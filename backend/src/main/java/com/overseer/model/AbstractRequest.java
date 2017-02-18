@@ -12,7 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false, exclude = {"historyDetailId"})
-@ToString(callSuper = false, exclude = {"historyDetailId"})
+@ToString(exclude = {"historyDetailId"})
 public abstract class AbstractRequest extends AbstractEntity {
     @NonNull
     private String title;
