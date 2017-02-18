@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Created by Romanova on 18.02.2017.
+ * The <code>Request</code> class represents requests of users {@link User}.
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -23,9 +23,9 @@ import java.util.List;
 public class Request extends AbstractRequest{
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "dd-MM-yyyy hh:mm:ss")
+            pattern = "dd-MM-yyyy")
     @NonNull
-    private Date dateOfCreation;
+    private LocalDate dateOfCreation;
     @NonNull
     private PriorityStatus priorityStatus;
     @NonNull

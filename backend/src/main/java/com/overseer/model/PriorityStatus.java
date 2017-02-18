@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.*;
 
 /**
- * Created by Romanova on 18.02.2017.
+ * The <code>PriorityStatus</code> class represents priority of request {@link Request}.
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
