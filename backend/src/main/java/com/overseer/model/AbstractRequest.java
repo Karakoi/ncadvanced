@@ -11,8 +11,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false, exclude = {"historyDetail"})
-@ToString(callSuper = false, exclude = {"historyDetail"})
+@EqualsAndHashCode(callSuper = false, exclude = {"historyDetailId"})
+@ToString(callSuper = false, exclude = {"historyDetailId"})
 public abstract class AbstractRequest extends AbstractEntity {
     @NonNull
     private String title;
