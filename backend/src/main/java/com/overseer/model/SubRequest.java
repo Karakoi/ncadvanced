@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 /**
- * Created by Romanova on 18.02.2017.
+ * The <code>SubRequest</code> class represents sub requests {@link Request} of office manager {@link User}.
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
