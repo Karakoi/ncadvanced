@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.*;
 
 /**
- * Created by Romanova on 18.02.2017.
+ * The <code>AbstractRequest</code> class represents Abstract class of Request {@link Request}.
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @NoArgsConstructor
