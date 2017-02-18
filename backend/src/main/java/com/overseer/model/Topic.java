@@ -8,15 +8,19 @@ import lombok.NonNull;
 
 import java.util.List;
 
+/**
+ * Topic entity.
+ */
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class Topic extends AbstractEntity {
 
     @NonNull
     private String title;
 
-    List<Integer> messagesId;
+    private List<Integer> messagesId;
 
     @NonNull
     private Long forumId;

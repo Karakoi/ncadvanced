@@ -6,9 +6,13 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
+/**
+ * HistoryDetail entity.
+ */
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class HistoryDetail extends AbstractEntity {
 
     private boolean actual;
