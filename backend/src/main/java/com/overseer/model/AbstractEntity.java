@@ -8,7 +8,6 @@ class AbstractEntity {
     private Long id;
 
     AbstractEntity() {
-        this.id = null;
     }
 
     public Long getId() {
