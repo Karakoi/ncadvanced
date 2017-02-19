@@ -11,7 +11,7 @@ public interface EmailService {
      * Method just send a message
      * @param message contains text, subject, recipient or recipients
      */
-     void sendMessage(SimpleMailMessage message);
+     void sendMessage(SimpleMailMessage message) throws Exception;
 
     /**
      * Method send message with some attachment.

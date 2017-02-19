@@ -16,6 +16,7 @@
 
     <properties>
         <lombok.version>1.16.14</lombok.version>
+        <javamail.version>1.5.5</javamail.version>
     </properties>
 
     <dependencies>
@@ -58,6 +59,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javamail.version}</version>
         </dependency>
     </dependencies>
 
