@@ -1,0 +1,3 @@
+insert into sub_request (title, description, request_id, history_detail_id, previous_sub_request_id) values ('Sub request for request #1', 'Some description', 1, null, null);
+insert into sub_request (title, description, request_id, history_detail_id, previous_sub_request_id) values ('Sub request for request #1', 'Some description', 1, null, null);
+insert into sub_request (title, description, request_id, history_detail_id, previous_sub_request_id) values ('Sub request for request #1', 'Some description', 1, null, null);
