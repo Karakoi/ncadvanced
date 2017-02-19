@@ -8,6 +8,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+/**
+ * Email configuration class.
+ */
 @Configuration
 @PropertySource("classpath:email.properties")
 public class EmailConfig {
@@ -22,14 +25,15 @@ public class EmailConfig {
     private String senderPassword;
 
     /**
-     * @return configured JavaMailSender
+     * JavaMailSender configuration.
+     * @return JavaMailSender bean.
      */
     @Bean
     public JavaMailSenderImpl mailSender() {
-        final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
         javaMailSender.setHost(this.mailHost);
-        javaMailSender.setPort(Integer.valueOf(this.mailPort));
+        javaMailSender.setPort(Integer.parseInt(this.mailPort));
         javaMailSender.setUsername(this.senderEmail);
         javaMailSender.setPassword(this.senderPassword);
 

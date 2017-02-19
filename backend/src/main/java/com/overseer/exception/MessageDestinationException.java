@@ -1,5 +1,8 @@
 package com.overseer.exception;
 
+/**
+ * Exception for email service.
+ */
 public class MessageDestinationException extends Exception{
 
     /**
