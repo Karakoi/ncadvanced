@@ -1,6 +1,7 @@
 package com.overseer.dao;
 
 import com.overseer.model.*;
+import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +25,11 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return List of requests with same progress status.
      */
 
-    List<Request> getRequestsByJoined(JoinedRequest joinedRequest);
+    default List<Request> getRequestsByJoined(JoinedRequest joinedRequest){
+        Long id = joinedRequest.getId();
+        Assert.notNull(id);
+        return  getRequestsByJoined(id);
+    }
 
     /**
      * Fetches from the database all Requests objects with same group.
@@ -41,7 +46,11 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return List of requests with same user.
      */
 
-    List<Request> getRequestsByUser(User user);
+    default List<Request> getRequestsByUser(User user){
+        Long id = user.getId();
+        Assert.notNull(id);
+        return getRequestsByUser(id);
+    }
 
     /**
      * Fetches from the database all Requests objects created or assigned with the same user.
