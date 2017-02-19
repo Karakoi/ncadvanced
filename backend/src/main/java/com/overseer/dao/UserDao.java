@@ -6,7 +6,7 @@ import com.overseer.model.User;
 import java.util.List;
 
 /**
- * User DAO interface.
+ * The <code>UserDao</code> interface represents access to ProgressStatus {@link UserDao} object in database.
  */
 public interface UserDao extends CrudDao<User, Long> {
 
