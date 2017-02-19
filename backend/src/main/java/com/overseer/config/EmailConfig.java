@@ -21,6 +21,9 @@ public class EmailConfig {
     @Value("${mail.password}")
     private String senderPassword;
 
+    /**
+     * @return configured JavaMailSender
+     */
     @Bean
     public JavaMailSenderImpl mailSender() {
         final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
@@ -38,5 +41,4 @@ public class EmailConfig {
         javaMailSender.setJavaMailProperties(properties);
         return javaMailSender;
     }
-
 }

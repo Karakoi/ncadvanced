@@ -11,6 +11,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Implementation of {@link com.overseer.service.EmailService} interface.
+ */
 @Service
 public class EmailServiceImpl implements EmailService {
 
