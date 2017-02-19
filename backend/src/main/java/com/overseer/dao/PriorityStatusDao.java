@@ -5,7 +5,7 @@ import com.overseer.model.PriorityStatus;
 import java.util.List;
 
 /**
- * Created by Romanova on 18.02.2017.
+ * The <code>PriorityStatusDao</code> interface represents access to PriorityStatus {@link PriorityStatus} object in database.
  */
 public interface PriorityStatusDao {
     /**

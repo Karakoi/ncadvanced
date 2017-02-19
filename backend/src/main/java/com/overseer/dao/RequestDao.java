@@ -3,7 +3,7 @@ package com.overseer.dao;
 import com.overseer.model.Request;
 
 /**
- * Created by Romanova on 18.02.2017.
+ * The <code>RequestDao</code> interface represents access to Request {@link Request} object in database.
  */
 public interface RequestDao {
     /**

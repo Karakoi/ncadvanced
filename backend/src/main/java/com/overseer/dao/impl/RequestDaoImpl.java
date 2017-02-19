@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 /**
- * Created by Romanova on 18.02.2017.
+ @{inheritDoc}
  */
 public class RequestDaoImpl implements RequestDao {
     @Autowired

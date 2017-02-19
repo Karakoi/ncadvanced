@@ -12,9 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
 /**
- * Created by Romanova on 18.02.2017.
+ @{inheritDoc}
  */
 public class ProgressStatusDaoImpl implements ProgressStatusDao {
     @Autowired

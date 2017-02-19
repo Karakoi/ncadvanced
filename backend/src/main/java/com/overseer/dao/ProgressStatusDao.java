@@ -5,7 +5,7 @@ import com.overseer.model.ProgressStatus;
 import java.util.List;
 
 /**
- * Created by Romanova on 18.02.2017.
+ * The <code>ProgressStatusDao</code> interface represents access to ProgressStatus {@link ProgressStatus} object in database.
  */
 public interface ProgressStatusDao {
     /**

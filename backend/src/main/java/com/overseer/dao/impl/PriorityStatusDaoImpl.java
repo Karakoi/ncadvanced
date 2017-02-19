@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by Romanova on 18.02.2017.
+ @{inheritDoc}
  */
 @Repository
 public class PriorityStatusDaoImpl implements PriorityStatusDao{
