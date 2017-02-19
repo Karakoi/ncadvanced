@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 import java.time.LocalDate;
-import javax.validation.constraints.NotNull;
 
 /**
  * User entity.
@@ -35,7 +34,7 @@ public class User extends AbstractEntity {
 
     private String phoneNumber;
 
-    @NotNull
+    @NonNull
     private Role role; // Role easy to be mapped, because it's haven't dependency
 
 }
