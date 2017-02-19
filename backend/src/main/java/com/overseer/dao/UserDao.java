@@ -1,4 +1,7 @@
 package com.overseer.dao;
 
-public class UserDao {
+/**
+ * User DAO interface.
+ */
+public interface UserDao {
 }

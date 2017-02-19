@@ -1,14 +1,16 @@
 package com.overseer.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
-@AllArgsConstructor
+/**
+ * HistoryDetail entity.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class HistoryDetail extends AbstractEntity {
 
     private boolean actual;

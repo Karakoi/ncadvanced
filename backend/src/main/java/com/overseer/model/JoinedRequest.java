@@ -2,9 +2,12 @@ package com.overseer.model;
 
 import lombok.*;
 
-@AllArgsConstructor
+/**
+ * JoinedRequest entity.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class JoinedRequest extends AbstractEntity {
 
     @NonNull
