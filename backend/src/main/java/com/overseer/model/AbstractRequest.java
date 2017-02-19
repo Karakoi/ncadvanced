@@ -15,9 +15,9 @@ import lombok.*;
 @SuppressWarnings("PMD.UnusedPrivateField")
 public abstract class AbstractRequest extends AbstractEntity {
     @NonNull
-    private String title;
+    protected String title;
 
-    private String description;
+    protected String description;
 
-    private Long historyDetailId;
+    protected Long historyDetailId;
 }

@@ -8,17 +8,10 @@ import lombok.*;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class JoinedRequest extends AbstractEntity {
-
-    @NonNull
-    private String title;
-
-    private String description;
+public class JoinedRequest extends AbstractRequest {
 
     @NonNull
     private Long assigneeId;
-
-    private Long historyDetailId;
 
     private Long previousJoinedRequestId;
 
