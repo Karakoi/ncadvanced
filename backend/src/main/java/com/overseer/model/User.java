@@ -9,7 +9,6 @@ import java.time.LocalDate;
  * User entity.
  */
 @Data
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class User extends AbstractEntity {

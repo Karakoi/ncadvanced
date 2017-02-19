@@ -6,8 +6,8 @@ import lombok.*;
 /**
  * The <code>PriorityStatus</code> class represents priority of request {@link Request}.
  */
+@SuppressWarnings("PMD.UnusedPrivateField")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)

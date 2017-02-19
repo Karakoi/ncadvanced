@@ -5,7 +5,6 @@ import lombok.*;
 /**
  * JoinedRequest entity.
  */
-@AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.UnusedPrivateField")
