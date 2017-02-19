@@ -8,16 +8,16 @@ import lombok.*;
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false, exclude = {"historyDetailId"})
 @ToString(exclude = {"historyDetailId"})
+@SuppressWarnings("PMD.UnusedPrivateField")
 public abstract class AbstractRequest extends AbstractEntity {
     @NonNull
     private String title;
-    @NonNull
+
     private String description;
-    @NonNull
+
     private Long historyDetailId;
 }

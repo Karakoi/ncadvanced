@@ -11,8 +11,8 @@ import java.util.List;
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
  */
+@SuppressWarnings("PMD.UnusedPrivateField")
 @NoArgsConstructor
-@AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
