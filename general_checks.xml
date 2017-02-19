@@ -711,14 +711,14 @@
                         Doesn't check for classes nested in interfaces or annotations, as they are always final there.
         Doc ref:        http://checkstyle.sourceforge.net/config_design.html#FinalClass
         -->
-        <module name="FinalClass"/>
+       <!--- <module name="FinalClass"/> -->
 
         <!--
         Description:    Makes sure that utility classes (classes that contain only static methods or fields in their API)
                         do not have a public constructor.
         Doc ref:        http://checkstyle.sourceforge.net/config_design.html#HideUtilityClassConstructor
         -->
-        <module name="HideUtilityClassConstructor"/>
+        <!--<module name="HideUtilityClassConstructor"/>-->
 
         <!--
         Description:    Implements Joshua Bloch, Effective Java, Item 17 - Use Interfaces only to define types.

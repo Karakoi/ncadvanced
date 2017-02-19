@@ -7,8 +7,8 @@ import lombok.*;
 /**
  * The <code>SubRequest</code> class represents sub requests {@link Request} of office manager {@link User}.
  */
+@SuppressWarnings("PMD.UnusedPrivateField")
 @NoArgsConstructor
-@AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter

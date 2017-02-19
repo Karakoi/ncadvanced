@@ -6,8 +6,8 @@ import lombok.*;
 /**
  * The <code>ProgressStatus</code> class represents progress status of request {@link Request}.
  */
+@SuppressWarnings("PMD.UnusedPrivateField")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
