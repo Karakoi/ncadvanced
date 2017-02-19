@@ -25,7 +25,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return List of requests with same progress status.
      */
 
-    default List<Request> getRequestsByJoined(JoinedRequest joinedRequest){
+    default List<Request> getRequestsByJoined(JoinedRequest joinedRequest) {
         Long id = joinedRequest.getId();
         Assert.notNull(id);
         return  getRequestsByJoined(id);
@@ -46,7 +46,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return List of requests with same user.
      */
 
-    default List<Request> getRequestsByUser(User user){
+    default List<Request> getRequestsByUser(User user) {
         Long id = user.getId();
         Assert.notNull(id);
         return getRequestsByUser(id);
