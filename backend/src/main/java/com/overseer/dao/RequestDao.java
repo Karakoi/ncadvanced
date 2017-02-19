@@ -7,7 +7,7 @@ import com.overseer.model.Request;
  */
 public interface RequestDao {
     /**
-     * Create Request object in database
+     * Create Request object in database.
      * @param request the request to be inserted
      * @return      inserted request
      * @see         Request
@@ -15,14 +15,14 @@ public interface RequestDao {
     Request create(Request request);
 
     /**
-     * Update Request object in database
+     * Update Request object in database.
      * @param request the request to be updated
      * @see         Request
      */
     void update(Request request);
 
     /**
-     * Delete Request object in database
+     * Delete Request object in database.
      * @param request the request to be deleted
      * @see         Request
      */

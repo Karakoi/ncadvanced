@@ -9,14 +9,14 @@ import java.util.List;
  */
 public interface PriorityStatusDao {
     /**
-     * Pulls from the database all PriorityStatus objects
+     * Pulls from the database all PriorityStatus objects.
      * @return      List of all PriorityStatus objects
      * @see         PriorityStatus
      */
     List<PriorityStatus> findAllPriorityStatuses();
 
     /**
-     * Fetches from the database PriorityStatus object with specified id
+     * Fetches from the database PriorityStatus object with specified id.
      * @param priorityStatusId the id of PriorityStatus to be fetched
      * @return      PriorityStatus object with specified id
      * @see         PriorityStatus

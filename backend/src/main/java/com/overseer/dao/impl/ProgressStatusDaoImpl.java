@@ -13,25 +13,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 /**
- @{inheritDoc}
+ @{inheritDoc}.
  */
 public class ProgressStatusDaoImpl implements ProgressStatusDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     /**
-     @{inheritDoc}
+     @{inheritDoc}.
      */
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     @Override
     public List<ProgressStatus> findAllProgressStatuses() {
         return this.namedParameterJdbcTemplate.query("select id, name from priority_status", new ProgressStatusMapper());
     }
 
     /**
-     @{inheritDoc}
+     @{inheritDoc}.
      */
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     @Override
     public ProgressStatus getProgressStatusById(Long progressStatusId) {
         String sql = "select id, name from progress_status where id = :progressStatusId";
@@ -39,6 +39,9 @@ public class ProgressStatusDaoImpl implements ProgressStatusDao {
         return this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, new ProgressStatusMapper());
     }
 
+    /**
+     * The <code>ProgressStatusMapper</code> class represents mapper for ProgressStatus {@link ProgressStatus} object.
+     */
     private static final class ProgressStatusMapper implements RowMapper<ProgressStatus> {
         @Override
         public ProgressStatus mapRow(ResultSet resultSet, int i) throws SQLException {

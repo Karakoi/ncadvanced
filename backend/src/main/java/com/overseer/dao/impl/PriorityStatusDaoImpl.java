@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- @{inheritDoc}
+ @{inheritDoc}.
  */
 @Repository
 public class PriorityStatusDaoImpl implements PriorityStatusDao{
@@ -23,11 +23,11 @@ public class PriorityStatusDaoImpl implements PriorityStatusDao{
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     /**
-     @{inheritDoc}
+     @{inheritDoc}.
      */
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     @Override
-    public PriorityStatus getPriorityStatusById(Long priorityStatusId){
+    public PriorityStatus getPriorityStatusById(Long priorityStatusId) {
         String sql = "select id, name from priority_status where id = :priorityStatusId";
 
         SqlParameterSource namedParameters = new MapSqlParameterSource("priorityStatusId", priorityStatusId);
@@ -35,14 +35,17 @@ public class PriorityStatusDaoImpl implements PriorityStatusDao{
     }
 
     /**
-     @{inheritDoc}
+     @{inheritDoc}.
      */
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     @Override
     public List<PriorityStatus> findAllPriorityStatuses() {
         return this.namedParameterJdbcTemplate.query("select id, name from priority_status", new PriorityStatusMapper());
     }
 
+    /**
+     * The <code>PriorityStatusMapper</code> class represents mapper for PriorityStatus {@link PriorityStatus} object.
+     */
     private static final class PriorityStatusMapper implements RowMapper<PriorityStatus> {
         @Override
         public PriorityStatus mapRow(ResultSet resultSet, int i) throws SQLException {
