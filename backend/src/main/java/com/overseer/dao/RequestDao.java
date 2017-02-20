@@ -40,26 +40,48 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> getRequestsByJoined(Long joinedRequestId);
 
     /**
-     * Fetches from the database all Requests objects created or assigned with the same user.
+     * Fetches from the database all Requests objects assigned to the same user.
      *
-     * @param user represents belonging request to a user, must not be {@literal null}.
+     * @param assignee represents belonging request to a user, must not be {@literal null}.
      * @return List of requests with same user.
      */
 
-    default List<Request> getRequestsByUser(User user) {
-        Long id = user.getId();
+    default List<Request> getRequestsByAssignee(User assignee) {
+        Long id = assignee.getId();
         Assert.notNull(id);
-        return getRequestsByUser(id);
+        return getRequestsByAssignee(id);
     }
 
     /**
-     * Fetches from the database all Requests objects created or assigned with the same user.
+     * Fetches from the database all Requests objects assigned to the same user.
      *
-     * @param userId represents belonging request to a user, must not be {@literal null}.
+     * @param assigneeId represents belonging request to a user, must not be {@literal null}.
      * @return List of requests with same user.
      */
 
-    List<Request> getRequestsByUser(Long userId);
+    List<Request> getRequestsByAssignee(Long assigneeId);
+
+    /**
+     * Fetches from the database all Requests objects created with the same user.
+     *
+     * @param reporter represents belonging request to a user, must not be {@literal null}.
+     * @return List of requests with same user.
+     */
+
+    default List<Request> getRequestsByReporter(User reporter) {
+        Long id = reporter.getId();
+        Assert.notNull(id);
+        return getRequestsByReporter(id);
+    }
+
+    /**
+     * Fetches from the database all Requests objects created with the same user.
+     *
+     * @param reporterId represents belonging request to a user, must not be {@literal null}.
+     * @return List of requests with same user.
+     */
+
+    List<Request> getRequestsByReporter(Long reporterId);
 
     /**
      * Fetches from the database all Requests objects which created in the same period.

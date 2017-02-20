@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
@@ -16,8 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true, exclude = {"priorityStatus", "progressStatus", "subRequestIds"})
-@ToString(callSuper = true, exclude = {"priorityStatus", "progressStatus", "reporterId", "assigneeId", "joinedRequestId", "previousRequestId", "subRequestIds"})
+@EqualsAndHashCode(callSuper = true, exclude = {"priorityStatus", "progressStatus"})
+@ToString(callSuper = true, exclude = {"priorityStatus", "progressStatus", "reporterId", "assigneeId", "joinedRequestId", "previousRequestId"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 public class Request extends AbstractRequest{
@@ -36,6 +35,4 @@ public class Request extends AbstractRequest{
     private Integer estimateTimeInDays;
     private Long joinedRequestId;
     private Long previousRequestId;
-
-    private List<Long> subRequestIds;
 }
