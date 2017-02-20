@@ -49,16 +49,14 @@ public class RequestDaoImpl implements RequestDao{
                                                             + " reporter_id = :reporterId,"
                                                             + " assignee_id = :assigneeId,"
                                                             + " estimate_time_in_days = :estimateTimeInDays,"
-                                                            + " date_of_creation = :dateOfCreation,"
-                                                            + " history_detail_id = :historyDetailId,"
-                                                            + " previous_request_id = :previousRequestId"
+                                                            + " date_of_creation = :dateOfCreation"
                                                     + " WHERE id = :id";
     private static final String INSERT_REQUEST = "INSERT INTO request"
                                                     + " (title, description, priority_status, progress_status, joined_request_id,"
-                                                    + " reporter_id, assignee_id, estimate_time_in_days, date_of_creation, history_detail_id, previous_request_id)"
+                                                    + " reporter_id, assignee_id, estimate_time_in_days, date_of_creation)"
                                              + " VALUES"
                                                     + " (:title, :description, :priorityStatus, :progressStatus, :joinedRequestId,"
-                                                    + " :reporterId, :assigneeId, :estimateTimeInDays, :dateOfCreation, :historyDetailId, :previousRequestId)";
+                                                    + " :reporterId, :assigneeId, :estimateTimeInDays, :dateOfCreation)";
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -149,8 +147,6 @@ public class RequestDaoImpl implements RequestDao{
         mapSqlParameterSource.addValue("assigneeId", request.getAssigneeId());
         mapSqlParameterSource.addValue("estimateTimeInDays", request.getEstimateTimeInDays());
         mapSqlParameterSource.addValue("joinedRequestId", request.getJoinedRequestId());
-        mapSqlParameterSource.addValue("historyDetailId", request.getHistoryDetailId());
-        mapSqlParameterSource.addValue("previousRequestId", request.getPreviousRequestId());
         if (findOne(request.getId()) != null) {
             id = request.getId();
             mapSqlParameterSource.addValue("id", id);
@@ -226,8 +222,6 @@ public class RequestDaoImpl implements RequestDao{
             request.setJoinedRequestId(resultSet.getLong("joined_request_id"));
             request.setAssigneeId(resultSet.getLong("assignee_id"));
             request.setEstimateTimeInDays(resultSet.getInt("estimate_time_in_days"));
-            request.setHistoryDetailId(resultSet.getLong("history_detail_id"));
-            request.setPreviousRequestId(resultSet.getLong("previous_request_id"));
 
             return request;
         }

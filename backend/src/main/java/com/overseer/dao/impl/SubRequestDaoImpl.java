@@ -24,8 +24,8 @@ public class SubRequestDaoImpl implements SubRequestDao {
     private static final String SQL_SELECT_BY_REQUEST_ID = SQL_SELECT_ALL + "WHERE request_id = :requestId";
     private static final String SQL_DELETE_ONE = "DELETE FROM sub_request WHERE id = :id";
     private static final String SQL_EXISTS = "SELECT count(id) FROM sub_request WHERE id = :id";
-    private static final String SQL_SAVE = "INSERT INTO sub_request (id,title,description,request_id,previous_sub_request_id,history_detail_id"
-            + "VALUES (:id,:title,:description,:request_id,:previous_sub_request_id,:history_detail_id))";
+    private static final String SQL_SAVE = "INSERT INTO sub_request (id,title,description,request_id"
+            + "VALUES (:id,:title,:description,:request_id))";
 
     @Autowired
     private final NamedParameterJdbcOperations jdbc;
@@ -36,8 +36,6 @@ public class SubRequestDaoImpl implements SubRequestDao {
         map.addValue("title", entity.getTitle());
         map.addValue("description", entity.getDescription());
         map.addValue("request_id", entity.getRequestId());
-        map.addValue("previous_sub_request_id", entity.getPreviousSubRequestId());
-        map.addValue("history_detail_id", entity.getHistoryDetailId());
         jdbc.update(SQL_SAVE, map);
         return entity;
     }
@@ -86,11 +84,9 @@ public class SubRequestDaoImpl implements SubRequestDao {
         public SubRequest mapRow(ResultSet rs, int rowNum) throws SQLException {
             SubRequest subRequest = new SubRequest();
             subRequest.setId(rs.getLong("id"));
-            subRequest.setPreviousSubRequestId(rs.getLong("previous_sub_request_id"));
             subRequest.setRequestId(rs.getLong("request_id"));
             subRequest.setTitle(rs.getString("title"));
             subRequest.setDescription(rs.getString("description"));
-            subRequest.setHistoryDetailId(rs.getLong("history_detail_id"));
             return subRequest;
         }
     }

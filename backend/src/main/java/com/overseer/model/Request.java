@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true, exclude = {"priorityStatus", "progressStatus"})
-@ToString(callSuper = true, exclude = {"priorityStatus", "progressStatus", "reporterId", "assigneeId", "joinedRequestId", "previousRequestId"})
+@ToString(callSuper = true, exclude = {"priorityStatus", "progressStatus", "reporterId", "assigneeId", "joinedRequestId"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 public class Request extends AbstractRequest{
@@ -34,5 +34,4 @@ public class Request extends AbstractRequest{
     private Long assigneeId;
     private Integer estimateTimeInDays;
     private Long joinedRequestId;
-    private Long previousRequestId;
 }
