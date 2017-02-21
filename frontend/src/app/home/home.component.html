@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row top-buffer">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <strong *ngIf="!register">Login</strong>
+          <strong *ngIf="register">Register</strong>
+        </div>
+        <app-login (registerMode)="toggleRegister($event)" *ngIf="!register"></app-login>
+        <app-register (registerMode)="toggleRegister($event)" *ngIf="register"></app-register>
+      </div>
+    </div>
+  </div>
+</div>
