@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * REST authentication Controller.
  */
@@ -36,12 +34,11 @@ public class AuthenticationController {
 
     /**
      * @param params Encapsulates user login and password.
-     * @param response Object that contains the response the servlet sends to the client.
      * @return String tooltip to check the cookies.
      * @throws AuthenticationException if Authentication failed.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public AuthResponse login(@RequestBody AuthParams params, HttpServletResponse response) throws AuthenticationException {
+    public AuthResponse login(@RequestBody AuthParams params) throws AuthenticationException {
         final UsernamePasswordAuthenticationToken LOGINTOKEN = params.toAuthenticationToken();
         final Authentication AUTHENTICATION = authenticationManager.authenticate(LOGINTOKEN);
         SecurityContextHolder.getContext().setAuthentication(AUTHENTICATION);
