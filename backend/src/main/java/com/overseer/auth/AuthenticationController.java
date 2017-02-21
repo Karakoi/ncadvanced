@@ -38,22 +38,17 @@ public class AuthenticationController {
     }
 
     /**
-     * @param params   Encapsulates user login and password.
+     * @param params Encapsulates user login and password.
      * @param response Object that contains the response the servlet sends to the client.
      * @return String tooltip to check the cookies.
      * @throws AuthenticationException if Authentication failed.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String login(@RequestBody AuthParams params, HttpServletResponse response) throws AuthenticationException {
+    public AuthResponse login(@RequestBody AuthParams params, HttpServletResponse response) throws AuthenticationException {
         final UsernamePasswordAuthenticationToken LOGINTOKEN = params.toAuthenticationToken();
         final Authentication AUTHENTICATION = authenticationManager.authenticate(LOGINTOKEN);
         SecurityContextHolder.getContext().setAuthentication(AUTHENTICATION);
-
-        Cookie cookie = new Cookie("token", tokenHandler.createTokenForUser(securityContextService.currentUser()));
-        cookie.setMaxAge(cookieMaxAge);
-        response.addCookie(cookie);
-
-        return "Check your cookies";
+        return new AuthResponse(tokenHandler.createTokenForUser(securityContextService.currentUser()));
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -72,5 +67,11 @@ public class AuthenticationController {
         UsernamePasswordAuthenticationToken toAuthenticationToken() {
             return new UsernamePasswordAuthenticationToken(email, password);
         }
+    }
+
+    @SuppressWarnings("PMD.UnusedPrivateField")
+    @Value
+    private static final class AuthResponse {
+        private final String token;
     }
 }

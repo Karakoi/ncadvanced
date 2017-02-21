@@ -21,15 +21,20 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
     /**
      * Return the UserAuthentication object according to the authorisation header.
+     *
      * @param request object that contains the request the client has made of the servlet.
      * @return the UserAuthentication object.
      */
     public Authentication getAuthentication(HttpServletRequest request) {
         final String AUTHHEADER = request.getHeader("authorization");
-        if (AUTHHEADER == null || AUTHHEADER.isEmpty()) {
+        if (AUTHHEADER == null || !AUTHHEADER.startsWith("Bearer")) {
             return null;
         }
-        return new UserAuthentication(tokenHandler.parseUserFromToken(AUTHHEADER));
+        final String JWT = AUTHHEADER.substring(7);
+        if (JWT.isEmpty()) {
+            return null;
+        }
+        return new UserAuthentication(tokenHandler.parseUserFromToken(JWT));
     }
 }
 
