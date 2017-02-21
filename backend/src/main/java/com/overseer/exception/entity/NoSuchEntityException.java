@@ -1,23 +1,21 @@
-package com.overseer.exception;
+package com.overseer.exception.entity;
 
 /**
- * Exception for email service.
+ * Exception for user service.
  */
-public class MessageDestinationException extends Exception{
-
+public class NoSuchEntityException extends Exception{
     /**
      * Constructs a new exception with {@code null} as its detail message.
      */
-    public MessageDestinationException() {
+    public NoSuchEntityException() {
         super();
     }
 
     /**
      *  Constructs a new exception with the specified detail message.
-     *
      * @param message the detail message.
      */
-    public MessageDestinationException(String message) {
+    public NoSuchEntityException(String message) {
         super(message);
     }
 }

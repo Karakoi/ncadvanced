@@ -1,5 +1,8 @@
 package com.overseer.service;
 
+import com.overseer.exception.entity.EntityAlreadyExistsException;
+import com.overseer.exception.entity.NoSuchEntityException;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,12 +14,20 @@ import java.util.List;
  */
 public interface CrudService<T, ID extends Serializable> {
     /**
-     * Saves a given entity.
+     * Create a given entity.
      *
      * @param entity must not be {@literal null}.
-     * @return the saved entity.
+     * @return the crated entity.
      */
-    T save(T entity);
+    T create(T entity) throws EntityAlreadyExistsException;
+
+    /**
+     * Update a given entity.
+     *
+     * @param entity must not be {@literal null}.
+     * @return the updated entity.
+     */
+    T update(T entity) throws NoSuchEntityException;
 
     /**
      * Fetches entity by its id.

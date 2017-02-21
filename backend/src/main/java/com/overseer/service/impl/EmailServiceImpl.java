@@ -1,7 +1,7 @@
 package com.overseer.service.impl;
 
-import com.overseer.exception.MessageDestinationException;
 import com.overseer.exception.email.EmptyMessageException;
+import com.overseer.exception.email.MessageDestinationException;
 import com.overseer.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
