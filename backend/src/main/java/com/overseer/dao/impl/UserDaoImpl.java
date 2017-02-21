@@ -4,8 +4,6 @@ import com.overseer.dao.UserDao;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -27,100 +26,155 @@ import java.util.Locale;
  * Implementation of {@link UserDao} interface.
  * </p>
  */
-@RequiredArgsConstructor
 @Transactional
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    private static final String SELECT_ALL_USERS = "SELECT * FROM user u " + "INNER JOIN role r ON u.role_id = r.id";
+    private static final String SELECT_ALL_USERS = "SELECT * FROM \"user\" u "
+            + "INNER JOIN role r ON u.role_id = r.id";
 
-    private static final String SELECT_USER_BY_ID = "SELECT * FROM user u " + "INNER JOIN role r ON u.role_id = r.id "
+    private static final String SELECT_USER_BY_ID = "SELECT * FROM \"user\" u "
+            + "INNER JOIN role r ON u.role_id = r.id "
+            + "WHERE u.id = :id";
+
+    private static final String INSERT_USER = "INSERT INTO \"user\" "
+            + "(first_name, last_name, second_name, password, email, "
+            + "date_of_birth, phone_number, role_id) VALUES ("
+            + " :firstName, :lastName, :secondName, :password, "
+            + ":email, :dateOfBirth, :phoneNumber,"
+            + " ( SELECT id FROM role WHERE name LIKE :rolename ) )";
+
+    private static final String UPDATE_USER_BY_ID = "UPDATE \"user\" SET "
+            + "first_name = :firstName, last_name = :lastName, "
+            + "second_name = :secondName, password = :password, "
+            + "email = :email, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, "
+            + " role_id = ( SELECT id FROM role WHERE name LIKE :rolename ) "
             + "WHERE id = :id";
 
-    private static final String INSERT_USER = "INSERT INTO user (" + "firstName, lastName, secondName, password, "
-            + "email, dateOfBirth, phoneNumber, role_id) " + "VALUES ("
-            + ":firstName, :lastName, :secondName, :password,"
-            + ":email, :dateOfBirth, :phoneNumber, ( SELECT id FROM role WHERE name = :rolename ) )";
+    private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM \"user\" u "
+            + "INNER JOIN role r ON u.role_id = r.id WHERE email LIKE :email";
 
-    private static final String UPDATE_USER_BY_ID = "UPDATE user SET "
-            + "firstName = :firstName, lastName = :lastName, " + "secondName = :secondName, password = :password, "
-            + "email = :email, dateOfBirth = :dateOfBirth, "
-            + "phoneNumber = :phoneNumber, role_id = ( SELECT id FROM role WHERE name = :rolename ) "
-            + "WHERE id = :id";
+    private static final String DELETE_USER_BY_ID = "DELETE FROM \"user\" WHERE id = :id";
 
-    private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM user u "
-            + "INNER JOIN role r ON u.role_id = r.id " + "WHERE email = :email";
-
-    private static final String DELETE_USER_BY_ID = "DELETE FROM user WHERE id = :id";
-
-    private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM user u "
-            + "INNER JOIN role r ON u.role_id = r.id " + "WHERE name = :rolename";
+    private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM \"user\" u "
+            + "INNER JOIN role r ON u.role_id = r.id WHERE r.name LIKE :rolename";
+    
+    private static final String EXISTS_USER_ID = "SELECT COUNT(*) FROM \"user\" WHERE id = :id";
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    /**
+     * {@inheritDoc}.
+     * @throws {@link org.springframework.dao.DuplicateKeyException} if email unique constraint violated.
+     */
     @Override
     public User save(User user) {
         Assert.notNull(user);
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("firstName", user.getFirstName());
         namedParameters.addValue("lastName", user.getLastName());
-        namedParameters.addValue("secondName", user.getSecondName());
         namedParameters.addValue("password", user.getPassword());
         namedParameters.addValue("email", user.getEmail());
-        namedParameters.addValue("dateOfBirth", user.getDateOfBirth().toString());
+        namedParameters.addValue("rolename", user.getRole()
+                .toString().toUpperCase(Locale.ENGLISH));
+        namedParameters.addValue("secondName", user.getSecondName());
+        LocalDate dateOfBirth = user.getDateOfBirth();
+        if (dateOfBirth != null) {
+            namedParameters.addValue("dateOfBirth", Date.valueOf(dateOfBirth));
+        } else {
+            namedParameters.addValue("dateOfBirth", null);
+        }
         namedParameters.addValue("phoneNumber", user.getPhoneNumber());
-        namedParameters.addValue("rolename", user.getRole().toString());
-        if (findOne(user.getId()) != null) {
+        if (user.getId() == null) {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            namedParameterJdbcTemplate.update(INSERT_USER, namedParameters, 
+                    keyHolder, new String[]{"id"});
+            user.setId(keyHolder.getKey().longValue());
+        } else {
             namedParameters.addValue("id", user.getId());
             namedParameterJdbcTemplate.update(UPDATE_USER_BY_ID, namedParameters);
-            return findOne(user.getId());
-        } else {
-            KeyHolder holder = new GeneratedKeyHolder();
-            namedParameterJdbcTemplate.update(INSERT_USER, namedParameters, holder);
-            return findOne(holder.getKey().longValue());
         }
+        return user;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public User findOne(Long id) { 
+    public User findOne(Long id) {
         Assert.notNull(id);
-        return namedParameterJdbcTemplate.queryForObject(SELECT_USER_BY_ID, new MapSqlParameterSource("id", id), new UserMapper());
+        List<User> users = namedParameterJdbcTemplate.query(SELECT_USER_BY_ID, 
+                new MapSqlParameterSource("id", id),
+                new UserMapper());
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.get(0);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public void delete(User user) {
         Assert.notNull(user);
-        delete(user.getId());
+        delete(user.getId()); 
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public void delete(Long id) {
         Assert.notNull(id);
-        namedParameterJdbcTemplate.update(DELETE_USER_BY_ID, new MapSqlParameterSource("id", id));
+        namedParameterJdbcTemplate.update(DELETE_USER_BY_ID, 
+                new MapSqlParameterSource("id", id));
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public boolean exists(Long id) {
         Assert.notNull(id);
-        return findOne(id) != null;
+        return namedParameterJdbcTemplate.queryForObject(EXISTS_USER_ID, 
+                new MapSqlParameterSource("id", id), Integer.class) > 0;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findAll() {
         return namedParameterJdbcTemplate.query(SELECT_ALL_USERS, new UserMapper());
+        
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public User findByEmail(String email) {
         Assert.notNull(email);
-        return namedParameterJdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL, new MapSqlParameterSource("email", email), new UserMapper());
+        List<User> users = namedParameterJdbcTemplate.query(SELECT_USER_BY_EMAIL,
+                new MapSqlParameterSource("email", email), new UserMapper());
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.get(0);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public List<User> findByRole(Role role) { 
+    public List<User> findByRole(Role role) {
         Assert.notNull(role);
-        return namedParameterJdbcTemplate.query(SELECT_USERS_BY_ROLE, new MapSqlParameterSource("rolename", role.toString()), new UserMapper());
+        return namedParameterJdbcTemplate.query(SELECT_USERS_BY_ROLE,
+                new MapSqlParameterSource("rolename", 
+                role.toString().toUpperCase(Locale.ENGLISH)), 
+                new UserMapper());
     }
 
     /**
@@ -129,18 +183,19 @@ public class UserDaoImpl implements UserDao {
     private static final class UserMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet resultSet, int i) throws SQLException {
-            User user = new User(
-                    resultSet.getString("firstName"),
-                    resultSet.getString("lastName"),
-                    resultSet.getString("password"),
-                    resultSet.getString("email"),
-                    Role.valueOf(resultSet.getString("name").toUpperCase(Locale.ENGLISH))
-                    );
+            User user = new User(resultSet.getString("first_name"), resultSet.getString("last_name"),
+                    resultSet.getString("password"), resultSet.getString("email"),
+                    Role.valueOf(resultSet.getString("name").toUpperCase(Locale.ENGLISH)));
             user.setId(resultSet.getLong("id"));
-            user.setSecondName(resultSet.getString("secondName"));
-            user.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
-            user.setPhoneNumber(resultSet.getString("phoneNumber"));
+            user.setSecondName(resultSet.getString("second_name"));
+            String dateOfBirth = resultSet.getString("date_of_birth");
+            if (dateOfBirth != null) {
+                user.setDateOfBirth(LocalDate.parse(dateOfBirth));
+            }
+            user.setPhoneNumber(resultSet.getString("phone_number"));
             return user;
         }
     }
+
 }
+
