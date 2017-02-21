@@ -52,6 +52,7 @@ public class AuthenticationController {
         Cookie cookie = new Cookie("token", tokenHandler.createTokenForUser(securityContextService.currentUser()));
         cookie.setMaxAge(cookieMaxAge);
         response.addCookie(cookie);
+
         return "Check your cookies";
     }
 
