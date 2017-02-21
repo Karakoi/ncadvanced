@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -22,8 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    @org.springframework.beans.factory.annotation.Value("${app.cookie.duration}")
-    private int cookieMaxAge;
     private final AuthenticationManager authenticationManager;
     private final TokenHandler tokenHandler;
     private final SecurityContextService securityContextService;
@@ -69,6 +66,9 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Encapsulates the user authentication token.
+     */
     @SuppressWarnings("PMD.UnusedPrivateField")
     @Value
     private static final class AuthResponse {
