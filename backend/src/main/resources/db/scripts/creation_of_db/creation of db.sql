@@ -11,6 +11,10 @@ ALTER TABLE main_id_seq OWNER TO tkacgwphjmxbcr;
 
 -- --------------------------------------------------------------------------
 
+CREATE TYPE role AS ENUM ('employee', 'office manager', 'admin');
+
+-- --------------------------------------------------------------------------
+
 CREATE TABLE forum (
     id integer NOT NULL,
     title character varying(45) NOT NULL
@@ -108,17 +112,6 @@ ALTER SEQUENCE main_id_seq OWNED BY request.id;
 
 -- --------------------------------------------------------------------------
 
-CREATE TABLE role (
-    id integer NOT NULL,
-    name character varying(45) NOT NULL
-);
-
-ALTER TABLE role OWNER TO tkacgwphjmxbcr;
-
-ALTER SEQUENCE main_id_seq OWNED BY role.id;
-
--- --------------------------------------------------------------------------
-
 CREATE TABLE sub_request (
     id integer NOT NULL,
     title character varying(45) NOT NULL,
@@ -153,7 +146,7 @@ CREATE TABLE "user" (
     email character varying(45) NOT NULL,
     date_of_birth date,
     phone_number character varying(45),
-    role_id integer NOT NULL
+    role role NOT NULL
 );
 
 ALTER TABLE "user" OWNER TO tkacgwphjmxbcr;
@@ -175,8 +168,6 @@ ALTER TABLE ONLY priority_status ALTER COLUMN id SET DEFAULT nextval('main_id_se
 ALTER TABLE ONLY progress_status ALTER COLUMN id SET DEFAULT nextval('main_id_seq'::regclass);
 
 ALTER TABLE ONLY request ALTER COLUMN id SET DEFAULT nextval('main_id_seq'::regclass);
-
-ALTER TABLE ONLY role ALTER COLUMN id SET DEFAULT nextval('main_id_seq'::regclass);
 
 ALTER TABLE ONLY sub_request ALTER COLUMN id SET DEFAULT nextval('main_id_seq'::regclass);
 
@@ -203,10 +194,6 @@ ALTER TABLE ONLY progress_status ADD CONSTRAINT progress_status_name_key UNIQUE 
 ALTER TABLE ONLY progress_status ADD CONSTRAINT progress_status_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY request ADD CONSTRAINT request_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY role ADD CONSTRAINT role_name_key UNIQUE (name);
-
-ALTER TABLE ONLY role ADD CONSTRAINT role_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY sub_request ADD CONSTRAINT sub_request_pkey PRIMARY KEY (id);
 
@@ -249,8 +236,6 @@ CREATE INDEX sub_request_fk_sub_request_request1_idx ON sub_request USING btree 
 
 CREATE INDEX topic_fk_topic_forum1_idx ON topic USING btree (forum_id);
 
-CREATE INDEX user_fk_user_role1_idx ON "user" USING btree (role_id);
-
 -- --------------------------------------------------------------------------
 
 ALTER TABLE ONLY history ADD CONSTRAINT fk_history_detail_ver2_user1 FOREIGN KEY (changer_id) REFERENCES "user"(id);
@@ -280,7 +265,5 @@ ALTER TABLE ONLY request ADD CONSTRAINT fk_request_user3 FOREIGN KEY (reporter_i
 ALTER TABLE ONLY sub_request ADD CONSTRAINT fk_sub_request_request1 FOREIGN KEY (request_id) REFERENCES request(id);
 
 ALTER TABLE ONLY topic ADD CONSTRAINT fk_topic_forum1 FOREIGN KEY (forum_id) REFERENCES forum(id);
-
-ALTER TABLE ONLY "user" ADD CONSTRAINT fk_user_role1 FOREIGN KEY (role_id) REFERENCES role(id);
 
 -- END --------------------------------------------------------------------------
