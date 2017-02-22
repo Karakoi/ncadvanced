@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -28,7 +29,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private static final Logger LOG = Logger.getLogger(UserServiceImpl.class);
 
-    private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " Temporary password ";
+    private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
     private static final String EMPTY_MESSAGE_EXCEPTION_MESSAGE = " Message for recovering password is empty ";
     private static final String DESTINATION_EXCEPTION_MESSAGE = " Destination for recovering password massage is empty ";
     private static final String NO_SUCH_ENTITY_MESSAGE = " Database does not contain such user ";
@@ -38,55 +39,8 @@ public class UserServiceImpl implements UserService {
     private String emailFrom;
     private final UserDao userDao;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public void changePassword(String email) throws NoSuchEntityException {
-        Assert.notNull(email);
-        User user = userDao.findByEmail(email);
-        if (user != null) {
-            String newPassword = PasswordGeneratorUtil.generatePassword();
-            user.setPassword(newPassword);
-            userDao.save(user);
-            try {
-                emailService.sendMessage(this.createMailMessage(user));
-            } catch (EmptyMessageException e) {
-                LOG.error(EMPTY_MESSAGE_EXCEPTION_MESSAGE, e);
-            } catch (MessageDestinationException e) {
-                LOG.error(DESTINATION_EXCEPTION_MESSAGE, e);
-            }
-        } else {
-            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
-        }
-    }
-
-    /**
-     * Forms message for recovering password.
-     *
-     * @param user user to recover password for, must not be {@literal null}
-     * @return message for recovering password
-     */
-    private SimpleMailMessage createMailMessage(User user) {
-        Assert.notNull(user);
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setFrom(emailFrom);
-        mailMessage.setSubject(SUBJECT_FOR_RECOVERING_PASSWORD);
-        mailMessage.setText("Dear "
-                + user.getFirstName()
-                + " "
-                + user.getLastName()
-                + ",\n\n"
-                + "You or someone else requested a password recovery to "
-                + user.getEmail()
-                + " account.\n"
-                + "Your temporary password is \n"
-                + user.getPassword()
-                + "\n");
-        return mailMessage;
-    }
 
     /**
      * {@inheritDoc}.
@@ -160,5 +114,65 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userDao.findAll();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void changePassword(String email) throws NoSuchEntityException {
+        Assert.notNull(email);
+        User user = userDao.findByEmail(email);
+        if (user != null) {
+            PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
+            String newPassword = passwordGeneratorUtil.generatePassword();
+            user.setPassword(newPassword);
+            userDao.save(user);
+            try {
+                emailService.sendMessage(this.createMailMessage(user));
+            } catch (EmptyMessageException e) {
+                LOG.error(EMPTY_MESSAGE_EXCEPTION_MESSAGE, e);
+            } catch (MessageDestinationException e) {
+                LOG.error(DESTINATION_EXCEPTION_MESSAGE, e);
+            }
+        } else {
+            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+        }
+    }
+
+    /**
+     * Forms message for recovering password.
+     *
+     * @param user user to recover password for, must not be {@literal null}
+     * @return message for recovering password
+     */
+    private SimpleMailMessage createMailMessage(User user) {
+        Assert.notNull(user);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setFrom(emailFrom);
+        mailMessage.setSubject(SUBJECT_FOR_RECOVERING_PASSWORD);
+        mailMessage.setText("Dear "
+                + user.getFirstName()
+                + " "
+                + user.getLastName()
+                + ",\n\n"
+                + "You or someone else requested a password recovery to "
+                + user.getEmail()
+                + " account.\n"
+                + "Your new password is \n"
+                + user.getPassword()
+                + "\n");
+        return mailMessage;
+    }
+
+    @Override
+    public User findByEmail(String email) throws NoSuchEntityException {
+        Assert.notNull(email);
+        User user = userDao.findByEmail(email);
+        if (user == null) {
+            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+        }
+        return user;
     }
 }

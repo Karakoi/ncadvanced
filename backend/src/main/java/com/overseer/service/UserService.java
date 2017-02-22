@@ -15,4 +15,11 @@ public interface UserService extends CrudService<User, Long> {
      */
     void changePassword(String email) throws NoSuchEntityException;
 
+    /**
+     * Fetches {@link User} entity by provided email.
+     *
+     * @param email user's email address, must not be {@literal null}.
+     * @return {@link User} entity associated with provided email, or {@literal null} if none found.
+     */
+    User findByEmail(String email) throws NoSuchEntityException;
 }
