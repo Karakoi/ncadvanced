@@ -1,17 +1,22 @@
 package com.overseer.controller;
 
 import com.overseer.exception.entity.EntityAlreadyExistsException;
-import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,39 +25,40 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
+    /**
+     * Returns all {@link User} entities.
+     *
+     * @return all {@link User} entities.
+     */
     @GetMapping("/user/getAll")
     public ResponseEntity<List<User>> getAllUser() {
         List<User> users = userService.findAll();
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     /**
-     * Fuck javadock.
+     * Returns {@link User} entity associated with provided id param.
      *
-     * @param id awdawd.
-     * @return waddawfr.
+     * @param id user identifier.
+     * @return {@link User} entity with http status 200 OK.
      */
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUser(@PathVariable("id") String id) {
         User user = userService.findOne(Long.parseLong(id));
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /**
      * Create new employee.
      *
-     * @param user json object which represents user.
-     * @return json representation of created user.
+     * @param user json object which represents {@link User} entity.
+     * @return json representation of created {@link User} entity.
      */
     @PostMapping("/user/register")
     public ResponseEntity<User> registerEmployee(@RequestBody User user) throws EntityAlreadyExistsException {
@@ -61,15 +67,15 @@ public class UserController {
         Assert.notNull(user.getFirstName(), "User must have first name");
         Assert.state(user.getRole() == Role.EMPLOYEE, "Can't register");
         userService.create(user);
-        logger.info("Employee has been added with email " + user.getEmail());
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        LOG.info("Employee has been added with email {}", user.getEmail());
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /**
-     * Method for admin, can create user with any role.
+     * Method for admin, can create {@link User} entity with any role.
      *
-     * @param user json object which represents user.
-     * @return json representation of created user.
+     * @param user json object which represents {@link User} entity.
+     * @return json representation of created {@link User} entity.
      */
     @PostMapping("/user")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws EntityAlreadyExistsException {
@@ -77,19 +83,30 @@ public class UserController {
         Assert.notNull(user.getEmail(), "User have no email");
         Assert.notNull(user.getFirstName(), "User must have first name");
         userService.create(user);
-        logger.info("User has been added with email " + user.getEmail());
+        LOG.info("User has been added with email {}", user.getEmail());
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    /**
+     * Deletes {@link User} entity associated with provided id param.
+     *
+     * @param id user identifier.
+     * @return http status 201 CREATED.
+     */
     @DeleteMapping("/user/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
-        logger.info("User has been deleted with id " + id);
+        LOG.info("User has been deleted with id {}", id);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    /**
+     * Changes {@link User} password.
+     *
+     * @param email user's email.
+     */
     @PostMapping("/user/changePassword")
-    public void changePassword(@RequestBody String email) throws NoSuchEntityException {
+    public void changePassword(@RequestBody String email) {
         userService.changePassword(email);
     }
 }

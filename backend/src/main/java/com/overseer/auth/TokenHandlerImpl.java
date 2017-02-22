@@ -3,8 +3,8 @@ package com.overseer.auth;
 import com.overseer.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -16,12 +16,12 @@ import java.util.Date;
  * Represents the service for working with tokens.
  */
 @Component("tokenHandler")
+@PropertySource("classpath:security.properties")
 public class TokenHandlerImpl implements TokenHandler {
 
     private final String secret;
     private final UserDetailsService userDetailsService;
 
-    @Autowired
     public TokenHandlerImpl(@Value("${app.jwt.secret}") String secret,
                             UserDetailsService userDetailsService) {
         this.secret = secret;

@@ -1,5 +1,6 @@
-package com.overseer.auth;
+package com.overseer.config;
 
+import com.overseer.auth.StatelessAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntryPoint;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

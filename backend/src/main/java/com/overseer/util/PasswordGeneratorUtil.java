@@ -10,7 +10,7 @@ import java.util.Random;
 /**
  * Utility for generating temporary password.
  */
-@PropertySource("classpath:security.yml")
+@PropertySource("classpath:security.properties")
 public class PasswordGeneratorUtil {
     private static final String PASSWORD_CHARACTERS =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?";

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -42,14 +43,13 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final EmailService emailService;
     @SuppressWarnings("PMD.UnusedPrivateField")
-    private final PasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public User create(User user) throws EntityAlreadyExistsException {
+    public User create(User user) {
         Assert.notNull(user);
         boolean isExist = userDao.exists(user.getId());
         if (isExist) {
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}.
      */
     @Override
-    public User update(User user) throws NoSuchEntityException {
+    public User update(User user) {
         Assert.notNull(user);
         boolean isExist = userDao.exists(user.getId());
         if (!isExist) {
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}.
      */
     @Override
-    public User findOne(Long id) throws NoSuchEntityException {
+    public User findOne(Long id) {
         Assert.notNull(id);
         User user = userDao.findOne(id);
         if (user == null) {

@@ -3,7 +3,7 @@ package com.overseer.exception.entity;
 /**
  * Exception for user service.
  */
-public class NoSuchEntityException extends Exception {
+public class NoSuchEntityException extends RuntimeException {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

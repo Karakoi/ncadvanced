@@ -4,9 +4,9 @@ import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,15 +20,11 @@ import java.util.List;
  * Represents service for user-specific data loading.
  */
 @Component
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     private final UserService userService;
-
-    @Autowired
-    UserDetailsServiceImpl(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -36,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         try {
             user = userService.findByEmail(login);
         } catch (NoSuchEntityException e) {
-            LOG.warn("NoSuchEntityException in loadUserByUsername() :" + e);
+            LOG.error("NoSuchEntityException in loadUserByUsername() :" + e);
         }
         UserDetails userDetails;
         if (user != null) {

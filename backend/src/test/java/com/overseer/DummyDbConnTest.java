@@ -19,12 +19,9 @@ public class DummyDbConnTest {
     private JdbcTemplate jt;
 
     @Test
-    public void connectionTest(){
+    public void connectionTest() {
         jt.execute("DROP TABLE IF EXISTS conn_test");
-        jt.execute("CREATE table conn_test (" +
-                        "value varchar(20)" +
-                   ")"
-        );
+        jt.execute("CREATE table conn_test (value varchar(20))");
         jt.execute("INSERT INTO conn_test (value) VALUES ('Connection success!')");
     }
 }

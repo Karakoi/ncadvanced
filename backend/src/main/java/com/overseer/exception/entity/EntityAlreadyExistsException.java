@@ -3,7 +3,7 @@ package com.overseer.exception.entity;
 /**
  * Exception for user service.
  */
-public class EntityAlreadyExistsException extends Exception {
+public class EntityAlreadyExistsException extends RuntimeException {
     /**
      * Constructs a new exception with {@code null} as its detail message.
      */

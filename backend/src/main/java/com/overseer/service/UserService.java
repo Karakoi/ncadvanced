@@ -1,6 +1,5 @@
 package com.overseer.service;
 
-import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 
@@ -16,7 +15,7 @@ public interface UserService extends CrudService<User, Long> {
      *
      * @param email email for recovering password, must not be {@literal null}.
      */
-    void changePassword(String email) throws NoSuchEntityException;
+    void changePassword(String email);
 
     /**
      * Fetches {@link User} entity by provided email.
@@ -24,7 +23,7 @@ public interface UserService extends CrudService<User, Long> {
      * @param email user's email address, must not be {@literal null}.
      * @return {@link User} entity associated with provided email, or {@literal null} if none found.
      */
-    User findByEmail(String email) throws NoSuchEntityException;
+    User findByEmail(String email);
 
     /**
      * Returns a list of {@link User} entities who's roles match provided role.
