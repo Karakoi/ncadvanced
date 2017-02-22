@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private String emailFrom;
     private final UserDao userDao;
     private final EmailService emailService;
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private final PasswordEncoder passwordEncoder;
 
 
@@ -126,7 +127,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
             String newPassword = passwordGeneratorUtil.generatePassword();
-            user.setPassword(newPassword);
+            user.setPassword(passwordEncoder.encode(newPassword));
             userDao.save(user);
             try {
                 emailService.sendMessage(this.createMailMessage(user));
