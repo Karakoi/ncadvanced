@@ -35,7 +35,7 @@ public interface CrudService<T, ID extends Serializable> {
      * @param id must not be {@literal null}.
      * @return entity with the given id or {@literal null} if none found.
      */
-    T findOne(ID id);
+    T findOne(ID id) throws NoSuchEntityException;
 
     /**
      * Deletes a given entity.

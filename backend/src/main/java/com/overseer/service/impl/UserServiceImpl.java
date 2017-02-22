@@ -118,9 +118,13 @@ public class UserServiceImpl implements UserService {
      * @{inheritDoc}.
      */
     @Override
-    public User findOne(Long id) {
+    public User findOne(Long id) throws NoSuchEntityException {
         Assert.notNull(id);
-        return userDao.findOne(id);
+        User user = userDao.findOne(id);
+        if (user == null) {
+            throw new NoSuchEntityException(MASSAGE_FOR_NO_SUCH_ENTITY_EXCEPTION);
+        }
+        return user;
     }
 
     /**
