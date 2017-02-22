@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Interface for generic CRUD operations.
  *
- * @param <T> entity type.
+ * @param <T>  entity type.
  * @param <ID> entity identifier type.
  */
 public interface CrudService<T, ID extends Serializable> {
