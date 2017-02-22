@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -36,8 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
-//                .passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -52,8 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().cacheControl();
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/auth").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers(HttpMethod.GET, "/authentication").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/authentication").permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new Http401AuthenticationEntryPoint("'Bearer token_type=\"JWT\"'"));

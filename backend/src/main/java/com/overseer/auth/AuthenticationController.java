@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * REST authentication Controller.
  */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/authentication")
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
@@ -34,7 +34,7 @@ public class AuthenticationController {
 
     /**
      * @param params Encapsulates user login and password.
-     * @return String tooltip to check the cookies.
+     * @return AuthResponse encapsulates the authentication token.
      * @throws AuthenticationException if Authentication failed.
      */
     @RequestMapping(method = RequestMethod.POST)

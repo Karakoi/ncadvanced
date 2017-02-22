@@ -14,8 +14,8 @@ public class UserRepositoryImpl implements UserRepository {
     private HashMap<String, User> list = new HashMap<>();
 
     UserRepositoryImpl() {
-        list.put("admin@mail.ru", new User("name", "surname", "123", "admin@mail.ru"));
-        list.put("user@mail.ru", new User("name", "surname", "123", "user@mail.ru"));
+        list.put("admin@mail.ru", new User("name", "surname", "$2a$06$2HG3JIf8YAQ9s8wXCzm4Reel2TaMbSGsNzLfImGftLVu1SqjmX78W", "admin@mail.ru"));
+        list.put("user@mail.ru", new User("name", "surname", "$2a$06$e06aVWkv0biI0tDeoiJKs.2QeRSZeS5B/v5bnHSBKzvfJHrv24jWq", "user@mail.ru"));
     }
 
     @Override

@@ -42,8 +42,10 @@ public class TokenHandlerImpl implements TokenHandler {
         final ZonedDateTime AFTERONEWEEK = ZonedDateTime.now().plusWeeks(1);
 
         return Jwts.builder()
+                .claim("id", user.getId())
                 .claim("email", user.getEmail())
                 .claim("password", user.getPassword())
+                .claim("role", user.getRole())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .setExpiration(Date.from(AFTERONEWEEK.toInstant()))
                 .compact();
