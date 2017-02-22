@@ -21,5 +21,4 @@ npm start
 ```
 
 ## ERD
-![alt tag](http://clip2net.com/clip/m425716/d5d38-clip-105kb.png?nocache=1)
-[ERD doc link]()
+![alt tag](http://s018.radikal.ru/i520/1702/63/6b06e069f599.png)
