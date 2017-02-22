@@ -5,6 +5,7 @@ import com.overseer.exception.email.EmptyMessageException;
 import com.overseer.exception.email.MessageDestinationException;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
+import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
@@ -174,5 +175,11 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
         }
         return user;
+    }
+
+    @Override
+    public List<User> findByRole(Role role) {
+        Assert.notNull(role);
+        return userDao.findByRole(role);
     }
 }
