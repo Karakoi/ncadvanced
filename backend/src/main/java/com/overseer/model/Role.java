@@ -1,5 +1,6 @@
 package com.overseer.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
@@ -13,6 +14,7 @@ public enum Role {
      * but cannot delete himself. Able to perform Update/Delete operations on
      * already created {@link Request} and can perform all actions a manager can do.
      */
+    @JsonProperty("admin")
     ADMINISTRATOR("admin"),
 
     /**
@@ -21,11 +23,13 @@ public enum Role {
      * Responsible for evaluation request's {@link ProgressStatus} as well as for
      * completing and closing the {@link Request}.
      */
+    @JsonProperty("office manager")
     MANAGER("office manager"),
 
     /**
      * An employee can perform CRUD operations on the {@link Request} object.
      */
+    @JsonProperty("employee")
     EMPLOYEE("employee");
     
     private String custom;

@@ -4,6 +4,7 @@ package com.overseer.exception.entity;
  * Exception for user service.
  */
 public class NoSuchEntityException extends Exception {
+
     /**
      * Constructs a new exception with {@code null} as its detail message.
      */
