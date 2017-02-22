@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(id);
         User user = userDao.findOne(id);
         if (user == null) {
-            throw new NoSuchEntityException(MASSAGE_FOR_NO_SUCH_ENTITY_EXCEPTION);
+            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
         }
         return user;
     }
