@@ -131,7 +131,6 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public boolean exists(Long id) {
-        Assert.notNull(id);
         return namedParameterJdbcTemplate.queryForObject(EXISTS_USER_ID, 
                 new MapSqlParameterSource("id", id), Integer.class) > 0;
     }

@@ -1,5 +1,6 @@
 package com.overseer.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class User extends AbstractEntity {
     @NonNull
     private String email;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     private String phoneNumber;

@@ -53,7 +53,7 @@ public class UserController {
      * @param user json object which represents user.
      * @return json representation of created user.
      */
-    @PostMapping("/user/register/employee")
+    @PostMapping("/user/register")
     public ResponseEntity<User> registerEmployee(@RequestBody User user) throws EntityAlreadyExistsException {
         Assert.notNull(user, "Create user error user is null");
         Assert.notNull(user.getEmail(), "User have no email");
@@ -70,7 +70,7 @@ public class UserController {
      * @param user json object which represents user.
      * @return json representation of created user.
      */
-    @PostMapping("/user/register")
+    @PostMapping("/user")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws EntityAlreadyExistsException {
         Assert.notNull(user, "Create user error user is null");
         Assert.notNull(user.getEmail(), "User have no email");
@@ -80,9 +80,10 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/user/register")
-    public void deleteUser(@RequestBody String id) {
-        userService.delete(Long.parseLong(id));
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity deleteUser(@PathVariable("id") Long id) {
+        userService.delete(id);
         logger.info("User has been deleted with id " + id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
