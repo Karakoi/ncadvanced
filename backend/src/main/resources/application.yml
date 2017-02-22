@@ -1,2 +1,1 @@
-app.jwt.secret: qwerty
-app.cookie.duration: 3600
+app.jwt.secret: U2VjcmV0
