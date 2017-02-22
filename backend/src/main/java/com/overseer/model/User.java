@@ -26,7 +26,7 @@ public class User extends AbstractEntity {
     private String secondName;
 
     @NonNull
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NonNull
