@@ -11,7 +11,8 @@ import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
 import com.overseer.util.PasswordGeneratorUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
@@ -28,7 +29,7 @@ import java.util.List;
 @PropertySource("classpath:email.properties")
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final Logger LOG = Logger.getLogger(UserServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
     private static final String EMPTY_MESSAGE_EXCEPTION_MESSAGE = " Message for recovering password is empty ";
