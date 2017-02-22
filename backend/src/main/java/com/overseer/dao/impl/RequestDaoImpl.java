@@ -5,6 +5,7 @@ import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -114,9 +115,13 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public Request findOne(Long id) {
         Assert.notNull(id);
-        return jdbc.queryForObject(SELECT_REQUEST_BY_ID,
-                new MapSqlParameterSource("id", id),
-                new RequestMapper());
+        try {
+            return jdbc.queryForObject(SELECT_REQUEST_BY_ID,
+                    new MapSqlParameterSource("id", id),
+                    new RequestMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     /**
