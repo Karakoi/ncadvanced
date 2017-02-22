@@ -5,15 +5,18 @@ import com.overseer.exception.email.EmptyMessageException;
 import com.overseer.exception.email.MessageDestinationException;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
+import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.EmailService;
-import com.overseer.service.PasswordGeneratorService;
 import com.overseer.service.UserService;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.overseer.util.PasswordGeneratorUtil;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -24,42 +27,119 @@ import java.util.List;
  */
 @Service
 @PropertySource("classpath:email.properties")
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    public static final Logger log = Logger.getLogger(UserServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " Temporary password ";
-    private static final String MASSAGE_FOR_EMPTY_MASSAGE_EXCEPTION = " Message for recovering password is empty ";
-    private static final String MASSAGE_FOR_MESSAGE_DESTINATION_EXCEPTION = " Destination for recovering password massage is empty ";
-    private static final String MASSAGE_FOR_NO_SUCH_ENTITY_EXCEPTION = " Database does not contain such user ";
-    private static final String MASSAGE_FOR_ENTITY_ALREADY_EXISTS_EXCEPTION = " Database already contains such user ";
+    private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
+    private static final String EMPTY_MESSAGE_EXCEPTION_MESSAGE = " Message for recovering password is empty ";
+    private static final String DESTINATION_EXCEPTION_MESSAGE = " Destination for recovering password massage is empty ";
+    private static final String NO_SUCH_ENTITY_MESSAGE = " Database does not contain such user ";
+    private static final String ENTITY_ALREADY_EXISTS_MESSAGE = " Database already contains such user ";
 
     @Value("${mail.from}")
     private String emailFrom;
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private EmailService emailService;
+    private final UserDao userDao;
+    private final EmailService emailService;
+    @SuppressWarnings("PMD.UnusedPrivateField")
+    private final PasswordEncoder passwordEncoder;
+
 
     /**
-     * @{inheritDoc}.
+     * {@inheritDoc}.
+     */
+    @Override
+    public User create(User user) throws EntityAlreadyExistsException {
+        Assert.notNull(user);
+        boolean isExist = userDao.exists(user.getId());
+        if (isExist) {
+            throw new EntityAlreadyExistsException(ENTITY_ALREADY_EXISTS_MESSAGE);
+        }
+        return userDao.save(user);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public User update(User user) throws NoSuchEntityException {
+        Assert.notNull(user);
+        boolean isExist = userDao.exists(user.getId());
+        if (!isExist) {
+            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+        }
+        return userDao.save(user);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public User findOne(Long id) throws NoSuchEntityException {
+        Assert.notNull(id);
+        User user = userDao.findOne(id);
+        if (user == null) {
+            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+        }
+        return user;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void delete(User user) {
+        Assert.notNull(user);
+        userDao.delete(user);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void delete(Long id) {
+        Assert.notNull(id);
+        userDao.delete(id);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public boolean exists(Long id) {
+        Assert.notNull(id);
+        return userDao.exists(id);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findAll() {
+        return userDao.findAll();
+    }
+
+    /**
+     * {@inheritDoc}.
      */
     @Override
     public void changePassword(String email) throws NoSuchEntityException {
         Assert.notNull(email);
         User user = userDao.findByEmail(email);
         if (user != null) {
-            String newPassword = PasswordGeneratorService.generatePassword();
-            user.setPassword(newPassword);
+            PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
+            String newPassword = passwordGeneratorUtil.generatePassword();
+            user.setPassword(passwordEncoder.encode(newPassword));
             userDao.save(user);
             try {
-                emailService.sendMessage(createMailMessage(user));
+                emailService.sendMessage(this.createMailMessage(user));
             } catch (EmptyMessageException e) {
-                log.error(MASSAGE_FOR_EMPTY_MASSAGE_EXCEPTION, e);
+                LOG.error(EMPTY_MESSAGE_EXCEPTION_MESSAGE, e);
             } catch (MessageDestinationException e) {
-                log.error(MASSAGE_FOR_MESSAGE_DESTINATION_EXCEPTION, e);
+                LOG.error(DESTINATION_EXCEPTION_MESSAGE, e);
             }
         } else {
-            throw new NoSuchEntityException(MASSAGE_FOR_NO_SUCH_ENTITY_EXCEPTION);
+            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
         }
     }
 
@@ -83,79 +163,25 @@ public class UserServiceImpl implements UserService {
                 + "You or someone else requested a password recovery to "
                 + user.getEmail()
                 + " account.\n"
-                + "Your temporary password is \n"
+                + "Your new password is \n"
                 + user.getPassword()
                 + "\n");
         return mailMessage;
     }
 
-    /**
-     * @{inheritDoc}.
-     */
     @Override
-    public User create(User user) throws EntityAlreadyExistsException {
-        Assert.notNull(user, "User must be not null");
-        boolean isExist = userDao.exists(user.getId());
-        if (isExist) {
-            throw new EntityAlreadyExistsException(MASSAGE_FOR_ENTITY_ALREADY_EXISTS_EXCEPTION);
+    public User findByEmail(String email) throws NoSuchEntityException {
+        Assert.notNull(email);
+        User user = userDao.findByEmail(email);
+        if (user == null) {
+            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
         }
-        return userDao.save(user);
+        return user;
     }
 
-    /**
-     * @{inheritDoc}.
-     */
     @Override
-    public User update(User user) throws NoSuchEntityException {
-        Assert.notNull(user);
-        boolean isExist = userDao.exists(user.getId());
-        if (!isExist) {
-            throw new NoSuchEntityException(MASSAGE_FOR_NO_SUCH_ENTITY_EXCEPTION);
-        }
-        return userDao.save(user);
-    }
-
-    /**
-     * @{inheritDoc}.
-     */
-    @Override
-    public User findOne(Long id) {
-        Assert.notNull(id);
-        return userDao.findOne(id);
-    }
-
-    /**
-     * @{inheritDoc}.
-     */
-    @Override
-    public void delete(User user) {
-        Assert.notNull(user);
-        userDao.delete(user);
-    }
-
-    /**
-     * @{inheritDoc}.
-     */
-    @Override
-    public void delete(Long id) {
-        Assert.notNull(id);
-        userDao.delete(id);
-    }
-
-    /**
-     * @{inheritDoc}.
-     */
-    @Override
-    public boolean exists(Long id) {
-        Assert.notNull(id);
-        return userDao.exists(id);
-    }
-
-    /**
-     * @{inheritDoc}.
-     */
-    @Override
-    public List<User> findAll() {
-        return userDao.findAll();
+    public List<User> findByRole(Role role) {
+        Assert.notNull(role);
+        return userDao.findByRole(role);
     }
 }

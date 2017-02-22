@@ -12,7 +12,8 @@ public class EntityAlreadyExistsException extends Exception {
     }
 
     /**
-     *  Constructs a new exception with the specified detail message.
+     * Constructs a new exception with the specified detail message.
+     *
      * @param message the detail message.
      */
     public EntityAlreadyExistsException(String message) {

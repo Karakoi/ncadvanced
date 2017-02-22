@@ -1,6 +1,10 @@
 package com.overseer.dao;
 
-import com.overseer.model.*;
+import com.overseer.model.JoinedRequest;
+import com.overseer.model.PriorityStatus;
+import com.overseer.model.ProgressStatus;
+import com.overseer.model.Request;
+import com.overseer.model.User;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -28,7 +32,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     default List<Request> getRequestsByJoined(JoinedRequest joinedRequest) {
         Long id = joinedRequest.getId();
         Assert.notNull(id);
-        return  getRequestsByJoined(id);
+        return getRequestsByJoined(id);
     }
 
     /**
