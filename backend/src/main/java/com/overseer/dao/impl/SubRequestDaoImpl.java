@@ -3,6 +3,7 @@ package com.overseer.dao.impl;
 import com.overseer.dao.SubRequestDao;
 import com.overseer.model.SubRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -57,8 +58,14 @@ public class SubRequestDaoImpl implements SubRequestDao {
      */
     @Override
     public SubRequest findOne(Long id) {
-        return jdbc.queryForObject(SQL_SELECT_ONE, new MapSqlParameterSource("id", id),
-                new SubRequestRowMapper());
+        Assert.notNull(id);
+        try {
+            return jdbc.queryForObject(SQL_SELECT_ONE,
+                    new MapSqlParameterSource("id", id),
+                    new SubRequestRowMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     /**
@@ -75,6 +82,7 @@ public class SubRequestDaoImpl implements SubRequestDao {
      */
     @Override
     public void delete(Long id) {
+        Assert.notNull(id);
         jdbc.update(SQL_DELETE_ONE, new MapSqlParameterSource("id", id));
     }
 
@@ -83,6 +91,7 @@ public class SubRequestDaoImpl implements SubRequestDao {
      */
     @Override
     public boolean exists(Long id) {
+        Assert.notNull(id);
         Integer count = jdbc.queryForObject(SQL_EXISTS, new MapSqlParameterSource("id", id), Integer.class);
         return count != null && count == 1;
     }
@@ -100,6 +109,7 @@ public class SubRequestDaoImpl implements SubRequestDao {
      */
     @Override
     public List<SubRequest> findByRequest(Long requestId) {
+        Assert.notNull(requestId);
         return jdbc.query(SQL_SELECT_BY_REQUEST_ID, new MapSqlParameterSource("requestId", requestId),
                 new SubRequestRowMapper());
     }

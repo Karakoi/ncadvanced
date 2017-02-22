@@ -4,6 +4,7 @@ import com.overseer.dao.UserDao;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -95,9 +96,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findOne(Long id) {
         Assert.notNull(id);
-        return jdbc.queryForObject(SELECT_USER_BY_ID,
-                new MapSqlParameterSource("id", id),
-                new UserMapper());
+        try {
+            return jdbc.queryForObject(SELECT_USER_BY_ID,
+                    new MapSqlParameterSource("id", id),
+                    new UserMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     /**
@@ -143,8 +148,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findByEmail(String email) {
         Assert.notNull(email);
-        return jdbc.queryForObject(SELECT_USER_BY_EMAIL,
-                new MapSqlParameterSource("email", email), new UserMapper());
+        try {
+            return jdbc.queryForObject(SELECT_USER_BY_EMAIL,
+                    new MapSqlParameterSource("email", email),
+                    new UserMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     /**
