@@ -29,7 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final StatelessAuthenticationFilter statelessAuthenticationFilter;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService, StatelessAuthenticationFilter statelessAuthenticationFilter) {
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          StatelessAuthenticationFilter statelessAuthenticationFilter) {
         super(true);
         this.userDetailsService = userDetailsService;
         this.statelessAuthenticationFilter = statelessAuthenticationFilter;

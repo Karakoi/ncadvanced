@@ -8,5 +8,7 @@ import javax.servlet.http.HttpServletRequest;
  * Represents the service forming authentication according to the token.
  */
 public interface TokenAuthenticationService {
+
     Authentication getAuthentication(HttpServletRequest request);
+
 }

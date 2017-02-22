@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private String emailFrom;
     private final UserDao userDao;
     private final EmailService emailService;
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private final PasswordEncoder passwordEncoder;
 
 

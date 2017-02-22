@@ -11,6 +11,7 @@ import java.util.Collection;
  * Represents the user authentication object.
  */
 public class UserAuthentication implements Authentication, Serializable {
+
     private static final long serialVersionUID = 1L;
     private final UserDetails user;
     private boolean authenticated = true;
