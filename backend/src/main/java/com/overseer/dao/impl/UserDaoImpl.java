@@ -58,7 +58,7 @@ public class UserDaoImpl implements UserDao {
 
     private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM \"user\" u "
             + "INNER JOIN role r ON u.role_id = r.id WHERE r.name LIKE :rolename";
-    
+
     private static final String EXISTS_USER_ID = "SELECT COUNT(*) FROM \"user\" WHERE id = :id";
 
     @Autowired
@@ -66,18 +66,19 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * {@inheritDoc}.
+     *
      * @throws {@link org.springframework.dao.DuplicateKeyException} if email unique constraint violated.
      */
     @Override
     public User save(User user) {
-        Assert.notNull(user);
+        Assert.notNull(user, "User must be not null");
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("firstName", user.getFirstName());
         namedParameters.addValue("lastName", user.getLastName());
         namedParameters.addValue("password", user.getPassword());
         namedParameters.addValue("email", user.getEmail());
         namedParameters.addValue("rolename", user.getRole()
-                .toString().toUpperCase(Locale.ENGLISH));
+            .toString().toUpperCase(Locale.ENGLISH));
         namedParameters.addValue("secondName", user.getSecondName());
         LocalDate dateOfBirth = user.getDateOfBirth();
         if (dateOfBirth != null) {
@@ -88,7 +89,7 @@ public class UserDaoImpl implements UserDao {
         namedParameters.addValue("phoneNumber", user.getPhoneNumber());
         if (user.getId() == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            namedParameterJdbcTemplate.update(INSERT_USER, namedParameters, 
+            namedParameterJdbcTemplate.update(INSERT_USER, namedParameters,
                     keyHolder, new String[]{"id"});
             user.setId(keyHolder.getKey().longValue());
         } else {
@@ -104,7 +105,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findOne(Long id) {
         Assert.notNull(id);
-        List<User> users = namedParameterJdbcTemplate.query(SELECT_USER_BY_ID, 
+        List<User> users = namedParameterJdbcTemplate.query(SELECT_USER_BY_ID,
                 new MapSqlParameterSource("id", id),
                 new UserMapper());
         if (users.isEmpty()) {
@@ -119,7 +120,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void delete(User user) {
         Assert.notNull(user);
-        delete(user.getId()); 
+        delete(user.getId());
     }
 
     /**
@@ -128,7 +129,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void delete(Long id) {
         Assert.notNull(id);
-        namedParameterJdbcTemplate.update(DELETE_USER_BY_ID, 
+        namedParameterJdbcTemplate.update(DELETE_USER_BY_ID,
                 new MapSqlParameterSource("id", id));
     }
 
@@ -138,7 +139,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean exists(Long id) {
         Assert.notNull(id);
-        return namedParameterJdbcTemplate.queryForObject(EXISTS_USER_ID, 
+        return namedParameterJdbcTemplate.queryForObject(EXISTS_USER_ID,
                 new MapSqlParameterSource("id", id), Integer.class) > 0;
     }
 
@@ -148,7 +149,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findAll() {
         return namedParameterJdbcTemplate.query(SELECT_ALL_USERS, new UserMapper());
-        
+
     }
 
     /**
@@ -172,8 +173,8 @@ public class UserDaoImpl implements UserDao {
     public List<User> findByRole(Role role) {
         Assert.notNull(role);
         return namedParameterJdbcTemplate.query(SELECT_USERS_BY_ROLE,
-                new MapSqlParameterSource("rolename", 
-                role.toString().toUpperCase(Locale.ENGLISH)), 
+                new MapSqlParameterSource("rolename",
+                        role.toString().toUpperCase(Locale.ENGLISH)),
                 new UserMapper());
     }
 
@@ -183,10 +184,12 @@ public class UserDaoImpl implements UserDao {
     private static final class UserMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet resultSet, int i) throws SQLException {
-            User user = new User(resultSet.getString("first_name"), resultSet.getString("last_name"),
-                    resultSet.getString("password"), resultSet.getString("email"),
-                    Role.valueOf(resultSet.getString("name").toUpperCase(Locale.ENGLISH)));
-            user.setId(resultSet.getLong("id"));
+            User user = new User();
+            user.setFirstName(resultSet.getString("first_name"));
+            user.setLastName(resultSet.getString("last_name"));
+            user.setPassword(resultSet.getString("password"));
+            user.setEmail(resultSet.getString("email"));
+            user.setRole(Role.valueOf(resultSet.getString("name").toUpperCase(Locale.ENGLISH)));
             user.setSecondName(resultSet.getString("second_name"));
             String dateOfBirth = resultSet.getString("date_of_birth");
             if (dateOfBirth != null) {

@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Forms message for recovering password.
+     *
      * @param user user to recover password for, must not be {@literal null}
      * @return message for recovering password
      */
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService {
                 + "Your temporary password is \n"
                 + user.getPassword()
                 + "\n");
-        return  mailMessage;
+        return mailMessage;
     }
 
     /**
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User create(User user) throws EntityAlreadyExistsException {
-        Assert.notNull(user);
+        Assert.notNull(user, "User must be not null");
         boolean isExist = userDao.exists(user.getId());
         if (isExist) {
             throw new EntityAlreadyExistsException(MASSAGE_FOR_ENTITY_ALREADY_EXISTS_EXCEPTION);
