@@ -10,14 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false, exclude = {"historyDetailId"})
-@ToString(exclude = {"historyDetailId"})
+@EqualsAndHashCode(callSuper = false)
+@ToString
 @SuppressWarnings("PMD.UnusedPrivateField")
 public abstract class AbstractRequest extends AbstractEntity {
     @NonNull
-    private String title;
-
-    private String description;
-
-    private Long historyDetailId;
+    protected String title;
+    protected String description;
 }

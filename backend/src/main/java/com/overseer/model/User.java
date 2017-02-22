@@ -1,7 +1,9 @@
 package com.overseer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import java.time.LocalDate;
 
@@ -32,6 +34,7 @@ public class User extends AbstractEntity {
 
     private String phoneNumber;
 
+    @NonNull
     private Role role; // Role easy to be mapped, because it's haven't dependency
 
 }
