@@ -1,14 +1,13 @@
-package com.overseer.exception.email;
+package com.overseer.exception.entity;
 
 /**
- * Exception for email service.
+ * Exception for user service.
  */
-public class EmptyMessageException extends Exception {
-
+public class NoSuchEntityException extends Exception {
     /**
      * Constructs a new exception with {@code null} as its detail message.
      */
-    public EmptyMessageException() {
+    public NoSuchEntityException() {
         super();
     }
 
@@ -17,7 +16,7 @@ public class EmptyMessageException extends Exception {
      *
      * @param message the detail message.
      */
-    public EmptyMessageException(String message) {
+    public NoSuchEntityException(String message) {
         super(message);
     }
 }

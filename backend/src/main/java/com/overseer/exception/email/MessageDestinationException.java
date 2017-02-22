@@ -3,12 +3,12 @@ package com.overseer.exception.email;
 /**
  * Exception for email service.
  */
-public class EmptyMessageException extends Exception {
+public class MessageDestinationException extends Exception {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.
      */
-    public EmptyMessageException() {
+    public MessageDestinationException() {
         super();
     }
 
@@ -17,7 +17,7 @@ public class EmptyMessageException extends Exception {
      *
      * @param message the detail message.
      */
-    public EmptyMessageException(String message) {
+    public MessageDestinationException(String message) {
         super(message);
     }
 }
