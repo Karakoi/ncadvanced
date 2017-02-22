@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * <p>
@@ -30,34 +29,30 @@ import java.util.Locale;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    private static final String SELECT_ALL_USERS = "SELECT * FROM \"user\" u "
-            + "INNER JOIN role r ON u.role_id = r.id";
+    private static final String SELECT_ALL_USERS = "SELECT * FROM \"user\" u ";
 
     private static final String SELECT_USER_BY_ID = "SELECT * FROM \"user\" u "
-            + "INNER JOIN role r ON u.role_id = r.id "
             + "WHERE u.id = :id";
 
     private static final String INSERT_USER = "INSERT INTO \"user\" "
             + "(first_name, last_name, second_name, password, email, "
-            + "date_of_birth, phone_number, role_id) VALUES ("
+            + "date_of_birth, phone_number, role) VALUES ("
             + " :firstName, :lastName, :secondName, :password, "
-            + ":email, :dateOfBirth, :phoneNumber,"
-            + " ( SELECT id FROM role WHERE name LIKE :rolename ) )";
+            + ":email, :dateOfBirth, :phoneNumber, :role ::role)";
 
     private static final String UPDATE_USER_BY_ID = "UPDATE \"user\" SET "
             + "first_name = :firstName, last_name = :lastName, "
             + "second_name = :secondName, password = :password, "
             + "email = :email, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, "
-            + " role_id = ( SELECT id FROM role WHERE name LIKE :rolename ) "
-            + "WHERE id = :id";
+            + " role = :role ::role WHERE id = :id";
 
     private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM \"user\" u "
-            + "INNER JOIN role r ON u.role_id = r.id WHERE email LIKE :email";
+            + " WHERE u.email LIKE :email";
 
     private static final String DELETE_USER_BY_ID = "DELETE FROM \"user\" WHERE id = :id";
 
     private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM \"user\" u "
-            + "INNER JOIN role r ON u.role_id = r.id WHERE r.name LIKE :rolename";
+            + " WHERE u.role = :role ::role";
     
     private static final String EXISTS_USER_ID = "SELECT COUNT(*) FROM \"user\" WHERE id = :id";
 
@@ -76,8 +71,7 @@ public class UserDaoImpl implements UserDao {
         namedParameters.addValue("lastName", user.getLastName());
         namedParameters.addValue("password", user.getPassword());
         namedParameters.addValue("email", user.getEmail());
-        namedParameters.addValue("rolename", user.getRole()
-                .toString().toUpperCase(Locale.ENGLISH));
+        namedParameters.addValue("role", user.getRole().toString());
         namedParameters.addValue("secondName", user.getSecondName());
         LocalDate dateOfBirth = user.getDateOfBirth();
         if (dateOfBirth != null) {
@@ -172,8 +166,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> findByRole(Role role) {
         Assert.notNull(role);
         return namedParameterJdbcTemplate.query(SELECT_USERS_BY_ROLE,
-                new MapSqlParameterSource("rolename", 
-                role.toString().toUpperCase(Locale.ENGLISH)), 
+                new MapSqlParameterSource("role", role.toString()), 
                 new UserMapper());
     }
 
@@ -185,7 +178,7 @@ public class UserDaoImpl implements UserDao {
         public User mapRow(ResultSet resultSet, int i) throws SQLException {
             User user = new User(resultSet.getString("first_name"), resultSet.getString("last_name"),
                     resultSet.getString("password"), resultSet.getString("email"),
-                    Role.valueOf(resultSet.getString("name").toUpperCase(Locale.ENGLISH)));
+                    Role.getValueFromString(resultSet.getString("role")));
             user.setId(resultSet.getLong("id"));
             user.setSecondName(resultSet.getString("second_name"));
             String dateOfBirth = resultSet.getString("date_of_birth");
