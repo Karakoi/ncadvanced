@@ -1,4 +1,4 @@
-package com.overseer.service;
+package com.overseer.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -6,14 +6,16 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 /**
- * Service for generating temporary password.
+ * Utility for generating temporary password.
  */
-public class PasswordGeneratorService {
-    private static final String PASSWORD_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?";
-    private static final int  PASSWORD_LENGTH = 8;
+public class PasswordGeneratorUtil {
+    private static final String PASSWORD_CHARACTERS =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?";
+    private static final int PASSWORD_LENGTH = 8;
 
     /**
      * Generates temporary password.
+     *
      * @return generated password
      */
     public static String generatePassword() {
