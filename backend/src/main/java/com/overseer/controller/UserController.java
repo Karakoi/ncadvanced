@@ -1,6 +1,7 @@
 package com.overseer.controller;
 
 import com.overseer.exception.entity.EntityAlreadyExistsException;
+import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
@@ -84,6 +85,11 @@ public class UserController {
     public ResponseEntity deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
         logger.info("User has been deleted with id " + id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/user/changePassword")
+    public void changePassword(@RequestBody String email) throws NoSuchEntityException {
+        userService.changePassword(email);
     }
 }

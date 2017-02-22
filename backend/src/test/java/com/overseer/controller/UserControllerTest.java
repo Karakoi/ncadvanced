@@ -1,6 +1,8 @@
 package com.overseer.controller;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.overseer.Application;
 import com.overseer.model.Role;
@@ -62,6 +64,21 @@ public class UserControllerTest {
         assertEquals(expected,userController.getUser("1").toString());
     }
 
+    @Test
+    public void addUser() throws Exception {
+        User unsaved = new User("Andrey","Sidorov","121da","andrey@mail.com", Role.EMPLOYEE);
+        User saved = new User("Andrey","Sidorov","121da","andrey@mail.com", Role.EMPLOYEE);
+        saved.setId(2053l);
+        UserService userService = mock(UserService.class);
+        when(userService.create(unsaved)).thenReturn(saved);
+        UserController controller = new UserController(userService);
+        mockMvc = standaloneSetup(controller).build();
+        //MAPPER
+        System.out.println(MAPPER.writeValueAsString(unsaved));
+        mockMvc.perform(post("/api/user").contentType(MediaType.APPLICATION_JSON)
+                .content(MAPPER.writeValueAsString(unsaved))).andExpect(status().isCreated());
+        verify(userService, atLeastOnce()).create(unsaved);
+    }
 
 
 }
