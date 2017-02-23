@@ -63,7 +63,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public User save(User user) {
-        Assert.notNull(user);
+        Assert.notNull(user, "user must not be null");
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("firstName", user.getFirstName());
         namedParameters.addValue("lastName", user.getLastName());
@@ -95,7 +95,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public User findOne(Long id) {
-        Assert.notNull(id);
+        Assert.notNull(id, "id must not be null");
         try {
             return jdbc.queryForObject(SELECT_USER_BY_ID,
                     new MapSqlParameterSource("id", id),
@@ -110,7 +110,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public void delete(User user) {
-        Assert.notNull(user);
+        Assert.notNull(user, "user must not be null");
         delete(user.getId());
     }
 
@@ -119,7 +119,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public void delete(Long id) {
-        Assert.notNull(id);
+        Assert.notNull(id, "id must not be null");
         jdbc.update(DELETE_USER_BY_ID,
                 new MapSqlParameterSource("id", id));
     }
@@ -129,7 +129,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public boolean exists(Long id) {
-        Assert.notNull(id);
+        Assert.notNull(id, "id must not be null");
         return jdbc.queryForObject(EXISTS_USER_ID,
                 new MapSqlParameterSource("id", id), Integer.class) > 0;
     }
@@ -147,7 +147,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public User findByEmail(String email) {
-        Assert.notNull(email);
+        Assert.notNull(email, "email must not be null");
         try {
             return jdbc.queryForObject(SELECT_USER_BY_EMAIL,
                     new MapSqlParameterSource("email", email),
@@ -162,7 +162,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public List<User> findByRole(Role role) {
-        Assert.notNull(role);
+        Assert.notNull(role, "role must not be null");
         return jdbc.query(SELECT_USERS_BY_ROLE,
                 new MapSqlParameterSource("role", role.toString()),
                 new UserMapper());

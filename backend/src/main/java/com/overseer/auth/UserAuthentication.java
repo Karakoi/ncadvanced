@@ -1,24 +1,21 @@
 package com.overseer.auth;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * Represents the user authentication object.
  */
-public class UserAuthentication implements Authentication, Serializable {
-
+@RequiredArgsConstructor
+public class UserAuthentication implements Authentication {
     private static final long serialVersionUID = 1L;
+
     private final UserDetails user;
     private boolean authenticated = true;
-
-    public UserAuthentication(UserDetails user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

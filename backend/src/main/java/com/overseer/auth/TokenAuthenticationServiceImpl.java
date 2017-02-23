@@ -1,7 +1,8 @@
 package com.overseer.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,14 +11,11 @@ import javax.servlet.http.HttpServletRequest;
  * Represents the service forming authentication according to the token.
  */
 @Service
+@RequiredArgsConstructor
 public class TokenAuthenticationServiceImpl implements TokenAuthenticationService {
 
     private final TokenHandler tokenHandler;
-
-    @Autowired
-    TokenAuthenticationServiceImpl(TokenHandler tokenHandler) {
-        this.tokenHandler = tokenHandler;
-    }
+    private static final Integer TOKEN_PLACEMENT = 7;
 
     /**
      * Return the UserAuthentication object according to the authorisation header.
@@ -26,15 +24,18 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
      * @return the UserAuthentication object.
      */
     public Authentication getAuthentication(HttpServletRequest request) {
-        final String AUTHHEADER = request.getHeader("authorization");
-        if (AUTHHEADER == null || !AUTHHEADER.startsWith("Bearer")) {
+        String authHeader = request.getHeader("authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
             return null;
         }
-        final String JWT = AUTHHEADER.substring(7);
-        if (JWT.isEmpty()) {
+        // authHeader example
+        // Bearer 1u2jio12h802f12k
+        String jwt = authHeader.substring(TOKEN_PLACEMENT);
+        if (jwt.isEmpty()) {
             return null;
         }
-        return new UserAuthentication(tokenHandler.parseUserFromToken(JWT));
+        UserDetails userDetails = this.tokenHandler.parseUserFromToken(jwt);
+        return new UserAuthentication(userDetails);
     }
 }
 

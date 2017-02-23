@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 
 @Component({
   selector: 'app-home',
@@ -7,13 +7,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   register: boolean = false;
+  recover: boolean = false;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
 
   toggleRegister(registerMode: boolean): void {
     this.register = registerMode;
+  }
+
+  toggleRecover(recoverMode: boolean): void {
+    this.recover = recoverMode;
   }
 }

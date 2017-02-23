@@ -1,6 +1,7 @@
 package com.overseer.auth;
 
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,13 +22,10 @@ import javax.servlet.http.HttpServletResponse;
  * Represents filter for authentication object updating.
  */
 @Component
+@RequiredArgsConstructor
 public class StatelessAuthenticationFilter extends GenericFilterBean {
 
     private final TokenAuthenticationService tokenAuthenticationService;
-
-    StatelessAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
-        this.tokenAuthenticationService = tokenAuthenticationService;
-    }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)

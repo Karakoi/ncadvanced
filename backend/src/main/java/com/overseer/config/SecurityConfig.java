@@ -38,11 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
@@ -54,13 +49,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().cacheControl();
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/authentication").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/authentication").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/api/**").permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new Http401AuthenticationEntryPoint("'Bearer token_type=\"JWT\"'"));
 
         http.addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+    }
+
+    @Override
+    protected UserDetailsService userDetailsService() {
+        return this.userDetailsService;
     }
 
     @Bean
@@ -79,5 +86,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         registration.setEnabled(false);
         return registration;
     }
-
 }

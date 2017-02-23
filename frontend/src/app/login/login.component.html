@@ -31,7 +31,14 @@
   </form>
 </div>
 <div class="panel-footer">
-  <div class="login-helper">Don't have an account?
-    <a (click)="toggleRegister()">Sign Up Here</a>
+  <div class="container">
+    <div class="row">
+      <div class="login-helper">Don't have an account?
+        <a (click)="toggleRegister()">Sign Up Here</a>
+      </div>
+      <div class="login-helper">Forgot password?
+        <a (click)="toggleRecover()">Recover password</a>
+      </div>
+    </div>
   </div>
 </div>

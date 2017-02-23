@@ -2,25 +2,29 @@ package com.overseer.controller;
 
 import com.overseer.auth.SecurityContextService;
 import com.overseer.auth.TokenHandler;
+import com.overseer.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST authentication Controller.
  */
 @RestController
-@RequestMapping("/authentication")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthenticationController {
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final AuthenticationManager authenticationManager;
     private final TokenHandler tokenHandler;
@@ -31,12 +35,16 @@ public class AuthenticationController {
      * @return AuthResponse encapsulates the authentication token.
      * @throws AuthenticationException if Authentication failed.
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping("/auth")
     public AuthResponse login(@RequestBody AuthParams params) throws AuthenticationException {
-        final UsernamePasswordAuthenticationToken LOGINTOKEN = params.toAuthenticationToken();
-        final Authentication AUTHENTICATION = authenticationManager.authenticate(LOGINTOKEN);
-        SecurityContextHolder.getContext().setAuthentication(AUTHENTICATION);
-        return new AuthResponse(tokenHandler.createTokenForUser(securityContextService.currentUser()));
+        LOG.debug("Authenticating request for user: {}", params.email);
+        UsernamePasswordAuthenticationToken loginToken = params.toAuthenticationToken();
+        Authentication authentication = authenticationManager.authenticate(loginToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        User user = securityContextService.currentUser();
+        String token = tokenHandler.createTokenForUser(user);
+        return new AuthResponse(token);
     }
 
     /**

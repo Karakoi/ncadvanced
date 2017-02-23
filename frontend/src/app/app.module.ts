@@ -6,7 +6,19 @@ import {AppComponent} from "./app.component";
 import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {HomeComponent} from "./home/home.component";
-import { FooterComponent } from './footer/footer.component';
+import {FooterComponent} from "./footer/footer.component";
+import {RecoverComponent} from "./recover/recover.component";
+import {RecoverService} from "./service/recover.service";
+import {ToastModule} from "ng2-toastr";
+import {NoContentComponent} from "./no-content/no-content.component";
+import {appRoutes} from "./app.routes";
+import {RouterModule} from "@angular/router";
+import {AuthService} from "./service/auth.service";
+import {JsonHttp} from "./service/json-http.service";
+import {UserService} from "./service/user.service";
+import {NavbarComponent} from "./navbar/navbar.component";
+import {ProfileComponent} from "./profile/profile.component";
+import {PrivatePageGuard} from "./service/private-page.guard";
 
 @NgModule({
   declarations: [
@@ -14,14 +26,26 @@ import { FooterComponent } from './footer/footer.component';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    FooterComponent
+    FooterComponent,
+    RecoverComponent,
+    NoContentComponent,
+    NavbarComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    ToastModule.forRoot(),
+    RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [
+    RecoverService,
+    AuthService,
+    JsonHttp,
+    UserService,
+    PrivatePageGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

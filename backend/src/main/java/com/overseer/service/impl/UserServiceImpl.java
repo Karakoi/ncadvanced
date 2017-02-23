@@ -35,8 +35,6 @@ public class UserServiceImpl implements UserService {
     private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
     private static final String EMPTY_MESSAGE_EXCEPTION_MESSAGE = " Message for recovering password is empty ";
     private static final String DESTINATION_EXCEPTION_MESSAGE = " Destination for recovering password massage is empty ";
-    private static final String NO_SUCH_ENTITY_MESSAGE = " Database does not contain such user ";
-    private static final String ENTITY_ALREADY_EXISTS_MESSAGE = " Database already contains such user ";
 
     @Value("${mail.from}")
     private String emailFrom;
@@ -51,10 +49,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         Assert.notNull(user);
-        boolean isExist = userDao.exists(user.getId());
-        if (isExist) {
-            throw new EntityAlreadyExistsException(ENTITY_ALREADY_EXISTS_MESSAGE);
+        if (user.getId() != null) {
+            throw new EntityAlreadyExistsException("email " + user.getEmail());
         }
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userDao.save(user);
     }
 
@@ -66,7 +64,7 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(user);
         boolean isExist = userDao.exists(user.getId());
         if (!isExist) {
-            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+            throw new NoSuchEntityException("email " + user.getEmail());
         }
         return userDao.save(user);
     }
@@ -79,7 +77,7 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(id);
         User user = userDao.findOne(id);
         if (user == null) {
-            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+            throw new NoSuchEntityException("id " + id);
         }
         return user;
     }
@@ -132,14 +130,14 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(newPassword));
             userDao.save(user);
             try {
-                emailService.sendMessage(this.createMailMessage(user));
+                emailService.sendMessage(this.createMailMessage(user, newPassword));
             } catch (EmptyMessageException e) {
                 LOG.error(EMPTY_MESSAGE_EXCEPTION_MESSAGE, e);
             } catch (MessageDestinationException e) {
                 LOG.error(DESTINATION_EXCEPTION_MESSAGE, e);
             }
         } else {
-            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+            throw new NoSuchEntityException("email " + email);
         }
     }
 
@@ -149,7 +147,7 @@ public class UserServiceImpl implements UserService {
      * @param user user to recover password for, must not be {@literal null}
      * @return message for recovering password
      */
-    private SimpleMailMessage createMailMessage(User user) {
+    private SimpleMailMessage createMailMessage(User user, String newPassword) {
         Assert.notNull(user);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getEmail());
@@ -164,7 +162,7 @@ public class UserServiceImpl implements UserService {
                 + user.getEmail()
                 + " account.\n"
                 + "Your new password is \n"
-                + user.getPassword()
+                + newPassword
                 + "\n");
         return mailMessage;
     }
@@ -174,7 +172,7 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(email);
         User user = userDao.findByEmail(email);
         if (user == null) {
-            throw new NoSuchEntityException(NO_SUCH_ENTITY_MESSAGE);
+            throw new NoSuchEntityException("email " + email);
         }
         return user;
     }

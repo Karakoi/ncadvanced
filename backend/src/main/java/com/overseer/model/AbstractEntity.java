@@ -3,7 +3,7 @@ package com.overseer.model;
 /**
  * Base class for the entities stored in the database, which should contain the id.
  */
-class  AbstractEntity {
+class AbstractEntity {
 
     private Long id;
 

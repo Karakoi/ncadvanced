@@ -30,11 +30,13 @@ public class TokenHandlerImpl implements TokenHandler {
 
     @Override
     public UserDetails parseUserFromToken(String token) {
-        final String EMAIL = Jwts.parser()
+        String email = Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
-                .getBody().get("email").toString();
-        return userDetailsService.loadUserByUsername(EMAIL);
+                .getBody()
+                .get("email")
+                .toString();
+        return userDetailsService.loadUserByUsername(email);
     }
 
     @Override
@@ -44,7 +46,6 @@ public class TokenHandlerImpl implements TokenHandler {
         return Jwts.builder()
                 .claim("id", user.getId())
                 .claim("email", user.getEmail())
-                .claim("password", user.getPassword())
                 .claim("role", user.getRole())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .setExpiration(Date.from(AFTERONEWEEK.toInstant()))

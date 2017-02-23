@@ -1,13 +1,13 @@
 package com.overseer.controller;
 
-import com.overseer.exception.entity.EntityAlreadyExistsException;
-import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,11 +61,10 @@ public class UserController {
      * @return json representation of created {@link User} entity.
      */
     @PostMapping("/user/register")
-    public ResponseEntity<User> registerEmployee(@RequestBody User user) throws EntityAlreadyExistsException {
+    public ResponseEntity<User> registerEmployee(@RequestBody User user) {
         Assert.notNull(user, "Create user error user is null");
         Assert.notNull(user.getEmail(), "User have no email");
         Assert.notNull(user.getFirstName(), "User must have first name");
-        Assert.state(user.getRole() == Role.EMPLOYEE, "Can't register");
         userService.create(user);
         LOG.info("Employee has been added with email {}", user.getEmail());
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -78,7 +77,7 @@ public class UserController {
      * @return json representation of created {@link User} entity.
      */
     @PostMapping("/user")
-    public ResponseEntity<User> registerUser(@RequestBody User user) throws EntityAlreadyExistsException {
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
         Assert.notNull(user, "Create user error user is null");
         Assert.notNull(user.getEmail(), "User have no email");
         Assert.notNull(user.getFirstName(), "User must have first name");
@@ -103,10 +102,19 @@ public class UserController {
     /**
      * Changes {@link User} password.
      *
-     * @param email user's email.
+     * @param recoverInfo user's recover params.
      */
-    @PostMapping("/user/changePassword")
-    public void changePassword(@RequestBody String email) {
-        userService.changePassword(email);
+    @PostMapping(value = "/user/changePassword", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void changePassword(@RequestBody RecoverInfo recoverInfo) {
+        LOG.debug("Sending recover info to: {}", recoverInfo.email);
+        userService.changePassword(recoverInfo.email);
+    }
+
+    /**
+     * Recover request.
+     */
+    @Value
+    private static final class RecoverInfo {
+        private final String email;
     }
 }

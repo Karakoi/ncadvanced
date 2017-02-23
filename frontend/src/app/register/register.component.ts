@@ -2,6 +2,11 @@ import {Component, OnInit, EventEmitter, Output} from "@angular/core";
 import {Validators, FormBuilder, FormGroup} from "@angular/forms";
 import {User} from "../model/user.model";
 import {CustomValidators} from "ng2-validation";
+import {UserService} from "../service/user.service";
+import {AuthService} from "../service/auth.service";
+import {ToastsManager} from "ng2-toastr";
+import {Router} from "@angular/router";
+import {Response} from "@angular/http";
 
 @Component({
   selector: 'app-register',
@@ -11,7 +16,10 @@ export class RegisterComponent implements OnInit {
   @Output() registerMode = new EventEmitter();
   registerForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private userService: UserService,
+              private router: Router,
+              private toastr: ToastsManager) {
   }
 
   ngOnInit(): void {
@@ -27,7 +35,11 @@ export class RegisterComponent implements OnInit {
   }
 
   register(user: User): void {
-    console.log(user);
+    user.role = 'employee';
+    this.userService.create(user)
+      .subscribe(() => {
+        this.router.navigate(['/profile']);
+      }, e => this.handleError(e));
   }
 
   toggleLogin(): void {
@@ -36,5 +48,12 @@ export class RegisterComponent implements OnInit {
 
   validateField(field: string): boolean {
     return this.registerForm.get(field).valid || !this.registerForm.get(field).dirty;
+  }
+
+  private handleError(error) {
+    switch (error.status) {
+      case 400:
+        this.toastr.error('This email is already taken.', 'Error.');
+    }
   }
 }
