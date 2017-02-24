@@ -1,8 +1,6 @@
 package com.overseer.service.impl;
 
 import com.overseer.dao.UserDao;
-import com.overseer.exception.email.EmptyMessageException;
-import com.overseer.exception.email.MessageDestinationException;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
@@ -16,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -31,17 +27,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
-
     private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
-    private static final String EMPTY_MESSAGE_EXCEPTION_MESSAGE = " Message for recovering password is empty ";
-    private static final String DESTINATION_EXCEPTION_MESSAGE = " Destination for recovering password massage is empty ";
 
     @Value("${mail.from}")
     private String emailFrom;
+
     private final UserDao userDao;
     private final EmailService emailService;
-    @SuppressWarnings("PMD.UnusedPrivateField")
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
      * {@inheritDoc}.
@@ -50,9 +42,9 @@ public class UserServiceImpl implements UserService {
     public User create(User user) {
         Assert.notNull(user);
         if (user.getId() != null) {
-            throw new EntityAlreadyExistsException("email " + user.getEmail());
+            throw new EntityAlreadyExistsException("Failed to create user. Id was not null for user: " + user);
         }
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        LOG.debug("Saving user with email: {}", user.getEmail());
         return userDao.save(user);
     }
 
@@ -62,10 +54,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         Assert.notNull(user);
-        boolean isExist = userDao.exists(user.getId());
-        if (!isExist) {
-            throw new NoSuchEntityException("email " + user.getEmail());
+        if (user.getId() == null) {
+            throw new NoSuchEntityException("Failed to update user. Id was null for user: " + user);
         }
+        LOG.debug("Updating user with email: {}", user.getEmail());
         return userDao.save(user);
     }
 
@@ -77,8 +69,9 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(id);
         User user = userDao.findOne(id);
         if (user == null) {
-            throw new NoSuchEntityException("id " + id);
+            throw new NoSuchEntityException("Failed to retrieve user with id " + id);
         }
+        LOG.debug("Retrieving user with id: {}", id);
         return user;
     }
 
@@ -88,6 +81,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(User user) {
         Assert.notNull(user);
+        LOG.debug("Removing user with email: {}", user.getEmail());
         userDao.delete(user);
     }
 
@@ -97,6 +91,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         Assert.notNull(id);
+        LOG.debug("Removing user with id: {}", id);
         userDao.delete(id);
     }
 
@@ -106,6 +101,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean exists(Long id) {
         Assert.notNull(id);
+        LOG.debug("Checking if user with id: {} exists", id);
         return userDao.exists(id);
     }
 
@@ -114,6 +110,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> findAll() {
+        LOG.info("Retrieving all users...");
         return userDao.findAll();
     }
 
@@ -123,22 +120,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(String email) throws NoSuchEntityException {
         Assert.notNull(email);
-        User user = userDao.findByEmail(email);
-        if (user != null) {
-            PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
-            String newPassword = passwordGeneratorUtil.generatePassword();
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userDao.save(user);
-            try {
-                emailService.sendMessage(this.createMailMessage(user, newPassword));
-            } catch (EmptyMessageException e) {
-                LOG.error(EMPTY_MESSAGE_EXCEPTION_MESSAGE, e);
-            } catch (MessageDestinationException e) {
-                LOG.error(DESTINATION_EXCEPTION_MESSAGE, e);
-            }
-        } else {
-            throw new NoSuchEntityException("email " + email);
-        }
+        User user = this.findByEmail(email);
+        PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
+        String newPassword = passwordGeneratorUtil.generatePassword();
+        user.setPassword(newPassword);
+        userDao.save(user);
+        SimpleMailMessage message = this.createMailMessage(user, newPassword);
+        emailService.sendMessage(message);
     }
 
     /**
@@ -172,14 +160,16 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(email);
         User user = userDao.findByEmail(email);
         if (user == null) {
-            throw new NoSuchEntityException("email " + email);
+            throw new NoSuchEntityException("Failed to retrieve user with email " + email);
         }
+        LOG.debug("Retrieving user with email: {}", email);
         return user;
     }
 
     @Override
     public List<User> findByRole(Role role) {
         Assert.notNull(role);
+        LOG.debug("Retrieving user with role: {}", role);
         return userDao.findByRole(role);
     }
 }

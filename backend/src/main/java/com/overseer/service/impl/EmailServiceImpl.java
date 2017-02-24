@@ -4,6 +4,8 @@ import com.overseer.exception.email.EmptyMessageException;
 import com.overseer.exception.email.MessageDestinationException;
 import com.overseer.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -16,21 +18,22 @@ import javax.mail.internet.MimeMessage;
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
-
+    private static final Logger LOG = LoggerFactory.getLogger(EmailServiceImpl.class);
     private final JavaMailSender javaMailSender;
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public void sendMessage(SimpleMailMessage message) throws EmptyMessageException, MessageDestinationException {
+    public void sendMessage(SimpleMailMessage message) {
         if ("".equals(message.getText())) {
-            throw new EmptyMessageException();
+            throw new EmptyMessageException("Supplied message contained no text " + message);
         }
         if (message.getTo() == null) {
-            throw new MessageDestinationException();
+            throw new MessageDestinationException("Supplied message contained no destination " + message);
         }
-        javaMailSender.send(message);
+        LOG.debug("Sending message with subject: {} to: {}", message.getSubject(), message.getTo());
+        this.javaMailSender.send(message);
     }
 
     /**

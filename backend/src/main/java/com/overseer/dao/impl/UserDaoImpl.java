@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -55,6 +57,7 @@ public class UserDaoImpl implements UserDao {
     private static final String EXISTS_USER_ID = "SELECT COUNT(*) FROM \"user\" WHERE id = :id";
 
     private final NamedParameterJdbcOperations jdbc;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
      * {@inheritDoc}.
@@ -67,7 +70,7 @@ public class UserDaoImpl implements UserDao {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("firstName", user.getFirstName());
         namedParameters.addValue("lastName", user.getLastName());
-        namedParameters.addValue("password", user.getPassword());
+        namedParameters.addValue("password", this.passwordEncoder.encode(user.getPassword()));
         namedParameters.addValue("email", user.getEmail());
         namedParameters.addValue("role", user.getRole().toString());
         namedParameters.addValue("secondName", user.getSecondName());
