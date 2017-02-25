@@ -45,8 +45,6 @@ public class TokenHandlerImpl implements TokenHandler {
 
         return Jwts.builder()
                 .claim("id", user.getId())
-                .claim("email", user.getEmail())
-                .claim("role", user.getRole())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .setExpiration(Date.from(AFTERONEWEEK.toInstant()))
                 .compact();

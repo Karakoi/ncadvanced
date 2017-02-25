@@ -1,33 +1,24 @@
 package com.overseer.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-
-import java.util.Locale;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
- * The <code>PriorityStatus</code> class represents priority of the {@link Request}.
+ * The <code>PriorityStatus</code> class represents priority of request {@link Request}.
  */
-@JsonSerialize(using = ToStringSerializer.class)
-public enum PriorityStatus {
-
-    /**
-     * Represents an urgent {@link Request}.
-     */
-    HIGH,
-
-    /**
-     * Represents an average priority {@link Request}.
-     */
-    NORMAL,
-
-    /**
-     * Represents a postponed {@link Request}.
-     */
-    LOW;
-
-    @Override
-    public String toString() {
-        return name().toLowerCase(Locale.ENGLISH);
-    }
+@NoArgsConstructor
+@RequiredArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
+@SuppressWarnings("PMD.UnusedPrivateField")
+public class PriorityStatus extends AbstractEntity {
+    @NonNull
+    private String name;
 }

@@ -7,8 +7,10 @@ import com.overseer.model.Request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -20,7 +22,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * <p>
@@ -33,10 +34,10 @@ import java.util.Locale;
 public class RequestDaoImpl implements RequestDao {
 
     private static final String SELECT_REQUEST_BY_PROGRESS_STATUS =
-            "SELECT * FROM request r WHERE r.progress_status =: progressStatus";
+            "SELECT * FROM request r WHERE r.progress_status_id =: progressStatusId";
 
-    private static final String SELECT_REQUEST_BY_JOINED_REQUEST_ID =
-            "SELECT * FROM request r WHERE r.joined_request_id =: joinedRequestId";
+    private static final String SELECT_REQUEST_BY_PARENT_ID =
+            "SELECT * FROM request r WHERE r.parent_id =: parentId";
 
     private static final String SELECT_REQUEST_BY_REPORTER_ID =
             "SELECT * FROM request r WHERE r.reporter_id =: reporterId";
@@ -48,7 +49,7 @@ public class RequestDaoImpl implements RequestDao {
             "SELECT * FROM request r WHERE r.date_of_creation BETWEEN :begin AND :end";
 
     private static final String SELECT_REQUEST_BY_PRIORITY_STATUS =
-            "SELECT * FROM request r WHERE r.priority_status =: priorityStatus";
+            "SELECT * FROM request r WHERE r.priority_status_id =: priorityStatusId";
 
     private static final String SELECT_REQUEST_BY_DATE = "SELECT * FROM request r WHERE r.date_of_creation =: date";
 
@@ -61,9 +62,9 @@ public class RequestDaoImpl implements RequestDao {
     private static final String UPDATE_REQUEST_BY_ID = "UPDATE request SET"
             + " title =: title,"
             + " description = :description,"
-            + " priority_status = :priorityStatus,"
-            + " progress_status = :progressStatus,"
-            + " joined_request_id =: joinedRequestId,"
+            + " priority_status_id = :priorityStatusId,"
+            + " progress_status_id = :progressStatusId,"
+            + " parent_id =: parentId,"
             + " reporter_id = :reporterId,"
             + " assignee_id = :assigneeId,"
             + " estimate_time_in_days = :estimateTimeInDays,"
@@ -71,10 +72,10 @@ public class RequestDaoImpl implements RequestDao {
             + " WHERE id = :id";
 
     private static final String INSERT_REQUEST = "INSERT INTO request"
-            + " (title, description, priority_status, progress_status, joined_request_id,"
+            + " (title, description, priority_status_id, progress_status_id, parent_id,"
             + " reporter_id, assignee_id, estimate_time_in_days, date_of_creation)"
             + " VALUES"
-            + " (:title, :description, :priorityStatus, :progressStatus, :joinedRequestId,"
+            + " (:title, :description, :priorityStatusId, :progressStatusId, :parentId,"
             + " :reporterId, :assigneeId, :estimateTimeInDays, :dateOfCreation)";
 
     private final NamedParameterJdbcOperations jdbc;
@@ -84,28 +85,16 @@ public class RequestDaoImpl implements RequestDao {
      */
     @Override
     public Request save(Request request) {
-        Assert.notNull(request);
-        Long id = null;
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("title", request.getTitle());
-        mapSqlParameterSource.addValue("description", request.getDescription());
-        mapSqlParameterSource.addValue("dateOfCreation", request.getDateOfCreation());
-        mapSqlParameterSource.addValue("priorityStatus", request.getPriorityStatus().name());
-        mapSqlParameterSource.addValue("progressStatus", request.getProgressStatus().name());
-        mapSqlParameterSource.addValue("reporterId", request.getReporterId());
-        mapSqlParameterSource.addValue("assigneeId", request.getAssigneeId());
-        mapSqlParameterSource.addValue("estimateTimeInDays", request.getEstimateTimeInDays());
-        mapSqlParameterSource.addValue("joinedRequestId", request.getJoinedRequestId());
-        if (findOne(request.getId()) != null) {
-            id = request.getId();
-            mapSqlParameterSource.addValue("id", id);
-            jdbc.update(UPDATE_REQUEST_BY_ID, mapSqlParameterSource);
-        } else {
+        Assert.notNull(request, "request must not be null");
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(request);
+        if (request.getId() == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbc.update(INSERT_REQUEST, mapSqlParameterSource, keyHolder);
-            id = keyHolder.getKey().longValue();
+            jdbc.update(INSERT_REQUEST, sqlParameterSource, keyHolder, new String[]{"id"});
+            long generatedId = keyHolder.getKey().longValue();
+            request.setId(generatedId);
+        } else {
+            jdbc.update(UPDATE_REQUEST_BY_ID, sqlParameterSource);
         }
-        request.setId(id);
         return request;
     }
 
@@ -168,7 +157,7 @@ public class RequestDaoImpl implements RequestDao {
     public List<Request> getRequestsByStatus(ProgressStatus progressStatus) {
         Assert.notNull(progressStatus);
         return jdbc.query(SELECT_REQUEST_BY_PROGRESS_STATUS,
-                new MapSqlParameterSource("progressStatus", progressStatus.name()),
+                new MapSqlParameterSource("progressStatusId", progressStatus.getId()),
                 new RequestMapper());
     }
 
@@ -176,10 +165,10 @@ public class RequestDaoImpl implements RequestDao {
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> getRequestsByJoined(Long joinedRequestId) {
-        Assert.notNull(joinedRequestId);
-        return jdbc.query(SELECT_REQUEST_BY_JOINED_REQUEST_ID,
-                new MapSqlParameterSource("joinedRequestId", joinedRequestId),
+    public List<Request> getRequestsByParent(Long parentId) {
+        Assert.notNull(parentId);
+        return jdbc.query(SELECT_REQUEST_BY_PARENT_ID,
+                new MapSqlParameterSource("parentId", parentId),
                 new RequestMapper());
     }
 
@@ -240,7 +229,7 @@ public class RequestDaoImpl implements RequestDao {
     public List<Request> getRequestsByPriority(PriorityStatus priorityStatus) {
         Assert.notNull(priorityStatus);
         return jdbc.query(SELECT_REQUEST_BY_PRIORITY_STATUS,
-                new MapSqlParameterSource("priorityStatus", priorityStatus.name()),
+                new MapSqlParameterSource("priorityStatusId", priorityStatus.getId()),
                 new RequestMapper());
     }
 
@@ -253,14 +242,17 @@ public class RequestDaoImpl implements RequestDao {
          */
         @Override
         public Request mapRow(ResultSet resultSet, int i) throws SQLException {
-            Request request = new Request(resultSet.getDate("date_of_creation").toLocalDate(),
-                    PriorityStatus.valueOf(resultSet.getString("priority_status").toUpperCase(Locale.ENGLISH)),
-                    ProgressStatus.valueOf(resultSet.getString("progress_status").toUpperCase(Locale.ENGLISH)),
+            Request request = new Request(
+                    resultSet.getString("title"),
+                    resultSet.getDate("date_of_creation").toLocalDate(),
+                    resultSet.getLong("progress_status_id"),
+                    resultSet.getLong("priority_status_id"),
                     resultSet.getLong("reporter_id"));
+
             request.setId(resultSet.getLong("id"));
             request.setTitle(resultSet.getString("title"));
             request.setDescription(resultSet.getString("description"));
-            request.setJoinedRequestId(resultSet.getLong("joined_request_id"));
+            request.setParentId(resultSet.getLong("parent_id"));
             request.setAssigneeId(resultSet.getLong("assignee_id"));
             request.setEstimateTimeInDays(resultSet.getInt("estimate_time_in_days"));
 
