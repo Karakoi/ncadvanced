@@ -1,22 +1,40 @@
 import {Routes} from "@angular/router";
-import {NoContentComponent} from "./no-content/no-content.component";
-import {HomeComponent} from "./home/home.component";
-import {ProfileComponent} from "./profile/profile.component";
+import {WelcomeComponent} from "./pages/welcome/welcome.component";
+import {NoContentComponent} from "./components/no-content/no-content.component";
+import {PublicPageGuard} from "./service/public-page.guard";
+import {HomeComponent} from "./pages/home/home.component";
 import {PrivatePageGuard} from "./service/private-page.guard";
 
 export const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'overseer',
     pathMatch: 'full'
   },
   {
-    path: 'login',
-    component: HomeComponent
+    path: 'overseer',
+    component: WelcomeComponent,
+    canActivate: [PublicPageGuard]
   },
   {
-    path: 'profile',
-    component: ProfileComponent
+    path: 'login',
+    loadChildren: './pages/login/login.module#LoginModule',
+    canActivate: [PublicPageGuard]
+  },
+  {
+    path: 'signup',
+    loadChildren: './pages/signup/signup.module#SignupModule',
+    canActivate: [PublicPageGuard]
+  },
+  {
+    path: 'recover',
+    loadChildren: './pages/recover/recover.module#RecoverModule',
+    canActivate: [PublicPageGuard]
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [PrivatePageGuard]
   },
   {
     path: '**',
