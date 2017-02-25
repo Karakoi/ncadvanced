@@ -6,15 +6,16 @@ import com.overseer.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -36,21 +37,21 @@ public class UserDaoImpl implements UserDao {
 
     private static final String INSERT_USER = "INSERT INTO \"user\" "
             + "(first_name, last_name, second_name, password, email, "
-            + "date_of_birth, phone_number, role) VALUES ("
+            + "date_of_birth, phone_number, role_id) VALUES ("
             + " :firstName, :lastName, :secondName, :password, "
-            + ":email, :dateOfBirth, :phoneNumber, :role ::role)";
+            + ":email, :dateOfBirth, :phoneNumber, :roleId)";
 
     private static final String UPDATE_USER_BY_ID = "UPDATE \"user\" SET "
             + "first_name = :firstName, last_name = :lastName, "
             + "second_name = :secondName, password = :password, "
             + "email = :email, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, "
-            + " role = :role ::role WHERE id = :id";
+            + " role_id = :roleId WHERE id = :id";
 
     private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM \"user\" u WHERE u.email LIKE :email";
 
     private static final String DELETE_USER_BY_ID = "DELETE FROM \"user\" WHERE id = :id";
 
-    private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM \"user\" u WHERE u.role = :role ::role";
+    private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM \"user\" u WHERE u.role_id = :roleId";
 
     private static final String EXISTS_USER_ID = "SELECT COUNT(*) FROM \"user\" WHERE id = :id";
 
@@ -64,28 +65,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User save(User user) {
         Assert.notNull(user, "user must not be null");
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("firstName", user.getFirstName());
-        namedParameters.addValue("lastName", user.getLastName());
-        namedParameters.addValue("password", user.getPassword());
-        namedParameters.addValue("email", user.getEmail());
-        namedParameters.addValue("role", user.getRole().toString());
-        namedParameters.addValue("secondName", user.getSecondName());
-        LocalDate dateOfBirth = user.getDateOfBirth();
-        if (dateOfBirth != null) {
-            namedParameters.addValue("dateOfBirth", Date.valueOf(dateOfBirth));
-        } else {
-            namedParameters.addValue("dateOfBirth", null);
-        }
-        namedParameters.addValue("phoneNumber", user.getPhoneNumber());
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(user);
         if (user.getId() == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbc.update(INSERT_USER, namedParameters,
-                    keyHolder, new String[]{"id"});
+            jdbc.update(INSERT_USER, sqlParameterSource, keyHolder, new String[]{"id"});
             user.setId(keyHolder.getKey().longValue());
         } else {
-            namedParameters.addValue("id", user.getId());
-            jdbc.update(UPDATE_USER_BY_ID, namedParameters);
+            jdbc.update(UPDATE_USER_BY_ID, sqlParameterSource);
         }
         return user;
     }
@@ -164,7 +150,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> findByRole(Role role) {
         Assert.notNull(role, "role must not be null");
         return jdbc.query(SELECT_USERS_BY_ROLE,
-                new MapSqlParameterSource("role", role.toString()),
+                new MapSqlParameterSource("role_id", role.getId()),
                 new UserMapper());
     }
 
@@ -177,9 +163,13 @@ public class UserDaoImpl implements UserDao {
          */
         @Override
         public User mapRow(ResultSet resultSet, int i) throws SQLException {
-            User user = new User(resultSet.getString("first_name"), resultSet.getString("last_name"),
-                    resultSet.getString("password"), resultSet.getString("email"),
-                    Role.getValueFromString(resultSet.getString("role")));
+            User user = new User(
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
+                    resultSet.getString("password"),
+                    resultSet.getString("email"),
+                    resultSet.getInt("role_id"));
+
             user.setId(resultSet.getLong("id"));
             user.setSecondName(resultSet.getString("second_name"));
             String dateOfBirth = resultSet.getString("date_of_birth");

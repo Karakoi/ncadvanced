@@ -1,6 +1,5 @@
 package com.overseer.dao;
 
-import com.overseer.model.JoinedRequest;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -25,23 +24,22 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Fetches from the database all Requests objects with same group.
      *
-     * @param joinedRequest request's property which represents belonging to a group, must not be {@literal null}.
+     * @param parent request's property which represents belonging to a group, must not be {@literal null}.
      * @return List of requests with same progress status.
      */
-
-    default List<Request> getRequestsByJoined(JoinedRequest joinedRequest) {
-        Long id = joinedRequest.getId();
+    default List<Request> getRequestsByParent(Request parent) {
+        Long id = parent.getId();
         Assert.notNull(id);
-        return getRequestsByJoined(id);
+        return getRequestsByParent(id);
     }
 
     /**
      * Fetches from the database all Requests objects with same group.
      *
-     * @param joinedRequestId request's property which represents belonging to a group, must not be {@literal null}.
+     * @param parentId request's property which represents belonging to a group, must not be {@literal null}.
      * @return List of requests with same progress status.
      */
-    List<Request> getRequestsByJoined(Long joinedRequestId);
+    List<Request> getRequestsByParent(Long parentId);
 
     /**
      * Fetches from the database all Requests objects assigned to the same user.

@@ -1,13 +1,15 @@
 package com.overseer.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,11 +22,12 @@ import java.util.List;
 /**
  * User entity.
  */
-
-@Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class User extends AbstractEntity implements UserDetails {
     private static final long serialVersionUID = 42L;
@@ -50,17 +53,17 @@ public class User extends AbstractEntity implements UserDetails {
     private String phoneNumber;
 
     @NonNull
-    private Role role; // Role easy to be mapped, because it's haven't dependency
+    private Integer roleId;
 
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authList = new ArrayList<>();
-        switch (role) {
-            case MANAGER:
+        switch (roleId) {
+            case 1:
                 authList.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 break;
-            case ADMINISTRATOR:
+            case 2:
                 authList.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
                 authList.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
