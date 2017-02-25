@@ -8,9 +8,9 @@ CREATE SEQUENCE "public"."main_id_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 562
- CACHE 1;
-SELECT setval('"public"."main_id_seq"', 562, true);
+ START 1
+ CACHE 10;
+SELECT setval('"public"."main_id_seq"', 1, true);
 
 -- ----------------------------
 -- Table structure for history
@@ -20,7 +20,7 @@ CREATE TABLE "public"."history" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "column_name" varchar(45) COLLATE "default" NOT NULL,
 "modified_value" varchar(45) COLLATE "default" NOT NULL,
-"date_of_last_change" date NOT NULL,
+"date_of_last_change" TIMESTAMP NOT NULL,
 "changer_id" int4 NOT NULL,
 "record_id" int4 NOT NULL
 )
@@ -38,7 +38,7 @@ CREATE TABLE "public"."message" (
 "recipient_id" int4,
 "topic_id" int4,
 "text" varchar(500) COLLATE "default" NOT NULL,
-"date_and_time" date NOT NULL
+"date_and_time" TIMESTAMP NOT NULL
 )
 WITH (OIDS=FALSE)
 
@@ -81,7 +81,7 @@ CREATE TABLE "public"."request" (
 "reporter_id" int4 NOT NULL,
 "assignee_id" int4,
 "estimate_time_in_days" int4,
-"date_of_creation" date NOT NULL,
+"date_of_creation" TIMESTAMP NOT NULL,
 "parent_id" int4
 )
 WITH (OIDS=FALSE)

@@ -8,6 +8,8 @@ DELETE FROM progress_status;
 DELETE FROM priority_status;
 DELETE FROM role;
 
+SELECT setval('"public"."main_id_seq"', 1, true);
+
 insert into priority_status(id,name) values (1,'High');
 insert into priority_status(name) values ('Normal');
 insert into priority_status(name) values ('Low');
