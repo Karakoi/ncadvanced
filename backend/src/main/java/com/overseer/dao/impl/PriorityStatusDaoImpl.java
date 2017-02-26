@@ -36,9 +36,8 @@ public class PriorityStatusDaoImpl implements PriorityStatusDao {
 
     private static final String SELECT_ALL_PRIORITY_STATUSES = "SELECT * FROM priority_status";
 
-    private static final String UPDATE_PRIORITY_STATUS = "UPDATE priority_status SET name =: name WHERE id = :id";
-
-    private static final String INSERT_PRIORITY_STATUS = "INSERT INTO priority_status (name) VALUES (:name)";
+    private static final String INSERT_PRIORITY_STATUS =
+            "INSERT INTO priority_status (name) VALUES (:name) ON CONFLICT (id) DO UPDATE SET name = excluded.name";
 
     private final NamedParameterJdbcOperations jdbc;
 
@@ -52,10 +51,10 @@ public class PriorityStatusDaoImpl implements PriorityStatusDao {
         if (priorityStatus.getId() == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbc.update(INSERT_PRIORITY_STATUS, sqlParameterSource, keyHolder, new String[]{"id"});
-            long generatedId = keyHolder.getKey().longValue();
+            Long generatedId = keyHolder.getKey().longValue();
             priorityStatus.setId(generatedId);
         } else {
-            jdbc.update(UPDATE_PRIORITY_STATUS, sqlParameterSource);
+            jdbc.update(INSERT_PRIORITY_STATUS, sqlParameterSource);
         }
         return priorityStatus;
     }
