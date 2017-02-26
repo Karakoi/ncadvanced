@@ -2,8 +2,7 @@ package com.overseer.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -14,15 +13,17 @@ import java.time.LocalDateTime;
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Message extends AbstractEntity{
 
+    @NotNull(message = "Message has to have a sender")
     private User sender;
 
     private User recipient;
 
     private Topic topic;
 
-    @NonNull
+    @NotNull(message = "Message has to have a text")
     private String text;
 
-    private LocalDateTime dateAndTime;
+    @NotNull(message = "Message has to have a time of creation")
+    private LocalDateTime creationDateTime;
 
 }

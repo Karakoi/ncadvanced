@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -38,9 +37,9 @@ public class Request extends AbstractEntity {
     @NonNull
     private LocalDateTime dateOfCreation;
 
-    private String priorityStatus;
+    private PriorityStatus priorityStatus;
 
-    private String progressStatus;
+    private PriorityStatus progressStatus;
 
     @NonNull
     private User reporter;
