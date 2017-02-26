@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../service/user.service";
 
 @Component({
-  selector: 'user-table',
-  templateUrl: 'table.component.html',
-  styleUrls: ['table.component.css']
+  selector: 'overseer-profile',
+  templateUrl: 'profile.component.html',
+  styleUrls: ['profile.component.css']
 })
-export class UserTable implements OnInit {
+export class ProfileComponent implements OnInit {
 
   constructor(private userService: UserService) {
   }

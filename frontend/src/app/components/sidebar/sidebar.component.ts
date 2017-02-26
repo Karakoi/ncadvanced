@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {AuthService} from "../../service/auth.service";
 
 @Component({
-  selector: 'sidebar',
+  selector: 'overseer-sidebar',
   templateUrl: 'sidebar.component.html',
   styleUrls: ['sidebar.component.css']
 })

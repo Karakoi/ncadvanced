@@ -1,0 +1,17 @@
+<div class="container col-lg-3">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="pull-left">{{request.title}}</div>
+        <div class="pull-right">{{request.progressStatus}}</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="pull-left description"><p> {{request.description}}</p></div>
+      <div class="pull-right">Some inf</div>
+    </div>
+    <div class="panel-footer">
+      Date of creation: {{request.dateOfCreation.toDateString()}}
+    </div>
+  </div>
+</div>

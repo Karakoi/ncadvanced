@@ -5,7 +5,7 @@ import {ToastsManager} from "ng2-toastr";
 import {CustomValidators} from "ng2-validation";
 
 @Component({
-  selector: 'app-recover',
+  selector: 'overseer-recover',
   templateUrl: 'recover.component.html'
 })
 export class RecoverComponent implements OnInit {
@@ -13,7 +13,8 @@ export class RecoverComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private recoverService: RecoverService,
-              private toastr: ToastsManager) { }
+              private toastr: ToastsManager) {
+  }
 
   ngOnInit() {
     this.recoverForm = this.formBuilder.group({

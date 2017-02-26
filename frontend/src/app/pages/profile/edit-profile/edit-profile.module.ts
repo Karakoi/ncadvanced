@@ -2,7 +2,7 @@ import {Routes, RouterModule} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
-import {EditProfileComponent} from "./editProfile.component";
+import {EditProfileComponent} from "./edit-profile.component";
 
 const routes: Routes = [
   {path: '', component: EditProfileComponent},

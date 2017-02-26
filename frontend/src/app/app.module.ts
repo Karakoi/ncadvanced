@@ -5,26 +5,33 @@ import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {WelcomeModule, HomeModule} from "./pages/index";
-import {FooterComponent, NoContentComponent, NavbarComponent, UserTable, SideBarComponent} from "./components/index";
-import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
 import {SideBarDirective} from "./directive/sidebar.directive";
+import {
+  FooterComponent,
+  HomeComponent,
+  NavbarComponent,
+  NoContentComponent,
+  RequestComponent,
+  SideBarComponent,
+  WelcomeComponent
+} from "./components/index";
+import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
 
 @NgModule({
   declarations: [
     AppComponent,
-    SideBarComponent,
-    SideBarDirective,
     FooterComponent,
-    NoContentComponent,
+    HomeComponent,
     NavbarComponent,
-    UserTable
+    NoContentComponent,
+    RequestComponent,
+    SideBarComponent,
+    WelcomeComponent,
+    SideBarDirective
   ],
   imports: [
     BrowserModule,
     HttpModule,
-    WelcomeModule,
-    HomeModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],

@@ -1,14 +1,14 @@
 import {Component, OnInit} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
 import {Router} from "@angular/router";
-import {AuthService} from "../../service/auth.service";
-import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "ng2-validation";
+import {UserService} from "../../../service/user.service";
+import {AuthService} from "../../../service/auth.service";
 
 @Component({
-  selector: 'edit-profile',
-  templateUrl: './editProfile.component.html'
+  selector: 'overseer-edit-profile',
+  templateUrl: 'edit-profile.html'
 })
 export class EditProfileComponent implements OnInit {
   editProfileForm: FormGroup;
@@ -29,12 +29,12 @@ export class EditProfileComponent implements OnInit {
       .mergeMap(() => {
         return this.authService.login(params.email, params.password);
       }).subscribe(() => {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/profile']);
     }, e => this.handleError(e));
   }
 
   cancel(): void {
-      this.router.navigate(['/overseer']);
+    this.router.navigate(['/profile']);
   }
 
   validateField(field: string): boolean {

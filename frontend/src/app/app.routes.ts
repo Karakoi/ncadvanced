@@ -1,10 +1,5 @@
 import {Routes} from "@angular/router";
-import {WelcomeComponent} from "./pages/welcome/welcome.component";
-import {NoContentComponent} from "./components/no-content/no-content.component";
-import {PublicPageGuard} from "./service/public-page.guard";
-import {HomeComponent} from "./pages/home/home.component";
-import {PrivatePageGuard} from "./service/private-page.guard";
-import {UserTable} from "./components/userTable/table.component";
+import {WelcomeComponent, NoContentComponent, HomeComponent, RequestComponent} from "./components/index";
 
 export const appRoutes: Routes = [
   {
@@ -14,33 +9,35 @@ export const appRoutes: Routes = [
   },
   {
     path: 'overseer',
-    component: WelcomeComponent,
-    canActivate: [PublicPageGuard]
+    component: WelcomeComponent
+  },
+  // Available for unregistered user
+  {
+    path: 'signup',
+    loadChildren: './pages/signup/signup.module#SignupModule'
   },
   {
     path: 'login',
-    loadChildren: './pages/login/login.module#LoginModule',
-    canActivate: [PublicPageGuard]
-  },
-  {
-    path: 'table',
-    component: UserTable
-  },
-  {
-    path: 'signup',
-    loadChildren: './pages/signup/signup.module#SignupModule',
-    canActivate: [PublicPageGuard]
+    loadChildren: './pages/login/login.module#LoginModule'
   },
   {
     path: 'recover',
-    loadChildren: './pages/recover/recover.module#RecoverModule',
-    canActivate: [PublicPageGuard]
+    loadChildren: './pages/recover/recover.module#RecoverModule'
   },
+  // Available for registered user
   {
     path: 'home',
-    component: HomeComponent,
-    canActivate: [PrivatePageGuard]
+    component: HomeComponent
   },
+  {
+    path: 'profile',
+    loadChildren: './pages/profile/profile.module#ProfileModule'
+  },
+  {
+    path: 'request',
+    component: RequestComponent
+  },
+  // If route does not match any previous ones
   {
     path: '**',
     component: NoContentComponent
