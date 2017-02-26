@@ -8,13 +8,15 @@ import {AppComponent} from "./app.component";
 import {WelcomeModule, HomeModule} from "./pages/index";
 import {FooterComponent, NoContentComponent, NavbarComponent} from "./components/index";
 import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
+import {LeftMenuComponent} from "./components/left-menu/left-menu.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     NoContentComponent,
-    NavbarComponent
+    NavbarComponent,
+    LeftMenuComponent
   ],
   imports: [
     BrowserModule,

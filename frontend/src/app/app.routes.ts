@@ -4,6 +4,7 @@ import {NoContentComponent} from "./components/no-content/no-content.component";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {HomeComponent} from "./pages/home/home.component";
 import {PrivatePageGuard} from "./service/private-page.guard";
+import {LeftMenuComponent} from "./components/left-menu/left-menu.component";
 
 export const appRoutes: Routes = [
   {
@@ -35,6 +36,11 @@ export const appRoutes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [PrivatePageGuard]
+  },
+  {
+    path: 'editProfile',
+    loadChildren: './pages/editProfile/editProfile.module#EditProfileModule',
+    canActivate: [PublicPageGuard]
   },
   {
     path: '**',
