@@ -1,0 +1,28 @@
+<nav id="nav">
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+    <!--This div will be visible regardless of role-->
+    <a [routerLink]="['/editProfile']">Edit profile</a>
+    <a href="#">Forum</a>
+    <a href="#">Send Message</a>
+
+    <!--Show this div, if user's role is Employee -->
+    <div >
+      <a href="#">Create request</a>
+    </div>
+
+    <!--Show this div, if user's role is Admin -->
+    <div style="display: none;">
+      <a href="#">Add user</a>
+      <a href="#">Create/Change request</a>
+      <a href="#">Show all managers</a>
+      <a href="#">Show all requests</a>
+    </div>
+
+    <!--Show this div, if user's role is Manager -->
+    <div style="display: none;">
+      <a href="#">Show all requests</a>
+    </div>
+  </div>
+</nav>
