@@ -3,7 +3,7 @@ package com.overseer.dao;
 /**
  * Interface for generic operations for simple entities.
  *
- * @param <T>  entity type.
+ * @param <T>   entity type.
  */
 public interface SimpleEntityDao<T> {
     /**

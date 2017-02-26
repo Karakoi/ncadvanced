@@ -41,7 +41,7 @@ public class ProgressStatusDaoImpl implements ProgressStatusDao {
     private final NamedParameterJdbcOperations jdbc;
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc} .
      */
     @Override
     public ProgressStatus save(ProgressStatus progressStatus) {

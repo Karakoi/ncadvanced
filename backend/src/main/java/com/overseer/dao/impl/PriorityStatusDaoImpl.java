@@ -43,7 +43,7 @@ public class PriorityStatusDaoImpl implements PriorityStatusDao {
     private final NamedParameterJdbcOperations jdbc;
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc} .
      */
     @Override
     public PriorityStatus save(PriorityStatus priorityStatus) {
