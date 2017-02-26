@@ -2,6 +2,8 @@ package com.overseer;
 
 import com.overseer.dao.PriorityStatusDao;
 import com.overseer.model.PriorityStatus;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 /**
- *  Test for PriorityStatusDao
+ *  Test for {@link PriorityStatusDao}.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,35 +26,41 @@ public class PriorityStatusDaoTest {
     @Autowired
     private PriorityStatusDao priorityStatusDao;
 
-    @Test
-    @Transactional
-    @Rollback(true)
-    public void testAddPriorityStatus()
-    {
-        // given
-        String namePriorityStatus = "PriorityStatus";
-        PriorityStatus priorityStatus = new PriorityStatus(namePriorityStatus);
-        PriorityStatus savedPriorityStatus = priorityStatusDao.save(priorityStatus);
+    private static final String TEST_NAME = "PriorityStatus";
+    private PriorityStatus savedPriorityStatus;
 
-        // when
-        PriorityStatus fromDbPriorityStatus = priorityStatusDao.findOne(savedPriorityStatus.getId());
+    @Before
+    public void setUp() throws Exception {
+        savedPriorityStatus = new PriorityStatus(TEST_NAME);
+        priorityStatusDao.save(savedPriorityStatus);
+    }
 
-        // then
-        assertThat(fromDbPriorityStatus.getName(), is(namePriorityStatus));
+    @After
+    public void tearDown() throws Exception {
+        savedPriorityStatus = null;
     }
 
     @Test
     @Transactional
     @Rollback(true)
-    public void testDeletePriorityStatus()
-    {
+    public void testAddPriorityStatus() {
         // given
-        String namePriorityStatus = "PriorityStatus";
-        PriorityStatus priorityStatus = new PriorityStatus(namePriorityStatus);
-        PriorityStatus savedPriorityStatus = priorityStatusDao.save(priorityStatus);
 
         // when
+        PriorityStatus fromDbPriorityStatus = priorityStatusDao.findOne(savedPriorityStatus.getId());
+
+        // then
+        assertThat(fromDbPriorityStatus.getName(), is(TEST_NAME));
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testDeletePriorityStatus() {
+        // given
         priorityStatusDao.delete(savedPriorityStatus);
+
+        // when
         PriorityStatus fromDbPriorityStatus = priorityStatusDao.findOne(savedPriorityStatus.getId());
 
         // then
@@ -62,18 +70,28 @@ public class PriorityStatusDaoTest {
     @Test
     @Transactional
     @Rollback(true)
-    public void testFindByNamePriorityStatus()
-    {
+    public void testFindByNamePriorityStatus() {
         // given
-        String namePriorityStatus = "PriorityStatus";
-        PriorityStatus priorityStatus = new PriorityStatus(namePriorityStatus);
-        PriorityStatus savedPriorityStatus = priorityStatusDao.save(priorityStatus);
 
         // when
-        PriorityStatus fromDbPriorityStatus = priorityStatusDao.findByName(namePriorityStatus);
+        PriorityStatus fromDbPriorityStatus = priorityStatusDao.findByName(TEST_NAME);
 
         // then
         assertThat(fromDbPriorityStatus, is(savedPriorityStatus));
     }
 
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testUpdatePriorityStatus() {
+        // given
+        String updatedName = "TestStatus";
+        savedPriorityStatus.setName(updatedName);
+
+        // when
+        PriorityStatus fromDbPriorityStatus = priorityStatusDao.save(savedPriorityStatus);
+
+        // then
+        assertThat(fromDbPriorityStatus.getName(), is(updatedName));
+    }
 }
