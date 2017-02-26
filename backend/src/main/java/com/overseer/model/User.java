@@ -29,8 +29,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class User extends AbstractEntity implements UserDetails {
-    private static final long serialVersionUID = 42L;
+public class User extends AbstractEntity {
 
     @NonNull
     private String firstName;
@@ -53,54 +52,6 @@ public class User extends AbstractEntity implements UserDetails {
     private String phoneNumber;
 
     @NonNull
-    private Integer roleId;
+    private String role;
 
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authList = new ArrayList<>();
-        switch (roleId) {
-            case 1:
-                authList.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-                break;
-            case 2:
-                authList.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
-                authList.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-                authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                break;
-            default:
-                authList.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
-        }
-        return authList;
-    }
-
-    @Override
-    @JsonIgnore
-    public String getUsername() {
-        return this.getEmail();
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
-    }
 }

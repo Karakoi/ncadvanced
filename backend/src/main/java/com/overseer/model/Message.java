@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Message extends AbstractEntity{
 
-    private final int senderId;
+    private User sender;
 
-    private Long recipientId;
+    private User recipient;
 
-    private Long topicId;
+    private Topic topic;
 
     @NonNull
     private String text;

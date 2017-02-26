@@ -18,8 +18,6 @@ public class Topic extends AbstractEntity {
     @NonNull
     private String title;
 
-    private List<Integer> messagesId;
-
     @NonNull
     private Long forumId;
 

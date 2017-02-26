@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
@@ -35,18 +36,16 @@ public class Request extends AbstractEntity {
             shape = JsonFormat.Shape.STRING,
             pattern = "dd-MM-yyyy")
     @NonNull
-    private LocalDate dateOfCreation;
+    private LocalDateTime dateOfCreation;
+
+    private String priorityStatus;
+
+    private String progressStatus;
 
     @NonNull
-    private Long priorityStatusId;
+    private User reporter;
 
-    @NonNull
-    private Long progressStatusId;
-
-    @NonNull
-    private Long reporterId;
-
-    private Long assigneeId;
+    private User assignee;
 
     private Long parentId;
 
