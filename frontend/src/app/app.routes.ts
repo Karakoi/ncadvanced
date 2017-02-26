@@ -4,7 +4,8 @@ import {NoContentComponent} from "./components/no-content/no-content.component";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {HomeComponent} from "./pages/home/home.component";
 import {PrivatePageGuard} from "./service/private-page.guard";
-import {UserTable} from "./components/userTable/table.component"
+import {UserTable} from "./components/userTable/table.component";
+import {RequestInfo} from "./components/request-info/request-info.component";
 
 export const appRoutes: Routes = [
   {
@@ -25,6 +26,10 @@ export const appRoutes: Routes = [
   {
     path: 'table',
     component: UserTable
+  },
+  {
+    path: 'requestinfo',
+    component: RequestInfo
   },
   {
     path: 'signup',
