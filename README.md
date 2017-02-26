@@ -21,4 +21,4 @@ npm start
 ```
 
 ## ERD
-![alt tag](http://s018.radikal.ru/i520/1702/63/6b06e069f599.png)
+![alt tag](http://i.imgur.com/lx8zzAn.png)
