@@ -81,7 +81,7 @@ export class UserTable implements OnInit {
       phoneNumber: "241-(539)668-2990",
       role: "Admin",
       password: null
-    }]
+    }];
 
     ngOnInit(){
       //this.users = this.userService.getAll();

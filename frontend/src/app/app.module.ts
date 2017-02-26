@@ -6,12 +6,15 @@ import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
 import {WelcomeModule, HomeModule} from "./pages/index";
-import {FooterComponent, NoContentComponent, NavbarComponent, UserTable} from "./components/index";
+import {FooterComponent, NoContentComponent, NavbarComponent, UserTable, SideBarComponent} from "./components/index";
 import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
+import {SideBarDirective} from "./directive/sidebar.directive";
 
 @NgModule({
   declarations: [
     AppComponent,
+    SideBarComponent,
+    SideBarDirective,
     FooterComponent,
     NoContentComponent,
     NavbarComponent,

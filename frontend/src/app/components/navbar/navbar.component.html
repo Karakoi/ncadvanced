@@ -11,12 +11,9 @@
         <li routerLinkActive="active" *ngIf="isSignedIn">
           <a [routerLink]="['/home']">Home</a>
         </li>
-
-        <li routerLinkActive="active" >
-          <a style="cursor: pointer;" onclick="openNav()">&#9776;</a>
+        <li style="cursor: pointer;">
+          <a side-bar>&#9776;</a>
         </li>
-        <!---<left-menu></left-menu> -->
-
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li routerLinkActive="active" *ngIf="!isSignedIn">
@@ -29,6 +26,7 @@
           <a style="cursor: pointer" (click)="logout()">Logout</a>
         </li>
       </ul>
+      <sidebar></sidebar>
     </div>
   </div>
 </nav>

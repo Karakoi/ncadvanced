@@ -4,7 +4,7 @@ import {NoContentComponent} from "./components/no-content/no-content.component";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {HomeComponent} from "./pages/home/home.component";
 import {PrivatePageGuard} from "./service/private-page.guard";
-import {UserTable} from "./components/userTable/table.component"
+import {UserTable} from "./components/userTable/table.component";
 
 export const appRoutes: Routes = [
   {
