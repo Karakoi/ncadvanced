@@ -2,6 +2,8 @@ package com.overseer;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.model.ProgressStatus;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 /**
- *  Test for ProgressStatusDao
+ *  Test for {@link ProgressStatusDao}.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -23,32 +25,38 @@ public class ProgressStatusDaoTest {
     @Autowired
     private ProgressStatusDao progressStatusDao;
 
-    @Test
-    @Transactional
-    @Rollback(true)
-    public void testAddProgressStatus()
-    {
-        // given
-        String nameProgressStatus = "ProgressStatus";
-        ProgressStatus progressStatus = new ProgressStatus(nameProgressStatus);
-        ProgressStatus savedProgressStatus = progressStatusDao.save(progressStatus);
+    private static final String TEST_NAME = "ProgressStatus";
+    private ProgressStatus savedProgressStatus;
 
-        // when
-        ProgressStatus fromDbProgressStatus = progressStatusDao.findOne(savedProgressStatus.getId());
+    @Before
+    public void setUp() throws Exception {
+        savedProgressStatus = new ProgressStatus(TEST_NAME);
+        progressStatusDao.save(savedProgressStatus);
+    }
 
-        // then
-        assertThat(fromDbProgressStatus.getName(), is(nameProgressStatus));
+    @After
+    public void tearDown() throws Exception {
+        savedProgressStatus = null;
     }
 
     @Test
     @Transactional
     @Rollback(true)
-    public void testDeleteProgressStatus()
-    {
+    public void testAddProgressStatus() {
         // given
-        String nameProgressStatus = "ProgressStatus";
-        ProgressStatus progressStatus = new ProgressStatus(nameProgressStatus);
-        ProgressStatus savedProgressStatus = progressStatusDao.save(progressStatus);
+
+        // when
+        ProgressStatus fromDbProgressStatus = progressStatusDao.findOne(savedProgressStatus.getId());
+
+        // then
+        assertThat(fromDbProgressStatus.getName(), is(TEST_NAME));
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testDeleteProgressStatus() {
+        // given
 
         // when
         progressStatusDao.delete(savedProgressStatus);
@@ -61,17 +69,29 @@ public class ProgressStatusDaoTest {
     @Test
     @Transactional
     @Rollback(true)
-    public void testFindByNameProgressStatus()
-    {
+    public void testFindByNameProgressStatus() {
         // given
-        String nameProgressStatus = "ProgressStatus";
-        ProgressStatus progressStatus = new ProgressStatus(nameProgressStatus);
-        ProgressStatus savedProgressStatus = progressStatusDao.save(progressStatus);
 
         // when
-        ProgressStatus fromDbProgressStatus = progressStatusDao.findByName(nameProgressStatus);
+        ProgressStatus fromDbProgressStatus = progressStatusDao.findByName(TEST_NAME);
 
         // then
         assertThat(fromDbProgressStatus, is(savedProgressStatus));
+    }
+
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testUpdateProgressStatus() {
+        // given
+        String updatedName = "TestStatus";
+        savedProgressStatus.setName(updatedName);
+
+        // when
+        ProgressStatus fromDbPriorityStatus = progressStatusDao.save(savedProgressStatus);
+
+        // then
+        assertThat(fromDbPriorityStatus.getName(), is(updatedName));
     }
 }

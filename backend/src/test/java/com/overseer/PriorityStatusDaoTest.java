@@ -58,9 +58,9 @@ public class PriorityStatusDaoTest {
     @Rollback(true)
     public void testDeletePriorityStatus() {
         // given
-        priorityStatusDao.delete(savedPriorityStatus);
 
         // when
+        priorityStatusDao.delete(savedPriorityStatus);
         PriorityStatus fromDbPriorityStatus = priorityStatusDao.findOne(savedPriorityStatus.getId());
 
         // then

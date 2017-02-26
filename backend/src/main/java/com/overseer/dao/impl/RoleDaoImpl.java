@@ -28,13 +28,12 @@ import java.util.List;
 public class RoleDaoImpl implements RoleDao {
     private static final String SELECT_ROLE_BY_ID = "SELECT * FROM role r WHERE r.id = :id";
 
-    private static final String SELECT_ROLE_BY_NAME = "SELECT * FROM role r WHERE r.name = :name";
+    private static final String SELECT_ROLE_BY_NAME = "SELECT * FROM role r WHERE r.name = :roleName";
 
     private static final String SELECT_ALL_ROLES = "SELECT * FROM role";
 
-    private static final String INSERT_ROLE = "INSERT INTO role (name) VALUES (:name)";
-
-    private static final String UPDATE_ROLE = "UPDATE role SET name =: name WHERE id = :id";
+    private static final String INSERT_ROLE =
+            "INSERT INTO role (name) VALUES (:name) ON CONFLICT (id) DO UPDATE SET name = excluded.name";
 
     private static final String DELETE_ROLE_BY_ID = "DELETE FROM role r WHERE r.id = :id";
 
@@ -53,7 +52,7 @@ public class RoleDaoImpl implements RoleDao {
             long generatedId = keyHolder.getKey().longValue();
             role.setId(generatedId);
         } else {
-            jdbc.update(UPDATE_ROLE, sqlParameterSource);
+            jdbc.update(INSERT_ROLE, sqlParameterSource);
         }
         return role;
     }
@@ -116,7 +115,7 @@ public class RoleDaoImpl implements RoleDao {
         Assert.notNull(name, "name must not be null");
         try {
             return jdbc.queryForObject(SELECT_ROLE_BY_NAME,
-                    new MapSqlParameterSource("name", name),
+                    new MapSqlParameterSource("roleName", name),
                     BeanPropertyRowMapper.newInstance(Role.class));
         } catch (DataAccessException e) {
             return null;

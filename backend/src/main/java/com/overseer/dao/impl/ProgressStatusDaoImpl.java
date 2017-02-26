@@ -28,13 +28,12 @@ import java.util.List;
 public class ProgressStatusDaoImpl implements ProgressStatusDao {
     private static final String SELECT_PROGRESS_STATUS_BY_ID = "SELECT * FROM progress_status ps WHERE ps.id = :id";
 
-    private static final String SELECT_PROGRESS_STATUS_BY_NAME = "SELECT * FROM progress_status ps WHERE ps.name = :name";
+    private static final String SELECT_PROGRESS_STATUS_BY_NAME = "SELECT * FROM progress_status ps WHERE ps.name = :progressStatusName";
 
     private static final String SELECT_ALL_PROGRESS_STATUSES = "SELECT * FROM progress_status";
 
-    private static final String INSERT_PROGRESS_STATUS = "INSERT INTO progress_status (name) VALUES (:name)";
-
-    private static final String UPDATE_PROGRESS_STATUS = "UPDATE progress_status SET name =: name WHERE id = :id";
+    private static final String INSERT_PROGRESS_STATUS =
+            "INSERT INTO progress_status (name) VALUES (:name) ON CONFLICT (id) DO UPDATE SET name = excluded.name";
 
     private static final String DELETE_PROGRESS_STATUS_BY_ID = "DELETE FROM progress_status ps WHERE ps.id = :id";
 
@@ -53,7 +52,7 @@ public class ProgressStatusDaoImpl implements ProgressStatusDao {
             long generatedId = keyHolder.getKey().longValue();
             progressStatus.setId(generatedId);
         } else {
-            jdbc.update(UPDATE_PROGRESS_STATUS, sqlParameterSource);
+            jdbc.update(INSERT_PROGRESS_STATUS, sqlParameterSource);
         }
         return progressStatus;
     }
@@ -116,7 +115,7 @@ public class ProgressStatusDaoImpl implements ProgressStatusDao {
         Assert.notNull(name, "name must not be null");
         try {
             return jdbc.queryForObject(SELECT_PROGRESS_STATUS_BY_NAME,
-                    new MapSqlParameterSource("name", name),
+                    new MapSqlParameterSource("progressStatusName", name),
                     BeanPropertyRowMapper.newInstance(ProgressStatus.class));
         } catch (DataAccessException e) {
             return null;

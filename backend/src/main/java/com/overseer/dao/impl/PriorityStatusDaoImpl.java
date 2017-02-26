@@ -32,7 +32,7 @@ public class PriorityStatusDaoImpl implements PriorityStatusDao {
 
     private static final String DELETE_PRIORITY_STATUS_BY_ID = "DELETE FROM priority_status ps WHERE ps.id = :id";
 
-    private static final String SELECT_PRIORITY_STATUS_BY_NAME = "SELECT * FROM priority_status ps WHERE ps.name = :name";
+    private static final String SELECT_PRIORITY_STATUS_BY_NAME = "SELECT * FROM priority_status ps WHERE ps.name = :priorityStatusName";
 
     private static final String SELECT_ALL_PRIORITY_STATUSES = "SELECT * FROM priority_status";
 
@@ -117,7 +117,7 @@ public class PriorityStatusDaoImpl implements PriorityStatusDao {
         Assert.notNull(name, "name must not be null");
         try {
             return jdbc.queryForObject(SELECT_PRIORITY_STATUS_BY_NAME,
-                    new MapSqlParameterSource("name", name),
+                    new MapSqlParameterSource("priorityStatusName", name),
                     BeanPropertyRowMapper.newInstance(PriorityStatus.class));
         } catch (DataAccessException e) {
             return null;
