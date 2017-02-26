@@ -20,4 +20,7 @@ export class UserService {
     return this.http.get(`${url}/${id}`).map(res => res.json());
   }
 
+  getAll(): Observable<User[]> {
+    return this.http.get(`${url}/getAll`).map(res => res.json());
+  }
 }
