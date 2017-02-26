@@ -2,7 +2,6 @@ package com.overseer;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.model.ProgressStatus;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  *  Test for ProgressStatusDao
@@ -25,12 +28,16 @@ public class ProgressStatusDaoTest {
     @Rollback(true)
     public void testAddProgressStatus()
     {
-        String nameProgressStatus = "Romanova";
+        // given
+        String nameProgressStatus = "ProgressStatus";
         ProgressStatus progressStatus = new ProgressStatus(nameProgressStatus);
         ProgressStatus savedProgressStatus = progressStatusDao.save(progressStatus);
+
+        // when
         ProgressStatus fromDbProgressStatus = progressStatusDao.findOne(savedProgressStatus.getId());
 
-        Assert.assertEquals(fromDbProgressStatus.getName(), nameProgressStatus);
+        // then
+        assertThat(fromDbProgressStatus.getName(), is(nameProgressStatus));
     }
 
     @Test
@@ -38,13 +45,17 @@ public class ProgressStatusDaoTest {
     @Rollback(true)
     public void testDeleteProgressStatus()
     {
-        String nameProgressStatus = "Romanova";
+        // given
+        String nameProgressStatus = "ProgressStatus";
         ProgressStatus progressStatus = new ProgressStatus(nameProgressStatus);
         ProgressStatus savedProgressStatus = progressStatusDao.save(progressStatus);
+
+        // when
         progressStatusDao.delete(savedProgressStatus);
         ProgressStatus fromDbProgressStatus = progressStatusDao.findOne(savedProgressStatus.getId());
 
-        Assert.assertEquals(fromDbProgressStatus, null);
+        // then
+        assertThat(fromDbProgressStatus, is(nullValue()));
     }
 
     @Test
@@ -52,11 +63,15 @@ public class ProgressStatusDaoTest {
     @Rollback(true)
     public void testFindByNameProgressStatus()
     {
-        String nameProgressStatus = "Romanova";
+        // given
+        String nameProgressStatus = "ProgressStatus";
         ProgressStatus progressStatus = new ProgressStatus(nameProgressStatus);
         ProgressStatus savedProgressStatus = progressStatusDao.save(progressStatus);
+
+        // when
         ProgressStatus fromDbProgressStatus = progressStatusDao.findByName(nameProgressStatus);
 
-        Assert.assertEquals(fromDbProgressStatus, savedProgressStatus);
+        // then
+        assertThat(fromDbProgressStatus, is(savedProgressStatus));
     }
 }
