@@ -5,7 +5,7 @@ package com.overseer.dao;
  *
  * @param <T>   entity type.
  */
-public interface SimpleEntityDao<T> {
+public interface SimpleEntityDao<T> extends CrudDao<T, Long> {
     /**
      * Fetches entity by its name.
      *
