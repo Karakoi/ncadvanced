@@ -535,18 +535,18 @@ insert into message (sender_id, recipient_id, topic_id, text, date_and_time) val
 insert into message (sender_id, recipient_id, topic_id, text, date_and_time) values (18, null, 327, 'lectus in est risus auctor sed tristique in', '2017-01-02 12:44:28');
 
 -- history data
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('title', 'First title', '2017/02/09', 101, 113);
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('title', 'Second title', '2017/02/10', 101, 113);
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('title', 'Third title', '2017/02/11', 101, 113);
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('description', 'First description', '2017/02/12', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('title', 'First title', 'Second title', '2017/02/09', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('title', 'Second title', 'Third title', '2017/02/10', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('title', 'Third title', 'Fourth title', '2017/02/11', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('description', 'First description', 'Second description', '2017/02/12', 101, 113);
 
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('title', 'First title', '2017/02/11', 44, 313);
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('title', 'Second title', '2017/02/12', 44, 313);
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('description', 'First description', '2017/02/13', 44, 313);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('title', 'First title', 'Second title', '2017/02/11', 44, 313);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('title', 'Second title', 'Third title', '2017/02/12', 44, 313);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('description', 'First description', 'Second description', '2017/02/13', 44, 313);
 
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('title', 'First title', '2017/02/11', 101, 213);
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('title', 'Second title', '2017/02/12', 101, 213);
-insert into history (column_name, modified_value, date_of_last_change, changer_id, record_id) values ('description', 'Second description', '2017/02/12', 101, 213);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('title', 'First title', 'Second title', '2017/02/11', 101, 213);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('title', 'Second title', 'Third title', '2017/02/12', 101, 213);
+insert into history (column_name, old_value, new_value, date_of_last_change, changer_id, record_id) values ('description', 'First description', 'Second description', '2017/02/12', 101, 213);
 
 insert into topic_to_role (topic_id, role_id) values (326,10);
 insert into topic_to_role (topic_id, role_id) values (326,11);
