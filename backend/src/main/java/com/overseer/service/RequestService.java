@@ -19,7 +19,7 @@ public interface RequestService extends CrudService<Request, Long> {
      *
      * @return list of joined requests
      */
-    List<Request> getJoinedRequests();
+    List<Request> getJoinedGroup();
 
     /**
      * Returns a list of requests which are joined in a specified parent request.
@@ -27,7 +27,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param id parent request id
      * @return list of requests which are joined in a parent request
      */
-    List<Request> getJoinedRequestParts(Long id);
+    List<Request> getJoinedGroupRequests(Long id);
 
     /**
      * Returns a list of sub requests for the request of the input id.
@@ -133,18 +133,16 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Changes the progress status of the request, notifies the request reporter and save change in the history.
      *
-     * @param requestId id of the request that will be changed
-     * @param newStatus new request status value
+     * @param request request to update by.
      * @return changed request
      */
-    Request changeProgressStatus(Long requestId, String newStatus);
+    Request changeProgressStatus(Request request);
 
     /**
      * Changes the priority status of the request, notifies the request reporter and save change in the history.
      *
-     * @param requestId id of the request that will be changed
-     * @param newStatus new request status value
+     * @param request request to update by.
      * @return changed request
      */
-    Request changePriorityStatus(Long requestId, String newStatus);
+    Request changePriorityStatus(Request request);
 }
