@@ -14,12 +14,27 @@ import java.util.List;
  */
 public interface RequestDao extends CrudDao<Request, Long> {
     /**
-     * Fetches from the database all Requests objects with same progress status.
+     * Returns a list of joined requests.
      *
-     * @param progressStatus request's status which represents completion progress, must not be {@literal null}.
-     * @return List of requests with same progress status.
+     * @return list of joined requests
      */
-    List<Request> getRequestsByStatus(ProgressStatus progressStatus);
+    List<Request> getJoinedGroup();
+
+    /**
+     * Returns a list of requests which are joined in a specified parent request.
+     *
+     * @param id parent request id
+     * @return list of requests which are joined in a parent request
+     */
+    List<Request> getJoinedGroupRequests(Long id);
+
+    /**
+     * Returns a list of sub requests for the request of the input id.
+     *
+     * @param id of the request that collect sub requests
+     * @return list of sub requests
+     */
+    List<Request> getSubRequests(Long id);
 
     /**
      * Fetches from the database all Requests objects with same group.
@@ -47,7 +62,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param assignee represents belonging request to a user, must not be {@literal null}.
      * @return List of requests with same user.
      */
-
     default List<Request> getRequestsByAssignee(User assignee) {
         Long id = assignee.getId();
         Assert.notNull(id);
@@ -60,7 +74,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param assigneeId represents belonging request to a user, must not be {@literal null}.
      * @return List of requests with same user.
      */
-
     List<Request> getRequestsByAssignee(Long assigneeId);
 
     /**
@@ -69,7 +82,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param reporter represents belonging request to a user, must not be {@literal null}.
      * @return List of requests with same user.
      */
-
     default List<Request> getRequestsByReporter(User reporter) {
         Long id = reporter.getId();
         Assert.notNull(id);
@@ -82,7 +94,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param reporterId represents belonging request to a user, must not be {@literal null}.
      * @return List of requests with same user.
      */
-
     List<Request> getRequestsByReporter(Long reporterId);
 
     /**
@@ -92,7 +103,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param end   date from
      * @return rerun list of requests from one period of time
      */
-
     List<Request> getRequestsByPeriod(LocalDate begin, LocalDate end);
 
     /**
@@ -104,6 +114,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> getRequestByDate(LocalDate date);
 
     /**
+     * Fetches from the database all Requests objects with same progress status.
+     *
+     * @param progressStatus request's status which represents completion progress, must not be {@literal null}.
+     * @return List of requests with same progress status.
+     */
+    List<Request> getRequestsByStatus(ProgressStatus progressStatus);
+
+    /**
      * Fetches from the database all Requests objects with same priority status.
      *
      * @param priorityStatus request's property which represents belonging to a group, must not be {@literal null}.
@@ -111,4 +129,19 @@ public interface RequestDao extends CrudDao<Request, Long> {
      */
     List<Request> getRequestsByPriority(PriorityStatus priorityStatus);
 
+    /**
+     * Changes the progress status of the request, notifies the request reporter and save change in the history.
+     *
+     * @param request request to update by.
+     * @return The request with updated progress status.
+     */
+    Request changeProgressStatus(Request request);
+
+    /**
+     * Changes the priority status of the request, notifies the request reporter and save change in the history.
+     *
+     * @param request request to update by.
+     * @return The request with updated priority status.
+     */
+    Request changePriorityStatus(Request request);
 }
