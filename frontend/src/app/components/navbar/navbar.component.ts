@@ -4,7 +4,8 @@ import {AuthService} from "../../service/auth.service";
 
 @Component({
   selector: 'overseer-navbar',
-  templateUrl: 'navbar.component.html'
+  templateUrl: 'navbar.component.html',
+  styleUrls: ['navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
 
