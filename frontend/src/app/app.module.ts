@@ -16,6 +16,7 @@ import {
   WelcomeComponent
 } from "./components/index";
 import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
+import {RequestFormModule} from "./pages/request-form/request-form.module";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, R
   imports: [
     BrowserModule,
     HttpModule,
+    RequestFormModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
