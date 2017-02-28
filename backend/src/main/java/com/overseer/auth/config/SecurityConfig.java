@@ -1,4 +1,4 @@
-package com.overseer.config;
+package com.overseer.auth.config;
 
 import com.overseer.auth.StatelessAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +7,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,11 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * Spring security configuration class.
+ * Application security configuration.
  */
 @Configuration
 @EnableWebSecurity
 @Order(1)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -39,25 +40,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        Http401AuthenticationEntryPoint unauthorizedHandler =
+                new Http401AuthenticationEntryPoint("'Bearer token_type=\"JWT\"'");
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
+                // using JWT token instead
+                .csrf().disable()
 
-        http.exceptionHandling().and()
-                .anonymous().and()
-                .servletApi().and()
+                // don't create session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+
+                // custom JWT based security filter
+                .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+                // send an 401 unauthorized
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+
+                // disable page caching
                 .headers().cacheControl();
-
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/api/**").permitAll()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new Http401AuthenticationEntryPoint("'Bearer token_type=\"JWT\"'"));
-
-        http.addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
