@@ -1,23 +1,43 @@
 import {Routes} from "@angular/router";
-import {NoContentComponent} from "./no-content/no-content.component";
-import {HomeComponent} from "./home/home.component";
-import {ProfileComponent} from "./profile/profile.component";
-import {PrivatePageGuard} from "./service/private-page.guard";
+import {WelcomeComponent, NoContentComponent, HomeComponent, RequestComponent} from "./components/index";
 
 export const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'overseer',
     pathMatch: 'full'
   },
   {
+    path: 'overseer',
+    component: WelcomeComponent
+  },
+  // Available for unregistered user
+  {
+    path: 'signup',
+    loadChildren: './pages/signup/signup.module#SignupModule'
+  },
+  {
     path: 'login',
+    loadChildren: './pages/login/login.module#LoginModule'
+  },
+  {
+    path: 'recover',
+    loadChildren: './pages/recover/recover.module#RecoverModule'
+  },
+  // Available for registered user
+  {
+    path: 'home',
     component: HomeComponent
   },
   {
     path: 'profile',
-    component: ProfileComponent
+    loadChildren: './pages/profile/profile.module#ProfileModule'
   },
+  {
+    path: 'request',
+    component: RequestComponent
+  },
+  // If route does not match any previous ones
   {
     path: '**',
     component: NoContentComponent
