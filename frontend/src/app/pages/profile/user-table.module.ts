@@ -2,17 +2,16 @@ import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgModule} from "@angular/core/src/metadata/ng_module";
 import {Routes, RouterModule} from "@angular/router";
-import {EditProfileComponent} from "./edit-profile/edit-profile.component";
-import {ProfileComponent} from "./profile.component";
+import {AddUserComponent} from "../../../../../../src/app/pages/profile/user-add/user.component";
+import {UserTable} from "./user-table.component";
 
 const routes: Routes = [
   {
     path: '',
-    component: ProfileComponent
+    component: UserTableModule
   },
   {
-    path: 'edit',
-    component: EditProfileComponent
+
   }
 ];
 
@@ -23,13 +22,13 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   declarations: [
-    ProfileComponent,
-    EditProfileComponent
+    UserTable,
+    AddUserComponent
   ],
   exports: [
-    ProfileComponent,
-    EditProfileComponent
+    UserTable,
+    AddUserComponent,
   ]
 })
-export class ProfileModule {
+export class UserTableModule {
 }

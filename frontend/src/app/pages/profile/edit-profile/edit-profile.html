@@ -5,13 +5,21 @@
         <strong>Edit Profile</strong>
       </div>
       <div class="panel-body">
-        <form [formGroup]="editProfileForm"  (ngSubmit)="update(editProfileForm.value)" autocomplete="on">
+        <form [formGroup]="editProfileForm" (ngSubmit)="update(editProfileForm.value)" autocomplete="on">
+
+          <!--USER PHOTO-->
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-upload"></i></span>
+                <input id="file" type="file" class="form-control" required="false">
+            </div>
+          </div>
           <!--USER FIRST NAME-->
           <div class="form-group" [ngClass]="{'has-error': !validateField('firstName')}">
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
               <input id="firstName" formControlName="firstName" type="text" placeholder="First Name"
-                     class="form-control" value="">
+                     class="form-control" value="OLD VALUE">
               <span *ngIf="!validateField('firstName')" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
             <div *ngIf="!validateField('firstName')" class="help-block text-left">
@@ -23,7 +31,7 @@
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
               <input id="lastName" formControlName="lastName" type="text" placeholder="Last Name" class="form-control"
-                     value=""/>
+                     value="OLD VALUE"/>
               <span *ngIf="!validateField('lastName')" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
             <div *ngIf="!validateField('lastName')" class="help-block text-left">
@@ -35,7 +43,7 @@
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
               <input id="secondName" formControlName="secondName" type="text" placeholder="Second Name"
-                     class="form-control" value=""/>
+                     class="form-control" value="OLD VALUE"/>
               <span *ngIf="!validateField('secondName')"
                     class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
@@ -44,7 +52,8 @@
           <div class="form-group" [ngClass]="{'has-error': !validateField('email')}">
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-              <input type="email" id="email" formControlName="email" class="form-control" placeholder="Email" value="">
+              <input type="email" id="email" formControlName="email" class="form-control" placeholder="Email"
+                     value="">
               <span *ngIf="!validateField('email')" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
             <div *ngIf="!validateField('email')" class="help-block text-left">

@@ -1,3 +1,11 @@
-table {
+.content{
   background-color: white;
+  border-radius: 20px;
+}
+
+.dummy_user {
+  width: 220px;
+  height: auto;
+  border: solid darkgray 3px;
+  border-radius: 3%;
 }
