@@ -18,7 +18,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      *
      * @return list of joined requests
      */
-    List<Request> getJoinedGroup();
+    List<Request> getJoinedGroups();
 
     /**
      * Returns a list of requests which are joined in a specified parent request.
@@ -111,7 +111,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param date request's property which represents belonging to a group, must not be {@literal null}.
      * @return List of requests with same date.
      */
-    List<Request> getRequestByDate(LocalDate date);
+    List<Request> getRequestsByDate(LocalDate date);
 
     /**
      * Fetches from the database all Requests objects with same progress status.
