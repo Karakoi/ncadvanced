@@ -1,7 +1,5 @@
 package com.overseer.service;
 
-import com.overseer.model.PriorityStatus;
-import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
 import org.springframework.util.Assert;
@@ -117,18 +115,18 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Fetches from the database all Requests objects with same progress status.
      *
-     * @param progressStatus request's status which represents completion progress, must not be {@literal null}.
+     * @param progressStatusId request's status which represents completion progress, must not be {@literal null}.
      * @return List of requests with same progress status.
      */
-    List<Request> getRequestsByStatus(ProgressStatus progressStatus);
+    List<Request> getRequestsByStatus(Long progressStatusId);
 
     /**
      * Fetches from the database all Requests objects with same priority status.
      *
-     * @param priorityStatus request's property which represents belonging to a group, must not be {@literal null}.
+     * @param priorityStatusId request's property which represents belonging to a group, must not be {@literal null}.
      * @return List of requests with same priorityStatus status.
      */
-    List<Request> getRequestsByPriority(PriorityStatus priorityStatus);
+    List<Request> getRequestsByPriority(Long priorityStatusId);
 
     /**
      * Changes the progress status of the request, notifies the request reporter and save change in the history.

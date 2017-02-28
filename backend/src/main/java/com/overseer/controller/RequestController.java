@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Controller provides api for creating, getting and deleting request.
@@ -27,8 +29,7 @@ public class RequestController {
      * @return {@link Request} entity with http status 200 OK.
      */
     @GetMapping("/request/{id}")
-    public ResponseEntity<Request> getRequest(@PathVariable("id") Long id) {
-        Assert.notNull(id, "Request Id is null");
+    public ResponseEntity<Request> getRequest(@PathVariable Long id) {
         Request request = requestService.findOne(id);
         LOG.debug("Getting request with id: {}", id);
         return new ResponseEntity<>(request, HttpStatus.OK);
@@ -42,9 +43,6 @@ public class RequestController {
      */
     @PostMapping("/request/create")
     public ResponseEntity<Request> createRequest(@RequestBody Request request) {
-        Assert.notNull(request, "Create request error request is null");
-        Assert.notNull(request.getTitle(), "Request has no title");
-        Assert.notNull(request.getReporter(), "Request has no reporter");
         requestService.create(request);
         LOG.debug("Request has been added with id: {}", request.getId());
         return new ResponseEntity<>(request, HttpStatus.CREATED);
@@ -56,9 +54,8 @@ public class RequestController {
      * @param id request identifier.
      * @return http status 204 NO_CONTENT.
      */
-    @DeleteMapping("/request/{id}")
-    public ResponseEntity deleteRequest(@PathVariable("id") Long id) {
-        Assert.notNull(id, "Request Id is null");
+    @DeleteMapping("/request/delete/{id}")
+    public ResponseEntity deleteRequest(@PathVariable Long id) {
         requestService.delete(id);
         LOG.debug("Request has been deleted with id: {}", id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -70,15 +67,153 @@ public class RequestController {
      * @param request json object which represents {@link Request} entity.
      * @return json representation of created {@link Request} entity.
      */
-    @PutMapping("/customers/{id}")
+    @PutMapping("/request/update/")
     public ResponseEntity updateRequest(@RequestBody Request request) {
-        Assert.notNull(request, "Update request error request is null");
-        Assert.notNull(request.getId(), "Request has no ID");
-        Assert.notNull(request.getTitle(), "Request has no title");
-        Assert.notNull(request.getReporter(), "Request has no reporter");
         requestService.update(request);
         LOG.debug("Request has been updated with id: {}", request.getId());
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
+    /**
+     * Gets list of requests with it's joined group.
+     *
+     * @return list of joined requests
+     */
+    @GetMapping("/request/getJoinedGroups")
+    public ResponseEntity<List<Request>> getJoinedGroups() {
+        List<Request> requests = requestService.getJoinedGroups();
+        LOG.debug("Gets list of requests with it's joined group");
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets a list of requests which are joined in a specified parent request.
+     *
+     * @param id parent request id
+     * @return list of requests which are joined in a parent request
+     */
+    @GetMapping("/request/getJoinedGroupRequests/{id}")
+    public ResponseEntity<List<Request>> getJoinedGroupRequests(@PathVariable Long id) {
+        List<Request> requests = requestService.getJoinedGroupRequests(id);
+        LOG.debug("Gets a list of requests which are joined in a specified parent request with id: {}", id);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets a list of sub requests for the request associated with provided id param.
+     *
+     * @param id of the request that collect sub requests
+     * @return list of sub requests
+     */
+    @GetMapping("/request/getSubRequests/{id}")
+    public ResponseEntity<List<Request>> getSubRequests(@PathVariable Long id) {
+        List<Request> requests = requestService.getSubRequests(id);
+        LOG.debug("Gets a list of sub requests for the request with id: {}", id);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets all Requests objects assigned to the same user.
+     *
+     * @param id represents belonging request to a user, must not be {@literal null}.
+     * @return List of requests with same user.
+     */
+    @GetMapping("/request/getRequestsByAssignee/{id}")
+    public ResponseEntity<List<Request>> getRequestsByAssignee(@PathVariable Long id) {
+        List<Request> requests = requestService.getRequestsByAssignee(id);
+        LOG.debug("Gets all Requests objects assigned to the user with id: {}", id);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets all Requests objects created with the same user.
+     *
+     * @param id represents belonging request to a user, must not be {@literal null}.
+     * @return List of requests with same user.
+     */
+    @GetMapping("/request/getRequestsByReporter/{id}")
+    public ResponseEntity<List<Request>> getRequestsByReporter(@PathVariable Long id) {
+        List<Request> requests = requestService.getRequestsByReporter(id);
+        LOG.debug("Gets all Requests objects created with the user with id: {}", id);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets all Requests objects which created in the same period.
+     *
+     * @param beginDate date from
+     * @param endDate   date to
+     * @return rerun list of requests from one period of time
+     */
+    @GetMapping("/request/getRequestsByPeriod/begin/{beginDate}/end/{endDate}")
+    public ResponseEntity<List<Request>> getRequestsByPeriod(@PathVariable LocalDate beginDate, LocalDate endDate) {
+        List<Request> requests = requestService.getRequestsByPeriod(beginDate, endDate);
+        LOG.debug("Gets all Requests objects which created in period: {} - {}", beginDate, endDate);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets all Requests objects created in the same day.
+     *
+     * @param date request's property which represents belonging to a group, must not be {@literal null}.
+     * @return List of requests with same date.
+     */
+    @GetMapping("/request/getRequestByDate/{date}")
+    public ResponseEntity<List<Request>> getRequestByDate(@PathVariable LocalDate date) {
+        List<Request> requests = requestService.getRequestByDate(date);
+        LOG.debug("Gets all Requests objects created in day: {}", date);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets all Requests objects with same progress status.
+     *
+     * @param id request's status which represents completion progress, must not be {@literal null}.
+     * @return List of requests with same progress status.
+     */
+    @GetMapping("/request/getRequestsByStatus/{id}")
+    public ResponseEntity<List<Request>> getRequestsByStatus(@PathVariable Long id) {
+        List<Request> requests = requestService.getRequestsByStatus(id);
+        LOG.debug("Gets all Requests objects with progress status with id: {}", id);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets all Requests objects with same priority status.
+     *
+     * @param id request's property which represents belonging to a group, must not be {@literal null}.
+     * @return List of requests with same priorityStatus status.
+     */
+    @GetMapping("/request/getRequestsByPriority/{id}")
+    public ResponseEntity<List<Request>> getRequestsByPriority(@PathVariable Long id) {
+        List<Request> requests = requestService.getRequestsByPriority(id);
+        LOG.debug("Gets all Requests objects with same priority status with id: {}", id);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Changes the progress status of the request.
+     *
+     * @param request request to update by.
+     * @return changed request
+     */
+    @PutMapping("/request/changeProgressStatus")
+    public ResponseEntity changeProgressStatus(@RequestBody Request request) {
+        requestService.changeProgressStatus(request);
+        LOG.debug("ProgressStatus of Request has been changed and Request has been updated with id: {}", request.getId());
+        return new ResponseEntity<>(request, HttpStatus.OK);
+    }
+
+    /**
+     * Changes the priority status of the request.
+     *
+     * @param request request to update by.
+     * @return changed request
+     */
+    @PutMapping("/request/changePriorityStatus")
+    public ResponseEntity changePriorityStatus(@RequestBody Request request) {
+        requestService.changePriorityStatus(request);
+        LOG.debug("PriorityStatus of Request has been changed and Request has been updated with id: {}", request.getId());
+        return new ResponseEntity<>(request, HttpStatus.OK);
+    }
 }
