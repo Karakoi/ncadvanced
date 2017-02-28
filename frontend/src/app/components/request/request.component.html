@@ -1,17 +1,82 @@
-<div class="container col-lg-3">
+<div class="container">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div class="row">
-        <div class="pull-left">{{request.title}}</div>
-        <div class="pull-right">{{request.progressStatus}}</div>
-      </div>
+      <p class="panel-title">{{request.title}} <a href="/overseer"><span class="glyphicon glyphicon-remove pull-right close-box" aria-hidden="true"></span></a></p>
     </div>
     <div class="panel-body">
-      <div class="pull-left description"><p> {{request.description}}</p></div>
-      <div class="pull-right">Some inf</div>
-    </div>
-    <div class="panel-footer">
-      Date of creation: {{request.dateOfCreation.toDateString()}}
+      <!-- DETAILS & PEOPLES -->
+      <div class="row">
+        <div class="col-lg-8">
+          <p><b>Details:</b></p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Type:</td>
+              <td>{{request.type}}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Progress status:</td>
+              <td>
+                <div class="btn-group btn-group-xs">
+                  <button type="button" class="btn btn-success btn-sm">{{request.progressStatus}}</button>
+                  <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Closed</a></li>
+                    <li><a href="#">Reopen</a></li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Priority status:</td>
+              <td>
+                <div class="btn-group btn-group-xs">
+                  <button type="button" class="btn btn-danger btn-sm">{{request.priorityStatus}}</button>
+                  <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Middle</a></li>
+                    <li><a href="#">Low</a></li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
+              <td>{{request.dateOfCreation}}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
+              <td>{{request.estimateTime}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-lg-4">
+          <p><b>Peoples:</b></p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
+              <td>
+                <a href="#">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
+              <td>
+                <a href="#">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
