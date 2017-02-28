@@ -19,7 +19,7 @@ public interface RequestService extends CrudService<Request, Long> {
      *
      * @return list of joined requests
      */
-    List<Request> getJoinedGroup();
+    List<Request> getJoinedGroups();
 
     /**
      * Returns a list of requests which are joined in a specified parent request.
