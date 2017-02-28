@@ -33,7 +33,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
 
-    private static final String SELECT_ALL_USERS = "SELECT * FROM \"user\" u ";
+    private static final String SELECT_ALL_USERS =
+            "SELECT u.id, u.first_name, u.last_name, u.second_name, "
+            + "u.password, u.email, u.date_of_birth, u.phone_number, "
+            + "u.role, r.name "
+            + "FROM \"user\" u INNER JOIN role r "
+            + "ON u.role = r.id";
 
     private static final String SELECT_USER_BY_ID =
             "SELECT u.id, u.first_name, u.last_name, u.second_name, "
@@ -139,7 +144,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public List<User> findAll() {
-        return jdbc.query(SELECT_ALL_USERS, BeanPropertyRowMapper.newInstance(User.class));
+        return jdbc.query(SELECT_ALL_USERS, new UserMapper());
     }
 
     /**
