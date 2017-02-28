@@ -27,7 +27,7 @@ export const appRoutes: Routes = [
   // Available for registered user
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'profile',

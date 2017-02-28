@@ -6,6 +6,7 @@ import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
 import {SideBarDirective} from "./directive/sidebar.directive";
+import {FormsModule} from '@angular/forms'
 import {
   FooterComponent,
   HomeComponent,
@@ -32,6 +33,7 @@ import {RequestFormModule} from "./pages/request-form/request-form.module";
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpModule,
     RequestFormModule,
     ToastModule.forRoot(),

@@ -1,11 +1,21 @@
-<div class="container">
-  <section id="about" class="content-section text-center">
-    <div class="main-section container">
+<header *ngIf="!request.length">
+  <h2 align="center" class="todo-list">you have not request yet</h2>
+</header>
 
-      <div class="row">
-        <h2>Secure Profile</h2>
-      </div>
+<main>
+  <form class="todo-form" (submit)="createRequest(); requestForm.reset()" #requestForm="ngForm">
+    <input type="text" name="name" [(ngModel)]="emptyValueForName" placeholder="enter name" required>
+    <input type="text" name="priority" [(ngModel)]="emptyValueForPriority" placeholder="enter priority" required>
+    <input type="text" name="data" [(ngModel)]="emptyValueForData" placeholder="enter data" required>
+    <input type="text" name="estimate time" [(ngModel)]="emptyValueForTime" placeholder="enter estimate time" required>
+    <input type="submit" value="Add ur request" [disabled]="requestForm.form.invalid">
+  </form>
 
+  <section class="todo-list" *ngIf="request.length">
+    <h2 align="center">Your request</h2>
+    <div class="todo-item" *ngFor="let req of request">
+      <span class="title">{{'Name: ' + req.name + ' Priority: '
+        + req.priority_status + ' Data: ' + req.data_of_creation + ' Estimate time: ' + req.estimate_time}}</span>
     </div>
   </section>
-</div>
+</main>
