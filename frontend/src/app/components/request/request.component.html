@@ -104,6 +104,30 @@
           </ul>
         </div>
       </div>
+      <!-- HISTORY -->
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>History:</b>
+            <span (click)="changeShowHistory()" *ngIf="showHistory == true" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowHistory()" *ngIf="showHistory == false" class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <ul class="list-group" *ngIf="showHistory">
+            <li *ngFor="let historyItem of request.historyDetails" class="list-group-item">
+              <span class="badge">{{historyItem.dateOfChange}}</span>
+              <a href="#">{{historyItem.changer.firstName}} {{historyItem.changer.lastName}}</a>
+              changed {{historyItem.columnName}}
+              from '{{historyItem.oldValue}}' to '{{historyItem.newValue}}'
+            </li>
+          </ul>
+          <table class="table" *ngIf="!showHistory">
+            <tbody >
+            <tr>
+              <td><i>Click arrow down to show full description</i></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
