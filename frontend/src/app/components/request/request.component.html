@@ -77,6 +77,33 @@
           </table>
         </div>
       </div>
+      <!-- DESCRIPTION -->
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Description:</b>
+            <span (click)="changeShowDescription()" *ngIf="showDescription == true" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowDescription()" *ngIf="showDescription == false" class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <table class="table">
+            <tbody >
+            <tr>
+              <td *ngIf="showDescription">{{request.description}}</td>
+              <td *ngIf="!showDescription"><i>Click arrow down to show full description</i></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row" *ngIf="request.type == 'Request group'">
+        <div class="col-lg-12">
+          <p><b>Sub requests:</b></p>
+          <ul class="list-group">
+            <li *ngFor="let subRequest of request.subRequests" class="list-group-item">
+              <a href="#">{{subRequest.title}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>
