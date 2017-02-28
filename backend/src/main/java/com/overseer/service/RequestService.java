@@ -133,16 +133,16 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Changes the progress status of the request, notifies the request reporter and save change in the history.
      *
-     * @param request request to update by.
+     * @param requestId changed request id.
      * @return changed request
      */
-    Request changeProgressStatus(Request request);
+    Request changeProgressStatus(Long requestId);
 
     /**
      * Changes the priority status of the request, notifies the request reporter and save change in the history.
      *
-     * @param request request to update by.
+     * @param requestId changed request request id.
      * @return changed request
      */
-    Request changePriorityStatus(Request request);
+    Request changePriorityStatus(Long requestId);
 }
