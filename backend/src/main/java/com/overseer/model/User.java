@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
 /**
  * User entity.
  */
-@NoArgsConstructor
+//@NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter

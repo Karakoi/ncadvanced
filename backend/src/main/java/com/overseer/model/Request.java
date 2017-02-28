@@ -47,7 +47,7 @@ public class Request extends AbstractEntity {
 
     private PriorityStatus priorityStatus;
 
-    private PriorityStatus progressStatus;
+    private ProgressStatus progressStatus;
 
     @NonNull
     private User reporter;

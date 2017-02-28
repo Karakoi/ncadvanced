@@ -30,7 +30,8 @@ public class ProgressStatusDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        savedProgressStatus = new ProgressStatus(TEST_NAME);
+        savedProgressStatus = new ProgressStatus();
+        savedProgressStatus.setName(TEST_NAME);
         progressStatusDao.save(savedProgressStatus);
     }
 

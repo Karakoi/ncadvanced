@@ -7,13 +7,11 @@ import lombok.*;
  * The <code>PriorityStatus</code> class represents priority of request {@link Request}.
  */
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class PriorityStatus extends AbstractEntity {
-    @NonNull
     private String name;
 }
