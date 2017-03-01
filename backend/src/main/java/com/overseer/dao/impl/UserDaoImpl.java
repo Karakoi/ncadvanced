@@ -33,7 +33,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
 
-    private static final String SELECT_ALL_USERS = "SELECT * FROM \"user\" u ";
+    private static final String SELECT_ALL_USERS =
+            "SELECT u.id, u.first_name, u.last_name, u.second_name, "
+            + "u.password, u.email, u.date_of_birth, u.phone_number, "
+            + "u.role, r.name "
+            + "FROM \"user\" u INNER JOIN role r "
+            + "ON u.role = r.id";
 
     private static final String SELECT_USER_BY_ID =
             "SELECT u.id, u.first_name, u.last_name, u.second_name, "
@@ -48,10 +53,11 @@ public class UserDaoImpl implements UserDao {
                     + "date_of_birth, phone_number, role) "
                     + "VALUES (:firstName, :lastName, :secondName, :password, "
                     + ":email, :dateOfBirth, :phoneNumber, :role.id) "
-                    + "ON CONFLICT (id) DO UPDATE SET first_name = :firstName, last_name = :lastName, "
+                    + "ON CONFLICT (email) DO UPDATE SET first_name = :firstName, last_name = :lastName, "
                     + "second_name = :secondName, password = :password, "
                     + "email = :email, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, "
                     + "role = :role.id";
+
 
     private static final String SELECT_USER_BY_EMAIL =
             "SELECT u.id, u.first_name, u.last_name, u.second_name, "
@@ -139,7 +145,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public List<User> findAll() {
-        return jdbc.query(SELECT_ALL_USERS, BeanPropertyRowMapper.newInstance(User.class));
+        return jdbc.query(SELECT_ALL_USERS, new UserMapper());
     }
 
     /**
