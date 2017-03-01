@@ -3,7 +3,7 @@ package com.overseer.exception.email;
 /**
  * Exception for email service.
  */
-public class MessageDestinationException extends Exception {
+public class MessageDestinationException extends RuntimeException {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

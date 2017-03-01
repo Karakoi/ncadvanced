@@ -18,6 +18,10 @@ export class RequestFormComponent implements OnInit {
     });
   }
 
+  createNewRequest(params): void {
+    console.log(params);
+  }
+
   validateField(field: string): boolean {
     return this.requestForm.get(field).valid || !this.requestForm.get(field).dirty;
   }

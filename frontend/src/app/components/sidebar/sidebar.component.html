@@ -16,26 +16,19 @@
     <li>
       <a href="/message">Send Message</a>
     </li>
-    <!--Show this div, if user's role is Employee -->
-    <li *ngIf="isSignedIn">
-      <a href="#">Create request</a>
-    </li>
     <!--Show this div, if user's role is Admin -->
-    <li *ngIf="isSignedIn">
-      <a href="#">Add user</a>
+    <li>
+      <a href="#" *ngIf="isAdmin()">Add user</a>
     </li>
-    <li *ngIf="isSignedIn">
-      <a href="#" data-toggle="modal" data-target="#newRequestModal">Create/Change request</a>
+    <li>
+      <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
     </li>
-    <li *ngIf="isSignedIn">
-      <a href="#">Show all managers</a>
-    </li>
-    <li *ngIf="isSignedIn">
-      <a href="#">Show all requests</a>
+    <li>
+      <a href="#" *ngIf="isAdmin()">Show all requests</a>
     </li>
     <!--Show this div, if user's role is Manager -->
-    <li *ngIf="isSignedIn">
-      <a href="#">Show all requests</a>
+    <li>
+      <a href="#" *ngIf="isManager()">Show all requests</a>
     </li>
   </ul>
 </div>

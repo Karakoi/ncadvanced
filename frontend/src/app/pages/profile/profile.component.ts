@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "ng2-validation";
 import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
+import {User} from "../../model/user.model";
 
 @Component({
   selector: 'overseer-profile',
@@ -13,6 +14,7 @@ import {AuthService} from "../../service/auth.service";
 })
 export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
+  user: User;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -22,6 +24,10 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe((user: User) => {
+      this.user = user;
+    });
+
     this.initForm();
   }
 
@@ -44,9 +50,9 @@ export class ProfileComponent implements OnInit {
 
   private initForm(): void {
     this.profileForm = this.formBuilder.group({
-      firstName: ['Old First Name', Validators.required],
-      lastName: ['Old Last Name', Validators.required],
-      secondName: 'Old Second Name',
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      secondName: '',
       email: ['', [Validators.required, CustomValidators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       birthDate: ['', CustomValidators.dateISO],

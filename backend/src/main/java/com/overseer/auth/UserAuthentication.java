@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 /**
- * Represents the user authentication object.
+ * The <code>UserAuthentication</code> represents the token for an authentication request.
  */
 @RequiredArgsConstructor
 public class UserAuthentication implements Authentication {

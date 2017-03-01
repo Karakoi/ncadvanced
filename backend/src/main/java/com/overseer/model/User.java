@@ -1,103 +1,63 @@
 package com.overseer.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import javax.validation.constraints.*;
+
 
 /**
  * User entity.
  */
-
-@Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class User extends AbstractEntity implements UserDetails {
-    private static final long serialVersionUID = 42L;
+public class User extends AbstractEntity {
+    private static final int MIN_NAME_LENGTH = 2;
+    private static final int MAX_NAME_LENGTH = 40;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MAX_PHONE_LENGTH = 20;
 
+    @NotNull(message = "User have to have first name")
     @NonNull
+    @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 30")
     private String firstName;
 
+    @NotNull(message = "User have to have last name")
     @NonNull
+    @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of last name has to be between 3 and 30")
     private String lastName;
 
+    @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 40")
     private String secondName;
 
+    @NotNull(message = "User have to have password")
     @NonNull
+    @Min(MIN_PASSWORD_LENGTH)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @NotNull(message = "User have to have email")
     @NonNull
+    @Pattern(regexp = "^(?:[a-zA-Z0-9_'^&/+-])+(?:\\.(?:[a-zA-Z0-9_'^&/+-])+) *@(?:(?:\\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\\           .){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\]?)|(?:[a-zA-Z0-9-]+\\.)+(?:[a-zA-Z]){2,}\\.?)$",
+            message = "Incorrect email")
     private String email;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
+    @Max(value = MAX_PHONE_LENGTH, message = "Max length of phone number is 20")
     private String phoneNumber;
 
+    @NotNull(message = "User have to have role")
     @NonNull
-    private Role role; // Role easy to be mapped, because it's haven't dependency
+    private Role role;
 
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authList = new ArrayList<>();
-        switch (role) {
-            case MANAGER:
-                authList.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-                break;
-            case ADMINISTRATOR:
-                authList.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
-                authList.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-                authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                break;
-            default:
-                authList.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
-        }
-        return authList;
-    }
-
-    @Override
-    @JsonIgnore
-    public String getUsername() {
-        return this.getEmail();
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
-    }
 }

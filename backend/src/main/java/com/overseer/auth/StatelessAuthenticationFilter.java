@@ -1,5 +1,6 @@
 package com.overseer.auth;
 
+import com.overseer.auth.service.TokenAuthenticationService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -17,9 +17,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
- * Represents filter for authentication object updating.
+ * The <code>StatelessAuthenticationFilter</code> is JWT based security filter.
  */
 @Component
 @RequiredArgsConstructor
@@ -34,7 +33,6 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
             Authentication authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) req);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(req, res);
-            SecurityContextHolder.getContext().setAuthentication(null);
         } catch (AuthenticationException | JwtException e) {
             SecurityContextHolder.clearContext();
             ((HttpServletResponse) res).setStatus(HttpServletResponse.SC_UNAUTHORIZED);

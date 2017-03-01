@@ -1,4 +1,4 @@
-<div class="content container">
+<div class="content container" *ngIf="user">
   <div class="tab-content">
     <div class="tab-pane active" id="tab1">
       <br/>
@@ -8,6 +8,7 @@
             <h5 class="text-center">Your Profile</h5>
           </div>
         </div>
+
         <div class="row">
           <div id="data" class="col-md-8 col-md-offset-0">
             <div class="row">
@@ -16,8 +17,8 @@
                   <label class="control-label">First Name</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="firstName" formControlName="firstName" type="text" placeholder="First Name"
-                           class="form-control" value="OLD VALUE">
+                    <input id="firstName" [(ngModel)]="user.firstName" type="text" placeholder="First Name"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('firstName')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -32,8 +33,8 @@
                   <label class="control-label">Last Name</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="lastName" formControlName="lastName" type="text" placeholder="Last Name"
-                           class="form-control" value="OLD VALUE"/>
+                    <input id="lastName" [(ngModel)]="user.lastName" type="text" placeholder="Last Name"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('lastName')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -51,8 +52,8 @@
                   <label class="control-label">Second Name</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="secondName" formControlName="secondName" type="text" placeholder="Second Name"
-                           class="form-control" value="OLD VALUE"/>
+                    <input id="secondName" [(ngModel)]="user.secondName" type="text" placeholder="Second Name"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('secondName')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -66,8 +67,8 @@
                   <label class="control-label">Date of birth</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                    <input id="birthDate" formControlName="birthDate" type="date" placeholder="Date of birth"
-                           class="form-control" value=""/>
+                    <input id="birthDate" [(ngModel)]="user.birthDate" type="text" placeholder="Date of birth"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('birthDate')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -82,8 +83,8 @@
                   <label class="control-label">Phone</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                    <input id="phoneNumber" formControlName="phoneNumber" type="text" placeholder="Phone Number"
-                           class="form-control" value=""/>
+                    <input id="phoneNumber" [(ngModel)]="user.phoneNumber" type="text" placeholder="Phone Number"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('phoneNumber')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -102,8 +103,8 @@
                   <label class="control-label">Email</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <input type="email" id="email" formControlName="email" class="form-control" placeholder="Email"
-                           value="">
+                    <input id="email" [(ngModel)]="user.email" type="text" placeholder="Email"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('email')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -120,8 +121,8 @@
                   <label class="control-label">Password</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <input type="password" id="password" formControlName="password" class="form-control"
-                           placeholder="Password" value="">
+                    <input id="password" [(ngModel)]="user.password" type="text" placeholder="Password"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('password')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -139,9 +140,9 @@
 
           <div id="foto" class="col-md-4 ">
             <div>
-              <img src="app/pages/profile/dummy_user.jpg" class="dummy_user"/>
+              <img src="http://aminoapps.com/static/img/user-icon-placeholder.png" class="dummy_user"/>
             </div>
-            <label class="control-label">Your foto</label>
+            <label class="control-label">Your Photo</label>
           </div>
         </div>
 
@@ -151,7 +152,9 @@
             </button>
           </div>
           <div class="col-md-2">
-            <button type="button" class="btn btn-success" (click)="cancel()" style="width: 150px; margin-left: 100px;">Cancel</button>
+            <button type="button" class="btn btn-success" (click)="cancel()" style="width: 150px; margin-left: 100px;">
+              Cancel
+            </button>
           </div>
         </div>
         <br/>

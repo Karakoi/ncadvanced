@@ -1,47 +1,47 @@
 import {BrowserModule} from "@angular/platform-browser";
 import {NgModule} from "@angular/core";
-import {HttpModule} from "@angular/http";
+import {HttpModule, Http, RequestOptions} from "@angular/http";
 import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {SideBarDirective} from "./directive/sidebar.directive";
 import {FormsModule} from "@angular/forms";
+import {SideBarDirective, RequestFormDirective} from "./directive/barrel";
+import {AuthHttp, AuthConfig} from "angular2-jwt";
+import {
+  PrivatePageGuard,
+  PublicPageGuard,
+  UserService,
+  JsonHttp,
+  AuthService,
+  RecoverService,
+  AdminPageGuard
+} from "./service/barrel";
 import {
   FooterComponent,
-  HomeComponent,
   NavbarComponent,
   NoContentComponent,
   RequestComponent,
   SideBarComponent,
   WelcomeComponent
-} from "./components/index";
-import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
-import {RequestFormModule} from "./pages/request-form/request-form.module";
-import {ForumModule} from "./pages/forum/forum.module";
-import {TopicModule} from "./pages/topic/topic.module";
-import {MessageModule} from "./pages/message/message.module";
+} from "./components/barrel";
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
-    HomeComponent,
     NavbarComponent,
     NoContentComponent,
     RequestComponent,
     SideBarComponent,
     WelcomeComponent,
-    SideBarDirective
+    SideBarDirective,
+    RequestFormDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RequestFormModule,
-    ForumModule,
-    TopicModule,
-    MessageModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
@@ -51,9 +51,19 @@ import {MessageModule} from "./pages/message/message.module";
     JsonHttp,
     UserService,
     PrivatePageGuard,
-    PublicPageGuard
+    PublicPageGuard,
+    AdminPageGuard,
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [Http, RequestOptions]
+    }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+}
+
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp(new AuthConfig(), http, options);
 }

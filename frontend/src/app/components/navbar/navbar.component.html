@@ -5,13 +5,13 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" *ngIf="!isSignedIn">
+        <li routerLinkActive="active" *ngIf="!isSignedIn">
+          <a [routerLink]="['/overseer']">Home</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="isSignedIn">
           <a [routerLink]="['/home']">Home</a>
         </li>
-        <!--<li routerLinkActive="active">-->
-          <!--<a [routerLink]="['/overseer']">Overseer</a>-->
-        <!--</li>-->
-        <li style="cursor: pointer;">
+        <li style="cursor: pointer;" *ngIf="isSignedIn">
           <a side-bar>&#9776;</a>
         </li>
       </ul>

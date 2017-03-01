@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="header-content" *ngIf="!request.length">
+    <div class="header-content-inner text-center">
+      <h1 id="homeHeading">No requests on the record</h1>
+      <hr>
+      <p>Start off by creating new request</p>
+      <a class="btn btn-primary btn-xl" request-form>Create request</a>
+    </div>
+  </div>
+
+  <!--<overseer-request-form></overseer-request-form>-->
+
+  <section class="todo-list" *ngIf="request.length">
+    <h2 align="center">Your request</h2>
+    <div class="todo-item" *ngFor="let req of request">
+      <span class="title">
+        Name: {{ req.name }} Priority: {{ req.priority_status }}
+        Data: {{ req.data_of_creation }} Estimate time: {{ req.estimate_time }}</span>
+    </div>
+  </section>
+</div>
+

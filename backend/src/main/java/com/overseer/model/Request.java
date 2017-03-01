@@ -3,35 +3,58 @@ package com.overseer.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.validation.constraints.Size;
 
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true, exclude = {"priorityStatus", "progressStatus"})
-@ToString(callSuper = true, exclude = {"priorityStatus", "progressStatus", "reporterId", "assigneeId", "joinedRequestId"})
+@EqualsAndHashCode(callSuper = false)
+@ToString(of = {"title", "description", "dateOfCreation", "estimateTimeInDays"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
-public class Request extends AbstractRequest{
+@SuppressWarnings("PMD.UnusedPrivateField")
+public class Request extends AbstractEntity {
+    private static final int MIN_TITLE_LENGTH = 5;
+    private static final int MAX_TITLE_LENGTH = 45;
+    private static final int MIN_DESCRIPTION_LENGTH = 10;
+    private static final int MAX_DESCRIPTION_LENGTH = 200;
+
+    @NonNull
+    @Size(min = MIN_TITLE_LENGTH, max = MAX_TITLE_LENGTH)
+    protected String title;
+
+    @Size(min = MIN_DESCRIPTION_LENGTH, max = MAX_DESCRIPTION_LENGTH)
+    protected String description;
+
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "dd-MM-yyyy")
     @NonNull
-    private LocalDate dateOfCreation;
-    @NonNull
+    private LocalDateTime dateOfCreation;
+
     private PriorityStatus priorityStatus;
-    @NonNull
+
     private ProgressStatus progressStatus;
+
     @NonNull
-    private Long reporterId;
-    private Long assigneeId;
+    private User reporter;
+
+    private User assignee;
+
+    private Long parentId;
+
     private Integer estimateTimeInDays;
-    private Long joinedRequestId;
 }
