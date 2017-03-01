@@ -46,10 +46,6 @@ export class EditProfileComponent implements OnInit {
   }
 
   private initForm(): void {
-    this.authService.currentUser.subscribe((user: User) => {
-      this.user = user;
-    });
-
     this.editProfileForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],

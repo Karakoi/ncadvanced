@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   login(formValues) {
     this.authService.login(formValues.email, formValues.password)
       .subscribe(() => {
+        this.toastr.success("Logged In successfully", "Success!");
         this.router.navigate(['/home']);
       }, e => this.handleError(e));
   }
@@ -39,7 +40,7 @@ export class LoginComponent implements OnInit {
   handleError(error) {
     switch (error.status) {
       case 401:
-        this.toastr.error('Email or password is wrong.');
+        this.toastr.error('Email or password is wrong.', "Error!");
     }
   }
 }

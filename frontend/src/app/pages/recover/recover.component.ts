@@ -27,11 +27,18 @@ export class RecoverComponent implements OnInit {
       .subscribe(() => {
         this.toastr.success("Please check your email inbox", "Success!");
       }, e => {
-        this.toastr.error("Email address is not found", "Error!");
+        this.handleError(e);
       });
   }
 
   validateField(field: string): boolean {
     return this.recoverForm.get(field).valid || !this.recoverForm.get(field).dirty;
+  }
+
+  handleError(error) {
+    switch (error.status) {
+      case 500:
+        this.toastr.error("Email address is not found", "Error!");
+    }
   }
 }

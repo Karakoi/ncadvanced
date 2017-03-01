@@ -7,24 +7,29 @@ import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
 import {FormsModule} from "@angular/forms";
 import {SideBarDirective, RequestFormDirective} from "./directive/barrel";
+import {AuthHttp, AuthConfig} from "angular2-jwt";
+import {
+  PrivatePageGuard,
+  PublicPageGuard,
+  UserService,
+  JsonHttp,
+  AuthService,
+  RecoverService,
+  AdminPageGuard
+} from "./service/barrel";
 import {
   FooterComponent,
-  HomeComponent,
   NavbarComponent,
   NoContentComponent,
   RequestComponent,
   SideBarComponent,
   WelcomeComponent
 } from "./components/barrel";
-import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/barrel";
-import {RequestFormModule} from "./pages/request-form/request-form.module";
-import {AuthHttp, AuthConfig} from "angular2-jwt";
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
-    HomeComponent,
     NavbarComponent,
     NoContentComponent,
     RequestComponent,
@@ -37,7 +42,6 @@ import {AuthHttp, AuthConfig} from "angular2-jwt";
     BrowserModule,
     FormsModule,
     HttpModule,
-    RequestFormModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
@@ -48,6 +52,7 @@ import {AuthHttp, AuthConfig} from "angular2-jwt";
     UserService,
     PrivatePageGuard,
     PublicPageGuard,
+    AdminPageGuard,
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

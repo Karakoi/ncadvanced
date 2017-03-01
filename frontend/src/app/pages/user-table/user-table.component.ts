@@ -10,8 +10,9 @@ import {User} from "../../model/user.model";
   templateUrl: 'user-table.component.html',
   styleUrls: ['user-table.component.css']
 })
-export class UserTable implements OnInit {
-  constructor(private userService: UserService, private formBuilder: FormBuilder) {
+export class UserTableComponent implements OnInit {
+  constructor(private userService: UserService,
+              private formBuilder: FormBuilder) {
   }
 
   @ViewChild(AddUserComponent)
@@ -19,12 +20,11 @@ export class UserTable implements OnInit {
 
   userForm: FormGroup;
 
-
   ngOnInit() {
     //this.users = this.userService.getAll();
     this.userForm = this.formBuilder.group({
       firstName: ['', Validators.required]
-    })
+    });
     this.modal.show();
   }
 

@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {User} from "../model/user.model";
 import {Observable} from "rxjs";
-import {Response, Http} from "@angular/http";
+import {Http, Response} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 
@@ -18,14 +18,14 @@ export class UserService {
   }
 
   update(user: User): Observable<Response> {
-    return this.http.put(url, user);
+    return this.authHttp.put(url, user).map(resp => resp.json());
   }
 
   get(id: number): Observable<User> {
-    return this.authHttp.get(`${url}/${id}`).map(res => res.json());
+    return this.authHttp.get(`${url}/${id}`).map(resp => resp.json());
   }
 
   getAll(): Observable<User[]> {
-    return this.authHttp.get(`${url}/getAll`).map(res => res.json());
+    return this.authHttp.get(`${url}/getAll`).map(resp => resp.json());
   }
 }

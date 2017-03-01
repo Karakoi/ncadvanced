@@ -25,16 +25,19 @@ export class SignupComponent implements OnInit {
   }
 
   register(params): void {
-    params.role  = {
+    params.role = {
       id: "12",
       name: "employee"
     };
 
-    this.userService.create(params).subscribe(() => {
-      this.authService.login(params.email, params.password).subscribe(() => {
-        this.router.navigate(['/home']);
+    this.userService.create(params)
+      .mergeMap(() => {
+        return this.authService.login(params.email, params.password);
       })
-    }, e => this.handleError(e));
+      .subscribe(() => {
+        this.toastr.success("Signed Up successfully", "Success!");
+        this.router.navigate(['/home']);
+      }, e => this.handleError(e));
   }
 
   validateField(field: string): boolean {

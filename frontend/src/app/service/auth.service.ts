@@ -6,11 +6,12 @@ import {tokenNotExpired, JwtHelper} from "angular2-jwt";
 import {User} from "../model/user.model";
 import {UserService} from "./user.service";
 
+const url = '/api/auth';
+
 @Injectable()
 export class AuthService {
   private authEvents: Subject<AuthEvent>;
   private JwtHelper: JwtHelper = new JwtHelper();
-  public authUser: User;
 
   constructor(private http: Http,
               private userService: UserService) {
@@ -18,11 +19,11 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<Response> {
-    let body = {
+    let authParams = {
       email: email,
       password: password
     };
-    return this.http.post('/api/auth', body).do((resp: Response) => {
+    return this.http.post(url, authParams).do((resp: Response) => {
       localStorage.setItem('id_token', resp.json().token);
       this.authEvents.next(new DidLogin());
     });
@@ -32,7 +33,10 @@ export class AuthService {
     let token = localStorage.getItem('id_token');
     let userId = +this.JwtHelper.decodeToken(token).id;
 
-    return this.userService.get(userId);
+    return this.userService.get(userId)
+      .map(user => {
+        return user
+      });
   }
 
   logout(): void {
@@ -42,6 +46,13 @@ export class AuthService {
 
   isSignedIn(): boolean {
     return tokenNotExpired();
+  }
+
+  get role(): string {
+    let token = localStorage.getItem('id_token');
+    let role = this.JwtHelper.decodeToken(token).role;
+
+    return role;
   }
 
   get events(): Observable<AuthEvent> {
