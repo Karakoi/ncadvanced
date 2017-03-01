@@ -7,13 +7,13 @@ import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,41 +32,15 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * Returns all {@link User} entities.
-     *
-     * @return all {@link User} entities.
-     */
-    @GetMapping("/user/getAll")
-    public ResponseEntity<List<User>> getAllUser() {
-        List<User> users = userService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    /**
      * Returns {@link User} entity associated with provided id param.
      *
      * @param id user identifier.
      * @return {@link User} entity with http status 200 OK.
      */
-    @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") String id) {
-        User user = userService.findOne(Long.parseLong(id));
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    /**
-     * Create new employee.
-     *
-     * @param user json object which represents {@link User} entity.
-     * @return json representation of created {@link User} entity.
-     */
-    @PostMapping("/user/register")
-    public ResponseEntity<User> registerEmployee(@RequestBody User user) {
-        Assert.notNull(user, "Create user error user is null");
-        Assert.notNull(user.getEmail(), "User have no email");
-        Assert.notNull(user.getFirstName(), "User must have first name");
-        userService.create(user);
-        LOG.info("Employee has been added with email {}", user.getEmail());
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        User user = userService.findOne(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -76,14 +50,23 @@ public class UserController {
      * @param user json object which represents {@link User} entity.
      * @return json representation of created {@link User} entity.
      */
-    @PostMapping("/user")
+    @PostMapping("/users")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
-        Assert.notNull(user, "Create user error user is null");
-        Assert.notNull(user.getEmail(), "User have no email");
-        Assert.notNull(user.getFirstName(), "User must have first name");
-        userService.create(user);
-        LOG.info("User has been added with email {}", user.getEmail());
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        User saveUser = userService.create(user);
+        return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
+    }
+
+    /**
+     * Updates {@link User} entity associated with provided id param.
+     *
+     * @param user user to update.
+     * @return http status 201 CREATED.
+     */
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        User updatedUser = userService.update(user);
+        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
     /**
@@ -92,10 +75,10 @@ public class UserController {
      * @param id user identifier.
      * @return http status 201 CREATED.
      */
-    @DeleteMapping("/user/{id}")
-    public ResponseEntity deleteUser(@PathVariable("id") Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity deleteUser(@PathVariable Long id) {
         userService.delete(id);
-        LOG.info("User has been deleted with id {}", id);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
@@ -104,10 +87,23 @@ public class UserController {
      *
      * @param recoverInfo user's recover params.
      */
-    @PostMapping(value = "/user/changePassword", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PostMapping(value = "/users/changePassword")
     public void changePassword(@RequestBody RecoverInfo recoverInfo) {
         LOG.debug("Sending recover info to: {}", recoverInfo.email);
         userService.changePassword(recoverInfo.email);
+    }
+
+    /**
+     * Returns all {@link User} entities.
+     *
+     * @return all {@link User} entities.
+     */
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUser() {
+        List<User> users = userService.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     /**
