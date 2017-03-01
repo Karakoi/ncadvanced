@@ -1,5 +1,6 @@
 import {Routes} from "@angular/router";
 import {WelcomeComponent, NoContentComponent, HomeComponent, RequestComponent} from "./components/index";
+import {ForumComponent} from "./pages/forum/forum.component";
 
 export const appRoutes: Routes = [
   {
@@ -28,6 +29,10 @@ export const appRoutes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+  },
+  {
+    path: 'forum',
+    component: ForumComponent
   },
   {
     path: 'profile',
