@@ -6,7 +6,8 @@ body {
     -o-background-size: cover;
     background-size: cover;
     overflow-x: hidden;
-    overflow-y: hidden;
+    /*disable page scroll...*/
+    /*overflow-y: hidden;*/
 }
 
 html, body {

@@ -4,7 +4,7 @@
 }
 
 .pagination {
-  margin-top: 20px;
+  margin: 10px 0 0 0;
 }
 
 .panel {
@@ -14,4 +14,16 @@
 .panel-heading {
   background-color: #337AB7;
   color: white;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.list-group {
+  margin-bottom: 15px;
+}
+
+button {
+  margin-top: 10px;
 }

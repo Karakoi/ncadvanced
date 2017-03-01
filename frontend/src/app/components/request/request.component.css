@@ -21,3 +21,7 @@ hr {
 .badge {
   background-color: #337AB7;
 }
+
+.panel-primary {
+  margin-top: 0;
+}
