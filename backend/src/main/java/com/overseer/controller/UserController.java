@@ -87,7 +87,6 @@ public class UserController {
      *
      * @param recoverInfo user's recover params.
      */
-    @PreAuthorize("hasRole('EMPLOYEE')")
     @PostMapping(value = "/users/changePassword")
     public void changePassword(@RequestBody RecoverInfo recoverInfo) {
         LOG.debug("Sending recover info to: {}", recoverInfo.email);
