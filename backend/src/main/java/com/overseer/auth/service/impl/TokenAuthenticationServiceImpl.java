@@ -1,5 +1,8 @@
-package com.overseer.auth;
+package com.overseer.auth.service.impl;
 
+import com.overseer.auth.UserAuthentication;
+import com.overseer.auth.service.TokenAuthenticationService;
+import com.overseer.auth.service.TokenHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Represents the service forming authentication according to the token.
+ * {@inheritDoc}.
  */
 @Service
 @RequiredArgsConstructor
@@ -18,13 +21,10 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
     private static final Integer TOKEN_PLACEMENT = 7;
 
     /**
-     * Return the UserAuthentication object according to the authorisation header.
-     *
-     * @param request object that contains the request the client has made of the servlet.
-     * @return the UserAuthentication object.
+     * {@inheritDoc}.
      */
     public Authentication getAuthentication(HttpServletRequest request) {
-        String authHeader = request.getHeader("authorization");
+        String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer")) {
             return null;
         }

@@ -1,7 +1,7 @@
-package com.overseer.controller;
+package com.overseer.auth.controller;
 
-import com.overseer.auth.SecurityContextService;
-import com.overseer.auth.TokenHandler;
+import com.overseer.auth.service.SecurityContextService;
+import com.overseer.auth.service.TokenHandler;
 import com.overseer.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -31,8 +31,10 @@ public class AuthenticationController {
     private final SecurityContextService securityContextService;
 
     /**
-     * @param params Encapsulates user login and password.
-     * @return AuthResponse encapsulates the authentication token.
+     * Perform {@link User} system authentication.
+     *
+     * @param params {@link AuthParams} user login and password.
+     * @return {@link AuthResponse} that encapsulates the authentication token.
      * @throws AuthenticationException if Authentication failed.
      */
     @PostMapping("/auth")
@@ -63,8 +65,8 @@ public class AuthenticationController {
     /**
      * Encapsulates the user authentication token.
      */
-    @SuppressWarnings("PMD.UnusedPrivateField")
     @Value
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private static final class AuthResponse {
         private final String token;
     }

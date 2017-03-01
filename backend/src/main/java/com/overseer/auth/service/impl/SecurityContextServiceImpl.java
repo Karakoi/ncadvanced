@@ -1,23 +1,27 @@
-package com.overseer.auth;
+package com.overseer.auth.service.impl;
 
+import com.overseer.auth.service.SecurityContextService;
+import com.overseer.dao.UserDao;
 import com.overseer.model.User;
-import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
- * Represents service for current user obtaining.
+ * {@inheritDoc}.
  */
 @Service
 @RequiredArgsConstructor
 public class SecurityContextServiceImpl implements SecurityContextService {
-    private final UserService userService;
+    private final UserDao userDao;
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public User currentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userService.findByEmail(authentication.getName());
+        return userDao.findByEmail(authentication.getName());
     }
 }
