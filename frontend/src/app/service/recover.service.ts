@@ -9,6 +9,6 @@ export class RecoverService {
   }
 
   sendRecoverInfo(email: string): Observable<Response> {
-    return this.http.post('/api/user/changePassword', email);
+    return this.http.post('/api/users/recoverPassword', email);
   }
 }

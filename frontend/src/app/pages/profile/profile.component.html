@@ -20,8 +20,7 @@
                 <label class="control-label">First Name</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input class="form-control" name="first_name" placeholder="ex: Mike" type="text" disabled
-                         value="TEST">
+                  <input class="form-control" name="firstName" type="text" disabled value="{{ user?.firstName }}">
                 </div>
               </div>
             </div>
@@ -30,8 +29,7 @@
                 <label class="control-label">Last Name</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input class="form-control" name="last_name" type="text"
-                         aria-required="true" disabled value="TEST">
+                  <input class="form-control" name="last_name" type="text" disabled value="{{ user?.lastName }}">
                 </div>
               </div>
             </div>
@@ -43,8 +41,7 @@
                 <label class="control-label">Second Name</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input class="form-control" name="last_name" placeholder="ex: Andrew" type="text"
-                         aria-required="true" disabled value="TEST">
+                  <input class="form-control" name="last_name" type="text" disabled value="{{ user?.secondName }}">
                 </div>
               </div>
             </div>
@@ -56,7 +53,7 @@
                 <label class="control-label">Date of birth</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                  <input class="form-control" name="birthDate" type="date" disabled value="TEST">
+                  <input class="form-control" name="birthDate" type="date" disabled value="{{ user?.birthDate }}">
                 </div>
               </div>
             </div>
@@ -65,7 +62,7 @@
                 <label class="control-label">Phone</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                  <input class="form-control" name="phone" type="text" disabled value="0971234567">
+                  <input class="form-control" name="phone" type="text" disabled value="{{ user?.phoneNumber }}">
                 </div>
               </div>
             </div>
@@ -77,7 +74,7 @@
                 <label class="control-label">Email</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                  <input class="form-control" email="true" name="email" type="text" disabled value="test@gmail.com">
+                  <input class="form-control" name="email" type="email" disabled value="{{ user?.email }}">
                 </div>
               </div>
             </div>

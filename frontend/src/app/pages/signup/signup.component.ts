@@ -25,11 +25,15 @@ export class SignupComponent implements OnInit {
   }
 
   register(params): void {
-    this.userService.create(params)
-      .mergeMap(() => {
-        return this.authService.login(params.email, params.password);
-      }).subscribe(() => {
-      this.router.navigate(['/home']);
+    params.role  = {
+      id: "12",
+      name: "employee"
+    };
+
+    this.userService.create(params).subscribe(() => {
+      this.authService.login(params.email, params.password).subscribe(() => {
+        this.router.navigate(['/home']);
+      })
     }, e => this.handleError(e));
   }
 
@@ -51,7 +55,7 @@ export class SignupComponent implements OnInit {
 
   private handleError(error) {
     switch (error.status) {
-      case 400:
+      case 500:
         this.toastr.error('This email is already taken.', 'Error.');
     }
   }

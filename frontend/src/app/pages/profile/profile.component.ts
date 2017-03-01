@@ -1,9 +1,7 @@
 import {Component, OnInit} from "@angular/core";
-import {UserService} from "../../service/user.service";
-import {FormBuilder} from "@angular/forms";
 import {AuthService} from "../../service/auth.service";
 import {Router} from "@angular/router";
-import {ToastsManager} from "ng2-toastr";
+import {User} from "../../model/user.model";
 
 @Component({
   selector: 'overseer-profile',
@@ -11,19 +9,19 @@ import {ToastsManager} from "ng2-toastr";
   styleUrls: ['profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  user: User;
 
-  constructor(private formBuilder: FormBuilder,
-              private userService: UserService,
-              private authService: AuthService,
-              private router: Router,
-              private toastr: ToastsManager) {
+  constructor(private authService: AuthService,
+              private router: Router) {
   }
 
   ngOnInit() {
+    this.authService.currentUser.subscribe((user: User) => {
+      this.user = user;
+    });
   }
 
   edit(): void {
-    this.router.navigate(['./profile/edit']);
+    this.router.navigate(['/profile/edit']);
   }
-
 }

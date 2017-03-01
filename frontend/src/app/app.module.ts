@@ -1,6 +1,6 @@
 import {BrowserModule} from "@angular/platform-browser";
 import {NgModule} from "@angular/core";
-import {HttpModule} from "@angular/http";
+import {HttpModule, Http, RequestOptions} from "@angular/http";
 import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
@@ -18,6 +18,7 @@ import {
 } from "./components/barrel";
 import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/barrel";
 import {RequestFormModule} from "./pages/request-form/request-form.module";
+import {AuthHttp, AuthConfig} from "angular2-jwt";
 
 @NgModule({
   declarations: [
@@ -46,9 +47,18 @@ import {RequestFormModule} from "./pages/request-form/request-form.module";
     JsonHttp,
     UserService,
     PrivatePageGuard,
-    PublicPageGuard
+    PublicPageGuard,
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [Http, RequestOptions]
+    }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+}
+
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp(new AuthConfig(), http, options);
 }

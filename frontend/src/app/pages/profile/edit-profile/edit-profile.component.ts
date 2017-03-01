@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "ng2-validation";
 import {UserService} from "../../../service/user.service";
 import {AuthService} from "../../../service/auth.service";
+import {User} from "../../../model/user.model";
 
 @Component({
   selector: 'overseer-edit-profile',
@@ -12,6 +13,7 @@ import {AuthService} from "../../../service/auth.service";
 })
 export class EditProfileComponent implements OnInit {
   editProfileForm: FormGroup;
+  user: User;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -25,10 +27,12 @@ export class EditProfileComponent implements OnInit {
   }
 
   update(params): void {
-    this.userService.create(params)
-      .mergeMap(() => {
-        return this.authService.login(params.email, params.password);
-      }).subscribe(() => {
+    params.role = {
+      id: "12",
+      name: "employee"
+    };
+
+    this.userService.update(params).subscribe(() => {
       this.router.navigate(['/profile']);
     }, e => this.handleError(e));
   }
@@ -42,14 +46,18 @@ export class EditProfileComponent implements OnInit {
   }
 
   private initForm(): void {
+    this.authService.currentUser.subscribe((user: User) => {
+      this.user = user;
+    });
+
     this.editProfileForm = this.formBuilder.group({
-      firstName: ['Old First Name', Validators.required],
-      lastName: ['Old Last Name', Validators.required],
-      secondName: 'Old Second Name',
-      email: ['Old Email', [Validators.required, CustomValidators.email]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      secondName: '',
+      email: ['', [Validators.required, CustomValidators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      birthDate: ['Old Date of Birth', CustomValidators.dateISO],
-      phoneNumber: ['Old Phone', CustomValidators.phone()]
+      birthDate: ['', CustomValidators.dateISO],
+      phoneNumber: ['', CustomValidators.phone()]
     });
   }
 

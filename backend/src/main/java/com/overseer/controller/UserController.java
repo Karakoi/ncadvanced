@@ -63,7 +63,7 @@ public class UserController {
      * @return http status 201 CREATED.
      */
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
-    @PutMapping("/users/{id}")
+    @PutMapping("/users")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         User updatedUser = userService.update(user);
         return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
@@ -87,8 +87,7 @@ public class UserController {
      *
      * @param recoverInfo user's recover params.
      */
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    @PostMapping(value = "/users/changePassword")
+    @PostMapping(value = "/users/recoverPassword")
     public void changePassword(@RequestBody RecoverInfo recoverInfo) {
         LOG.debug("Sending recover info to: {}", recoverInfo.email);
         userService.changePassword(recoverInfo.email);
