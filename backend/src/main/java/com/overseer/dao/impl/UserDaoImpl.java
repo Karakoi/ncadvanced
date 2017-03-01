@@ -53,10 +53,11 @@ public class UserDaoImpl implements UserDao {
                     + "date_of_birth, phone_number, role) "
                     + "VALUES (:firstName, :lastName, :secondName, :password, "
                     + ":email, :dateOfBirth, :phoneNumber, :role.id) "
-                    + "ON CONFLICT (id) DO UPDATE SET first_name = :firstName, last_name = :lastName, "
+                    + "ON CONFLICT (email) DO UPDATE SET first_name = :firstName, last_name = :lastName, "
                     + "second_name = :secondName, password = :password, "
                     + "email = :email, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, "
                     + "role = :role.id";
+
 
     private static final String SELECT_USER_BY_EMAIL =
             "SELECT u.id, u.first_name, u.last_name, u.second_name, "
