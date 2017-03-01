@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 const mergeAuthToken = (options: RequestOptionsArgs = {}) => {
   let newOptions = new RequestOptions({}).merge(options);
   let newHeaders = new Headers(newOptions.headers);
+  newHeaders.set('Content-Type', 'application/json');
   const jwt = localStorage.getItem('jwt');
   if (jwt) {
     newHeaders.set('authorization', `Bearer ${jwt}`);
