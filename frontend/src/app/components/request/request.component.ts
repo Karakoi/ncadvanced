@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 
 @Component({
-  selector: 'request-info',
+  selector: 'overseer-request-details',
   templateUrl: 'request.component.html',
   styleUrls: ['request.component.css']
 })

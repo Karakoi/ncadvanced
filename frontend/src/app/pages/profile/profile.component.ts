@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {UserService} from "../../service/user.service";
 import {FormBuilder} from "@angular/forms";
 import {AuthService} from "../../service/auth.service";
@@ -18,8 +18,10 @@ export class ProfileComponent implements OnInit {
               private router: Router,
               private toastr: ToastsManager) {
   }
-    ngOnInit(){
-    }
+
+  ngOnInit() {
+  }
+
   edit(): void {
     this.router.navigate(['./profile/edit']);
   }

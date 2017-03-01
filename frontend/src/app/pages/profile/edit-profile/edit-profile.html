@@ -7,13 +7,6 @@
       <div class="panel-body">
         <form [formGroup]="editProfileForm" (ngSubmit)="update(editProfileForm.value)" autocomplete="on">
 
-          <!--USER PHOTO-->
-          <div class="form-group">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-upload"></i></span>
-                <input id="file" type="file" class="form-control" required="false">
-            </div>
-          </div>
           <!--USER FIRST NAME-->
           <div class="form-group" [ngClass]="{'has-error': !validateField('firstName')}">
             <div class="input-group">

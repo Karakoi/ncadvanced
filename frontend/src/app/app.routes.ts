@@ -1,5 +1,5 @@
 import {Routes} from "@angular/router";
-import {WelcomeComponent, NoContentComponent, HomeComponent, RequestComponent} from "./components/index";
+import {WelcomeComponent, NoContentComponent, HomeComponent, RequestComponent} from "./components/barrel";
 
 export const appRoutes: Routes = [
   {

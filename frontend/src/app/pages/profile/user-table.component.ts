@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserService} from "../../../../../../src/app/service/user.service";
-import {User} from "../../../../../../src/app/model/user.model";
-import {AddUserComponent} from "../../../../../../src/app/pages/profile/user-add/user.component";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {FormGroup, Validators, FormBuilder} from "@angular/forms";
+import {UserService} from "../../service/user.service";
+import {AddUserComponent} from "./user-add/user.component";
+import {User} from "../../model/user.model";
 
 
 @Component({

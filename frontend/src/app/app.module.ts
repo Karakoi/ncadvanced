@@ -5,8 +5,8 @@ import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {SideBarDirective} from "./directive/sidebar.directive";
-import {FormsModule} from '@angular/forms'
+import {FormsModule} from "@angular/forms";
+import {SideBarDirective, RequestFormDirective} from "./directive/barrel";
 import {
   FooterComponent,
   HomeComponent,
@@ -15,8 +15,8 @@ import {
   RequestComponent,
   SideBarComponent,
   WelcomeComponent
-} from "./components/index";
-import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
+} from "./components/barrel";
+import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/barrel";
 import {RequestFormModule} from "./pages/request-form/request-form.module";
 
 @NgModule({
@@ -29,7 +29,8 @@ import {RequestFormModule} from "./pages/request-form/request-form.module";
     RequestComponent,
     SideBarComponent,
     WelcomeComponent,
-    SideBarDirective
+    SideBarDirective,
+    RequestFormDirective
   ],
   imports: [
     BrowserModule,

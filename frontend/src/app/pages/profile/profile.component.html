@@ -1,13 +1,14 @@
-<div class="content">
+<div class="container content">
   <div class="tab-content">
     <div class="tab-pane active" id="tab1">
       <br/>
+
       <div class="row">
         <div class="col-md-2 col-md-offset-1">
-          <h5 class="text-center">Your Profile</h5>
+          <h5 class="text-left">Profile</h5>
         </div>
-        <div class="col-md-1 col-md-offset-8" >
-          <button type="button" class="btn btn-success" (click)="edit()">Edit</button>
+        <div class="col-md-1 col-md-offset-8">
+          <button type="button" class="btn btn-success btn-xl" (click)="edit()">Edit</button>
         </div>
       </div>
 
@@ -42,7 +43,7 @@
                 <label class="control-label">Second Name</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input class="form-control" name="last_name" placeholder="ex: Andrew" required="true" type="text"
+                  <input class="form-control" name="last_name" placeholder="ex: Andrew" type="text"
                          aria-required="true" disabled value="TEST">
                 </div>
               </div>
@@ -55,8 +56,7 @@
                 <label class="control-label">Date of birth</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                  <input class="form-control" name="birthDate" type="date"
-                         disabled value="TEST">
+                  <input class="form-control" name="birthDate" type="date" disabled value="TEST">
                 </div>
               </div>
             </div>
@@ -70,6 +70,7 @@
               </div>
             </div>
           </div>
+
           <div class="row">
             <div class="col-md-5 col-md-offset-1">
               <div class="form-group">
@@ -81,7 +82,7 @@
               </div>
             </div>
           </div>
-        <br/>
+          <br/>
         </div>
         <div id="foto" class="col-md-3 ">
           <div>

@@ -1,77 +1,149 @@
 .todo-list {
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
-  border-radius: 2px;
-  width: 100%;
-  background-color: white;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    border-radius: 2px;
+    width: 100%;
+    background-color: white;
 }
 
 .todo-item {
-  padding: 1em;
-  display: flex;
-  align-items: center;
+    padding: 1em;
+    display: flex;
+    align-items: center;
 }
 
 .todo-item:not(:first-child) {
-  border-top: 1px solid rgba(0,0,0,.1);
+    border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
 .todo-item .checkbox {
-  margin-right: .25em;
+    margin-right: .25em;
 }
 
 .todo-item.completed .title {
-  text-decoration: line-through;
+    text-decoration: line-through;
 }
 
 .todo-item.completed .title,
 .todo-item.completed .material-icons {
-  color: lightgray;
+    color: lightgray;
 }
 
 .todo-item input {
-  flex: 1;
-  margin-right: 1rem;
+    flex: 1;
+    margin-right: 1rem;
 }
 
 .todo-item .actions {
-  margin-left: auto;
-  opacity: 0;
-  transition: all .2s;
+    margin-left: auto;
+    opacity: 0;
+    transition: all .2s;
 }
 
 .todo-item:hover .actions {
-  opacity: 1;
+    opacity: 1;
 }
 
 .todo-form,
 .todo-list {
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
-  border-radius: 2px;
-  width: 100%;
-  background-color: white;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    border-radius: 2px;
+    width: 100%;
+    background-color: white;
 }
 
 .todo-form {
-  display: flex;
-  padding: 1em;
-  margin-bottom: 1em;
+    display: flex;
+    padding: 1em;
+    margin-bottom: 1em;
 }
 
 .todo-form input {
-  flex: 1;
+    flex: 1;
 }
 
 .todo-form input:focus {
-  border: 1px solid #1976D2;
+    border: 1px solid #1976D2;
 }
 
 .todo-form input:focus.ng-invalid.ng-dirty {
-  border: 1px solid #dd0031;
+    border: 1px solid #dd0031;
 }
 
 .todo-form button {
-  margin-left: 16px;
+    margin-left: 16px;
 }
 
+.header-content-inner {
+    padding-top: 100px;
+    margin: 30px auto;
+    color: white;
+}
 
+hr {
+    border-color: #F05F40;
+    border-width: 3px;
+    max-width: 50px
+}
 
+.btn, .navbar-default, .navbar-default .navbar-header .navbar-brand, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif
+}
+
+.btn-default {
+    color: #222;
+    background-color: #fff;
+    border-color: #fff;
+    transition: all .35s
+}
+
+.btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open > .dropdown-toggle.btn-default {
+    color: #222;
+    background-color: #f2f2f2;
+    border-color: #ededed
+}
+
+.btn-default.disabled, .btn-default.disabled.active, .btn-default.disabled.focus, .btn-default.disabled:active, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled], .btn-default[disabled].active, .btn-default[disabled].focus, .btn-default[disabled]:active, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default.active, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
+    background-color: #fff;
+    border-color: #fff
+}
+
+.btn-default .badge {
+    color: #fff;
+    background-color: #222
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #F05F40;
+    border-color: #F05F40;
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s
+}
+
+.btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
+    color: #fff;
+    background-color: #ee4b28;
+    border-color: #ed431f
+}
+
+.btn-primary.disabled, .btn-primary.disabled.active, .btn-primary.disabled.focus, .btn-primary.disabled:active, .btn-primary.disabled:focus, .btn-primary.disabled:hover, .btn-primary[disabled], .btn-primary[disabled].active, .btn-primary[disabled].focus, .btn-primary[disabled]:active, .btn-primary[disabled]:focus, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary, fieldset[disabled] .btn-primary.active, fieldset[disabled] .btn-primary.focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:hover {
+    background-color: #F05F40;
+    border-color: #F05F40
+}
+
+.btn-primary .badge {
+    color: #F05F40;
+    background-color: #fff
+}
+
+.btn {
+    border: none;
+    border-radius: 300px;
+    font-weight: 700;
+    text-transform: uppercase
+}
+
+.btn-xl {
+    padding: 15px 30px
+}
