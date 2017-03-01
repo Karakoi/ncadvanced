@@ -1,4 +1,7 @@
 .content{
+  width: 1000px;
+  text-align: center;
+  margin: 0 auto;
   background-color: white;
   border-radius: 20px;
 }
