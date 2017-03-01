@@ -19,6 +19,7 @@ import {
 import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
 import {RequestFormModule} from "./pages/request-form/request-form.module";
 import {ForumModule} from "./pages/forum/forum.module";
+import {TopicModule} from "./pages/topic/topic.module";
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import {ForumModule} from "./pages/forum/forum.module";
     HttpModule,
     RequestFormModule,
     ForumModule,
+    TopicModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
