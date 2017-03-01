@@ -11,7 +11,7 @@ export class TopicComponent {
     {
       img: "http://www.iconsfind.com/wp-content/uploads/2016/10/20161014_58006bf27a2d0.png",
       title: "Some topic message",
-      sender: {
+      author: {
         firstName: "Eugene",
         lastName: "Deyneka",
         role: "Employee"
@@ -22,7 +22,7 @@ export class TopicComponent {
     {
       img: "http://www.iconsfind.com/wp-content/uploads/2016/10/20161014_58006bff8b1de.png",
       title: "Some topic message",
-      sender: {
+      author: {
         firstName: "Bohdan",
         lastName: "Bachkala",
         role: "Office manager"
@@ -33,7 +33,7 @@ export class TopicComponent {
     /*{
       img: "http://www.iconsfind.com/wp-content/uploads/2016/10/20161014_58006bf27a2d0.png",
       title: "Some topic message",
-      sender: {
+      author: {
         firstName: "Eugene",
         lastName: "Deyneka",
         role: "Employee"
