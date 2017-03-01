@@ -1,6 +1,7 @@
 package com.overseer.service.impl;
 
 import com.overseer.dao.UserDao;
+import com.overseer.exception.UserAlreadyExistsException;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
@@ -45,7 +46,11 @@ public class UserServiceImpl implements UserService {
             throw new EntityAlreadyExistsException("Failed to create user. Id was not null for user: " + user);
         }
         LOG.debug("Saving user with email: {}", user.getEmail());
-        return userDao.save(user);
+        if (userDao.findByEmail(user.getEmail()) == null) {
+            return userDao.save(user);
+        } else {
+            throw new UserAlreadyExistsException("User with such email already exists");
+        }
     }
 
     /**
