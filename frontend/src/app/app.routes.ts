@@ -2,6 +2,7 @@ import {Routes} from "@angular/router";
 import {WelcomeComponent, NoContentComponent, HomeComponent, RequestComponent} from "./components/index";
 import {ForumComponent} from "./pages/forum/forum.component";
 import {TopicComponent} from "./pages/topic/topic.component";
+import {MessageComponent} from "./pages/message/message.component";
 
 export const appRoutes: Routes = [
   {
@@ -38,6 +39,10 @@ export const appRoutes: Routes = [
   {
     path: 'topic',
     component: TopicComponent
+  },
+  {
+    path: 'message',
+    component: MessageComponent
   },
   {
     path: 'profile',

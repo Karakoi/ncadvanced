@@ -1,0 +1,20 @@
+.panel {
+  border-color: #337AB7;
+}
+
+.panel-heading {
+  background-color: #337AB7;
+  color: white;
+}
+
+.list-group {
+  margin-bottom: 15px;
+}
+
+#recipient {
+  color: #999;
+}
+
+.submit-form-group {
+  margin-bottom: 0;
+}

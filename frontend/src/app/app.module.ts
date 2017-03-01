@@ -6,7 +6,7 @@ import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
 import {SideBarDirective} from "./directive/sidebar.directive";
-import {FormsModule} from '@angular/forms'
+import {FormsModule} from "@angular/forms";
 import {
   FooterComponent,
   HomeComponent,
@@ -20,6 +20,7 @@ import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, R
 import {RequestFormModule} from "./pages/request-form/request-form.module";
 import {ForumModule} from "./pages/forum/forum.module";
 import {TopicModule} from "./pages/topic/topic.module";
+import {MessageModule} from "./pages/message/message.module";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import {TopicModule} from "./pages/topic/topic.module";
     RequestFormModule,
     ForumModule,
     TopicModule,
+    MessageModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
