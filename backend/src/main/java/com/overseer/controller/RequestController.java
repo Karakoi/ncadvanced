@@ -1,5 +1,7 @@
 package com.overseer.controller;
 
+import com.overseer.model.PriorityStatus;
+import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.service.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -160,7 +162,7 @@ public class RequestController {
      */
     @GetMapping("/request/getRequestByDate/{date}")
     public ResponseEntity<List<Request>> getRequestByDate(@PathVariable LocalDate date) {
-        List<Request> requests = requestService.getRequestByDate(date);
+        List<Request> requests = requestService.getRequestsByDate(date);
         LOG.debug("Gets all Requests objects created in day: {}", date);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
@@ -168,26 +170,26 @@ public class RequestController {
     /**
      * Gets all Requests objects with same progress status.
      *
-     * @param id request's status which represents completion progress, must not be {@literal null}.
+     * @param progressStatus request's status which represents completion progress, must not be {@literal null}.
      * @return List of requests with same progress status.
      */
     @GetMapping("/request/getRequestsByStatus/{id}")
-    public ResponseEntity<List<Request>> getRequestsByStatus(@PathVariable Long id) {
-        List<Request> requests = requestService.getRequestsByStatus(id);
-        LOG.debug("Gets all Requests objects with progress status with id: {}", id);
+    public ResponseEntity<List<Request>> getRequestsByStatus(@PathVariable ProgressStatus progressStatus) {
+        List<Request> requests = requestService.getRequestsByStatus(progressStatus);
+        LOG.debug("Gets all Requests objects with progress status: {}", progressStatus);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     /**
      * Gets all Requests objects with same priority status.
      *
-     * @param id request's property which represents belonging to a group, must not be {@literal null}.
+     * @param priorityStatus request's property which represents belonging to a group, must not be {@literal null}.
      * @return List of requests with same priorityStatus status.
      */
     @GetMapping("/request/getRequestsByPriority/{id}")
-    public ResponseEntity<List<Request>> getRequestsByPriority(@PathVariable Long id) {
-        List<Request> requests = requestService.getRequestsByPriority(id);
-        LOG.debug("Gets all Requests objects with same priority status with id: {}", id);
+    public ResponseEntity<List<Request>> getRequestsByPriority(@PathVariable PriorityStatus priorityStatus) {
+        List<Request> requests = requestService.getRequestsByPriority(priorityStatus);
+        LOG.debug("Gets all Requests objects with same priority status: {}", priorityStatus);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
