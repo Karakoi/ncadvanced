@@ -27,7 +27,7 @@
       <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
     </li>
     <li>
-      <a href="#" *ngIf="isAdmin()">Show all requests</a>
+      <a [routerLink]="['/requests']" *ngIf="isAdmin()">Show all requests</a>
     </li>
     <!--Show this div, if user's role is Manager -->
     <li>

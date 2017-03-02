@@ -1,7 +1,7 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {NgModule, OnInit} from "@angular/core";
+import {NgModule} from "@angular/core";
 import {HttpModule, Http, RequestOptions} from "@angular/http";
-import {RouterModule, ActivatedRoute} from "@angular/router";
+import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
@@ -15,13 +15,13 @@ import {
   UserService,
   AuthService,
   RecoverService,
-  AdminPageGuard
+  AdminPageGuard,
+  RequestService
 } from "./service/barrel";
 import {
   FooterComponent,
   NavbarComponent,
   NoContentComponent,
-  RequestDetailsComponent,
   SideBarComponent,
   WelcomeComponent
 } from "./components/barrel";
@@ -32,7 +32,6 @@ import {
     FooterComponent,
     NavbarComponent,
     NoContentComponent,
-    RequestDetailsComponent,
     SideBarComponent,
     WelcomeComponent,
     SideBarDirective
@@ -42,11 +41,6 @@ import {
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    LoginModule,
-    ProfileModule,
-    RecoverModule,
-    SignupModule,
-    UserTableModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
@@ -57,6 +51,7 @@ import {
     PrivatePageGuard,
     PublicPageGuard,
     AdminPageGuard,
+    RequestService,
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

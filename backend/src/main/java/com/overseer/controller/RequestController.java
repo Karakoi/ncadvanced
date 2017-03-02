@@ -18,6 +18,7 @@ import java.util.List;
  * Controller provides api for creating, getting and deleting request.
  */
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class RequestController {
     private static final Logger LOG = LoggerFactory.getLogger(RequestController.class);

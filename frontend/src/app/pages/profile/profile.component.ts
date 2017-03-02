@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   validateField(field: string): boolean {
