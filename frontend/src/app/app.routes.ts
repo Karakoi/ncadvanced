@@ -42,6 +42,26 @@ export const appRoutes: Routes = [
     canActivate: [PrivatePageGuard]
   },
   {
+    path: 'forum',
+    loadChildren: './pages/forum/forum.module#ForumModule',
+    canActivate: [PrivatePageGuard]
+  },
+  {
+    path: 'topic',
+    loadChildren: './pages/topic/topic.module#TopicModule',
+    canActivate: [PrivatePageGuard]
+  },
+  {
+    path: 'message',
+    loadChildren: './pages/message/message.module#MessageModule',
+    canActivate: [PrivatePageGuard]
+  },
+  {
+    path: 'chat',
+    loadChildren: './pages/chat/chat.module#ChatModule',
+    canActivate: [PrivatePageGuard]
+  },
+  {
     path: 'request',
     component: RequestComponent,
     canActivate: [PrivatePageGuard]

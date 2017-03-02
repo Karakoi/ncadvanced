@@ -8,9 +8,9 @@
         <li class="list-group-item" *ngFor="let message of messages">
           <div class="row">
             <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
-              <p><img class="topic-user-logo"
-                      src="{{message.img}}"
-                      alt="topic-user-logo"></p>
+                <p><img class="topic-user-logo"
+                        src="{{message.img}}"
+                        alt="topic-user-logo"></p>
               <b><a href="">{{message.author.firstName}} {{message.author.lastName}}</a></b>
               <span>{{message.author.role}}</span><br>
             </div>
