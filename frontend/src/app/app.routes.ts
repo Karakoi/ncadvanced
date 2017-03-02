@@ -1,8 +1,9 @@
 import {Routes} from "@angular/router";
-import {WelcomeComponent, NoContentComponent, RequestComponent} from "./components/barrel";
+import {WelcomeComponent, NoContentComponent} from "./components/barrel";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {PrivatePageGuard} from "./service/private-page.guard";
 import {AdminPageGuard} from "./service/admin-page.guard";
+import {RequestDetailsComponent} from "./components/request-details/request-details.component";
 
 export const appRoutes: Routes = [
   {
@@ -43,7 +44,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'request',
-    component: RequestComponent,
+    component: RequestDetailsComponent,
     canActivate: [PrivatePageGuard]
   },
   // Available for admin

@@ -1,11 +1,10 @@
-import {Response} from "@angular/http";
+import {Response, Http} from "@angular/http";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
-import {JsonHttp} from "./json-http.service";
 
 @Injectable()
 export class RecoverService {
-  constructor(private http: JsonHttp) {
+  constructor(private http: Http) {
   }
 
   sendRecoverInfo(email: string): Observable<Response> {

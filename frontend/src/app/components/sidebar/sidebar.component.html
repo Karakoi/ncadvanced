@@ -11,15 +11,12 @@
       <a [routerLink]="['/profile']">Profile</a>
     </li>
     <li>
-      <a href="#">Forum</a>
+      <a href="#" [routerLink]="['/forum']">Forum</a>
     </li>
     <li>
-      <a href="#">Send Message</a>
+      <a href="#" [routerLink]="['/messages']">Send Message</a>
     </li>
     <!--Show this div, if user's role is Admin -->
-    <li>
-      <a href="#" *ngIf="isAdmin()">Add user</a>
-    </li>
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
     </li>

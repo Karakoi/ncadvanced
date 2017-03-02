@@ -5,14 +5,14 @@ import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {FormsModule} from "@angular/forms";
-import {SideBarDirective, RequestFormDirective} from "./directive/barrel";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SideBarDirective} from "./directive/barrel";
 import {AuthHttp, AuthConfig} from "angular2-jwt";
+import {HomeModule, LoginModule, ProfileModule, RecoverModule, SignupModule, UserTableModule} from "./pages/barrel";
 import {
   PrivatePageGuard,
   PublicPageGuard,
   UserService,
-  JsonHttp,
   AuthService,
   RecoverService,
   AdminPageGuard
@@ -21,7 +21,7 @@ import {
   FooterComponent,
   NavbarComponent,
   NoContentComponent,
-  RequestComponent,
+  RequestDetailsComponent,
   SideBarComponent,
   WelcomeComponent
 } from "./components/barrel";
@@ -32,23 +32,28 @@ import {
     FooterComponent,
     NavbarComponent,
     NoContentComponent,
-    RequestComponent,
+    RequestDetailsComponent,
     SideBarComponent,
     WelcomeComponent,
-    SideBarDirective,
-    RequestFormDirective
+    SideBarDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
+    HomeModule,
+    LoginModule,
+    ProfileModule,
+    RecoverModule,
+    SignupModule,
+    UserTableModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
     RecoverService,
     AuthService,
-    JsonHttp,
     UserService,
     PrivatePageGuard,
     PublicPageGuard,
