@@ -5,7 +5,12 @@ export interface User {
   secondName?: string,
   email: string,
   password: string,
-  birthDate?: Date,
-  phoneNumber?: number,
-  role: string;
+  dateOfBirth?: Date,
+  phoneNumber?: string,
+  role: Role;
+}
+
+export interface Role {
+  id: number,
+  name: string;
 }

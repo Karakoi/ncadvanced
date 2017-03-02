@@ -1,7 +1,7 @@
 package com.overseer.auth;
 
+import com.overseer.dao.UserDao;
 import com.overseer.model.User;
-import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,16 +15,17 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserService userService;
+    private final UserDao userDao;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = userService.findByEmail(login);
+        User user = userDao.findByEmail(login);
         AccountStatusUserDetailsChecker detailsChecker = new AccountStatusUserDetailsChecker();
         if (user == null) {
             throw new UsernameNotFoundException("User with login: " + login + " is not found.");
         }
-        detailsChecker.check(user);
-        return user;
+        JwtUser jwtUser = JwtUserFactory.create(user);
+        detailsChecker.check(jwtUser);
+        return jwtUser;
     }
 }

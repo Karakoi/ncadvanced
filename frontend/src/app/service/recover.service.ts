@@ -1,5 +1,5 @@
-import {Http, Headers, Response} from "@angular/http";
-import {Subscription, Observable} from "rxjs";
+import {Response, Http} from "@angular/http";
+import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 
 @Injectable()
@@ -8,9 +8,6 @@ export class RecoverService {
   }
 
   sendRecoverInfo(email: string): Observable<Response> {
-    let headers = new Headers({'Content-Type': 'application/json'});
-    let options = {headers: headers};
-
-    return this.http.post('/api/user/changePassword', email, options);
+    return this.http.post('/api/users/changePassword', email);
   }
 }

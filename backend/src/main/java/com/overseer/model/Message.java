@@ -2,9 +2,10 @@ package com.overseer.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Message entity.
@@ -13,16 +14,21 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Message extends AbstractEntity{
+    private static final int MIN_MESSAGE_LENGTH = 10;
+    private static final int MAX_MESSAGE_LENGTH = 500;
 
-    private final int senderId;
+    @NotNull(message = "Message has to have a sender")
+    private User sender;
 
-    private Long recipientId;
+    private User recipient;
 
-    private Long topicId;
+    private Topic topic;
 
-    @NonNull
+    @Size(min = MIN_MESSAGE_LENGTH, max = MAX_MESSAGE_LENGTH)
+    @NotNull(message = "Message has to have a text")
     private String text;
 
-    private LocalDateTime dateAndTime;
+    @NotNull(message = "Message has to have a time of creation")
+    private LocalDateTime creationDateTime;
 
 }

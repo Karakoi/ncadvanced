@@ -1,0 +1,106 @@
+<div class="container" *ngIf="users">
+  <div class="col-lg-12">
+    <div class="row">
+      <div class="overflow: auto">
+        <table class="table table-bordered table-hover table-condensed">
+          <thead>
+          <tr>
+            <th>Id</th>
+            <th>First name</th>
+            <th>Last Name</th>
+            <th>Second Name</th>
+            <th>Phone number</th>
+            <th>Email</th>
+            <th>Date of birth</th>
+            <th>Role</th>
+            <th></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of sorted">
+            <td>{{user.id}}</td>
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.secondName}}</td>
+            <td>{{user.phoneNumber}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.dateOfBirth}}</td>
+            <td>{{user.role.name}}</td>
+            <td>
+              <button [attr.value]="user.id" class="glyphicon glyphicon-trash" (click)="deleteRow($event)"></button>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <button class="glyphicon glyphicon-plus" (click)="showModal()"></button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="pull-right">
+        <ul class="pagination">
+          <li class="paginate_button active"><a>1</a></li>
+          <li class="paginate_button"><a>2</a></li>
+          <li class="paginate_button"><a>3</a></li>
+          <li class="paginate_button"><a>4</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<add-user>
+  <div class="app-modal-header">
+    Create new user
+  </div>
+  <div class="app-modal-body">
+    <form [formGroup]="userForm">
+      <div class="form-group col-lg-6 col-sm-6" [ngClass]="{'has-error': !validateField('firstName')}">
+        <label for="firstName">First name:</label>
+        <input type="text" id="firstName" class="form-control">
+      </div>
+      <div class="form-group col-lg-6 col-sm-6">
+        <label for="lastName">Last name:</label>
+        <input type="text" id="lastName" class="form-control">
+      </div>
+      <div class="form-group col-lg-6 col-sm-6">
+        <label for="email">Email:</label>
+        <input type="text" id="email" class="form-control">
+      </div>
+      <div class="form-group col-lg-6 col-sm-6">
+        <label for="role">Role:</label>
+        <select id="role" class="form-control">
+          <option>Admin</option>
+          <option>Office Manager</option>
+          <option>Employee</option>
+        </select>
+      </div>
+      <div class="form-group col-lg-12 col-sm-12">
+        <label for="dateOfBirth">Date of Birth:</label>
+        <input type="date" id="dateOfBirth" class="form-control">
+      </div>
+      <div class="form-group col-lg-12 col-sm-12">
+        <label for="phoneNumber">Phone number:</label>
+        <input type="text" id="phoneNumber" class="form-control">
+      </div>
+    </form>
+  </div>
+  <div class="app-modal-footer">
+    <div class="form-group col-lg-12 col-sm-12">
+      <button type="submit" class="btn btn-success col-lg-5 col-sm-5" [disabled]="userForm.invalid">Create user</button>
+      <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5"
+              data-dismiss="modal" (click)="modal.hide()">Close
+      </button>
+    </div>
+  </div>
+</add-user>
