@@ -112,7 +112,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param date request's property which represents belonging to a group, must not be {@literal null}.
      * @return List of requests with same date.
      */
-    List<Request> getRequestByDate(LocalDate date);
+    List<Request> getRequestsByDate(LocalDate date);
 
     /**
      * Fetches from the database all Requests objects with same progress status.
