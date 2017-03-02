@@ -1,14 +1,14 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {NgModule} from "@angular/core";
+import {NgModule, OnInit} from "@angular/core";
 import {HttpModule, Http, RequestOptions} from "@angular/http";
-import {RouterModule} from "@angular/router";
+import {RouterModule, ActivatedRoute} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SideBarDirective} from "./directive/barrel";
 import {AuthHttp, AuthConfig} from "angular2-jwt";
-import {HomeModule, LoginModule, ProfileModule, RecoverModule, SignupModule, UserTableModule} from "./pages/barrel";
+import {LoginModule, ProfileModule, RecoverModule, SignupModule, UserTableModule} from "./pages/barrel";
 import {
   PrivatePageGuard,
   PublicPageGuard,
@@ -42,7 +42,6 @@ import {
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    HomeModule,
     LoginModule,
     ProfileModule,
     RecoverModule,
