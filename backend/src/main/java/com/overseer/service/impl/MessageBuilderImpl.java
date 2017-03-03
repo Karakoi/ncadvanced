@@ -1,7 +1,7 @@
 package com.overseer.service.impl;
 
 import com.overseer.model.User;
-import com.overseer.model.modelEnum.MessageReason;
+import com.overseer.model.enumreason.MessageReason;
 import com.overseer.service.MessageBuilder;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,15 +35,24 @@ public class MessageBuilderImpl implements MessageBuilder {
             case CONFIRM_RECOVERY:
                 // TODO the same
                 break;
+            default:
+                // TODO do something extraordinary
+                break;
         }
         return simpleMailMessage;
     }
 
+    /**
+     * generate text for email message.
+    * */
     private String generateMessageForRecoveringPassword(User user) {
         // here can be StringBuilder
         return "Dear " + user.getFirstName() + "....";
     }
 
+    /**
+     * generate email from and to for email message.
+     * */
     private SimpleMailMessage buildProperties(User user) {
 
         val simpleMailMessage = new SimpleMailMessage();

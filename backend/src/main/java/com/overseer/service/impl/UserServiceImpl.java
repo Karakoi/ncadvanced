@@ -6,13 +6,10 @@ import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
-import com.overseer.model.modelEnum.MessageReason;
 import com.overseer.service.EmailService;
-import com.overseer.service.MessageBuilder;
 import com.overseer.service.UserService;
 import com.overseer.util.PasswordGeneratorUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +18,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 /**
@@ -165,12 +161,6 @@ public class UserServiceImpl implements UserService {
                 + newPassword
                 + "\n");
         return mailMessage;
-    }
-
-    // test method
-    private SimpleMailMessage forgotPassword(User user) {
-        val messageBuilder = new MessageBuilderImpl();
-        return messageBuilder.builderMessage(user, MessageReason.FORGOT_PASSWORD);
     }
 
     @Override

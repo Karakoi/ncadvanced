@@ -1,8 +1,8 @@
-package com.overseer.model.modelEnum;
+package com.overseer.model.enumreason;
 
 /**
- * @author Igor Gnes on 3/3/17.
- */
+ * Reason for send email.
+* */
 public enum MessageReason {
 
     CHANGE_REQUEST,

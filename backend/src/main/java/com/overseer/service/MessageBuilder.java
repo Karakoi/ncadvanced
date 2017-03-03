@@ -1,7 +1,7 @@
 package com.overseer.service;
 
 import com.overseer.model.User;
-import com.overseer.model.modelEnum.MessageReason;
+import com.overseer.model.enumreason.MessageReason;
 import org.springframework.mail.SimpleMailMessage;
 
 /**

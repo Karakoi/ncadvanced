@@ -2,7 +2,6 @@ package com.overseer.dao;
 
 import com.overseer.model.Role;
 import com.overseer.model.User;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
