@@ -267,10 +267,10 @@
         Error messages: Class type name '{0}' must match pattern '{1}'.
         Doc ref:        http://checkstyle.sourceforge.net/config_naming.html#ClassTypeParameterName
         -->
-        <module name="ClassTypeParameterName">
+        <!--<module name="ClassTypeParameterName">
             <property name="format" value="^[A-Z][a-zA-Z]$"/>
             <message key="name.invalidPattern" value="Class type name ''{0}'' must match pattern ''{1}''."/>
-        </module>
+        </module>-->
 
         <!--
         Description:    Validates identifiers for method type parameters by regex.
