@@ -2,12 +2,14 @@ package com.overseer.dao;
 
 import com.overseer.model.Role;
 import com.overseer.model.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * The <code>UserDao</code> interface represents access to {@link User} object in database.
  */
+
 public interface UserDao extends CrudDao<User, Long> {
 
     /**

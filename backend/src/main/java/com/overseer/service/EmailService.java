@@ -21,5 +21,5 @@ public interface EmailService {
      *
      * @param message contains text, subject, recipient or recipients and link to resource on classpath.
      */
-    void sendMessageWithAttachments(MimeMessage message);
+    void sendMessageWithAttachments(MimeMessage message);//ijuihyg
 }
