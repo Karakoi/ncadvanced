@@ -7,6 +7,7 @@ import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
 
+
 @Component({
   selector: 'overseer-profile',
   templateUrl: 'profile.component.html',
