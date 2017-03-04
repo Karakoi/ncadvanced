@@ -27,7 +27,6 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
-    private static final int DEFAULT_PAGE_SIZE = 20;
     private static final int DEFAULT_PAGE_NUMBER = 1;
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
@@ -97,13 +96,12 @@ public class UserController {
 
     /**
      * Returns all {@link User} entities.
-     *
      * @return all {@link User} entities.
      */
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUser() {
-        List<User> users = userService.fetchPage(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_NUMBER);
+        List<User> users = userService.fetchPage(DEFAULT_PAGE_NUMBER);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 

@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
-import {User} from "../model/user.model";
 import {Observable} from "rxjs";
-import {Http, Response} from "@angular/http";
+import {Response} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {Request} from "../model/request.model";
@@ -26,6 +25,6 @@ export class RequestService {
   }
 
   getAll(): Observable<Request[]> {
-    return this.authHttp.get(`${url}/getJoinedGroups`).map(resp => resp.json());
+    return this.authHttp.get(`${url}/fetch/1`).map(resp => resp.json());
   }
 }

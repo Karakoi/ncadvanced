@@ -35,6 +35,18 @@ public class RequestController {
     /**
      * Gets {@link Request} entity associated with provided id param.
      *
+     * @param page  identifier.
+     * @return {@link Request} entity with http status 200 OK.
+     */
+    @GetMapping("/request/fetch/{page}")
+    public List<Request> fetchRequestPage(@PathVariable int page) {
+        System.out.println(page);
+        return requestService.fetchPage(page);
+    }
+
+    /**
+     * Gets {@link Request} entity associated with provided id param.
+     *
      * @param id request identifier.
      * @return {@link Request} entity with http status 200 OK.
      */

@@ -20,6 +20,7 @@ import java.util.List;
 @Transactional
 public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudService<T, Long> {
     private static final Logger LOG = LoggerFactory.getLogger(CrudServiceImpl.class);
+    private static final short DEFAULT_PAGE_SIZE = 20;
 
     private CrudDao<T, Long> crudDao;
 
@@ -78,7 +79,7 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
     }
 
     @Override
-    public List<T> fetchPage(int pageSize, int pageNumber) {
-        return this.crudDao.fetchPage(pageSize, pageNumber);
+    public List<T> fetchPage(int pageNumber) {
+        return this.crudDao.fetchPage(DEFAULT_PAGE_SIZE, pageNumber);
     }
 }

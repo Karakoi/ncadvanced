@@ -64,5 +64,5 @@ public interface CrudService<T, ID extends Serializable> {
      *
      * @return all entities.
      */
-    List<T> fetchPage(int pageSize, int pageNumber);
+    List<T> fetchPage(int pageNumber);
 }
