@@ -42,6 +42,11 @@ export const appRoutes: Routes = [
     canActivate: [PrivatePageGuard]
   },
   {
+    path: 'error',
+    loadChildren: './pages/error/error.module#ErrorModule',
+    canActivate: [PrivatePageGuard]
+  },
+  {
     path: 'forum',
     loadChildren: './pages/forum/forum.module#ForumModule',
     canActivate: [PrivatePageGuard]
