@@ -6,16 +6,21 @@ import com.overseer.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -28,24 +33,43 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
 
-    private static final String SELECT_ALL_USERS = "SELECT * FROM \"user\" u ";
+    private static final String SELECT_ALL_USERS =
+            "SELECT u.id, u.first_name, u.last_name, u.second_name, "
+            + "u.password, u.email, u.date_of_birth, u.phone_number, "
+            + "u.role, r.name "
+            + "FROM \"user\" u INNER JOIN role r "
+            + "ON u.role = r.id";
 
-    private static final String SELECT_USER_BY_ID = "SELECT * FROM \"user\" u WHERE u.id = :id";
+    private static final String SELECT_USER_BY_ID =
+            "SELECT u.id, u.first_name, u.last_name, u.second_name, "
+                    + "u.password, u.email, u.date_of_birth, u.phone_number, "
+                    + "u.role, r.name "
+                    + "FROM \"user\" u INNER JOIN role r "
+                    + "ON u.role = r.id "
+                    + "WHERE u.id = :id";
 
-    private static final String INSERT_USER = "INSERT INTO \"user\" (first_name, last_name, second_name, password, email, "
-            + "date_of_birth, phone_number, role_id) "
-            + "VALUES (:firstName, :lastName, :secondName, :password, "
-            + ":email, :dateOfBirth, :phoneNumber, :roleId) "
-            + "ON CONFLICT (id) DO UPDATE SET first_name = :firstName, last_name = :lastName, "
-            + "second_name = :secondName, password = :password, "
-            + "email = :email, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, "
-            + "role_id = :role.id";
+    private static final String INSERT_USER =
+            "INSERT INTO \"user\" (first_name, last_name, second_name, password, email, "
+                    + "date_of_birth, phone_number, role) "
+                    + "VALUES (:firstName, :lastName, :secondName, :password, "
+                    + ":email, :dateOfBirth, :phoneNumber, :role.id) "
+                    + "ON CONFLICT (email) DO UPDATE SET first_name = :firstName, last_name = :lastName, "
+                    + "second_name = :secondName, password = :password, "
+                    + "email = :email, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, "
+                    + "role = :role.id";
 
-    private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM \"user\" u WHERE u.email LIKE :email";
+
+    private static final String SELECT_USER_BY_EMAIL =
+            "SELECT u.id, u.first_name, u.last_name, u.second_name, "
+                    + "u.password, u.email, u.date_of_birth, u.phone_number, "
+                    + "u.role, r.name "
+                    + "FROM \"user\" u INNER JOIN role r "
+                    + "ON u.role = r.id "
+                    + "WHERE u.email = :email";
 
     private static final String DELETE_USER_BY_ID = "DELETE FROM \"user\" WHERE id = :id";
 
-    private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM \"user\" u WHERE u.role_id = :roleId";
+    private static final String SELECT_USERS_BY_ROLE = "SELECT * FROM \"user\" u WHERE u.role = :role.id";
 
     private static final String EXISTS_USER_ID = "SELECT COUNT(*) FROM \"user\" WHERE id = :id";
 
@@ -59,6 +83,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User save(User user) {
         Assert.notNull(user, "user must not be null");
+        String password = user.getPassword();
+        user.setPassword(new BCryptPasswordEncoder().encode(password));
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(user);
         if (user.getId() == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -79,7 +105,7 @@ public class UserDaoImpl implements UserDao {
         try {
             return jdbc.queryForObject(SELECT_USER_BY_ID,
                     new MapSqlParameterSource("id", id),
-                    BeanPropertyRowMapper.newInstance(User.class));
+                    new UserMapper());
         } catch (DataAccessException e) {
             return null;
         }
@@ -119,7 +145,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public List<User> findAll() {
-        return jdbc.query(SELECT_ALL_USERS, BeanPropertyRowMapper.newInstance(User.class));
+        return jdbc.query(SELECT_ALL_USERS, new UserMapper());
     }
 
     /**
@@ -131,7 +157,7 @@ public class UserDaoImpl implements UserDao {
         try {
             return jdbc.queryForObject(SELECT_USER_BY_EMAIL,
                     new MapSqlParameterSource("email", email),
-                    BeanPropertyRowMapper.newInstance(User.class));
+                    new UserMapper());
         } catch (DataAccessException e) {
             return null;
         }
@@ -148,4 +174,33 @@ public class UserDaoImpl implements UserDao {
                 BeanPropertyRowMapper.newInstance(User.class));
     }
 
+    /**
+     * The <code>UserMapper</code> class represents mapper for {@link User} object.
+     */
+    private static final class UserMapper implements RowMapper<User> {
+        /**
+         * Mapping data in {@link ResultSet} to an {@link User} entity.
+         */
+        @Override
+        public User mapRow(ResultSet resultSet, int i) throws SQLException {
+            Role role = new Role(resultSet.getString("name"));
+            role.setId(resultSet.getLong("role"));
+
+            User user = new User(
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
+                    resultSet.getString("password"),
+                    resultSet.getString("email"),
+                    role);
+
+            user.setId(resultSet.getLong("id"));
+            user.setSecondName(resultSet.getString("second_name"));
+            String dateOfBirth = resultSet.getString("date_of_birth");
+            if (dateOfBirth != null) {
+                user.setDateOfBirth(LocalDate.parse(dateOfBirth));
+            }
+            user.setPhoneNumber(resultSet.getString("phone_number"));
+            return user;
+        }
+    }
 }

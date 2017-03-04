@@ -1,94 +1,164 @@
-<div class="content">
+<div class="content container" *ngIf="user">
   <div class="tab-content">
     <div class="tab-pane active" id="tab1">
       <br/>
-      <div class="row">
-        <div class="col-md-2 col-md-offset-1">
-          <h5 class="text-center">Your Profile</h5>
+      <form [formGroup]="profileForm" (ngSubmit)="update(profileForm.value)" autocomplete="on">
+        <div class="row">
+          <div class="col-md-2 col-md-offset-1">
+            <h5 class="text-center">Your Profile</h5>
+          </div>
         </div>
-        <div class="col-md-1 col-md-offset-8" >
-          <button type="button" class="btn btn-success" (click)="edit()">Edit</button>
+
+        <div class="row">
+          <div id="data" class="col-md-8 col-md-offset-0">
+            <div class="row">
+              <div class="col-md-5 col-md-offset-1">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('firstName')}">
+                  <label class="control-label">First Name</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="firstName" [(ngModel)]="user.firstName" type="text" placeholder="First Name"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('firstName')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                  <div *ngIf="!validateField('firstName')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('firstName').hasError('required')">First name required.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-5">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('lastName')}">
+                  <label class="control-label">Last Name</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="lastName" [(ngModel)]="user.lastName" type="text" placeholder="Last Name"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('lastName')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                  <div *ngIf="!validateField('lastName')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('lastName').hasError('required')">Last name required.</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('secondName')}">
+                  <label class="control-label">Second Name</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="secondName" [(ngModel)]="user.secondName" type="text" placeholder="Second Name"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('secondName')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-5 col-md-offset-1">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('dateOfBirth')}">
+                  <label class="control-label">Date of birth</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input id="dateOfBirth" [(ngModel)]="user.dateOfBirth" type="text" placeholder="Date of birth"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('dateOfBirth')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                  <div *ngIf="!validateField('dateOfBirth')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('dateOfBirth').hasError('dateISO')">Invalid date.</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-5 ">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('phoneNumber')}">
+                  <label class="control-label">Phone</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                    <input id="phoneNumber" [(ngModel)]="user.phoneNumber" type="text" placeholder="Phone Number"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('phoneNumber')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                  <div *ngIf="!validateField('phoneNumber')" class="help-block text-left">
+              <span *ngIf="profileForm.get('phoneNumber').hasError('phone')">
+                Invalid phone number. Example: 0671234567</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-md-5 col-md-offset-1">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('email')}">
+                  <label class="control-label">Email</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input id="email" [(ngModel)]="user.email" type="text" placeholder="Email"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('email')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                  <div *ngIf="!validateField('email')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('email').hasError('required')">Email address required.</span>
+                    <span *ngIf="profileForm.get('email').hasError('email')">Invalid email address.</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-md-5 ">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('password')}">
+                  <label class="control-label">Password</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="password" [(ngModel)]="user.password" type="text" placeholder="Password"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('password')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                  <div *ngIf="!validateField('password')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('password').hasError('required')">Password required.</span>
+                    <span *ngIf="profileForm.get('password').hasError('minlength')">
+                Password invalid. Password must be at least six characters long.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <br/>
+          </div>
+
+          <div id="foto" class="col-md-4 ">
+            <div>
+              <img src="http://aminoapps.com/static/img/user-icon-placeholder.png" class="dummy_user"/>
+            </div>
+            <label class="control-label">Your Photo</label>
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div id="data" class="col-md-7 col-md-offset-0">
-          <div class="row">
-            <div class="col-md-5 col-md-offset-1">
-              <div class="form-group">
-                <label class="control-label">First Name</label>
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input class="form-control" name="first_name" placeholder="ex: Mike" type="text" disabled
-                         value="TEST">
-                </div>
-              </div>
-            </div>
-            <div class="col-md-5">
-              <div class="form-group">
-                <label class="control-label">Last Name</label>
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input class="form-control" name="last_name" type="text"
-                         aria-required="true" disabled value="TEST">
-                </div>
-              </div>
-            </div>
+        <div class="row">
+          <div class="col-md-2 col-md-offset-1">
+            <button type="submit" class="btn btn-success" [disabled]="profileForm.invalid" style="width: 150px;">Update
+            </button>
           </div>
-
-          <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-              <div class="form-group">
-                <label class="control-label">Second Name</label>
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input class="form-control" name="last_name" placeholder="ex: Andrew" required="true" type="text"
-                         aria-required="true" disabled value="TEST">
-                </div>
-              </div>
-            </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-success" (click)="cancel()" style="width: 150px; margin-left: 100px;">
+              Cancel
+            </button>
           </div>
-
-          <div class="row">
-            <div class="col-md-5 col-md-offset-1">
-              <div class="form-group">
-                <label class="control-label">Date of birth</label>
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                  <input class="form-control" name="birthDate" type="date"
-                         disabled value="TEST">
-                </div>
-              </div>
-            </div>
-            <div class="col-md-5 ">
-              <div class="form-group">
-                <label class="control-label">Phone</label>
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                  <input class="form-control" name="phone" type="text" disabled value="0971234567">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-5 col-md-offset-1">
-              <div class="form-group">
-                <label class="control-label">Email</label>
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                  <input class="form-control" email="true" name="email" type="text" disabled value="test@gmail.com">
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
         <br/>
-        </div>
-        <div id="foto" class="col-md-3 ">
-          <div>
-            <img src="app/pages/profile/dummy_user.jpg" class="dummy_user"/>
-          </div>
-        </div>
-      </div>
+      </form>
 
     </div>
   </div>

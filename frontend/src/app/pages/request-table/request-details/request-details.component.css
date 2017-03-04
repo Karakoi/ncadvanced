@@ -1,0 +1,27 @@
+p {
+  margin: 0;
+}
+
+hr {
+  margin: 5px;
+}
+
+.table, .list-group {
+  margin-top: 5px;
+}
+
+.glyphicon {
+  margin: 0 5px;
+}
+
+.glyphicon-chevron-up, .glyphicon-chevron-down, .close-box {
+  line-height: 140%;
+}
+
+.badge {
+  background-color: #337AB7;
+}
+
+.panel-primary {
+  margin-top: 0;
+}

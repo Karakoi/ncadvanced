@@ -25,12 +25,19 @@ export class SignupComponent implements OnInit {
   }
 
   register(params): void {
+    params.role = {
+      id: "12",
+      name: "employee"
+    };
+
     this.userService.create(params)
       .mergeMap(() => {
         return this.authService.login(params.email, params.password);
-      }).subscribe(() => {
-      this.router.navigate(['/home']);
-    }, e => this.handleError(e));
+      })
+      .subscribe(() => {
+        this.toastr.success("Signed Up successfully", "Success!");
+        this.router.navigate(['/home']);
+      }, e => this.handleError(e));
   }
 
   validateField(field: string): boolean {
@@ -44,14 +51,14 @@ export class SignupComponent implements OnInit {
       secondName: '',
       email: ['', [Validators.required, CustomValidators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      birthDate: ['', CustomValidators.dateISO],
+      dateOfBirth: ['', CustomValidators.dateISO],
       phoneNumber: ['', CustomValidators.phone()]
     });
   }
 
   private handleError(error) {
     switch (error.status) {
-      case 400:
+      case 500:
         this.toastr.error('This email is already taken.', 'Error.');
     }
   }

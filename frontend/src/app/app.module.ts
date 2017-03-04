@@ -1,51 +1,68 @@
 import {BrowserModule} from "@angular/platform-browser";
 import {NgModule} from "@angular/core";
-import {HttpModule} from "@angular/http";
+import {HttpModule, Http, RequestOptions} from "@angular/http";
 import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {SideBarDirective} from "./directive/sidebar.directive";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SideBarDirective} from "./directive/barrel";
+import {AuthHttp, AuthConfig} from "angular2-jwt";
+import {LoginModule, ProfileModule, RecoverModule, SignupModule, UserTableModule} from "./pages/barrel";
+import {
+  PrivatePageGuard,
+  PublicPageGuard,
+  UserService,
+  AuthService,
+  RecoverService,
+  AdminPageGuard,
+  RequestService
+} from "./service/barrel";
 import {
   FooterComponent,
-  HomeComponent,
   NavbarComponent,
   NoContentComponent,
-  RequestComponent,
   SideBarComponent,
   WelcomeComponent
-} from "./components/index";
-import {PrivatePageGuard, PublicPageGuard, UserService, JsonHttp, AuthService, RecoverService} from "./service/index";
-import {RequestFormModule} from "./pages/request-form/request-form.module";
+} from "./components/barrel";
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
-    HomeComponent,
     NavbarComponent,
     NoContentComponent,
-    RequestComponent,
     SideBarComponent,
     WelcomeComponent,
     SideBarDirective
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     HttpModule,
-    RequestFormModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
     RecoverService,
     AuthService,
-    JsonHttp,
     UserService,
     PrivatePageGuard,
-    PublicPageGuard
+    PublicPageGuard,
+    AdminPageGuard,
+    RequestService,
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [Http, RequestOptions]
+    }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+}
+
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp(new AuthConfig(), http, options);
 }
