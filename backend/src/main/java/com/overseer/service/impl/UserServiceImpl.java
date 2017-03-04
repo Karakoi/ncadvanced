@@ -10,7 +10,6 @@ import com.overseer.service.UserService;
 import com.overseer.util.PasswordGeneratorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
@@ -31,14 +30,13 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     @Value("${mail.from}")
     private String emailFrom;
 
-    @Autowired
     private EmailService emailService;
-
     private UserDao userDao;
 
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, EmailService emailService) {
         super(userDao);
-            this.userDao =  userDao;
+        this.userDao = userDao;
+        this.emailService = emailService;
     }
 
     /**

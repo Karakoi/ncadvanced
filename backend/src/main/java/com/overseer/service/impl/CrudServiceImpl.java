@@ -17,7 +17,6 @@ import java.util.List;
  *
  * @param <T> entity type.
  */
-
 @Transactional
 public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudService<T, Long> {
     private static final Logger LOG = LoggerFactory.getLogger(CrudServiceImpl.class);
