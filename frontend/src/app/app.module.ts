@@ -41,6 +41,7 @@ import {ErrorService} from "./service/error.service";
   ],
   imports: [
     ErrorModule,
+    UserProfileModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,

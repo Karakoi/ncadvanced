@@ -42,6 +42,11 @@ export const appRoutes: Routes = [
     canActivate: [PrivatePageGuard]
   },
   {
+    path: 'user-profile',
+    loadChildren: './pages/user-profile/user-profile.module#UserProfileModule',
+    canActivate: [PrivatePageGuard]
+  },
+  {
     path: 'error',
     loadChildren: './pages/error/error.module#ErrorModule',
     canActivate: [PrivatePageGuard]
