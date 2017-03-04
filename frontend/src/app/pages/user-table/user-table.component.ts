@@ -11,21 +11,21 @@ import {User} from "../../model/user.model";
   styleUrls: ['user-table.component.css']
 })
 export class UserTableComponent implements OnInit {
-  @ViewChild(AddUserComponent)
-  public readonly modal: AddUserComponent;
-
-  userForm: FormGroup;
-  users: User[];
-
   constructor(private userService: UserService,
               private formBuilder: FormBuilder) {
   }
 
+  @ViewChild(AddUserComponent)
+  public readonly modal: AddUserComponent;
+
+  userForm: FormGroup;
+
   ngOnInit() {
-    this.userService.getAll().subscribe((users: User[]) => {
-      this.users = users;
+    //this.users = this.userService.getAll();
+    this.userForm = this.formBuilder.group({
+      firstName: ['', Validators.required]
     });
-    this.initForm();
+    this.modal.show();
   }
 
   showModal() {
@@ -36,10 +36,15 @@ export class UserTableComponent implements OnInit {
     return this.users
       .map(user => user)
       .sort((a, b) => {
-        if (a.id > b.id) return 1;
-        else if (a.id < b.id) return -1;
+        if (a.lastName > b.lastName) return 1;
+        else if (a.lastName < b.lastName) return -1;
         else return 0;
-      });
+      })
+      .sort((a, b) => {
+        if (a.firstName > b.firstName) return 1;
+        else if (a.firstName < b.firstName) return -1;
+        else return 0;
+      })
   }
 
   sortByRole() {
@@ -55,13 +60,87 @@ export class UserTableComponent implements OnInit {
     event.toElement.parentElement.parentElement.remove()
   }
 
+
   validateField(field: string): boolean {
     return this.userForm.get(field).valid || !this.userForm.get(field).dirty;
   }
 
-  private initForm(): void {
-    this.userForm = this.formBuilder.group({
-      firstName: ['', Validators.required]
-    });
-  }
+  users: User[] = [
+    {
+      id: 1,
+      firstName: "Ayne",
+      lastName: "Bollins",
+      secondName: "Wayneovich",
+      email: "wcollins0@aboutads.info",
+      birthDate: new Date("1985-12-12"),
+      phoneNumber: "374-(251)803-9567",
+      role: "Admin",
+      password: null
+    },
+    {
+      id: 2,
+      firstName: "Benise",
+      lastName: "Day",
+      secondName: "Deniseovich",
+      email: "dday1@blogtalkradio.com",
+      birthDate: new Date("1995-11-27"),
+      phoneNumber: "241-(539)668-2990",
+      role: "Admin",
+      password: null
+    },
+    {
+      id: 7,
+      firstName: "Corothy",
+      lastName: "Collins",
+      secondName: "Dorothyovich",
+      email: "dcollins7@ed.gov",
+      birthDate: new Date("1980-10-12"),
+      phoneNumber: "380-(874)642-9009",
+      role: "Office Manager",
+      password: null
+    },
+    {
+      id: 4,
+      firstName: "Wayne",
+      lastName: "Vollins",
+      secondName: "Wayneovich",
+      email: "wcollins0@aboutads.info",
+      birthDate: new Date("1985-12-12"),
+      phoneNumber: "374-(251)803-9567",
+      role: "Admin",
+      password: null
+    },
+    {
+      id: 3,
+      firstName: "Denise",
+      lastName: "Day",
+      secondName: "Deniseovich",
+      email: "dday1@blogtalkradio.com",
+      birthDate: new Date("1995-11-27"),
+      phoneNumber: "241-(539)668-2990",
+      role: "Admin",
+      password: null
+    },
+    {
+      id: 6,
+      firstName: "Wayne",
+      lastName: "Collins",
+      secondName: "Wayneovich",
+      email: "wcollins0@aboutads.info",
+      birthDate: new Date("1985-12-12"),
+      phoneNumber: "374-(251)803-9567",
+      role: "Admin",
+      password: null
+    },
+    {
+      id: 5,
+      firstName: "Denise",
+      lastName: "Way",
+      secondName: "Deniseovich",
+      email: "dday1@blogtalkradio.com",
+      birthDate: new Date("1995-11-27"),
+      phoneNumber: "241-(539)668-2990",
+      role: "Admin",
+      password: null
+    }];
 }

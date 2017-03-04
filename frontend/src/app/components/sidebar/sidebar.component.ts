@@ -14,7 +14,6 @@ export class SideBarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.role = this.authService.role;
     this.authService.events.subscribe((event: Subject<AuthEvent>) => {
       if (event.constructor.name === 'DidLogin') {
         this.role = this.authService.role;

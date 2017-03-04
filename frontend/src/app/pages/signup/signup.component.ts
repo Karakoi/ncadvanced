@@ -51,7 +51,7 @@ export class SignupComponent implements OnInit {
       secondName: '',
       email: ['', [Validators.required, CustomValidators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      dateOfBirth: ['', CustomValidators.dateISO],
+      birthDate: ['', CustomValidators.dateISO],
       phoneNumber: ['', CustomValidators.phone()]
     });
   }

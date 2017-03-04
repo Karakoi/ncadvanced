@@ -3,7 +3,6 @@ import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {RecoverService} from "../../service/recover.service";
 import {ToastsManager} from "ng2-toastr";
 import {CustomValidators} from "ng2-validation";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'overseer-recover',
@@ -14,8 +13,7 @@ export class RecoverComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private recoverService: RecoverService,
-              private toastr: ToastsManager,
-              private router: Router,) {
+              private toastr: ToastsManager) {
   }
 
   ngOnInit() {
@@ -28,7 +26,6 @@ export class RecoverComponent implements OnInit {
     this.recoverService.sendRecoverInfo(email)
       .subscribe(() => {
         this.toastr.success("Please check your email inbox", "Success!");
-        this.router.navigate(['/login']);
       }, e => {
         this.handleError(e);
       });

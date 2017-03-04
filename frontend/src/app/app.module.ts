@@ -5,29 +5,26 @@ import {RouterModule} from "@angular/router";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {SideBarDirective} from "./directive/barrel";
+import {FormsModule} from "@angular/forms";
+import {SideBarDirective, RequestFormDirective} from "./directive/barrel";
 import {AuthHttp, AuthConfig} from "angular2-jwt";
-import {LoginModule, ProfileModule, RecoverModule, SignupModule, UserTableModule} from "./pages/barrel";
 import {
   PrivatePageGuard,
   PublicPageGuard,
   UserService,
+  JsonHttp,
   AuthService,
   RecoverService,
-  AdminPageGuard,
-  RequestService
+  AdminPageGuard
 } from "./service/barrel";
 import {
   FooterComponent,
   NavbarComponent,
   NoContentComponent,
+  RequestComponent,
   SideBarComponent,
   WelcomeComponent
 } from "./components/barrel";
-import {ErrorModule} from "./pages/error/error.module";
-import {UserProfileModule} from "./pages/user-profile/user-profile.module";
-import {ErrorService} from "./service/error.service";
 
 @NgModule({
   declarations: [
@@ -35,29 +32,27 @@ import {ErrorService} from "./service/error.service";
     FooterComponent,
     NavbarComponent,
     NoContentComponent,
+    RequestComponent,
     SideBarComponent,
     WelcomeComponent,
-    SideBarDirective
+    SideBarDirective,
+    RequestFormDirective
   ],
   imports: [
-    ErrorModule,
-    UserProfileModule,
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule,
     HttpModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
-    ErrorService,
     RecoverService,
     AuthService,
+    JsonHttp,
     UserService,
     PrivatePageGuard,
     PublicPageGuard,
     AdminPageGuard,
-    RequestService,
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

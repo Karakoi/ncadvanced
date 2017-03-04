@@ -2,10 +2,10 @@ import {Routes, RouterModule} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
-import {HomeComponent} from "./home.component";
+import {RequestFormComponent} from "./request-form.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: RequestFormComponent},
 ];
 
 @NgModule({
@@ -15,11 +15,11 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   declarations: [
-    HomeComponent
+    RequestFormComponent
   ],
   exports: [
-    HomeComponent
+    RequestFormComponent
   ]
 })
-export class HomeModule {
+export class RequestFormModule {
 }

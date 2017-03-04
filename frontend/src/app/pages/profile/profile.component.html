@@ -63,17 +63,17 @@
 
             <div class="row">
               <div class="col-md-5 col-md-offset-1">
-                <div class="form-group" [ngClass]="{'has-error': !validateField('dateOfBirth')}">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('birthDate')}">
                   <label class="control-label">Date of birth</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                    <input id="dateOfBirth" [(ngModel)]="user.dateOfBirth" type="text" placeholder="Date of birth"
+                    <input id="birthDate" [(ngModel)]="user.birthDate" type="text" placeholder="Date of birth"
                            class="form-control" [ngModelOptions]="{standalone: true}">
-                    <span *ngIf="!validateField('dateOfBirth')"
+                    <span *ngIf="!validateField('birthDate')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
-                  <div *ngIf="!validateField('dateOfBirth')" class="help-block text-left">
-                    <span *ngIf="profileForm.get('dateOfBirth').hasError('dateISO')">Invalid date.</span>
+                  <div *ngIf="!validateField('birthDate')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('birthDate').hasError('dateISO')">Invalid date.</span>
                   </div>
                 </div>
 

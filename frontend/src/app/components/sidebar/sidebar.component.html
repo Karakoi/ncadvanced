@@ -11,23 +11,23 @@
       <a [routerLink]="['/profile']">Profile</a>
     </li>
     <li>
-      <a [routerLink]="['/forum']">Forum</a>
+      <a href="/forum">Forum</a>
     </li>
     <li>
-      <a [routerLink]="['/topic']">Topic</a>
+      <a href="/message">Send Message</a>
     </li>
     <li>
-      <a [routerLink]="['/chat']">Chat</a>
-    </li>
-    <li>
-      <a [routerLink]="['/message']">Send Message</a>
+      <a href="/chat">Chat</a>
     </li>
     <!--Show this div, if user's role is Admin -->
+    <li>
+      <a href="#" *ngIf="isAdmin()">Add user</a>
+    </li>
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
     </li>
     <li>
-      <a [routerLink]="['/requests']" *ngIf="isAdmin()">Show all requests</a>
+      <a href="#" *ngIf="isAdmin()">Show all requests</a>
     </li>
     <!--Show this div, if user's role is Manager -->
     <li>
