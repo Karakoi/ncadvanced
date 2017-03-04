@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * The <code>UserDao</code> interface represents access to {@link User} object in database.
  */
+
 public interface UserDao extends CrudDao<User, Long> {
 
     /**
