@@ -29,7 +29,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     public RequestServiceImpl(@Qualifier("requestDaoImpl") CrudDao<Request, Long> requestDao) {
         super(requestDao);
-        this.requestDao = (RequestDao) requestDao;
+        if (requestDao instanceof RequestDao) {
+            this.requestDao = (RequestDao) requestDao;
+        }
     }
 
     /**

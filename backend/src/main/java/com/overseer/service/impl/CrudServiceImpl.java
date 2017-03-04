@@ -13,6 +13,11 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
+/**
+ * Basic implementation of {@link CrudService} interface.
+ *
+ * @param <T> entity type.
+ */
 @NoArgsConstructor
 @Transactional
 public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudService<T, Long> {

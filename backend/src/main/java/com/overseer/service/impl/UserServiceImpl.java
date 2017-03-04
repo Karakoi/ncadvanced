@@ -41,7 +41,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
     public UserServiceImpl(@Qualifier("userDaoImpl") CrudDao<User, Long> userDao) {
         super(userDao);
-        this.userDao = (UserDao) userDao;
+        if (userDao instanceof UserDao) {
+            this.userDao = (UserDao) userDao;
+        }
     }
 
     /**
