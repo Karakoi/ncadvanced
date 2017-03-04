@@ -3,10 +3,12 @@ package com.overseer.service.impl;
 import com.overseer.model.User;
 import com.overseer.model.enumreason.MessageReason;
 import com.overseer.service.MessageBuilder;
+import lombok.Setter;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +26,8 @@ public class MessageBuilderImpl implements MessageBuilder {
 
     @Value("${mail.from}")
     private String emailFrom;
+    @Setter
+    private String password;
 
     @Override
     public SimpleMailMessage builderMessage(User user, MessageReason reason) {
@@ -63,7 +67,7 @@ public class MessageBuilderImpl implements MessageBuilder {
      * generate SimpleMailMessage if reason is forgot password.
      * */
     private SimpleMailMessage generateMessageForRecoveringPassword(User user) {
-
+        Assert.notNull(password, "new password can not be null");
         SimpleMailMessage message = buildProperties(user);
         message.setSubject(SUBJECT_FOR_RECOVERING_PASSWORD);
         String text = "Dear "
@@ -75,7 +79,7 @@ public class MessageBuilderImpl implements MessageBuilder {
                 + user.getEmail()
                 + "\n"
                 + "Your new password is: "
-                + user.getPassword();
+                + password;
         message.setText(text);
         return message;
     }

@@ -5,6 +5,7 @@ import com.overseer.dao.UserDao;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
+import com.overseer.model.enumreason.MessageReason;
 import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -29,10 +30,7 @@ import java.util.List;
 })
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
-    private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
 
-    @Value("${mail.from}")
-    private String emailFrom;
     @Value("${password.length}")
     private Integer newPasswordLength;
 
@@ -55,34 +53,10 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         String newPassword = RandomStringUtils.randomAlphanumeric(newPasswordLength);
         user.setPassword(newPassword);
         userDao.save(user);
-        SimpleMailMessage message = this.createMailMessage(user, newPassword);
+        MessageBuilderImpl messageBuilder = new MessageBuilderImpl();
+        messageBuilder.setPassword(newPassword);
+        SimpleMailMessage message = messageBuilder.builderMessage(user, MessageReason.FORGOT_PASSWORD);
         emailService.sendMessage(message);
-    }
-
-    /**
-     * Forms message for recovering password.
-     *
-     * @param user user to recover password for, must not be {@literal null}
-     * @return message for recovering password
-     */
-    private SimpleMailMessage createMailMessage(User user, String newPassword) {
-        Assert.notNull(user, "user must not be null");
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setFrom(emailFrom);
-        mailMessage.setSubject(SUBJECT_FOR_RECOVERING_PASSWORD);
-        mailMessage.setText("Dear "
-                + user.getFirstName()
-                + " "
-                + user.getLastName()
-                + ",\n\n"
-                + "You or someone else requested a password recovery to "
-                + user.getEmail()
-                + " account.\n"
-                + "Your new password is \n"
-                + newPassword
-                + "\n");
-        return mailMessage;
     }
 
     @Override
