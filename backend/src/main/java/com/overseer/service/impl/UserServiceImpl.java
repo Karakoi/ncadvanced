@@ -6,13 +6,13 @@ import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
+import com.overseer.model.enumreason.MessageReason;
 import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
 import com.overseer.util.PasswordGeneratorUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -28,10 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
-    private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
-
-    @Value("${mail.from}")
-    private String emailFrom;
 
     private final UserDao userDao;
     private final EmailService emailService;
@@ -130,37 +126,20 @@ public class UserServiceImpl implements UserService {
         String newPassword = passwordGeneratorUtil.generatePassword();
         user.setPassword(newPassword);
         userDao.save(user);
-        SimpleMailMessage message = this.createMailMessage(user, newPassword);
+        SimpleMailMessage message = this.createMailMessage(user, MessageReason.FORGOT_PASSWORD);
         emailService.sendMessage(message);
     }
 
     /**
-     * Forms message for recovering password.
+     * Forms message for all reasons.
      *
      * @param user user to recover password for, must not be {@literal null}
-     * @return message for recovering password
+     * @param reason invoke different method
+     * @return message depends on reason
      */
-    private SimpleMailMessage createMailMessage(User user, String newPassword) {
+    private SimpleMailMessage createMailMessage(User user, MessageReason reason) {
         Assert.notNull(user);
-
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setFrom(emailFrom);
-        mailMessage.setSubject(SUBJECT_FOR_RECOVERING_PASSWORD);
-
-        mailMessage.setText("Dear "
-                + user.getFirstName()
-                + " "
-                + user.getLastName()
-                + ",\n\n"
-                + "You or someone else requested a password recovery to "
-                + user.getEmail()
-                + " account.\n"
-                + "Your new password is \n"
-                + newPassword
-                + "\n");
-        return mailMessage;
+        return new MessageBuilderImpl().builderMessage(user, reason);
     }
 
     @Override

@@ -7,5 +7,5 @@ public enum MessageReason {
 
     CHANGE_REQUEST,
     FORGOT_PASSWORD,
-    CONFIRM_RECOVERY
+    CONFIRM_REGISTRY
 }
