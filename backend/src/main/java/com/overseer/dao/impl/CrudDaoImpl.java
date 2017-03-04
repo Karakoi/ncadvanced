@@ -93,9 +93,9 @@ public abstract class CrudDaoImpl<T extends AbstractEntity> implements CrudDao<T
     }
 
     @Override
-    public int count() {
+    public Long count() {
         String findCountQuery = getCountQuery();
-        return this.jdbc.queryForObject(findCountQuery, new MapSqlParameterSource(), Integer.class);
+        return this.jdbc.queryForObject(findCountQuery, new MapSqlParameterSource(), Long.class);
     }
 
     NamedParameterJdbcOperations jdbc() {
