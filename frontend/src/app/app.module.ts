@@ -25,6 +25,9 @@ import {
   SideBarComponent,
   WelcomeComponent
 } from "./components/barrel";
+import {ErrorModule} from "./pages/error/error.module";
+import {UserProfileModule} from "./pages/user-profile/user-profile.module";
+import {ErrorService} from "./service/error.service";
 
 @NgModule({
   declarations: [
@@ -37,6 +40,8 @@ import {
     SideBarDirective
   ],
   imports: [
+    ErrorModule,
+    UserProfileModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
@@ -45,6 +50,7 @@ import {
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
+    ErrorService,
     RecoverService,
     AuthService,
     UserService,
