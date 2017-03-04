@@ -55,6 +55,11 @@ public class RoleDaoImpl extends CrudDaoImpl<Role> implements RoleDao {
         return this.queryService().getQuery("role.findAll");
     }
 
+    @Override
+    protected String getCountQuery() {
+        return this.queryService().getQuery("role.count");
+    }
+
     /**
      * Gets {@link RowMapper} implementation for {@link Role} entity.
      *

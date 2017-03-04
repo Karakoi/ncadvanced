@@ -98,4 +98,9 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
             return user;
         };
     }
+
+    @Override
+    protected String getCountQuery() {
+        return this.queryService().getQuery("user.count");
+    }
 }

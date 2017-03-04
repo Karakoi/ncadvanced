@@ -56,6 +56,11 @@ public class PriorityStatusDaoImpl extends CrudDaoImpl<PriorityStatus> implement
         return this.queryService().getQuery("priorityStatus.findAll");
     }
 
+    @Override
+    protected String getCountQuery() {
+        return queryService().getQuery("priorityStatus.count");
+    }
+
     /**
      * Gets {@link RowMapper} implementation for {@link PriorityStatus} entity.
      *

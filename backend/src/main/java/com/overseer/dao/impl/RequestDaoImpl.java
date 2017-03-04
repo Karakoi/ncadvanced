@@ -149,6 +149,11 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    protected String getCountQuery() {
+        return this.queryService().getQuery("request.count");
+    }
+
+    @Override
     protected RowMapper<Request> getMapper() {
         return (resultSet, i) -> {
             User reporter = new User();

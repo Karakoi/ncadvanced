@@ -4,6 +4,7 @@ import com.overseer.dao.CrudDao;
 import com.overseer.model.AbstractEntity;
 import com.overseer.service.QueryService;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -83,9 +84,18 @@ public abstract class CrudDaoImpl<T extends AbstractEntity> implements CrudDao<T
     }
 
     @Override
-    public List<T> findAll() {
+    public List<T> fetchPage(int pageSize, int pageNumber) {
+        Assert.state(pageNumber > 0, "Must be greater then 0");
+        val parameterSource = new MapSqlParameterSource("limit", pageSize);
+        parameterSource.addValue("offset", pageSize * pageNumber - 1);
         String findAllQuery = this.getFindAllQuery();
-        return this.jdbc.query(findAllQuery, this.getMapper());
+        return this.jdbc.query(findAllQuery, parameterSource, this.getMapper());
+    }
+
+    @Override
+    public int count() {
+        String findCountQuery = getCountQuery();
+        return this.jdbc.queryForObject(findCountQuery, new MapSqlParameterSource(), Integer.class);
     }
 
     NamedParameterJdbcOperations jdbc() {
@@ -108,4 +118,5 @@ public abstract class CrudDaoImpl<T extends AbstractEntity> implements CrudDao<T
 
     protected abstract String getFindAllQuery();
 
+    protected abstract String getCountQuery();
 }

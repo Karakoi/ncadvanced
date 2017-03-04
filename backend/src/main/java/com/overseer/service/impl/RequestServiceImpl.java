@@ -7,7 +7,6 @@ import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.service.RequestService;
-import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +20,6 @@ import java.util.List;
  * Implementation of {@link RequestService} interface.
  */
 @Service
-@NoArgsConstructor
 public class RequestServiceImpl extends CrudServiceImpl<Request> implements RequestService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 

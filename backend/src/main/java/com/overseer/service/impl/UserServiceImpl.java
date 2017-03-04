@@ -1,6 +1,6 @@
 package com.overseer.service.impl;
 
-import com.overseer.dao.CrudDao;
+
 import com.overseer.dao.UserDao;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
@@ -8,11 +8,9 @@ import com.overseer.model.User;
 import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
 import com.overseer.util.PasswordGeneratorUtil;
-import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,7 +24,6 @@ import java.util.List;
  */
 @Service
 @PropertySource("classpath:email.properties")
-@NoArgsConstructor
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
@@ -39,11 +36,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
     private UserDao userDao;
 
-    public UserServiceImpl(@Qualifier("userDaoImpl") CrudDao<User, Long> userDao) {
+    public UserServiceImpl(UserDao userDao) {
         super(userDao);
-        if (userDao instanceof UserDao) {
-            this.userDao = (UserDao) userDao;
-        }
+            this.userDao =  userDao;
     }
 
     /**

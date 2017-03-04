@@ -69,4 +69,9 @@ public class ProgressStatusDaoImpl extends CrudDaoImpl<ProgressStatus> implement
             return progressStatus;
         };
     }
+
+    @Override
+    protected String getCountQuery() {
+        return this.queryService().getQuery("progressStatus.count");
+    }
 }

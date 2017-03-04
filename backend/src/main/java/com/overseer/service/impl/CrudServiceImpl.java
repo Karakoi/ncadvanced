@@ -5,7 +5,6 @@ import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.AbstractEntity;
 import com.overseer.service.CrudService;
-import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,7 @@ import java.util.List;
  *
  * @param <T> entity type.
  */
-@NoArgsConstructor
+
 @Transactional
 public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudService<T, Long> {
     private static final Logger LOG = LoggerFactory.getLogger(CrudServiceImpl.class);
@@ -50,6 +49,7 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
     @Override
     public T findOne(Long id) throws NoSuchEntityException {
         Assert.notNull(id, "id must not be null");
+        Assert.notNull(crudDao, "Crud dao is null 8(");
         LOG.debug("Searching for entity with id: {}", id);
         T entity = this.crudDao.findOne(id);
         if (entity == null) {
@@ -79,7 +79,7 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
     }
 
     @Override
-    public List<T> findAll() {
-        return this.crudDao.findAll();
+    public List<T> fetchPage(int pageSize, int pageNumber) {
+        return this.crudDao.fetchPage(pageSize, pageNumber);
     }
 }
