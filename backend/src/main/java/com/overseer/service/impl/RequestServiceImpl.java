@@ -1,6 +1,5 @@
 package com.overseer.service.impl;
 
-import com.overseer.dao.CrudDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -9,7 +8,6 @@ import com.overseer.model.User;
 import com.overseer.service.RequestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -25,11 +23,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     private RequestDao requestDao;
 
-    public RequestServiceImpl(@Qualifier("requestDaoImpl") CrudDao<Request, Long> requestDao) {
+    public RequestServiceImpl(RequestDao requestDao) {
         super(requestDao);
-        if (requestDao instanceof RequestDao) {
-            this.requestDao = (RequestDao) requestDao;
-        }
+        this.requestDao = requestDao;
     }
 
     /**
