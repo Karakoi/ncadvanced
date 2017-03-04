@@ -7,12 +7,13 @@ import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
-import com.overseer.util.PasswordGeneratorUtil;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -23,13 +24,18 @@ import java.util.List;
  * Implementation of {@link UserService} interface.
  */
 @Service
-@PropertySource("classpath:email.properties")
+@PropertySources({
+        @PropertySource("classpath:email.properties"),
+        @PropertySource("classpath:security.properties")
+})
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
 
     @Value("${mail.from}")
     private String emailFrom;
+    @Value("${password.length}")
+    private Integer newPasswordLength;
 
     @Autowired
     private EmailService emailService;
@@ -48,8 +54,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     public void changePassword(String email) throws NoSuchEntityException {
         Assert.notNull(email, "email must not be null");
         User user = this.findByEmail(email);
-        PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
-        String newPassword = passwordGeneratorUtil.generatePassword();
+        String newPassword = RandomStringUtils.randomAlphanumeric(newPasswordLength);
         user.setPassword(newPassword);
         userDao.save(user);
         SimpleMailMessage message = this.createMailMessage(user, newPassword);
