@@ -33,6 +33,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
     @Value("${mail.from}")
     private String emailFrom;
+
     @Autowired
     private EmailService emailService;
 
@@ -48,7 +49,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
      */
     @Override
     public void changePassword(String email) throws NoSuchEntityException {
-        Assert.notNull(email);
+        Assert.notNull(email, "email must not be null");
         User user = this.findByEmail(email);
         PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
         String newPassword = passwordGeneratorUtil.generatePassword();
@@ -65,7 +66,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
      * @return message for recovering password
      */
     private SimpleMailMessage createMailMessage(User user, String newPassword) {
-        Assert.notNull(user);
+        Assert.notNull(user, "user must not be null");
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getEmail());
         mailMessage.setFrom(emailFrom);
@@ -86,7 +87,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
     @Override
     public User findByEmail(String email) throws NoSuchEntityException {
-        Assert.notNull(email);
+        Assert.notNull(email, "email must not be null");
         User user = userDao.findByEmail(email);
         if (user == null) {
             throw new NoSuchEntityException("Failed to retrieve user with email " + email);
@@ -97,7 +98,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
     @Override
     public List<User> findByRole(Role role) {
-        Assert.notNull(role);
+        Assert.notNull(role, "role must not be null");
         LOG.debug("Retrieving user with role: {}", role);
         return userDao.findByRole(role);
     }
