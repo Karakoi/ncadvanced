@@ -112,7 +112,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param date request's property which represents belonging to a group, must not be {@literal null}.
      * @return List of requests with same date.
      */
-    List<Request> getRequestByDate(LocalDate date);
+    List<Request> getRequestsByDate(LocalDate date);
 
     /**
      * Fetches from the database all Requests objects with same progress status.
@@ -133,16 +133,16 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Changes the progress status of the request, notifies the request reporter and save change in the history.
      *
-     * @param requestId changed request id.
+     * @param request changed request.
      * @return changed request
      */
-    Request changeProgressStatus(Long requestId);
+    Request changeProgressStatus(Request request);
 
     /**
      * Changes the priority status of the request, notifies the request reporter and save change in the history.
      *
-     * @param requestId changed request request id.
+     * @param request changed request.
      * @return changed request
      */
-    Request changePriorityStatus(Long requestId);
+    Request changePriorityStatus(Request request);
 }
