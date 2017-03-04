@@ -54,5 +54,7 @@ public interface CrudDao<T, ID extends Serializable> {
      *
      * @return all entities.
      */
-    List<T> findAll();
+    List<T> fetchPage(int pageSize, int pageNumber);
+
+    int count();
 }

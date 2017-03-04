@@ -9,6 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @SuppressWarnings("PMD.UnusedPrivateField")
-class AbstractEntity {
+public class AbstractEntity {
     private Long id;
+
+    public boolean isNew() {
+        return this.id == null;
+    }
 }
