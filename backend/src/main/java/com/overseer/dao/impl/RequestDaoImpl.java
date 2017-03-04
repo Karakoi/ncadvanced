@@ -145,7 +145,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     @Override
     protected String getFindAllQuery() {
         return queryService().getQuery("request.select")
-                .concat(queryService().getQuery("request.findAll"));
+                .concat(queryService().getQuery("request.fetchPage"));
     }
 
     @Override
