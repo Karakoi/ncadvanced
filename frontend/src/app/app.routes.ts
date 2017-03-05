@@ -1,5 +1,5 @@
 import {Routes} from "@angular/router";
-import {WelcomeComponent, NoContentComponent, RequestComponent} from "./components/barrel";
+import {WelcomeComponent, NoContentComponent} from "./components/barrel";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {PrivatePageGuard} from "./service/private-page.guard";
 import {AdminPageGuard} from "./service/admin-page.guard";
@@ -61,15 +61,15 @@ export const appRoutes: Routes = [
     loadChildren: './pages/chat/chat.module#ChatModule',
     canActivate: [PrivatePageGuard]
   },
-  {
-    path: 'request',
-    component: RequestComponent,
-    canActivate: [PrivatePageGuard]
-  },
   // Available for admin
   {
     path: 'users',
     loadChildren: './pages/user-table/user-table.module#UserTableModule',
+    canActivate: [PrivatePageGuard, AdminPageGuard]
+  },
+  {
+    path: 'requests',
+    loadChildren: './pages/request-table/request-table.module#RequestTableModule',
     canActivate: [PrivatePageGuard, AdminPageGuard]
   },
   // If route does not match any previous ones

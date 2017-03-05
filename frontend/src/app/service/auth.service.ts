@@ -50,9 +50,10 @@ export class AuthService {
 
   get role(): string {
     let token = localStorage.getItem('id_token');
-    let role = this.JwtHelper.decodeToken(token).role;
-
-    return role;
+    if (!!token) {
+      return this.JwtHelper.decodeToken(token).role;
+    }
+    return 'unauthorized';
   }
 
   get events(): Observable<AuthEvent> {

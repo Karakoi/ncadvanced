@@ -65,15 +65,15 @@
             </div>
           </div>
           <!--USER BIRTH DATE-->
-          <div class="form-group" [ngClass]="{'has-error': !validateField('birthDate')}">
+          <div class="form-group" [ngClass]="{'has-error': !validateField('dateOfBirth')}">
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-              <input id="birthDate" formControlName="birthDate" type="date" placeholder="Date of birth"
+              <input id="dateOfBirth" formControlName="dateOfBirth" type="date" placeholder="Date of birth"
                      class="form-control"/>
-              <span *ngIf="!validateField('birthDate')" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              <span *ngIf="!validateField('dateOfBirth')" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
-            <div *ngIf="!validateField('birthDate')" class="help-block text-left">
-              <span *ngIf="registerForm.get('birthDate').hasError('dateISO')">Invalid date.</span>
+            <div *ngIf="!validateField('dateOfBirth')" class="help-block text-left">
+              <span *ngIf="registerForm.get('dateOfBirth').hasError('dateISO')">Invalid date.</span>
             </div>
           </div>
           <!--USER PHONE NUMBER-->

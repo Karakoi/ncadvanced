@@ -26,6 +26,6 @@ export class UserService {
   }
 
   getAll(): Observable<User[]> {
-    return this.authHttp.get(`${url}/getAll`).map(resp => resp.json());
+    return this.authHttp.get(`${url}`).map(resp => resp.json());
   }
 }

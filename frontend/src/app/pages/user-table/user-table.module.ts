@@ -22,7 +22,8 @@ const routes: Routes = [
   exports: [
     UserTableComponent,
     AddUserComponent,
-  ]
+  ],
+  providers: []
 })
 export class UserTableModule {
 }
