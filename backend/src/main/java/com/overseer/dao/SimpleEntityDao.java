@@ -1,5 +1,7 @@
 package com.overseer.dao;
 
+import java.util.List;
+
 /**
  * Interface for generic operations for simple entities.
  *
@@ -13,4 +15,11 @@ public interface SimpleEntityDao<T> extends CrudDao<T, Long> {
      * @return entity with the given name or {@literal null} if none found.
      */
     T findByName(String name);
+
+    /**
+     * Fetches all entities.
+     *
+     * @return all entities.
+     */
+    List<T> findAll();
 }

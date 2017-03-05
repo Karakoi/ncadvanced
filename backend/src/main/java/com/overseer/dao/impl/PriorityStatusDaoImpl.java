@@ -2,11 +2,8 @@ package com.overseer.dao.impl;
 
 import com.overseer.dao.PriorityStatusDao;
 import com.overseer.model.PriorityStatus;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 
 /**
  * <p>
@@ -14,21 +11,11 @@ import org.springframework.util.Assert;
  * </p>
  */
 @Repository
-public class PriorityStatusDaoImpl extends CrudDaoImpl<PriorityStatus> implements PriorityStatusDao {
+public class PriorityStatusDaoImpl extends SimpleEntityDaoImpl<PriorityStatus> implements PriorityStatusDao {
 
-    /**
-     * {@inheritDoc}.
-     */
     @Override
-    public PriorityStatus findByName(String name) {
-        Assert.notNull(name, "name must not be null");
-        try {
-            return this.jdbc().queryForObject(this.queryService().getQuery("priorityStatus.findByName"),
-                    new MapSqlParameterSource("priorityStatusName", name),
-                    this.getMapper());
-        } catch (DataAccessException e) {
-            return null;
-        }
+    protected String getFindByNameQuery() {
+        return this.queryService().getQuery("priorityStatus.findByName");
     }
 
     @Override
@@ -74,5 +61,4 @@ public class PriorityStatusDaoImpl extends CrudDaoImpl<PriorityStatus> implement
             return priorityStatus;
         };
     }
-
 }

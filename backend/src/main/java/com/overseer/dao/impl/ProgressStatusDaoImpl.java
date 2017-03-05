@@ -2,11 +2,8 @@ package com.overseer.dao.impl;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.model.ProgressStatus;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 
 /**
  * <p>
@@ -14,21 +11,11 @@ import org.springframework.util.Assert;
  * </p>
  */
 @Repository
-public class ProgressStatusDaoImpl extends CrudDaoImpl<ProgressStatus> implements ProgressStatusDao {
+public class ProgressStatusDaoImpl extends SimpleEntityDaoImpl<ProgressStatus> implements ProgressStatusDao {
 
-    /**
-     * {@inheritDoc}.
-     */
     @Override
-    public ProgressStatus findByName(String name) {
-        Assert.notNull(name, "name must not be null");
-        try {
-            return this.jdbc().queryForObject(this.queryService().getQuery("progressStatus.findByName"),
-                    new MapSqlParameterSource("progressStatusName", name),
-                    this.getMapper());
-        } catch (DataAccessException e) {
-            return null;
-        }
+    protected String getFindByNameQuery() {
+        return this.queryService().getQuery("progressStatus.findByName");
     }
 
     @Override
@@ -56,6 +43,11 @@ public class ProgressStatusDaoImpl extends CrudDaoImpl<ProgressStatus> implement
         return this.queryService().getQuery("progressStatus.findAll");
     }
 
+    @Override
+    protected String getCountQuery() {
+        return this.queryService().getQuery("progressStatus.count");
+    }
+
     /**
      * Gets {@link RowMapper} implementation for {@link ProgressStatus} entity.
      *
@@ -70,8 +62,5 @@ public class ProgressStatusDaoImpl extends CrudDaoImpl<ProgressStatus> implement
         };
     }
 
-    @Override
-    protected String getCountQuery() {
-        return this.queryService().getQuery("progressStatus.count");
-    }
+
 }
