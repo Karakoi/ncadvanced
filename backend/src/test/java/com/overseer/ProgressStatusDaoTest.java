@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 /**
@@ -77,6 +78,7 @@ public class ProgressStatusDaoTest {
         ProgressStatus fromDbProgressStatus = progressStatusDao.findByName(TEST_NAME);
 
         // then
+        assertThat(fromDbProgressStatus, is(notNullValue()));
         assertThat(fromDbProgressStatus, is(savedProgressStatus));
     }
 

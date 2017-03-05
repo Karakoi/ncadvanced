@@ -22,13 +22,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RequestController {
     private static final Logger LOG = LoggerFactory.getLogger(RequestController.class);
+    private static final Long DEFAULT_PAGE_SIZE = 20L;
 
     private final RequestService requestService;
 
     /**
      * Gets {@link Request} entity associated with provided id param.
      *
-     * @param page  identifier.
+     * @param page identifier.
      * @return {@link Request} entity with http status 200 OK.
      */
     @GetMapping("/request/fetch")
@@ -222,5 +223,11 @@ public class RequestController {
 //        requestService.changePriorityStatus(request);
         LOG.debug("PriorityStatus of Request has been changed and Request has been updated with id: {}", request.getId());
         return new ResponseEntity<>(request, HttpStatus.OK);
+    }
+
+    @GetMapping("/request/pageCount")
+    public ResponseEntity<Long> getPagesCount() {
+        Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
+        return new ResponseEntity<Long>(pageCount, HttpStatus.OK);
     }
 }

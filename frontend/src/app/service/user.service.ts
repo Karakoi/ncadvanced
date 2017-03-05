@@ -9,6 +9,8 @@ const url = '/api/users';
 
 @Injectable()
 export class UserService {
+  userData: Map<number,User[]>;
+
   constructor(private http: Http,
               private authHttp: AuthHttp) {
   }
@@ -25,7 +27,12 @@ export class UserService {
     return this.authHttp.get(`${url}/${id}`).map(resp => resp.json());
   }
 
-  getAll(): Observable<User[]> {
-    return this.authHttp.get(`${url}`).map(resp => resp.json());
+  getAll(page: number): Observable<User[]> {
+
+    return this.authHttp.get(`${url}?page=`+ page).map(resp => resp.json()).publishReplay(1,2000).refCount();
+  }
+
+  getPageCount(): Observable<number> {
+    return this.authHttp.get(`${url}/pageCount`).map( resp => resp.json());
   }
 }

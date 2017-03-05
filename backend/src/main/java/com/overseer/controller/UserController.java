@@ -9,14 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,8 +20,8 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
-    private static final int DEFAULT_PAGE_NUMBER = 1;
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final Long DEFAULT_PAGE_SIZE = 20L;
 
     private final UserService userService;
 
@@ -96,12 +89,13 @@ public class UserController {
 
     /**
      * Returns all {@link User} entities.
+     *
      * @return all {@link User} entities.
      */
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUser() {
-        List<User> users = userService.fetchPage(DEFAULT_PAGE_NUMBER);
+    public ResponseEntity<List<User>> getAllUser(@RequestParam int page) {
+        List<User> users = userService.fetchPage(page);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -111,5 +105,12 @@ public class UserController {
     @Value
     private static final class RecoverInfo {
         private final String email;
+    }
+
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
+    @GetMapping("/users/pageCount")
+    public ResponseEntity<Long> getPageCount() {
+        long pageCount = userService.getCount() / DEFAULT_PAGE_SIZE + 1;
+        return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
 }

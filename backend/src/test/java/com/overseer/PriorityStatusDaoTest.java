@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 /**
@@ -78,6 +79,7 @@ public class PriorityStatusDaoTest {
         PriorityStatus fromDbPriorityStatus = priorityStatusDao.findByName(TEST_NAME);
 
         // then
+        assertThat(fromDbPriorityStatus, is(notNullValue()));
         assertThat(fromDbPriorityStatus, is(savedPriorityStatus));
     }
 

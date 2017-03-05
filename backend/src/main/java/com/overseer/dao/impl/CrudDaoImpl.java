@@ -87,7 +87,7 @@ public abstract class CrudDaoImpl<T extends AbstractEntity> implements CrudDao<T
     public List<T> fetchPage(int pageSize, int pageNumber) {
         Assert.state(pageNumber > 0, "Must be greater then 0");
         val parameterSource = new MapSqlParameterSource("limit", pageSize);
-        parameterSource.addValue("offset", pageSize * pageNumber - 1);
+        parameterSource.addValue("offset", pageSize * (pageNumber - 1));
         String findAllQuery = this.getFindAllQuery();
         return this.jdbc.query(findAllQuery, parameterSource, this.getMapper());
     }

@@ -64,6 +64,18 @@ public class UserDaoTest {
     }
 
     @Test
+    public void shouldDeleteUser() throws Exception {
+        // given
+
+        // when
+        userDao.delete(testUser);
+        User savedUser = userDao.findOne(testUser.getId());
+
+        // then
+        assertThat(savedUser, is(nullValue()));
+    }
+
+    @Test
     public void shouldFindUserByEmail() throws Exception {
         // given
 

@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
-import {User} from "../model/user.model";
 import {Observable} from "rxjs";
-import {Http, Response} from "@angular/http";
+import {Response} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {Request} from "../model/request.model";
@@ -25,7 +24,11 @@ export class RequestService {
     return this.authHttp.get(`${url}/${id}`).map(resp => resp.json());
   }
 
-  getAll(): Observable<Request[]> {
-    return this.authHttp.get(`${url}/getJoinedGroups`).map(resp => resp.json());
+  getAll(page: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/fetch?page=`+page).map(resp => resp.json());
+  }
+
+  getPageCount(): Observable<number> {
+    return this.authHttp.get(`${url}/pageCount`).map( resp => resp.json());
   }
 }

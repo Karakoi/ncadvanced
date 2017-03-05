@@ -18,7 +18,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of sorted">
+          <tr *ngFor="let user of users">
             <td>{{user.id}}</td>
             <td>{{user.firstName}}</td>
             <td>{{user.lastName}}</td>
@@ -50,10 +50,8 @@
     <div class="row">
       <div class="pull-right">
         <ul class="pagination">
-          <li class="paginate_button active"><a>1</a></li>
-          <li class="paginate_button"><a>2</a></li>
-          <li class="paginate_button"><a>3</a></li>
-          <li class="paginate_button"><a>4</a></li>
+          <li class="paginate_button active" (click)="load($event)" ><a>1</a></li>
+          <li class="paginate_button"  (click)="load($event)" *ngFor="let item of createRange(pageNumber)" ><a>{{item}}</a></li>
         </ul>
       </div>
     </div>
