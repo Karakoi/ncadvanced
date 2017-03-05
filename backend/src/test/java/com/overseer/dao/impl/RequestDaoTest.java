@@ -115,27 +115,14 @@ public class RequestDaoTest {
         assertThat(savedRequest, is(nullValue()));
     }
 
-    /*@Test
-    public void shouldFindRequestByAssignee() throws Exception {
-        // given
-
-        // when
-        List<Request> requestsByAssignee = requestDao.findRequestsByAssignee(assignee);
-
-        // then
-        assertThat(requestsByAssignee, is(notNullValue()));
-        assertThat(requestsByAssignee, is(not(empty())));
-    }
-
     @Test
-    public void shouldFindRequestByReporter() throws Exception {
+    public void shouldReturnTrueIfRequestExists() throws Exception {
         // given
 
-        // when
-        List<Request> requestsByReporter = requestDao.findRequestsByReporter(reporter);
+        // wen
+        boolean exists = requestDao.exists(request.getId());
 
         // then
-        assertThat(requestsByReporter, is(notNullValue()));
-        assertThat(requestsByReporter, is(not(empty())));
-    }*/
+        assertThat(exists, is(true));
+    }
 }

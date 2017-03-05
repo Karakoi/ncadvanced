@@ -63,18 +63,6 @@ public class UserDaoTest {
         assertThat(savedUser.getLastName(), is(testLastName));
     }
 
-//    @Test
-//    public void shouldDeleteUser() throws Exception {
-//        // given
-//
-//        // when
-//        userDao.delete(testUser);
-//        User savedUser = userDao.findOne(testUser.getId());
-//
-//        // then
-//        assertThat(savedUser, is(nullValue()));
-//    }
-
     @Test
     public void shouldFindUserByEmail() throws Exception {
         // given
@@ -86,15 +74,14 @@ public class UserDaoTest {
         assertThat(savedUser, is(testUser));
     }
 
-    /*@Test
-    public void shouldFindUserByRole() throws Exception {
+    @Test
+    public void shouldReturnTrueWhenUserExists() throws Exception {
         // given
 
         // when
-        List<User> savedUsers = userDao.findByRole(testUser.getRole());
+        boolean exists = userDao.exists(testUser.getId());
 
         // then
-        assertThat(savedUsers, is(notNullValue()));
-        assertThat(savedUsers, is(not(empty())));
-    }*/
+        assertThat(exists, is(true));
+    }
 }
