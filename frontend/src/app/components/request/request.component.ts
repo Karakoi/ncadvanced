@@ -2,10 +2,10 @@ import {Component} from "@angular/core";
 
 @Component({
   selector: 'overseer-request-details',
-  templateUrl: 'request-details.component.html',
-  styleUrls: ['request-details.component.css']
+  templateUrl: 'request.component.html',
+  styleUrls: ['request.component.css']
 })
-export class RequestDetailsComponent {
+export class RequestComponent {
   showDescription: boolean = true;
   showHistory: boolean = true;
 

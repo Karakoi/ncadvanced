@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * The <code>UserDao</code> interface represents access to {@link User} object in database.
  */
+
 public interface UserDao extends CrudDao<User, Long> {
 
     /**
@@ -25,6 +26,6 @@ public interface UserDao extends CrudDao<User, Long> {
      * @param role user's role, must not be {@literal null}.
      * @return a list of {@link User} entities.
      */
-    List<User> findByRole(Role role);
+    List<User> findByRole(Role role, int pageSize, int pageNumber);
 
 }

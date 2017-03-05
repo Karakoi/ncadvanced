@@ -31,5 +31,5 @@ public interface UserService extends CrudService<User, Long> {
      * @param role user's role, must not be {@literal null}.
      * @return a list of {@link User} entities.
      */
-    List<User> findByRole(Role role);
+    List<User> findByRole(Role role, int pageNumber);
 }

@@ -3,6 +3,7 @@ import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {ProfileComponent} from "./profile.component";
+import {GravatarComponent} from "./gravatar/gravatar.component";
 
 const routes: Routes = [
   {path: '', component: ProfileComponent},
@@ -16,10 +17,12 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   declarations: [
-    ProfileComponent
+    ProfileComponent,
+    GravatarComponent
   ],
   exports: [
-    ProfileComponent
+    ProfileComponent,
+    GravatarComponent
   ]
 })
 export class ProfileModule {

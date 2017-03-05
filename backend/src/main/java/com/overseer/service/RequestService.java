@@ -4,7 +4,6 @@ import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
-import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,134 +14,67 @@ import java.util.List;
 public interface RequestService extends CrudService<Request, Long> {
 
     /**
-     * Returns a list of joined requests.
+     * Returns a list of sub requests for the given request {@link Request}.
      *
-     * @return list of joined requests
+     * @param parent request that contains sub requests, must not be {@literal null}.
+     * @return list of sub requests.
      */
-    List<Request> getJoinedGroups();
+    List<Request> findSubRequests(Request parent);
 
     /**
-     * Returns a list of requests which are joined in a specified parent request.
+     * Returns a list of requests that have been joined by the given request {@link Request}.
      *
-     * @param id parent request id
-     * @return list of requests which are joined in a parent request
+     * @param parent parent request that joined requests, must not be {@literal null}.
+     * @return list of joined requests.
      */
-    List<Request> getJoinedGroupRequests(Long id);
+    List<Request> findJoinedRequests(Request parent);
 
     /**
-     * Returns a list of sub requests for the request of the input id.
+     * Returns a list of requests which have provided {@link User} as assignee.
      *
-     * @param id of the request that collect sub requests
-     * @return list of sub requests
+     * @param assignee requests assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
      */
-    List<Request> getSubRequests(Long id);
+    List<Request> findRequestsByAssignee(User assignee, int pageNumber);
 
     /**
-     * Fetches from the database all Requests objects with same group.
+     * Returns a list of requests which have provided {@link User} as reporter.
      *
-     * @param parent request's property which represents belonging to a group, must not be {@literal null}.
-     * @return List of requests with same progress status.
+     * @param reporter requests reporter, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as reporter.
      */
-    default List<Request> getRequestsByParent(Request parent) {
-        Long id = parent.getId();
-        Assert.notNull(id);
-        return getRequestsByParent(id);
-    }
+    List<Request> findRequestsByReporter(User reporter, int pageNumber);
 
     /**
-     * Fetches from the database all Requests objects with same group.
+     * Returns a list of requests with provided progress status {@link ProgressStatus}.
      *
-     * @param parentId request's property which represents belonging to a group, must not be {@literal null}.
-     * @return List of requests with same progress status.
+     * @param progressStatus request's progress status, must not be {@literal null}.
+     * @return list of requests with provided progress status {@link ProgressStatus}.
      */
-    List<Request> getRequestsByParent(Long parentId);
+    List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageNumber);
 
     /**
-     * Fetches from the database all Requests objects assigned to the same user.
+     * Returns a list of requests with provided progress status {@link PriorityStatus}.
      *
-     * @param assignee represents belonging request to a user, must not be {@literal null}.
-     * @return List of requests with same user.
+     * @param priorityStatus request's priority status, must not be {@literal null}.
+     * @return list of requests with provided progress status {@link PriorityStatus}.
      */
-    default List<Request> getRequestsByAssignee(User assignee) {
-        Long id = assignee.getId();
-        Assert.notNull(id);
-        return getRequestsByAssignee(id);
-    }
+    List<Request> findRequestsByPriority(PriorityStatus priorityStatus, int pageNumber);
 
     /**
-     * Fetches from the database all Requests objects assigned to the same user.
+     * Returns a list of requests created in provided period.
      *
-     * @param assigneeId represents belonging request to a user, must not be {@literal null}.
-     * @return List of requests with same user.
+     * @param start period start.
+     * @param end   period end.
+     * @return list of requests created in provided period.
      */
-    List<Request> getRequestsByAssignee(Long assigneeId);
+    List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber);
 
     /**
-     * Fetches from the database all Requests objects created with the same user.
+     * Returns a list of requests created in provided date.
      *
-     * @param reporter represents belonging request to a user, must not be {@literal null}.
-     * @return List of requests with same user.
+     * @param date creation date, must not be {@literal null}.
+     * @return list of requests created in provided date.
      */
-    default List<Request> getRequestsByReporter(User reporter) {
-        Long id = reporter.getId();
-        Assert.notNull(id);
-        return getRequestsByReporter(id);
-    }
-
-    /**
-     * Fetches from the database all Requests objects created with the same user.
-     *
-     * @param reporterId represents belonging request to a user, must not be {@literal null}.
-     * @return List of requests with same user.
-     */
-    List<Request> getRequestsByReporter(Long reporterId);
-
-    /**
-     * Fetches from the database all Requests objects which created in the same period.
-     *
-     * @param begin date from
-     * @param end   date from
-     * @return rerun list of requests from one period of time
-     */
-    List<Request> getRequestsByPeriod(LocalDate begin, LocalDate end);
-
-    /**
-     * Fetches from the database all Requests objects created in the same day.
-     *
-     * @param date request's property which represents belonging to a group, must not be {@literal null}.
-     * @return List of requests with same date.
-     */
-    List<Request> getRequestsByDate(LocalDate date);
-
-    /**
-     * Fetches from the database all Requests objects with same progress status.
-     *
-     * @param progressStatus request's status which represents completion progress, must not be {@literal null}.
-     * @return List of requests with same progress status.
-     */
-    List<Request> getRequestsByStatus(ProgressStatus progressStatus);
-
-    /**
-     * Fetches from the database all Requests objects with same priority status.
-     *
-     * @param priorityStatus request's property which represents belonging to a group, must not be {@literal null}.
-     * @return List of requests with same priorityStatus status.
-     */
-    List<Request> getRequestsByPriority(PriorityStatus priorityStatus);
-
-    /**
-     * Changes the progress status of the request, notifies the request reporter and save change in the history.
-     *
-     * @param request changed request.
-     * @return changed request
-     */
-    Request changeProgressStatus(Request request);
-
-    /**
-     * Changes the priority status of the request, notifies the request reporter and save change in the history.
-     *
-     * @param request changed request.
-     * @return changed request
-     */
-    Request changePriorityStatus(Request request);
+    List<Request> findRequestsByDate(LocalDate date);
 }

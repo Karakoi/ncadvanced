@@ -22,14 +22,10 @@ export class UserService {
   }
 
   get(id: number): Observable<User> {
-    return this.authHttp.get(`${url}/${id}`)
-      .map(resp => resp.json())
-      .catch((error: any) => {
-        return Observable.throw(error);
-      });
+    return this.authHttp.get(`${url}/${id}`).map(resp => resp.json());
   }
 
   getAll(): Observable<User[]> {
-    return this.authHttp.get(`${url}`).map(resp => resp.json());
+    return this.authHttp.get(`${url}/getAll`).map(resp => resp.json());
   }
 }
