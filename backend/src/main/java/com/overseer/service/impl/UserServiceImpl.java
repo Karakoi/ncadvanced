@@ -5,15 +5,15 @@ import com.overseer.dao.UserDao;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
-import com.overseer.model.enumreason.MessageReason;
 import com.overseer.service.EmailService;
+import com.overseer.service.EmailBuilder;
 import com.overseer.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -24,10 +24,7 @@ import java.util.List;
  * Implementation of {@link UserService} interface.
  */
 @Service
-@PropertySources({
-        @PropertySource("classpath:email.properties"),
-        @PropertySource("classpath:security.properties")
-})
+@PropertySource("classpath:security.properties")
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -35,12 +32,16 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     private Integer newPasswordLength;
 
     private EmailService emailService;
+    private EmailBuilder<User> emailStrategy;
     private UserDao userDao;
 
-    public UserServiceImpl(UserDao userDao, EmailService emailService) {
+    public UserServiceImpl(UserDao userDao,
+                           EmailService emailService,
+                           @Qualifier("recoverBuilderImpl") EmailBuilder<User> emailStrategy) {
         super(userDao);
         this.userDao = userDao;
         this.emailService = emailService;
+        this.emailStrategy = emailStrategy;
     }
 
     /**
@@ -52,11 +53,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         User user = this.findByEmail(email);
         String newPassword = RandomStringUtils.randomAlphanumeric(newPasswordLength);
         user.setPassword(newPassword);
-        userDao.save(user);
-        MessageBuilderImpl messageBuilder = new MessageBuilderImpl();
-        messageBuilder.setPassword(newPassword);
-        SimpleMailMessage message = messageBuilder.builderMessage(user, MessageReason.FORGOT_PASSWORD);
+        SimpleMailMessage message = this.emailStrategy.buildMessage(user);
         emailService.sendMessage(message);
+        userDao.save(user);
     }
 
     @Override
