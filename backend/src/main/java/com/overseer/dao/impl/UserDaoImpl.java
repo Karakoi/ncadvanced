@@ -7,6 +7,7 @@ import lombok.val;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -20,6 +21,30 @@ import java.util.List;
  */
 @Repository
 public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public User save(User user) {
+        Assert.notNull(user, "user must not be null");
+        user = this.encryptPassword(user);
+        return super.save(user);
+    }
+
+    /**
+     * Encodes password using {@link BCryptPasswordEncoder}.
+     *
+     * @param user user to encode password for.
+     * @return user entity with encoded password.
+     */
+    private User encryptPassword(User user) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String password = user.getPassword();
+        String encodedPassword = encoder.encode(password);
+        user.setPassword(encodedPassword);
+        return user;
+    }
 
     /**
      * {@inheritDoc}.

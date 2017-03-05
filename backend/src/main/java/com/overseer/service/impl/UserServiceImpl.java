@@ -1,6 +1,7 @@
 package com.overseer.service.impl;
 
 import com.overseer.dao.UserDao;
+import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
@@ -42,6 +43,29 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         this.userDao = userDao;
         this.emailService = emailService;
         this.emailStrategy = emailStrategy;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public User create(User user) throws EntityAlreadyExistsException {
+        Assert.notNull(user, "user must not be null");
+        if (!this.emailAvailable(user)) {
+            throw new EntityAlreadyExistsException("Supplied email is already taken: " + user.getEmail());
+        }
+        return super.create(user);
+    }
+
+    /**
+     * Checks if supplied email is already in the database.
+     *
+     * @param user user to check email for.
+     * @return true if email available, false otherwise.
+     */
+    private boolean emailAvailable(User user) {
+        String email = user.getEmail();
+        return this.findByEmail(email) == null;
     }
 
     /**
