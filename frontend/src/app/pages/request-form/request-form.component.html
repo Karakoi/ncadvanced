@@ -1,10 +1,10 @@
 <div class="container modal fade" id="request-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header form-title">
-        <h4 class="modal-title">Create new request</h4>
+    <div class="modal-content panel panel-default">
+      <div class="modal-header panel-heading">
+        <h4 class="panel-title"><b>Create new request</b></h4>
       </div>
-      <div class="modal-header">
+      <div class="modal-header panel-body">
         <form [formGroup]="requestForm" (ngSubmit)="createNewRequest(requestForm.value)" autocomplete="off" novalidate>
           <!--REQUEST TITLE-->
           <div class="form-group col-lg-12 col-sm-12" [ngClass]="{'has-error': !validateField('title')}">
@@ -45,7 +45,7 @@
             <textarea id="description" class="form-control" rows="5"></textarea>
           </div>
           <div class="form-group col-lg-12 col-sm-12">
-            <button type="submit" class="btn btn-success col-lg-5 col-sm-5" [disabled]="requestForm.invalid">Submit</button>
+            <button type="submit" class="btn btn-primary col-lg-5 col-sm-5" [disabled]="requestForm.invalid">Submit</button>
             <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5" data-dismiss="modal">Close</button>
           </div>
         </form>

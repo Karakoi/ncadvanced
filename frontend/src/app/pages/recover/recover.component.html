@@ -1,8 +1,8 @@
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
-    <div class="panel panel-primary">
+    <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Recover</strong>
+        <strong>Recover Password</strong>
       </div>
       <div class="panel-body">
         <form [formGroup]="recoverForm" (ngSubmit)="recover(recoverForm.value)" autocomplete="off" novalidate>
@@ -19,7 +19,7 @@
               <span *ngIf="recoverForm.get('email').hasError('email')">Invalid email address.</span>
             </div>
           </div>
-          <button type="submit" class="btn btn-success col-lg-12" [disabled]="recoverForm.invalid">
+          <button type="submit" class="btn btn-primary col-lg-12" [disabled]="recoverForm.invalid">
             Submit
           </button>
         </form>

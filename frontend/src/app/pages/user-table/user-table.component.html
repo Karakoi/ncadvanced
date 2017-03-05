@@ -61,7 +61,9 @@
 </div>
 <add-user>
   <div class="app-modal-header">
-    Create new user
+    <div class="panel-title">
+      <b>Create new user</b>
+    </div>
   </div>
   <div class="app-modal-body">
     <form [formGroup]="userForm">
@@ -97,7 +99,7 @@
   </div>
   <div class="app-modal-footer">
     <div class="form-group col-lg-12 col-sm-12">
-      <button type="submit" class="btn btn-success col-lg-5 col-sm-5" [disabled]="userForm.invalid">Create user</button>
+      <button type="submit" class="btn btn-primary col-lg-5 col-sm-5" [disabled]="userForm.invalid">Submit</button>
       <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5"
               data-dismiss="modal" (click)="modal.hide()">Close
       </button>

@@ -21,8 +21,7 @@ import {
   FooterComponent,
   NavbarComponent,
   NoContentComponent,
-  SideBarComponent,
-  WelcomeComponent
+  SideBarComponent
 } from "./components/barrel";
 
 @NgModule({
@@ -32,7 +31,6 @@ import {
     NavbarComponent,
     NoContentComponent,
     SideBarComponent,
-    WelcomeComponent,
     SideBarDirective
   ],
   imports: [

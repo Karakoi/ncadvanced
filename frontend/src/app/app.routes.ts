@@ -1,5 +1,5 @@
 import {Routes} from "@angular/router";
-import {WelcomeComponent, NoContentComponent} from "./components/barrel";
+import {NoContentComponent} from "./components/barrel";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {PrivatePageGuard} from "./service/private-page.guard";
 import {AdminPageGuard} from "./service/admin-page.guard";
@@ -7,12 +7,8 @@ import {AdminPageGuard} from "./service/admin-page.guard";
 export const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'overseer',
+    redirectTo: 'login',
     pathMatch: 'full'
-  },
-  {
-    path: 'overseer',
-    component: WelcomeComponent
   },
   // Available for unregistered user
   {

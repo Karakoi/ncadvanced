@@ -1,8 +1,8 @@
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
-    <div class="panel panel-primary">
+    <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Signup</strong>
+        <strong>Create account</strong>
       </div>
       <div class="panel-body">
         <form [formGroup]="registerForm" (ngSubmit)="register(registerForm.value)" autocomplete="off" novalidate>
@@ -89,7 +89,7 @@
               <span *ngIf="registerForm.get('phoneNumber').hasError('phone')">Invalid phone number. Example: 0995351242</span>
             </div>
           </div>
-          <button type="submit" class="btn btn-success col-lg-12" [disabled]="registerForm.invalid">Submit</button>
+          <button type="submit" class="btn btn-primary col-lg-12" [disabled]="registerForm.invalid">Submit</button>
         </form>
       </div>
     </div>
