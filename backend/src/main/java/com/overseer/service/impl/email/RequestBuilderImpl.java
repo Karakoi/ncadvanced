@@ -2,15 +2,14 @@ package com.overseer.service.impl.email;
 
 import com.overseer.model.Request;
 import com.overseer.model.User;
-import com.overseer.service.EmailBuilder;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementation of {@link EmailBuilder} interface, that specifies how
+ * Implementation of <code>EmailBuilder</code> interface, that specifies how
  * to build notification email for {@link Request} entity.
  */
 @Service
-public class RequestBuilderImpl extends EmailBuilderImpl<Request> implements EmailBuilder<Request> {
+public class RequestBuilderImpl extends EmailBuilderImpl<Request> {
     private static final String MESSAGE_SUBJECT = "Request status changed";
 
     @Override

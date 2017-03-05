@@ -1,12 +1,11 @@
 package com.overseer.service.impl;
 
-
 import com.overseer.dao.UserDao;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
-import com.overseer.service.EmailService;
 import com.overseer.service.EmailBuilder;
+import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
