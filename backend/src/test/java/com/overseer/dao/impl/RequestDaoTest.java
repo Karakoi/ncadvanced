@@ -115,7 +115,7 @@ public class RequestDaoTest {
         assertThat(savedRequest, is(nullValue()));
     }
 
-    @Test
+    /*@Test
     public void shouldFindRequestByAssignee() throws Exception {
         // given
 
@@ -137,5 +137,5 @@ public class RequestDaoTest {
         // then
         assertThat(requestsByReporter, is(notNullValue()));
         assertThat(requestsByReporter, is(not(empty())));
-    }
+    }*/
 }

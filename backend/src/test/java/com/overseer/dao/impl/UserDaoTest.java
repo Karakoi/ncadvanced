@@ -86,7 +86,7 @@ public class UserDaoTest {
         assertThat(savedUser, is(testUser));
     }
 
-    @Test
+    /*@Test
     public void shouldFindUserByRole() throws Exception {
         // given
 
@@ -96,5 +96,5 @@ public class UserDaoTest {
         // then
         assertThat(savedUsers, is(notNullValue()));
         assertThat(savedUsers, is(not(empty())));
-    }
+    }*/
 }

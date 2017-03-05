@@ -12,8 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.context.annotation.PropertySource;import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -26,6 +25,7 @@ import java.util.List;
 @PropertySource("classpath:security.properties")
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final short DEFAULT_PAGE_SIZE = 20;
 
     @Value("${password.length}")
     private Integer newPasswordLength;
@@ -69,9 +69,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     }
 
     @Override
-    public List<User> findByRole(Role role) {
+    public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
         LOG.debug("Retrieving user with role: {}", role);
-        return userDao.findByRole(role);
+        return userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
     }
 }

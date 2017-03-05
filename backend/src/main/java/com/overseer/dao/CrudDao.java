@@ -56,5 +56,5 @@ public interface CrudDao<T, ID extends Serializable> {
      */
     List<T> fetchPage(int pageSize, int pageNumber);
 
-    int count();
+    Long count();
 }

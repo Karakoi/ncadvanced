@@ -9,14 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,6 +24,18 @@ public class RequestController {
     private static final Logger LOG = LoggerFactory.getLogger(RequestController.class);
 
     private final RequestService requestService;
+
+    /**
+     * Gets {@link Request} entity associated with provided id param.
+     *
+     * @param page  identifier.
+     * @return {@link Request} entity with http status 200 OK.
+     */
+    @GetMapping("/request/fetch")
+    public List<Request> fetchRequestPage(@RequestParam int page) {
+        System.out.println(page);
+        return requestService.fetchPage(page);
+    }
 
     /**
      * Gets {@link Request} entity associated with provided id param.
@@ -173,8 +178,9 @@ public class RequestController {
      * @return rerun list of requests from one period of time
      */
     @GetMapping("/request/getRequestsByPeriod/begin/{beginDate}/end/{endDate}")
-    public ResponseEntity<List<Request>> getRequestsByPeriod(@PathVariable LocalDate beginDate, LocalDate endDate) {
-        List<Request> requests = requestService.findRequestsByPeriod(beginDate, endDate);
+    public ResponseEntity<List<Request>> getRequestsByPeriod(@PathVariable LocalDate beginDate, LocalDate endDate,
+                                                             int pageNumber) {
+        List<Request> requests = requestService.findRequestsByPeriod(beginDate, endDate, pageNumber);
         LOG.debug("Gets all Requests objects which created in period: {} - {}", beginDate, endDate);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
