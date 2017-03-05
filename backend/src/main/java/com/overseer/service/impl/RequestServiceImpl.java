@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 public class RequestServiceImpl extends CrudServiceImpl<Request> implements RequestService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final short DEFAULT_PAGE_SIZE = 20;
 
     private RequestDao requestDao;
 
@@ -52,51 +53,51 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByAssignee(User assignee) {
+    public List<Request> findRequestsByAssignee(User assignee, int pageNumber) {
         Assert.notNull(assignee, "assignee must not be null");
         LOG.debug("Fetching requests for assignee: {}", assignee.getEmail());
-        return this.requestDao.findRequestsByAssignee(assignee);
+        return this.requestDao.findRequestsByAssignee(assignee, DEFAULT_PAGE_SIZE, pageNumber);
     }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByReporter(User reporter) {
+    public List<Request> findRequestsByReporter(User reporter, int pageNumber) {
         Assert.notNull(reporter, "reporter must not be null");
         LOG.debug("Fetching requests for reporter: {}", reporter.getEmail());
-        return this.requestDao.findRequestsByReporter(reporter);
+        return this.requestDao.findRequestsByReporter(reporter, DEFAULT_PAGE_SIZE, pageNumber);
     }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByProgress(ProgressStatus progressStatus) {
+    public List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageNumber) {
         Assert.notNull(progressStatus, "progress status must not be null");
         LOG.debug("Fetching requests with progress status: {}", progressStatus.getName());
-        return this.requestDao.findRequestsByProgress(progressStatus);
+        return this.requestDao.findRequestsByProgress(progressStatus, DEFAULT_PAGE_SIZE, pageNumber);
     }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByPriority(PriorityStatus priorityStatus) {
+    public List<Request> findRequestsByPriority(PriorityStatus priorityStatus, int pageNumber) {
         Assert.notNull(priorityStatus, "priority status must not be null");
         LOG.debug("Fetching requests with priority status: {}", priorityStatus.getName());
-        return this.requestDao.findRequestsByPriority(priorityStatus);
+        return this.requestDao.findRequestsByPriority(priorityStatus, DEFAULT_PAGE_SIZE, pageNumber);
     }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByPeriod(LocalDate start, LocalDate end) {
+    public List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber) {
         Assert.notNull(start, "start date must not be null");
         Assert.notNull(end, "end date must not be null");
         LOG.debug("Fetching requests between {} and {} dates", start, end);
-        return this.requestDao.findRequestsByPeriod(start, end);
+        return this.requestDao.findRequestsByPeriod(start, end, DEFAULT_PAGE_SIZE, pageNumber);
     }
 
     /**

@@ -5,6 +5,7 @@ import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
+import lombok.val;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -43,13 +44,16 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Request> findRequestsByAssignee(Long assigneeId) {
+    public List<Request> findRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber) {
         Assert.notNull(assigneeId, "id must not be null");
         String findByAssigneeQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findByAssignee"));
         try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("assigneeId", assigneeId);
             return jdbc().query(findByAssigneeQuery,
-                    new MapSqlParameterSource("assigneeId", assigneeId),
+                    parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
             return null;
@@ -57,13 +61,16 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Request> findRequestsByReporter(Long reporterId) {
+    public List<Request> findRequestsByReporter(Long reporterId, int pageSize, int pageNumber) {
         Assert.notNull(reporterId, "id must not be null");
         String findByReporterQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findByReporter"));
         try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("reporterId", reporterId);
             return jdbc().query(findByReporterQuery,
-                    new MapSqlParameterSource("reporterId", reporterId),
+                    parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
             return null;
@@ -71,13 +78,16 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Request> findRequestsByProgress(Long statusId) {
+    public List<Request> findRequestsByProgress(Long statusId, int pageSize, int pageNumber) {
         Assert.notNull(statusId, "id must not be null");
         String findByStatusQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findByStatus"));
         try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("progress_status_id", statusId);
             return jdbc().query(findByStatusQuery,
-                    new MapSqlParameterSource("progress_status_id", statusId),
+                    parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
             return null;
@@ -85,13 +95,16 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Request> findRequestsByPriority(Long priorityId) {
+    public List<Request> findRequestsByPriority(Long priorityId, int pageSize, int pageNumber) {
         Assert.notNull(priorityId, "id must not be null");
         String findByPriorityQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findByPriority"));
         try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("priority_status_id", priorityId);
             return jdbc().query(findByPriorityQuery,
-                    new MapSqlParameterSource("priority_status_id", priorityId),
+                    parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
             return null;
@@ -99,17 +112,18 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Request> findRequestsByPeriod(LocalDate begin, LocalDate end) {
+    public List<Request> findRequestsByPeriod(LocalDate begin, LocalDate end, int pageSize, int pageNumber) {
         Assert.notNull(begin, "begin time must not be null");
         Assert.notNull(end, "end time must not be null");
         String findByPeriodQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findByPeriod"));
         try {
-            MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-            mapSqlParameterSource.addValue("begin", java.sql.Date.valueOf(begin));
-            mapSqlParameterSource.addValue("end", java.sql.Date.valueOf(end));
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("begin", java.sql.Date.valueOf(begin));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
             return jdbc().query(findByPeriodQuery,
-                    mapSqlParameterSource,
+                    parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
             return null;
@@ -118,7 +132,11 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
     @Override
     public List<Request> findRequestsByDate(LocalDate date) {
-        return findRequestsByPeriod(date, date.plusDays(1));
+        Assert.notNull(date, "Date must be not null");
+        return jdbc().query(queryService().getQuery("request.select")
+                        .concat(queryService().getQuery("request.byDate")),
+                new MapSqlParameterSource("date", date),
+                getMapper());
     }
 
     @Override

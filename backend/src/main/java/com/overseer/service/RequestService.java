@@ -35,7 +35,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param assignee requests assignee, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as assignee.
      */
-    List<Request> findRequestsByAssignee(User assignee);
+    List<Request> findRequestsByAssignee(User assignee, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -43,7 +43,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param reporter requests reporter, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    List<Request> findRequestsByReporter(User reporter);
+    List<Request> findRequestsByReporter(User reporter, int pageNumber);
 
     /**
      * Returns a list of requests with provided progress status {@link ProgressStatus}.
@@ -51,7 +51,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param progressStatus request's progress status, must not be {@literal null}.
      * @return list of requests with provided progress status {@link ProgressStatus}.
      */
-    List<Request> findRequestsByProgress(ProgressStatus progressStatus);
+    List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageNumber);
 
     /**
      * Returns a list of requests with provided progress status {@link PriorityStatus}.
@@ -59,7 +59,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param priorityStatus request's priority status, must not be {@literal null}.
      * @return list of requests with provided progress status {@link PriorityStatus}.
      */
-    List<Request> findRequestsByPriority(PriorityStatus priorityStatus);
+    List<Request> findRequestsByPriority(PriorityStatus priorityStatus, int pageNumber);
 
     /**
      * Returns a list of requests created in provided period.
@@ -68,7 +68,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param end   period end.
      * @return list of requests created in provided period.
      */
-    List<Request> findRequestsByPeriod(LocalDate start, LocalDate end);
+    List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber);
 
     /**
      * Returns a list of requests created in provided date.

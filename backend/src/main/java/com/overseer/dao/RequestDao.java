@@ -60,7 +60,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param assigneeId id of the assignee, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as assignee.
      */
-    List<Request> findRequestsByAssignee(Long assigneeId);
+    List<Request> findRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as assignee.
@@ -68,10 +68,10 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param assignee requests assignee, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as assignee.
      */
-    default List<Request> findRequestsByAssignee(User assignee) {
+    default List<Request> findRequestsByAssignee(User assignee, int pageSize, int pageNumber) {
         Assert.notNull(assignee);
         Long id = assignee.getId();
-        return findRequestsByAssignee(id);
+        return findRequestsByAssignee(id, pageSize, pageNumber);
     }
 
     /**
@@ -80,7 +80,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    List<Request> findRequestsByReporter(Long reporterId);
+    List<Request> findRequestsByReporter(Long reporterId, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -88,10 +88,10 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param reporter requests reporter, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    default List<Request> findRequestsByReporter(User reporter) {
+    default List<Request> findRequestsByReporter(User reporter, int pageSize, int pageNumber) {
         Assert.notNull(reporter);
         Long id = reporter.getId();
-        return findRequestsByReporter(id);
+        return findRequestsByReporter(id, pageSize, pageNumber);
     }
 
     /**
@@ -100,7 +100,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param statusId id of the progress status, must not be {@literal null}.
      * @return list of requests with provided progress status {@link ProgressStatus}.
      */
-    List<Request> findRequestsByProgress(Long statusId);
+    List<Request> findRequestsByProgress(Long statusId, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests with provided progress status {@link ProgressStatus}.
@@ -108,10 +108,10 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param progressStatus request's progress status, must not be {@literal null}.
      * @return list of requests with provided progress status {@link ProgressStatus}.
      */
-    default List<Request> findRequestsByProgress(ProgressStatus progressStatus) {
+    default List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageSize, int pageNumber) {
         Assert.notNull(progressStatus);
         Long id = progressStatus.getId();
-        return findRequestsByProgress(id);
+        return findRequestsByProgress(id, pageSize, pageNumber);
     }
 
     /**
@@ -120,7 +120,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param priorityId id of the priority status, must not be {@literal null}.
      * @return list of requests with provided progress status {@link PriorityStatus}.
      */
-    List<Request> findRequestsByPriority(Long priorityId);
+    List<Request> findRequestsByPriority(Long priorityId, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests with provided progress status {@link PriorityStatus}.
@@ -128,10 +128,10 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param priorityStatus request's priority status, must not be {@literal null}.
      * @return list of requests with provided progress status {@link PriorityStatus}.
      */
-    default List<Request> findRequestsByPriority(PriorityStatus priorityStatus) {
+    default List<Request> findRequestsByPriority(PriorityStatus priorityStatus, int pageSize, int pageNumber) {
         Assert.notNull(priorityStatus);
         Long id = priorityStatus.getId();
-        return findRequestsByPriority(id);
+        return findRequestsByPriority(id, pageSize, pageNumber);
     }
 
     /**
@@ -141,7 +141,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param end   period end.
      * @return list of requests created in provided period.
      */
-    List<Request> findRequestsByPeriod(LocalDate start, LocalDate end);
+    List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests created in provided date.

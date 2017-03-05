@@ -30,6 +30,7 @@ import java.util.List;
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final String SUBJECT_FOR_RECOVERING_PASSWORD = " New password ";
+    private static final short DEFAULT_PAGE_SIZE = 20;
 
     @Value("${mail.from}")
     private String emailFrom;
@@ -97,9 +98,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     }
 
     @Override
-    public List<User> findByRole(Role role) {
+    public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
         LOG.debug("Retrieving user with role: {}", role);
-        return userDao.findByRole(role);
+        return userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
     }
 }

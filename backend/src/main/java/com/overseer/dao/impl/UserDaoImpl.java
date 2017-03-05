@@ -3,6 +3,7 @@ package com.overseer.dao.impl;
 import com.overseer.dao.UserDao;
 import com.overseer.model.Role;
 import com.overseer.model.User;
+import lombok.val;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -39,10 +40,13 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
      * {@inheritDoc}.
      */
     @Override
-    public List<User> findByRole(Role role) {
+    public List<User> findByRole(Role role, int pageSize, int pageNumber) {
         Assert.notNull(role, "role must not be null");
+        val parameterSource = new MapSqlParameterSource("limit", pageSize);
+        parameterSource.addValue("offset", pageSize * pageNumber - 1);
+        parameterSource.addValue("role", role.getId());
         return this.jdbc().query(this.queryService().getQuery("user.findByRole"),
-                new MapSqlParameterSource("role", role.getId()),
+                parameterSource,
                 this.getMapper());
     }
 

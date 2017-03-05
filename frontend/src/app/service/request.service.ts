@@ -25,6 +25,6 @@ export class RequestService {
   }
 
   getAll(): Observable<Request[]> {
-    return this.authHttp.get(`${url}/fetch/1`).map(resp => resp.json());
+    return this.authHttp.get(`${url}/fetch?page=1`).map(resp => resp.json());
   }
 }
