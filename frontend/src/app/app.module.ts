@@ -8,6 +8,7 @@ import {AppComponent} from "./app.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SideBarDirective} from "./directive/barrel";
 import {AuthHttp, AuthConfig} from "angular2-jwt";
+import {CacheService} from "ionic-cache/ionic-cache";
 import {
   PrivatePageGuard,
   PublicPageGuard,
@@ -42,6 +43,7 @@ import {
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
+    CacheService,
     RecoverService,
     AuthService,
     UserService,
