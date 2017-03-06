@@ -136,7 +136,9 @@
           </div>
 
           <div id="foto" class="col-md-4">
-            <gravatar [email]="user.email"></gravatar>
+            <div class="dummy_user">
+              <gravatar [email]="user.email" [size]="300"></gravatar>
+            </div>
           </div>
         </div>
 
