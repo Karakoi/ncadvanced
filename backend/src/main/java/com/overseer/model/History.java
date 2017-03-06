@@ -16,12 +16,14 @@ import javax.validation.constraints.NotNull;
 public class History extends AbstractEntity {
     private static final int MAX_COLUMN_NAME_LENGTH = 20;
 
-    @Max(MAX_COLUMN_NAME_LENGTH)
     @NotNull(message = "History has to have a column name")
     private String columnName;
 
-    @NotNull(message = "History has to have a old value")
-    private String modifiedValue;
+    @NotNull(message = "History has to have an old value")
+    private String oldValue;
+
+    @NotNull(message = "History has to have a new value")
+    private String newValue;
 
     @NotNull(message = "History has to have a change date")
     private LocalDateTime dateOfLastChange;
