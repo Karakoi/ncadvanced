@@ -23,6 +23,7 @@ import {
   NoContentComponent,
   SideBarComponent
 } from "./components/barrel";
+import {TestModule} from "./pages/shared/SharedGravatar.module";
 
 @NgModule({
   declarations: [
@@ -39,15 +40,16 @@ import {
     ReactiveFormsModule,
     HttpModule,
     ToastModule.forRoot(),
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    TestModule
   ],
   providers: [
     RecoverService,
     AuthService,
     UserService,
     PrivatePageGuard,
-    PublicPageGuard,
     AdminPageGuard,
+    PublicPageGuard,
     RequestService,
     {
       provide: AuthHttp,
