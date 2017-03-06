@@ -25,10 +25,10 @@ export class RequestService {
   }
 
   getAll(page: number): Observable<Request[]> {
-    return this.authHttp.get(`${url}/fetch?page=`+page).map(resp => resp.json());
+    return this.authHttp.get(`${url}/fetch?page=` + page).map(resp => resp.json());
   }
 
   getPageCount(): Observable<number> {
-    return this.authHttp.get(`${url}/pageCount`).map( resp => resp.json());
+    return this.authHttp.get(`${url}/pageCount`).map(resp => resp.json());
   }
 }

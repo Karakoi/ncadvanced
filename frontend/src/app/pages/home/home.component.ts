@@ -1,42 +1,60 @@
 import {Component} from "@angular/core";
+import {Request} from "../../model/request.model";
+import {RequestService} from "../../service/request.service";
 
-class Requests{
-
-  constructor(public name,
-              public priority_status,
-              public data_of_creation,
-              public estimate_time) {}
-}
-
-const requests: Requests[] = [];
+declare let $: any;
 
 @Component({
   selector: 'overseer-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.css']
-
 })
 export class HomeComponent {
+  requests: Request[] = [];
+  checked: number[] = [];
+  pageCount: number;
 
-  request: Requests[] = requests;
+  constructor(private requestService: RequestService) {
+  }
 
-  emptyValueForName: string = '';
-  emptyValueForPriority: string = '';
-  emptyValueForData: string = '';
-  emptyValueForTime: string = '';
+  ngOnInit() {
+    this.requestService.getAll(1).subscribe((requests: Request[]) => {
+      this.requests = requests;
+    });
+    this.requestService.getPageCount().subscribe((count) => this.pageCount = count);
 
-  createRequest(){
+  }
 
-    event.preventDefault();
+  toggle(id) {
+    if (this.checked.indexOf(id) >= 0) {
+      this.checked.splice(this.checked.indexOf(id), 1);
+    } else {
+      this.checked.push(id);
+    }
+  }
 
-    let request: Requests = new Requests(this.emptyValueForName,this.emptyValueForPriority, this.emptyValueForData,this.emptyValueForTime);
+  createRange(number) {
+    let items: number[] = [];
+    for (let i = 2; i <= number; i++) {
+      items.push(i);
+    }
+    return items;
+  }
 
-    this.request.push(request);
+  info() {
+    console.log(this.checked);
+  }
 
-    this.emptyValueForName = '';
-    this.emptyValueForPriority = '';
-    this.emptyValueForData = '';
-    this.emptyValueForTime = '';
+  canUnite() {
+    return this.checked.length > 1;
+  }
 
+  load(data) {
+    $('.paginate_button').removeClass('active');
+    let page = data.target.text;
+    $(data.target.parentElement).addClass('active');
+    this.requestService.getAll(page).subscribe((requests: Request[]) => {
+      this.requests = requests;
+    });
   }
 }
