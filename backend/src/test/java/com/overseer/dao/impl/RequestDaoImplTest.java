@@ -2,12 +2,7 @@ package com.overseer.dao.impl;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
-import com.overseer.model.PriorityStatus;
-import com.overseer.model.ProgressStatus;
-import com.overseer.model.Request;
-import com.overseer.model.Role;
-import com.overseer.model.User;
-import com.overseer.service.RequestService;
+import com.overseer.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,14 +13,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,19 +30,16 @@ public class RequestDaoImplTest {
     @Autowired
     private RequestDao requestDao;
 
-    @Autowired
-    private RequestService requestService;
-
     private Request request;
     private User assignee;
     private User reporter;
     private ProgressStatus progress;
     private PriorityStatus priority;
-    private List<Integer> requestsGroupIds;
+    private List<Long> requestsGroupIds;
 
     @Before
     public void setUp() throws Exception {
-        requestsGroupIds = Arrays.asList(113, 114, 115);
+        requestsGroupIds = Arrays.asList(113L, 114L, 115L);
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);

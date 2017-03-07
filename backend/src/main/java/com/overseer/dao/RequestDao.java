@@ -157,5 +157,5 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param ids input id's
      * @return filtered list of requests
      */
-    List<Request> findRequestsByIds(List<Integer> ids);
+    List<Request> findRequestsByIds(List<Long> ids);
 }

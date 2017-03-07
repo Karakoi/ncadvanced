@@ -140,7 +140,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Request> findRequestsByIds(List<Integer> ids) {
+    public List<Request> findRequestsByIds(List<Long> ids) {
         Assert.notNull(ids, "ids must not be null");
         String subRequestsQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findRequestsByIds"));
