@@ -19,7 +19,7 @@ CREATE TABLE "public"."history" (
 "column_name" varchar(45) COLLATE "default" NOT NULL,
 "old_value" varchar(45) COLLATE "default" NOT NULL,
 "new_value" varchar(45) COLLATE "default" NOT NULL,
-"date_of_last_change" TIMESTAMP NOT NULL,
+"date_of_change" TIMESTAMP NOT NULL,
 "changer_id" int4 NOT NULL,
 "record_id" int4 NOT NULL
 )
@@ -73,7 +73,8 @@ CREATE TABLE "public"."request" (
 "assignee_id" int4,
 "estimate_time_in_days" int4,
 "date_of_creation" TIMESTAMP NOT NULL,
-"parent_id" int4
+"parent_id" int4,
+ "last_changer_id" int4
 )
 WITH (OIDS=FALSE);
 
