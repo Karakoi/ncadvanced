@@ -2,6 +2,8 @@ package com.overseer.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.Max;

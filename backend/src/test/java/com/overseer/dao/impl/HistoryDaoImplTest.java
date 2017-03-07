@@ -67,7 +67,6 @@ public class HistoryDaoImplTest {
         history1.setRecordId(topic.getId());
 
         history1 = historyDAO.save(history1);
-
     }
 
     @Test
@@ -83,39 +82,50 @@ public class HistoryDaoImplTest {
         assertThat(allHistoryForEntity, is(expectedList));
     }
 
-    @Test
-    public void save() throws Exception {
-
-    }
 
     @Test
     public void findOne() throws Exception {
+        // given
 
+        // when
+        History actualHistory = historyDAO.findOne(history1.getId());
+
+        // then
+        assertThat(actualHistory, is(history1));
     }
 
     @Test
-    public void delete() throws Exception {
+    public void deleteById() throws Exception {
+        // given
 
+        // when
+        historyDAO.delete(history1.getId());
+        History actualHistory = historyDAO.findOne(history1.getId());
+
+        // then
+        assertNull(actualHistory);
     }
 
     @Test
-    public void delete1() throws Exception {
+    public void deleteByEntity() throws Exception {
+        // given
 
+        // when
+        historyDAO.delete(history1);
+        History actualHistory = historyDAO.findOne(history1.getId());
+
+        // then
+        assertNull(actualHistory);
     }
 
     @Test
     public void exists() throws Exception {
+        // given
 
+        // when
+        Boolean isEntityInDB = historyDAO.exists(history1.getId());
+
+        // then
+        assertTrue(isEntityInDB);
     }
-
-    @Test
-    public void fetchPage() throws Exception {
-
-    }
-
-    @Test
-    public void count() throws Exception {
-
-    }
-
 }
