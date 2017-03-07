@@ -23,21 +23,16 @@ export class UserService {
   }
 
   update(user:User):Observable<Response> {
-    return this.authHttp.put(url, user).map(resp => resp.json());
+    return this.authHttp.put(`${url}/${user.id}`, user).map(resp => resp.json());
   }
-
-
 
   get(id:number):Observable<User> {
     let path = `${url}/${id}`;
     let cacheKey = path;
     let request = this.authHttp.get(path).map(res => res.json());
-    
+
     return this.cache.loadFromObservable(cacheKey, request);
   }
-
-
-
 
   getAll(page:number):Observable<User[]> {
 

@@ -31,12 +31,21 @@ export class ProfileComponent implements OnInit {
   }
 
   update(params): void {
-    this.userService.create(params)
-      .mergeMap(() => {
-        return this.authService.login(params.email, params.password);
-      }).subscribe(() => {
-      this.router.navigate(['/profile']);
-    }, e => this.handleError(e));
+
+    this.userService.update(params.user).subscribe(
+      ()=> alert(params.user.firstName)
+    );
+  }
+
+  updatePass(newPass,confirmPass): void {
+
+    if (newPass === '' || confirmPass === '') {
+      this.toastr.error("Fields can't be empty");
+    }
+
+    if (newPass!=confirmPass) {
+      this.toastr.error("Password isn't match");
+    }
   }
 
   cancel(): void {
