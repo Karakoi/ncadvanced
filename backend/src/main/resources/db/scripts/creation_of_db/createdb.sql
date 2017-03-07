@@ -151,6 +151,26 @@ WITH (OIDS=FALSE)
 CREATE UNIQUE INDEX request_reporter_date_uindex ON "public"."request" (reporter_id, date_of_creation);
 
 -- ----------------------------
+-- Indexes structure for table role
+-- ----------------------------
+CREATE UNIQUE INDEX role_name_uindex ON "public"."role" (name);
+
+-- ----------------------------
+-- Indexes structure for table priority status
+-- ----------------------------
+CREATE UNIQUE INDEX priority_status_name_uindex ON "public"."priority_status" (name);
+
+-- ----------------------------
+-- Indexes structure for table progress status
+-- ----------------------------
+CREATE UNIQUE INDEX progress_status_name_uindex ON "public"."progress_status" (name);
+
+-- ----------------------------
+-- Indexes structure for table topic
+-- ----------------------------
+CREATE UNIQUE INDEX topic_title_uindex ON "public"."topic" (title);
+
+-- ----------------------------
 -- Alter Sequences Owned By 
 -- ----------------------------
 ALTER SEQUENCE "public"."main_id_seq" OWNED BY "role"."id";
