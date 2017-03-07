@@ -7,6 +7,8 @@ import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.Role;
 import com.overseer.model.User;
+import com.overseer.service.RequestService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +18,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -36,14 +38,20 @@ public class RequestDaoImplTest {
     @Autowired
     private RequestDao requestDao;
 
+    @Autowired
+    private RequestService requestService;
+
     private Request request;
     private User assignee;
     private User reporter;
     private ProgressStatus progress;
     private PriorityStatus priority;
+    private List<Integer> requestsGroupIds;
 
     @Before
     public void setUp() throws Exception {
+        requestsGroupIds = Arrays.asList(113, 114, 115);
+
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
         reporter = new User("Mark", "Biggles", "securepass22", "valid@email.com", reporterRole);
@@ -54,10 +62,10 @@ public class RequestDaoImplTest {
         assignee = new User("Gavin", "Clarks", "rondo1890_", "blessed@email.com", assigneeRole);
         assignee = this.userDao.save(assignee);
 
-        priority = new PriorityStatus("Normal");
+        priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
 
-        progress = new ProgressStatus("Free");
+        progress = new ProgressStatus("Free", 200);
         progress.setId(5L);
 
         request = new Request();
@@ -88,11 +96,11 @@ public class RequestDaoImplTest {
     @Test
     public void shouldUpdateRequest() throws Exception {
         // given
-        PriorityStatus high = new PriorityStatus("High");
+        PriorityStatus high = new PriorityStatus("High", 300);
         high.setId(1L);
         request.setPriorityStatus(high);
 
-        ProgressStatus inProgress = new ProgressStatus("In progress");
+        ProgressStatus inProgress = new ProgressStatus("In progress", 400);
         inProgress.setId(7L);
         request.setProgressStatus(inProgress);
 
@@ -126,5 +134,13 @@ public class RequestDaoImplTest {
 
         // then
         assertThat(exists, is(true));
+    }
+
+    @Test
+    public void findRequestsByIds() throws Exception {
+        List<Request> foundRequests = requestDao.findRequestsByIds(requestsGroupIds);
+
+        Assert.assertNotNull(foundRequests);
+        Assert.assertEquals(foundRequests.size(), requestsGroupIds.size());
     }
 }
