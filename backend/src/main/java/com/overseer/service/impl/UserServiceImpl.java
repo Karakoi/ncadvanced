@@ -86,9 +86,6 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     public User findByEmail(String email) throws NoSuchEntityException {
         Assert.notNull(email, "email must not be null");
         User user = userDao.findByEmail(email);
-        if (user == null) {
-            throw new NoSuchEntityException("Failed to retrieve user with email " + email);
-        }
         LOG.debug("Retrieving user with email: {}", email);
         return user;
     }

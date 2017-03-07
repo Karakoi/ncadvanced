@@ -1,33 +1,32 @@
 <!-- Sidebar -->
-<div id="sidebar-wrapper">
+<div id="sidebar-wrapper" *ngIf="user">
+
   <ul class="sidebar-nav">
-    <li class="sidebar-brand">
-      <div class="logo">
-        <img src="http://aminoapps.com/static/img/user-icon-placeholder.png" class="img-responsive center-block" alt="Logo">
-      </div>
+    <li class="logo">
+      <gravatar [email]="user.email" [size]="80"></gravatar>
     </li>
     <!--This div will be visible regardless of role-->
     <li>
       <a [routerLink]="['/profile']">Profile</a>
     </li>
     <li>
-      <a href="/forum">Forum</a>
+      <a [routerLink]="['/forum']">Forum</a>
     </li>
     <li>
-      <a href="/message">Send Message</a>
+      <a [routerLink]="['/topic']">Topic</a>
     </li>
     <li>
-      <a href="/chat">Chat</a>
+      <a [routerLink]="['/chat']">Chat</a>
+    </li>
+    <li>
+      <a [routerLink]="['/message']">Send Message</a>
     </li>
     <!--Show this div, if user's role is Admin -->
-    <li>
-      <a href="#" *ngIf="isAdmin()">Add user</a>
-    </li>
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
     </li>
     <li>
-      <a href="#" *ngIf="isAdmin()">Show all requests</a>
+      <a [routerLink]="['/requests']" *ngIf="isAdmin()">Show all requests</a>
     </li>
     <!--Show this div, if user's role is Manager -->
     <li>

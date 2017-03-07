@@ -82,4 +82,9 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
     public List<T> fetchPage(int pageNumber) {
         return this.crudDao.fetchPage(DEFAULT_PAGE_SIZE, pageNumber);
     }
+
+    @Override
+    public Long getCount() {
+        return crudDao.count();
+    }
 }

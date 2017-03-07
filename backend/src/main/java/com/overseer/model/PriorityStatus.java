@@ -10,6 +10,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @Getter
 @Setter
+@ToString
 @EqualsAndHashCode(callSuper = false)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")

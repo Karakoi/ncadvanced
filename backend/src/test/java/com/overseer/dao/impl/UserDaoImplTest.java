@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.nullValue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class UserDaoTest {
+public class UserDaoImplTest {
 
     @Autowired
     private UserDao userDao;
@@ -61,6 +61,18 @@ public class UserDaoTest {
         // then
         assertThat(savedUser, is(notNullValue()));
         assertThat(savedUser.getLastName(), is(testLastName));
+    }
+
+    @Test
+    public void shouldDeleteUser() throws Exception {
+        // given
+
+        // when
+        userDao.delete(testUser);
+        User savedUser = userDao.findOne(testUser.getId());
+
+        // then
+        assertThat(savedUser, is(nullValue()));
     }
 
     @Test

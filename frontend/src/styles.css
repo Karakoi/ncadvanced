@@ -1,13 +1,12 @@
 body {
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(assets/img/intro-bg.jpg) no-repeat center center fixed;
+    background-color: #d4d4d4;
     font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
     overflow-x: hidden;
-    /*disable page scroll...*/
-    /*overflow-y: hidden;*/
 }
 
 html, body {
@@ -23,7 +22,7 @@ h5,
 h6 {
     margin: 0 0 35px;
     text-transform: uppercase;
-    font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
     font-weight: 700;
     letter-spacing: 1px;
 }
@@ -34,10 +33,6 @@ h6 {
 
 .login-helper > a {
     cursor: pointer;
-}
-
-.panel-primary {
-    margin-top: 15%;
 }
 
 .main-section {

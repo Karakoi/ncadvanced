@@ -7,8 +7,8 @@
 }
 
 .dummy_user {
-  width: 250px;
-  height: 250px;
-  border: solid darkgray 3px;
+  width: 303px;
+  height: auto;
+  /*border: solid darkgray 3px;*/
   border-radius: 3%;
 }

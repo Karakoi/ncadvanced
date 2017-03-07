@@ -3,12 +3,12 @@ import {Md5} from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'gravatar',
-  templateUrl: 'gravatar.component.html',
-  styleUrls: ['../profile.component.css']
+  templateUrl: 'gravatar.component.html'
+  // styleUrls: ['../test.component.css']
 })
 export class GravatarComponent implements OnInit{
-  @Input('email') email: string;
-  @Input('size') size: number = 500;
+  @Input('email') email: string = "";
+  @Input('size') size: number = 50;
 
   constructor() {}
   ngOnInit() {}

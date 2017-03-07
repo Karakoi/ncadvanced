@@ -1,4 +1,4 @@
-package com.overseer;
+package com.overseer.dao.impl;
 
 import com.overseer.dao.RoleDao;
 import com.overseer.model.Role;
@@ -21,7 +21,9 @@ import static org.hamcrest.Matchers.nullValue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RoleDaoTest {
+@Transactional
+public class RoleDaoImplTest {
+
     @Autowired
     private RoleDao roleDao;
 
@@ -40,8 +42,6 @@ public class RoleDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testAddRole() {
         // given
 
@@ -53,8 +53,6 @@ public class RoleDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testDeleteRole() {
         // given
 
@@ -67,8 +65,6 @@ public class RoleDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testFindByNameRole() {
         // given
 
@@ -80,8 +76,6 @@ public class RoleDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testUpdateRole() {
         // given
         String updatedName = "TestRole";

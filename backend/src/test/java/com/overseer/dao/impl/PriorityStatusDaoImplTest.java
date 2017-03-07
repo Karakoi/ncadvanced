@@ -1,4 +1,4 @@
-package com.overseer;
+package com.overseer.dao.impl;
 
 import com.overseer.dao.PriorityStatusDao;
 import com.overseer.model.PriorityStatus;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 /**
@@ -22,7 +23,9 @@ import static org.hamcrest.Matchers.nullValue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PriorityStatusDaoTest {
+@Transactional
+public class PriorityStatusDaoImplTest {
+
     @Autowired
     private PriorityStatusDao priorityStatusDao;
 
@@ -42,8 +45,6 @@ public class PriorityStatusDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testAddPriorityStatus() {
         // given
 
@@ -55,8 +56,6 @@ public class PriorityStatusDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testDeletePriorityStatus() {
         // given
 
@@ -69,8 +68,6 @@ public class PriorityStatusDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testFindByNamePriorityStatus() {
         // given
 
@@ -78,12 +75,11 @@ public class PriorityStatusDaoTest {
         PriorityStatus fromDbPriorityStatus = priorityStatusDao.findByName(TEST_NAME);
 
         // then
+        assertThat(fromDbPriorityStatus, is(notNullValue()));
         assertThat(fromDbPriorityStatus, is(savedPriorityStatus));
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testUpdatePriorityStatus() {
         // given
         String updatedName = "TestStatus";

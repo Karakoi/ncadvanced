@@ -1,8 +1,8 @@
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
-    <div class="panel panel-primary">
+    <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Signup</strong>
+        <strong>Create account</strong>
       </div>
       <div class="panel-body">
         <form [formGroup]="registerForm" (ngSubmit)="register(registerForm.value)" autocomplete="off" novalidate>
@@ -65,15 +65,15 @@
             </div>
           </div>
           <!--USER BIRTH DATE-->
-          <div class="form-group" [ngClass]="{'has-error': !validateField('birthDate')}">
+          <div class="form-group" [ngClass]="{'has-error': !validateField('dateOfBirth')}">
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-              <input id="birthDate" formControlName="birthDate" type="date" placeholder="Date of birth"
+              <input id="dateOfBirth" formControlName="dateOfBirth" type="date" placeholder="Date of birth"
                      class="form-control"/>
-              <span *ngIf="!validateField('birthDate')" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              <span *ngIf="!validateField('dateOfBirth')" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
-            <div *ngIf="!validateField('birthDate')" class="help-block text-left">
-              <span *ngIf="registerForm.get('birthDate').hasError('dateISO')">Invalid date.</span>
+            <div *ngIf="!validateField('dateOfBirth')" class="help-block text-left">
+              <span *ngIf="registerForm.get('dateOfBirth').hasError('dateISO')">Invalid date.</span>
             </div>
           </div>
           <!--USER PHONE NUMBER-->
@@ -89,7 +89,7 @@
               <span *ngIf="registerForm.get('phoneNumber').hasError('phone')">Invalid phone number. Example: 0995351242</span>
             </div>
           </div>
-          <button type="submit" class="btn btn-success col-lg-12" [disabled]="registerForm.invalid">Submit</button>
+          <button type="submit" class="btn btn-primary col-lg-12" [disabled]="registerForm.invalid">Submit</button>
         </form>
       </div>
     </div>

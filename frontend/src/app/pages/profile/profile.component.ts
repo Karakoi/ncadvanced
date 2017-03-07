@@ -7,7 +7,6 @@ import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
 
-
 @Component({
   selector: 'overseer-profile',
   templateUrl: 'profile.component.html',
@@ -28,7 +27,6 @@ export class ProfileComponent implements OnInit {
     this.authService.currentUser.subscribe((user: User) => {
       this.user = user;
     });
-
     this.initForm();
   }
 
@@ -42,7 +40,7 @@ export class ProfileComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   validateField(field: string): boolean {
@@ -56,7 +54,7 @@ export class ProfileComponent implements OnInit {
       secondName: '',
       email: ['', [Validators.required, CustomValidators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      birthDate: ['', CustomValidators.dateISO],
+      dateOfBirth: ['', CustomValidators.dateISO],
       phoneNumber: ['', CustomValidators.phone()]
     });
   }
