@@ -2,10 +2,9 @@
 <div id="sidebar-wrapper" *ngIf="user">
 
   <ul class="sidebar-nav">
-    <div class="logo">
+    <li class="logo">
       <gravatar [email]="user.email" [size]="80"></gravatar>
-    </div>
-    <br/>
+    </li>
     <!--This div will be visible regardless of role-->
     <li>
       <a [routerLink]="['/profile']">Profile</a>
