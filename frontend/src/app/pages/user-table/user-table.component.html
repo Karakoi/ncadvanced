@@ -1,57 +1,51 @@
 <div class="container" *ngIf="users">
   <div class="col-lg-12">
     <div class="row">
-      <div class="overflow: auto">
-        <table class="table table-bordered table-hover table-condensed">
-          <thead>
-          <tr>
-            <th>Id</th>
-            <th>First name</th>
-            <th>Last Name</th>
-            <th>Second Name</th>
-            <th>Phone number</th>
-            <th>Email</th>
-            <th>Date of birth</th>
-            <th>Role</th>
-            <th></th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let user of users">
-            <td>{{user.id}}</td>
-            <td>{{user.firstName}}</td>
-            <td>{{user.lastName}}</td>
-            <td>{{user.secondName}}</td>
-            <td>{{user.phoneNumber}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.dateOfBirth}}</td>
-            <td>{{user.role.name}}</td>
-            <td>
-              <button [attr.value]="user.id" class="glyphicon glyphicon-trash" (click)="deleteRow($event)"></button>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <button class="glyphicon glyphicon-plus" (click)="showModal()"></button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+      <div class="overflow: auto panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Users</h2>
+        </div>
+        <div class="panel-body">
+          <table class="table table-bordered table-hover table-condensed">
+            <thead>
+            <tr>
+              <th>First name</th>
+              <th>Last Name</th>
+              <th>Second Name</th>
+              <th>Phone number</th>
+              <th>Email</th>
+              <th>Date of birth</th>
+              <th>Role</th>
+              <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{user.firstName}}</td>
+              <td>{{user.lastName}}</td>
+              <td>{{user.secondName}}</td>
+              <td>{{user.phoneNumber}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.dateOfBirth}}</td>
+              <td>{{user.role.name}}</td>
+              <td>
+                <button [attr.value]="user.id" class="glyphicon glyphicon-trash" (click)="deleteRow($event)"></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-footer text-right">
+          <input type="submit" class="btn btn-primary" (click)="showModal()" value="Add"/>
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="pull-right">
         <ul class="pagination">
-          <li class="paginate_button active" (click)="load($event)" ><a>1</a></li>
-          <li class="paginate_button"  (click)="load($event)" *ngFor="let item of createRange(pageNumber)" ><a>{{item}}</a></li>
+          <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
+          <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageNumber)">
+            <a>{{item}}</a></li>
         </ul>
       </div>
     </div>

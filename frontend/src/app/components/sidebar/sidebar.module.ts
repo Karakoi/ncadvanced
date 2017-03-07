@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
-import {TestModule} from "../../pages/shared/SharedGravatar.module";
+import {GravatarSharedModule} from "../../pages/shared/sharedGravatar.module";
 import {SideBarComponent} from "./sidebar.component";
 
 @NgModule({
@@ -9,7 +9,7 @@ import {SideBarComponent} from "./sidebar.component";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TestModule
+    GravatarSharedModule
   ],
   declarations: [
     SideBarComponent
