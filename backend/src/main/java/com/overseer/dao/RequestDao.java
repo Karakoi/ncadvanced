@@ -150,4 +150,12 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of requests created in provided date.
      */
     List<Request> findRequestsByDate(LocalDate date);
+
+    /**
+     * Returns a list of requests with specified id's.
+     *
+     * @param ids input id's
+     * @return filtered list of requests
+     */
+    List<Request> findRequestsByIds(List<Long> ids);
 }

@@ -77,4 +77,25 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return list of requests created in provided date.
      */
     List<Request> findRequestsByDate(LocalDate date);
+
+    /**
+     * Joins specified requests by parent request.
+     * Joined requests will have 'Joined' {@link Request#progressStatus}
+     * and not null {@link Request#parentId}.
+     *
+     * @param ids specified requests primary keys for joining
+     * @return created parent request
+     */
+    Request joinRequestsIntoParent(List<Long> ids, Request parentRequest);
+
+    /**
+     * Creates sub request for parent request.
+     * Sub request will have null {@link Request#progressStatus}, {@link Request#priorityStatus}
+     * and not null {@link Request#parentId}
+     *
+     * @param subRequest specified sub request
+     * @param parentRequest specified parent request
+     * @return joined sub request
+     */
+    Request saveSubRequest(Request subRequest, Request parentRequest);
 }
