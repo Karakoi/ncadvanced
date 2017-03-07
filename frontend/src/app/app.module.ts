@@ -17,13 +17,8 @@ import {
   AdminPageGuard,
   RequestService
 } from "./service/barrel";
-import {
-  FooterComponent,
-  NavbarComponent,
-  NoContentComponent,
-  SideBarComponent
-} from "./components/barrel";
-import {TestModule} from "./pages/shared/SharedGravatar.module";
+import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} from "./components/barrel";
+import {GravatarSharedModule} from "./pages/shared/sharedGravatar.module";
 
 @NgModule({
   declarations: [
@@ -39,9 +34,9 @@ import {TestModule} from "./pages/shared/SharedGravatar.module";
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    GravatarSharedModule,
     ToastModule.forRoot(),
-    RouterModule.forRoot(appRoutes),
-    TestModule
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [
     RecoverService,

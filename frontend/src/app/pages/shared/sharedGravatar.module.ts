@@ -1,7 +1,6 @@
 import {NgModule} from "@angular/core";
 import {GravatarComponent} from "../../components/gravatar/gravatar.component";
 import {CommonModule} from "@angular/common";
-import {FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
@@ -11,10 +10,8 @@ import {FormsModule} from "@angular/forms";
     GravatarComponent
   ],
   exports: [
-    GravatarComponent,
-    CommonModule,
-    FormsModule
+    GravatarComponent
   ]
 })
-export class TestModule {
+export class GravatarSharedModule {
 }
