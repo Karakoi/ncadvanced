@@ -8,8 +8,8 @@
         <li routerLinkActive="active" *ngIf="isSignedIn">
           <a [routerLink]="['/home']">Home</a>
         </li>
-        <li style="cursor: pointer;" *ngIf="isSignedIn">
-          <a side-bar>&#9776;</a>
+        <li style="cursor: pointer;">
+          <a side-bar *ngIf="isSignedIn">&#9776;</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -23,7 +23,7 @@
           <a style="cursor: pointer" (click)="logout()">Logout</a>
         </li>
       </ul>
-      <overseer-sidebar></overseer-sidebar>
+      <overseer-sidebar *ngIf="isSignedIn"></overseer-sidebar>
     </div>
   </div>
 </nav>
