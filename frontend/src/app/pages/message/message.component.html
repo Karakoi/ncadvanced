@@ -5,27 +5,24 @@
         <span class="panel-title"><b>Send message to email</b></span>
       </div>
       <div class="panel-body">
-        <form action="">
+        <form  autocomplete="off" novalidate [formGroup]="messageForm" (ngSubmit)="sendMessage(messageForm.value)">
           <div class="form-group col-lg-6">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-              <input type="text" placeholder="Theme" class="form-control">
-            </div>
+            <!-- <div class="input-group">
+               <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+               <input type="text" placeholder="Theme" class="form-control">
+            </div>-->
           </div>
           <div class="form-group col-lg-6">
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-              <select class="form-control">
-                <option>Eugene Deyneka</option>
-                <option>Bogdan Bachkala</option>
-                <option>Dasha Romanova</option>
-                <option>Andrey Karakoy</option>
-                <option>Viacheslav Rurenko</option>
+              <select id="recipient" class="form-control" formControlName="recipient">
+                <option class="selected disabled">Recipient</option>
+                <option [attr.value]="user.id" *ngFor="let user of potentialRecipients">{{user.firstName}} {{user.lastName}}</option>
               </select>
             </div>
           </div>
           <div class="form-group col-lg-12">
-            <textarea class="form-control" rows="8" placeholder="Message text.."></textarea>
+            <textarea rows="8" placeholder="Message text.." id="text" class="form-control" formControlName="text"></textarea>
           </div>
           <div class="form-group col-lg-12 submit-form-group">
             <button type="submit" class="btn btn-success pull-right">Send message</button>
