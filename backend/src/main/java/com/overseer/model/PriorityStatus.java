@@ -17,4 +17,7 @@ import lombok.*;
 public class PriorityStatus extends AbstractEntity {
     @NonNull
     private String name;
+
+    @NonNull
+    private int value;
 }
