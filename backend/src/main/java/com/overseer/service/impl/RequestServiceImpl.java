@@ -1,5 +1,7 @@
 package com.overseer.service.impl;
 
+import static java.util.Comparator.comparingInt;
+
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -108,5 +111,79 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         Assert.notNull(date, "date must not be null");
         LOG.debug("Fetching requests for date: {}", date);
         return this.requestDao.findRequestsByDate(date);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Request joinRequestsIntoParent(List<Long> ids, Request parentRequest) {
+        Assert.notNull(ids, "ids must not be null");
+        Assert.notNull(parentRequest, "parent request must not be null");
+        LOG.debug("Joining requests with ids {} into parent request {}", ids, parentRequest);
+
+        // Retrieve specified requests for joining from database
+        List<Request> joinedRequests = requestDao.findRequestsByIds(ids);
+
+        // Find and set max priority status from specified requests to parent request
+        PriorityStatus maxPriorityStatus = getMaxPriorityStatus(joinedRequests);
+        parentRequest.setPriorityStatus(maxPriorityStatus);
+
+        // Define and set progress status and date of creation to parent
+        ProgressStatus parentProgressStatus = new ProgressStatus();
+        parentProgressStatus.setName("In progress");
+        final Long inProgressStatusValue = 7L;
+        parentProgressStatus.setId(inProgressStatusValue);
+        parentRequest.setProgressStatus(parentProgressStatus);
+        parentRequest.setDateOfCreation(LocalDateTime.now());
+
+        // Save parent request to database
+        Request parent = requestDao.save(parentRequest);
+
+        // Define progress status with 'Joined' value for child requests
+        ProgressStatus childProgressStatus = new ProgressStatus();
+        childProgressStatus.setName("Joined");
+        final Long joinedStatusValue = 6L;
+        childProgressStatus.setId(joinedStatusValue);
+
+        // Update child requests with new progress status and parent id
+        Long parentId = parent.getId();
+        joinedRequests.forEach(request -> {
+            request.setProgressStatus(childProgressStatus);
+            request.setParentId(parentId);
+            requestDao.save(request);
+        });
+
+        return parent;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Request saveSubRequest(Request subRequest, Request parentRequest) {
+        Assert.notNull(subRequest, "sub request must not be null");
+        Assert.notNull(parentRequest, "parent request must not be null");
+        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
+        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
+        LOG.debug("Create sub request {} for parent request {}", subRequest, parentRequest);
+        Long parentId = parentRequest.getId();
+        subRequest.setParentId(parentId);
+        return requestDao.save(subRequest);
+    }
+
+    /**
+     * Returns max {@link PriorityStatus} of specified requests list.
+     * Statuses compares by {@link PriorityStatus#value}.
+     *
+     * @param requests specified requests list
+     * @return max priority status
+     */
+    private PriorityStatus getMaxPriorityStatus(List<Request> requests) {
+        return requests
+                .stream()
+                .map(Request::getPriorityStatus)
+                .max(comparingInt(PriorityStatus::getValue))
+                .orElseThrow(UnsupportedOperationException::new);
     }
 }

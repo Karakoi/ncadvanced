@@ -520,7 +520,7 @@
         Doc ref:        http://checkstyle.sourceforge.net/config_naming.html#LocalFinalVariableName
         -->
         <module name="LocalFinalVariableName">
-            <property name="format" value="^[A-Z][a-zA-Z]*$"/>
+            <property name="format" value="^[a-z][a-zA-Z]*$"/>
             <message key="name.invalidPattern" value="Parameter name ''{0}'' must match pattern ''{1}''."/>
         </module>
 

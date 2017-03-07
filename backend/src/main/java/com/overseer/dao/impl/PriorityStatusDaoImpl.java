@@ -56,7 +56,7 @@ public class PriorityStatusDaoImpl extends SimpleEntityDaoImpl<PriorityStatus> i
     @Override
     protected RowMapper<PriorityStatus> getMapper() {
         return (resultSet, i) -> {
-            PriorityStatus priorityStatus = new PriorityStatus(resultSet.getString("name"));
+            PriorityStatus priorityStatus = new PriorityStatus(resultSet.getString("name"), resultSet.getInt("value"));
             priorityStatus.setId(resultSet.getLong("id"));
             return priorityStatus;
         };
