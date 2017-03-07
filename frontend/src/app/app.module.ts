@@ -25,7 +25,11 @@ import {
   SideBarComponent,
   LoginComponent,
   SignupComponent,
-  RecoverComponent
+  RecoverComponent,
+  MessageComponent,
+  ForumComponent,
+  ChatComponent,
+  TopicComponent
 } from "./components/barrel";
 import {GravatarSharedModule} from "./pages/shared/sharedGravatar.module";
 import {FormTemplateComponent} from "./shared/form-template/form-template.component";
@@ -41,6 +45,10 @@ import {FormTemplateComponent} from "./shared/form-template/form-template.compon
     SignupComponent,
     RecoverComponent,
     FormTemplateComponent,
+    MessageComponent,
+    ForumComponent,
+    ChatComponent,
+    TopicComponent,
     SideBarDirective
   ],
   imports: [

@@ -1,5 +1,14 @@
 import {Routes} from "@angular/router";
-import {NoContentComponent, LoginComponent, SignupComponent, RecoverComponent} from "./components/barrel";
+import {
+  NoContentComponent,
+  LoginComponent,
+  SignupComponent,
+  RecoverComponent,
+  ChatComponent,
+  MessageComponent,
+  ForumComponent,
+  TopicComponent
+} from "./components/barrel";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {PrivatePageGuard} from "./service/private-page.guard";
 import {AdminPageGuard} from "./service/admin-page.guard";
@@ -39,22 +48,22 @@ export const appRoutes: Routes = [
   },
   {
     path: 'forum',
-    loadChildren: './pages/forum/forum.module#ForumModule',
+    component: ForumComponent,
     canActivate: [PrivatePageGuard]
   },
   {
     path: 'topic',
-    loadChildren: './pages/topic/topic.module#TopicModule',
+    component: TopicComponent,
     canActivate: [PrivatePageGuard]
   },
   {
     path: 'message',
-    loadChildren: './pages/message/message.module#MessageModule',
+    component: MessageComponent,
     canActivate: [PrivatePageGuard]
   },
   {
     path: 'chat',
-    loadChildren: './pages/chat/chat.module#ChatModule',
+    component: ChatComponent,
     canActivate: [PrivatePageGuard]
   },
   // Available for admin
