@@ -146,6 +146,11 @@ WITH (OIDS=FALSE)
 ;
 
 -- ----------------------------
+-- Indexes structure for table request
+-- ----------------------------
+CREATE UNIQUE INDEX request_reporter_date_uindex ON "public"."request" (reporter_id, date_of_creation);
+
+-- ----------------------------
 -- Alter Sequences Owned By 
 -- ----------------------------
 ALTER SEQUENCE "public"."main_id_seq" OWNED BY "role"."id";
