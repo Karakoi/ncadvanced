@@ -1,4 +1,4 @@
-package com.overseer;
+package com.overseer.dao.impl;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.model.ProgressStatus;
@@ -22,7 +22,9 @@ import static org.hamcrest.Matchers.nullValue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProgressStatusDaoTest {
+@Transactional
+public class ProgressStatusDaoImplTest {
+
     @Autowired
     private ProgressStatusDao progressStatusDao;
 
@@ -42,8 +44,6 @@ public class ProgressStatusDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testAddProgressStatus() {
         // given
 
@@ -55,8 +55,6 @@ public class ProgressStatusDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testDeleteProgressStatus() {
         // given
 
@@ -69,8 +67,6 @@ public class ProgressStatusDaoTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testFindByNameProgressStatus() {
         // given
 
@@ -84,8 +80,6 @@ public class ProgressStatusDaoTest {
 
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testUpdateProgressStatus() {
         // given
         String updatedName = "TestStatus";

@@ -1,5 +1,3 @@
-
-
 -- ----------------------------
 -- Sequence structure for main_id_seq
 -- ----------------------------
@@ -25,9 +23,7 @@ CREATE TABLE "public"."history" (
 "changer_id" int4 NOT NULL,
 "record_id" int4 NOT NULL
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for message
@@ -41,9 +37,7 @@ CREATE TABLE "public"."message" (
 "text" varchar(500) COLLATE "default" NOT NULL,
 "date_and_time" TIMESTAMP NOT NULL
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for priority_status
@@ -53,9 +47,7 @@ CREATE TABLE "public"."priority_status" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "name" varchar(45) COLLATE "default" NOT NULL
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for progress_status
@@ -65,9 +57,7 @@ CREATE TABLE "public"."progress_status" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "name" varchar(45) COLLATE "default" NOT NULL
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for request
@@ -85,9 +75,7 @@ CREATE TABLE "public"."request" (
 "date_of_creation" TIMESTAMP NOT NULL,
 "parent_id" int4
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for role
@@ -97,9 +85,7 @@ CREATE TABLE "public"."role" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "name" varchar(100) COLLATE "default"
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for topic
@@ -109,9 +95,7 @@ CREATE TABLE "public"."topic" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "title" varchar(45) COLLATE "default" NOT NULL
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for topic_to_role
@@ -122,9 +106,7 @@ CREATE TABLE "public"."topic_to_role" (
 "role_id" int4 NOT NULL,
 "topic_id" int4 NOT NULL
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for user
@@ -141,9 +123,32 @@ CREATE TABLE "public"."user" (
 "phone_number" varchar(45) COLLATE "default",
 "role" int4
 )
-WITH (OIDS=FALSE)
+WITH (OIDS=FALSE);
 
-;
+-- ----------------------------
+-- Indexes structure for table request
+-- ----------------------------
+CREATE UNIQUE INDEX request_reporter_date_uindex ON "public"."request" (reporter_id, date_of_creation);
+
+-- ----------------------------
+-- Indexes structure for table role
+-- ----------------------------
+CREATE UNIQUE INDEX role_name_uindex ON "public"."role" (name);
+
+-- ----------------------------
+-- Indexes structure for table priority status
+-- ----------------------------
+CREATE UNIQUE INDEX priority_status_name_uindex ON "public"."priority_status" (name);
+
+-- ----------------------------
+-- Indexes structure for table progress status
+-- ----------------------------
+CREATE UNIQUE INDEX progress_status_name_uindex ON "public"."progress_status" (name);
+
+-- ----------------------------
+-- Indexes structure for table topic
+-- ----------------------------
+CREATE UNIQUE INDEX topic_title_uindex ON "public"."topic" (title);
 
 -- ----------------------------
 -- Alter Sequences Owned By 

@@ -44,14 +44,12 @@ public class TopicDaoImplTest {
 
 
     @Test
-    @Rollback
     public void save() throws Exception {
         final Topic actual = topicDao.findOne(testTopicId);
         Assert.assertEquals(testTopic, actual);
     }
 
     @Test
-    @Rollback
     public void deleteById() throws Exception {
         topicDao.delete(testTopicId);
         final Topic actual = topicDao.findOne(testTopicId);
@@ -59,7 +57,6 @@ public class TopicDaoImplTest {
     }
 
     @Test
-    @Rollback
     public void deleteByValue() throws Exception {
         topicDao.delete(testTopic);
         final Topic actual = topicDao.findOne(testTopicId);
