@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.nullValue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class RequestDaoTest {
+public class RequestDaoImplTest {
 
     @Autowired
     private UserDao userDao;
