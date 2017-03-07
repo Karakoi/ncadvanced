@@ -1,5 +1,5 @@
 import {Routes} from "@angular/router";
-import {NoContentComponent} from "./components/barrel";
+import {NoContentComponent, LoginComponent, SignupComponent, RecoverComponent} from "./components/barrel";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {PrivatePageGuard} from "./service/private-page.guard";
 import {AdminPageGuard} from "./service/admin-page.guard";
@@ -13,17 +13,17 @@ export const appRoutes: Routes = [
   // Available for unregistered user
   {
     path: 'signup',
-    loadChildren: './pages/signup/signup.module#SignupModule',
+    component: SignupComponent,
     canActivate: [PublicPageGuard]
   },
   {
     path: 'login',
-    loadChildren: './pages/login/login.module#LoginModule',
+    component: LoginComponent,
     canActivate: [PublicPageGuard]
   },
   {
     path: 'recover',
-    loadChildren: './pages/recover/recover.module#RecoverModule',
+    component: RecoverComponent,
     canActivate: [PublicPageGuard]
   },
   // Available for registered user

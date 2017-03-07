@@ -8,7 +8,7 @@ import {CustomValidators} from "ng2-validation";
 
 @Component({
   selector: 'overseer-signup',
-  templateUrl: './signup.component.html'
+  templateUrl: 'signup.component.html'
 })
 export class SignupComponent implements OnInit {
   registerForm: FormGroup;

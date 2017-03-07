@@ -18,8 +18,17 @@ import {
   AdminPageGuard,
   RequestService
 } from "./service/barrel";
-import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} from "./components/barrel";
+import {
+  FooterComponent,
+  NavbarComponent,
+  NoContentComponent,
+  SideBarComponent,
+  LoginComponent,
+  SignupComponent,
+  RecoverComponent
+} from "./components/barrel";
 import {GravatarSharedModule} from "./pages/shared/sharedGravatar.module";
+import {FormTemplateComponent} from "./shared/form-template/form-template.component";
 
 @NgModule({
   declarations: [
@@ -28,6 +37,10 @@ import {GravatarSharedModule} from "./pages/shared/sharedGravatar.module";
     NavbarComponent,
     NoContentComponent,
     SideBarComponent,
+    LoginComponent,
+    SignupComponent,
+    RecoverComponent,
+    FormTemplateComponent,
     SideBarDirective
   ],
   imports: [
