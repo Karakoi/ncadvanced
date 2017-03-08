@@ -1,3 +1,6 @@
+/*
+  There is no original class for testing HistoryDaoImpl, because we do not
+  */
 DELETE FROM request
 WHERE id = 999;
 

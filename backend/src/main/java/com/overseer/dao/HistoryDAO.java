@@ -2,7 +2,6 @@ package com.overseer.dao;
 
 import com.overseer.model.History;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**

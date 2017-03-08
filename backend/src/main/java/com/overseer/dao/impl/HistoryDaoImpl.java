@@ -5,7 +5,6 @@ import com.overseer.model.History;
 import com.overseer.service.QueryService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -53,7 +52,7 @@ public class HistoryDaoImpl implements HistoryDAO{
             history.setOldValue(resultSet.getString("old_value"));
             history.setNewValue(resultSet.getString("new_value"));
             Date dateOfLastChanges = resultSet.getDate("date_of_last_changes");
-            history.setDateOfLastChange(LocalDateTime.ofInstant(dateOfLastChanges.toInstant(), ZoneId.systemDefault()));
+            history.setDateOfChange(LocalDateTime.ofInstant(dateOfLastChanges.toInstant(), ZoneId.systemDefault()));
             UserDaoImpl userDao = new UserDaoImpl();
             history.setChanger(userDao.findOne(resultSet.getLong("changer_id")));
             history.setRecordId(resultSet.getLong("record_id"));

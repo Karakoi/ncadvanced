@@ -2,11 +2,8 @@ package com.overseer.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -28,7 +25,7 @@ public class History extends AbstractEntity {
     private String newValue;
 
     @NotNull(message = "History has to have a change date")
-    private LocalDateTime dateOfLastChange;
+    private LocalDateTime dateOfChange;
 
     @NotNull(message = "History has to have a changer")
     private User changer;
