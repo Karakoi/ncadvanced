@@ -6,6 +6,7 @@ import {CustomValidators} from "ng2-validation";
 import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
+import {CacheService} from "ionic-cache";
 
 @Component({
   selector: 'overseer-profile',
@@ -15,11 +16,13 @@ import {User} from "../../model/user.model";
 export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
   user: User;
+  showPass: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private authService: AuthService,
               private router: Router,
+              private cach: CacheService,
               private toastr: ToastsManager) {
   }
 
@@ -31,26 +34,32 @@ export class ProfileComponent implements OnInit {
   }
 
   update(): void {
-
     this.userService.update(this.user).subscribe( () => {
         this.toastr.success('Your profile has been updated');
+        this.cach.clearAll();
       }, e => this.toastr.error('Enter ur password','Wrong')
     );
   }
-
-  updatePass(newPass,confirmPass): void {
-
-    if (newPass === '' || confirmPass === '') {
-      this.toastr.error("Fields can't be empty");
-    }
+  updatePass(newPass, confirmPass): void {
 
     if (newPass!=confirmPass) {
-      this.toastr.error("Passwords don't match");
+      this.toastr.error('Passwords do not match');
+      return;
     }
+
+    this.user.password = newPass;
+    this.userService.update(this.user).subscribe(() => {
+        this.toastr.success("Your password has been changed");
+      }, e => this.toastr.error("Wrong")
+    );
   }
 
   cancel(): void {
     this.router.navigate(['/home']);
+  }
+
+  showPassword(){
+    this.showPass = !this.showPass;
   }
 
   validateField(field: string): boolean {
