@@ -13,7 +13,7 @@ export class RequestService {
   }
 
   create(request: Request): Observable<Response> {
-    return this.authHttp.post(url, request);
+    return this.authHttp.post(url, request).map(resp => resp.json());
   }
 
   update(request: Request): Observable<Response> {
