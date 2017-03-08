@@ -27,4 +27,17 @@ public interface UserDao extends CrudDao<User, Long> {
      */
     List<User> findByRole(Role role, int pageSize, int pageNumber);
 
+    /**
+     * Method find managers which work on employee tasks.
+     * @param employeeId employee which have a tasks.
+     * @return list of office managers which works on employee's tasks.
+     */
+    List<User> findManagersByEmployee(Long employeeId);
+
+    /**
+     * Method find employees by tasks which has been assigned by manager.
+     * @param managerId manager which work on tasks.
+     * @return list of employees.
+     */
+    List<User> findUsersByManager(Long managerId);
 }
