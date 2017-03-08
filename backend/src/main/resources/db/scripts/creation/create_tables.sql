@@ -76,7 +76,7 @@ CREATE TABLE "public"."request" (
 "estimate_time_in_days" int4,
 "date_of_creation" TIMESTAMP NOT NULL,
 "parent_id" int4,
- "last_changer_id" int4
+ "last_changer_id" int4 NOT NULL
 )
 WITH (OIDS=FALSE);
 

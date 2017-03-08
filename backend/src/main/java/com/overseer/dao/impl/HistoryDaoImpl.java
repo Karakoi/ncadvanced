@@ -2,11 +2,14 @@ package com.overseer.dao.impl;
 
 import com.overseer.dao.HistoryDAO;
 import com.overseer.model.History;
+import com.overseer.service.QueryService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +26,13 @@ import java.util.List;
 @Transactional
 @Repository
 @RequiredArgsConstructor
-public class HistoryDaoImpl extends CrudDaoImpl<History> implements HistoryDAO{
+public class HistoryDaoImpl implements HistoryDAO{
+
+    @Autowired
+    private NamedParameterJdbcOperations jdbc;
+
+    @Autowired
+    private QueryService queryService;
 
     /**
      * {@inheritDoc}.
@@ -36,8 +45,7 @@ public class HistoryDaoImpl extends CrudDaoImpl<History> implements HistoryDAO{
         return this.jdbc().query(this.queryService().getQuery("history.findAllForEntity"), parameterSource, this.getMapper());
     }
 
-    @Override
-    protected RowMapper<History> getMapper() {
+    private RowMapper<History> getMapper() {
         return (resultSet, i) -> {
             History history = new History();
             history.setId(resultSet.getLong("id"));
@@ -53,33 +61,11 @@ public class HistoryDaoImpl extends CrudDaoImpl<History> implements HistoryDAO{
         };
     }
 
-    @Override
-    protected String getInsertQuery() {
-        return this.queryService().getQuery("history.insert");
+    NamedParameterJdbcOperations jdbc() {
+        return this.jdbc;
     }
 
-    @Override
-    protected String getFindOneQuery() {
-        return this.queryService().getQuery("history.findOne");
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        return this.queryService().getQuery("user.delete");
-    }
-
-    @Override
-    protected String getExistsQuery() {
-        return this.queryService().getQuery("history.exists");
-    }
-
-    @Override
-    protected String getFindAllQuery() {
-        return this.queryService().getQuery("history.findAll");
-    }
-
-    @Override
-    protected String getCountQuery() {
-        return this.queryService().getQuery("history.count");
+    QueryService queryService() {
+        return this.queryService;
     }
 }

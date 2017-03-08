@@ -8,7 +8,7 @@ import java.util.List;
 /**
  *  The <code>HistoryDAO</code> interface represents access to {@link History} object in database.
  */
-public interface HistoryDAO extends CrudDao<History, Long>{
+public interface HistoryDAO {
 
     /**
      * Returns all {@Link History} details by entity id.
