@@ -1,6 +1,0 @@
-export * from './home/home.module'
-export * from './login/login.module'
-export * from './profile/profile.module'
-export * from './recover/recover.module'
-export * from './signup/signup.module'
-export * from './user-table/user-table.module'

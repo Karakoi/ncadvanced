@@ -65,3 +65,6 @@
     border: 2px solid green;
 }
 
+#sidebar-wrapper {
+  border-right: 1px solid black;
+}

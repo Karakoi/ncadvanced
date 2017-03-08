@@ -8,7 +8,6 @@ import {AuthService} from "../../service/auth.service";
   styleUrls: ['navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
   isSignedIn: boolean;
 
   constructor(private router: Router,
@@ -17,6 +16,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.isSignedIn = this.authService.isSignedIn();
+
     this.authService.events.subscribe(() => {
       this.isSignedIn = this.authService.isSignedIn();
     });
@@ -24,6 +24,6 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/authentication/login']);
   }
 }

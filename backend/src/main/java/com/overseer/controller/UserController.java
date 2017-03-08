@@ -1,9 +1,12 @@
 package com.overseer.controller;
 
+import com.overseer.model.Message;
+import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -107,10 +110,39 @@ public class UserController {
         private final String email;
     }
 
+    /**
+     * Returns all {@link Role} entities.
+     *
+     * @return all {@link Role} entities.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> roles = userService.findAllRoles();
+        return new ResponseEntity<>(roles, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/users/pageCount")
     public ResponseEntity<Long> getPageCount() {
         long pageCount = userService.getCount() / DEFAULT_PAGE_SIZE + 1;
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/managersByEmp")
+    public ResponseEntity<List<User>> getManagersByEmployee(@RequestParam Long empId) {
+        val managers = userService.findManagersByEmployee(empId);
+        return new ResponseEntity<>(managers, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/empByManager")
+    public ResponseEntity<List<User>> getUsersByManager(@RequestParam Long managerId) {
+        val users = userService.findUsersByManager(managerId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PostMapping("/sendMessage")
+    public void sendMessageToEmail(@RequestBody Message message) {
+        System.out.println(message);
     }
 }

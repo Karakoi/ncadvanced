@@ -1,0 +1,41 @@
+<div class="container">
+
+  <form-template>
+    <div class="template-header">
+      Some important topic title
+    </div>
+    <div class="template-body">
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let message of messages">
+          <div class="row">
+            <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
+              <p><img class="topic-user-logo"
+                      src="{{message.img}}"
+                      alt="topic-user-logo"></p>
+              <b><a href="">{{message.author.firstName}} {{message.author.lastName}}</a></b>
+              <span>{{message.author.role}}</span><br>
+            </div>
+            <div class="col-lg-10 col-sm-9 col-xs-9">
+              <p>{{message.text}}</p>
+              <p class="pull-right">{{message.dateOfCreation}}</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <form action="">
+        <textarea class="form-control" rows="3"></textarea>
+        <button type="submit" class="btn btn-primary pull-right">Submit message</button>
+      </form>
+      <ul class="pagination pull-left">
+        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+      </ul>
+    </div>
+  </form-template>
+
+</div>

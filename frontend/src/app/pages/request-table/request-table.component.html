@@ -30,18 +30,18 @@
             </tr>
             </tbody>
           </table>
+          <div class="pull-right">
+            <ul class="pagination">
+              <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
+              <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)"><a>{{item}}</a></li>
+            </ul>
+          </div>
         </div>
-        <div class="panel-footer text-right">
-        </div>
+
       </div>
     </div>
     <div class="row">
-      <div class="pull-right">
-        <ul class="pagination">
-          <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
-          <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)"><a>{{item}}</a></li>
-        </ul>
-      </div>
+
     </div>
     <overseer-request-details></overseer-request-details>
   </div>
