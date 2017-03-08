@@ -196,6 +196,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             ProgressStatus progressStatus = new ProgressStatus();
             progressStatus.setName(resultSet.getString("progress_name"));
             progressStatus.setId(resultSet.getLong("progress_id"));
+            progressStatus.setValue(resultSet.getInt("progress_value"));
 
             PriorityStatus priorityStatus = new PriorityStatus();
             priorityStatus.setName(resultSet.getString("priority_name"));
