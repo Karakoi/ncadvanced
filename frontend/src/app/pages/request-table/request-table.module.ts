@@ -3,8 +3,9 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {NgModule} from "@angular/core/src/metadata/ng_module";
 import {Routes, RouterModule} from "@angular/router";
 import {RequestTableComponent} from "./request-table.component";
-import {RequestDetailsComponent} from "./request-details/request-details.component";
-import {RequestDetailDirective} from "../../directive/request-detail.directive";
+import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
+import {FormTemplateModule} from "../../shared/form-template/form-template.module";
+import {RequestModule} from "../../shared/request/request.module";
 
 const routes: Routes = [
   {path: '', component: RequestTableComponent}
@@ -14,17 +15,15 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    FormTemplateModule,
+    RequestModule,
     ReactiveFormsModule
   ],
   declarations: [
-    RequestTableComponent,
-    RequestDetailsComponent,
-    RequestDetailDirective
+    RequestTableComponent
   ],
   exports: [
-    RequestTableComponent,
-    RequestDetailsComponent,
-    RequestDetailDirective
+    RequestTableComponent
   ]
 })
 export class RequestTableModule {

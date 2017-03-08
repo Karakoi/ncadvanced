@@ -1,13 +1,17 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
+import {ModalComponent} from "ng2-bs3-modal/components/modal";
 
 @Component({
-  selector: 'overseer-request-form',
+  selector: 'request-form',
   templateUrl: 'request-form.component.html',
   styleUrls: ['request-form.component.css']
 })
 export class RequestFormComponent implements OnInit {
   requestForm: FormGroup;
+
+  @ViewChild('requestFormModal')
+  modal: ModalComponent;
 
   constructor(private formBuilder: FormBuilder) {
   }
