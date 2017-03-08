@@ -1,5 +1,6 @@
 package com.overseer.service.impl;
 
+import com.overseer.dao.RoleDao;
 import com.overseer.dao.UserDao;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -35,12 +36,15 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     private EmailService emailService;
     private EmailBuilder<User> emailStrategy;
     private UserDao userDao;
+    private RoleDao roleDao;
 
     public UserServiceImpl(UserDao userDao,
+                           RoleDao roleDao,
                            EmailService emailService,
                            @Qualifier("recoverBuilderImpl") EmailBuilder<User> emailStrategy) {
         super(userDao);
         this.userDao = userDao;
+        this.roleDao = roleDao;
         this.emailService = emailService;
         this.emailStrategy = emailStrategy;
     }
@@ -95,5 +99,23 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         Assert.notNull(role, "role must not be null");
         LOG.debug("Retrieving user with role: {}", role);
         return userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
+    }
+
+    @Override
+    public List<User> findManagersByEmployee(Long employeeId) {
+        LOG.debug("Retrieving Managers by employee with employeeId: {}", employeeId);
+        return userDao.findManagersByEmployee(employeeId);
+    }
+
+    @Override
+    public List<User> findUsersByManager(Long managerId) {
+        LOG.debug("Retrieving employees by manager with managerId: {}", managerId);
+        return userDao.findUsersByManager(managerId);
+    }
+
+    @Override
+    public List<Role> findAllRoles() {
+        LOG.debug("Retrieving all roles: ");
+        return roleDao.findAll();
     }
 }

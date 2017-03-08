@@ -4,6 +4,7 @@ import {NgModule} from "@angular/core/src/metadata/ng_module";
 import {Routes, RouterModule} from "@angular/router";
 import {AddUserComponent} from "./user-add/user.component";
 import {UserTableComponent} from "./user-table.component";
+import {DeleteUserComponent} from "./user-delete/delete-user.component";
 
 const routes: Routes = [
   {path: '', component: UserTableComponent}
@@ -17,11 +18,13 @@ const routes: Routes = [
   ],
   declarations: [
     UserTableComponent,
-    AddUserComponent
+    AddUserComponent,
+    DeleteUserComponent
   ],
   exports: [
     UserTableComponent,
     AddUserComponent,
+    DeleteUserComponent
   ],
   providers: []
 })

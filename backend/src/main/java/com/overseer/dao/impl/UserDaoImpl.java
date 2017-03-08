@@ -132,4 +132,26 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
     protected String getCountQuery() {
         return this.queryService().getQuery("user.count");
     }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findManagersByEmployee(Long employeeId) {
+        Assert.notNull(employeeId, "EmployeeId can't be null");
+        return this.jdbc().query(this.queryService().getQuery("user.managers"),
+                new MapSqlParameterSource("reporter", employeeId),
+                this.getMapper());
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findUsersByManager(Long managerId) {
+        Assert.notNull(managerId, "ManagerId can't be null");
+        return this.jdbc().query(this.queryService().getQuery("manager.users"),
+                new MapSqlParameterSource("assignee", managerId),
+                this.getMapper());
+    }
 }

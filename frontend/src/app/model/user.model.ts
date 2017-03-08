@@ -1,3 +1,4 @@
+import {Role} from "./role.model";
 export interface User {
   id?: number,
   firstName: string,
@@ -8,9 +9,4 @@ export interface User {
   dateOfBirth?: Date,
   phoneNumber?: string,
   role: Role;
-}
-
-export interface Role {
-  id: number,
-  name: string;
 }
