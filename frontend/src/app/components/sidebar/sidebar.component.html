@@ -21,6 +21,9 @@
     <li>
       <a [routerLink]="['/forum/message']">Send Message</a>
     </li>
+    <li>
+      <a [routerLink]="['/forum/inbox']">Inbox</a>
+    </li>
     <!--Show this div, if user's role is Admin -->
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
@@ -28,6 +31,7 @@
     <li>
       <a [routerLink]="['/requests']" *ngIf="isAdmin()">Show all requests</a>
     </li>
+
     <!--Show this div, if user's role is Manager -->
     <li>
       <a href="#" *ngIf="isManager()">Show all requests</a>

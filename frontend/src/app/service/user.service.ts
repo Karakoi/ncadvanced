@@ -59,4 +59,8 @@ export class UserService {
   sendMessage(message: Message): Observable<Response> {
     return this.authHttp.post('/api/sendMessage',message);
   }
+
+  getMyMessages(recipient:number, page:number): Observable<Message[]> {
+    return this.authHttp.get(`/api/messagesByRecipient?recipient=${recipient}&pageNumber=${page}`).map(resp => resp.json());
+  }
 }

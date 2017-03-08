@@ -6,6 +6,8 @@ import {ForumComponent, ChatComponent, MessageComponent, TopicComponent} from ".
 import {forumRoutes} from "./forum.routes";
 import {AuthService, UserService} from "../../service/barrel";
 import {FormTemplateModule} from "../../shared/form-template/form-template.module";
+import {IncomingMessageListComponent} from "./incoming-messages/incoming-message-list.component";
+import {MessageItemComponent} from "./incoming-messages/incom-message/incoming-message.component";
 
 @NgModule({
   imports: [
@@ -17,6 +19,8 @@ import {FormTemplateModule} from "../../shared/form-template/form-template.modul
   ],
   declarations: [
     ForumComponent,
+    IncomingMessageListComponent,
+    MessageItemComponent,
     ChatComponent,
     MessageComponent,
     TopicComponent

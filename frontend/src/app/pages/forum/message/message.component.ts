@@ -36,7 +36,7 @@ export class MessageComponent implements OnInit {
         recipient: null,
         text: null,
         topic: null,
-        creationDateTime: null
+        dateAndTime: null
       };
       this.userService.getPotentialRecipientForManager(user.id).subscribe((potential) => {
         this.potentialRecipients = potential;
@@ -48,7 +48,7 @@ export class MessageComponent implements OnInit {
   sendMessage(param) {
     this.message.text = param.text;
     this.message.recipient = this.potentialRecipients.filter(r => r.id == param.recipient).pop();
-    this.message.creationDateTime = new Date();
+    this.message.dateAndTime = new Date();
     this.message.sender.password = "";
     this.message.recipient.password = "";
     console.log(this.message.sender);

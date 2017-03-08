@@ -4,6 +4,7 @@ import com.overseer.model.Message;
 import com.overseer.model.User;
 import com.overseer.service.MessageService;
 import com.overseer.service.UserService;
+import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,15 @@ public class MessageController {
 
     @PostMapping("/sendMessage")
     public void sendMessageToEmail(@RequestBody Message message) {
-        System.out.println(message);
+        Assert.notNull(message.getText(), "Message has to have text");
+        Assert.notNull(message.getRecipient(), "Message has to have recipient");
+        messageService.create(message);
+    }
+
+    @GetMapping("/messagesByRecipient")
+    public ResponseEntity<List<Message>> getMessagesByRecipient(@RequestParam Long recipient,
+                                                                @RequestParam int pageNumber) {
+        return new ResponseEntity<>(messageService.findByRecipient(recipient, pageNumber), HttpStatus.OK);
     }
 
 }
