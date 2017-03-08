@@ -3,7 +3,7 @@
   <form-template>
     <div class="template-header">
       Forum
-      <button class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#newTopicModal">New topic
+      <button class="btn btn-primary btn-xs pull-right" (click)="topicModal.open()">New topic
       </button>
     </div>
     <div class="template-body">
@@ -55,40 +55,28 @@
     </div>
   </form-template>
 
-  <!--MODAL WINDOW-->
-  <div class="modal fade" id="newTopicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-       aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header form-title">
-          <p class="modal-title"><b>Create new topic</b></p>
+  <modal [animation]="true" #topicModal>
+    <form autocomplete="off" novalidate>
+      <modal-header [show-close]="true">
+        <h4 class="modal-title"><b>Create new topic</b></h4>
+      </modal-header>
+      <modal-body>
+        <!--TOPIC TITLE-->
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input id="title" type="text" class="form-control" required/>
         </div>
-        <div class="modal-header">
-          <form autocomplete="off" novalidate>
-            <!--TOPIC TITLE-->
-            <div class="form-group col-lg-12 col-sm-12">
-              <label for="title">Title:</label>
-              <input id="title" type="text" class="form-control" required/>
-            </div>
-            <!--TOPIC ROLE-->
-            <div class="form-group col-lg-12 col-sm-12">
-              <label for="priorityStatus">Role:</label>
-              <select id="priorityStatus" class="form-control">
-                <option selected>Employees</option>
-                <option>Office managers</option>
-              </select>
-            </div>
-            <br>
-            <div class="form-group col-lg-12 col-sm-12 btn-div">
-              <button type="submit" class="btn btn-success col-lg-5 col-sm-5">Create</button>
-              <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5"
-                      data-dismiss="modal">Close
-              </button>
-            </div>
-          </form>
+        <!--TOPIC ROLE-->
+        <div class="form-group">
+          <label for="priorityStatus">Role:</label>
+          <select id="priorityStatus" class="form-control">
+            <option selected>Employees</option>
+            <option>Office managers</option>
+          </select>
         </div>
-      </div>
-    </div>
-  </div>
+      </modal-body>
+      <modal-footer [show-default-buttons]="true"></modal-footer>
+    </form>
+  </modal>
 
 </div>
