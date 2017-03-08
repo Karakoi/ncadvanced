@@ -32,7 +32,6 @@ export class MessageComponent implements OnInit {
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
       this.message = {
-        id: null,
         sender: user,
         recipient: null,
         text: null,

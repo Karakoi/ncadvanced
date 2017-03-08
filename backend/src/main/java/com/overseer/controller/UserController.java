@@ -1,12 +1,10 @@
 package com.overseer.controller;
 
-import com.overseer.model.Message;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -129,20 +127,5 @@ public class UserController {
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
 
-    @GetMapping("/users/managersByEmp")
-    public ResponseEntity<List<User>> getManagersByEmployee(@RequestParam Long empId) {
-        val managers = userService.findManagersByEmployee(empId);
-        return new ResponseEntity<>(managers, HttpStatus.OK);
-    }
 
-    @GetMapping("/users/empByManager")
-    public ResponseEntity<List<User>> getUsersByManager(@RequestParam Long managerId) {
-        val users = userService.findUsersByManager(managerId);
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    @PostMapping("/sendMessage")
-    public void sendMessageToEmail(@RequestBody Message message) {
-        System.out.println(message);
-    }
 }
