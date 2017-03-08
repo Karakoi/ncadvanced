@@ -15,7 +15,7 @@
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input id="firstName" [(ngModel)]="user.firstName" type="text" placeholder="First Name"
-                           class="form-control" [ngModelOptions]="{standalone: true}">
+                           class="form-control" [ngModelOptions]="{standalone: true}" required>
                     <span *ngIf="!validateField('firstName')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -64,7 +64,7 @@
                   <label class="control-label">Date of birth</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                    <input id="dateOfBirth" [(ngModel)]="user.dateOfBirth" type="text" placeholder="Date of birth"
+                    <input id="dateOfBirth" [(ngModel)]="user.dateOfBirth" type="date" placeholder="Date of birth"
                            class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('dateOfBirth')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -80,7 +80,7 @@
                   <label class="control-label">Phone</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                    <input id="phoneNumber" [(ngModel)]="user.phoneNumber" type="text" placeholder="Phone Number"
+                    <input id="phoneNumber" [(ngModel)]="user.phoneNumber" type="number" placeholder="Phone Number"
                            class="form-control" [ngModelOptions]="{standalone: true}">
                     <span *ngIf="!validateField('phoneNumber')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -117,11 +117,20 @@
                 <div class="form-group" [ngClass]="{'has-error': !validateField('password')}">
                   <label class="control-label">Password</label>
                   <div class="input-group">
-                    <button class="form-control" style="width: 205%" data-toggle="modal" data-target="#newTopicModal">Change password</button>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="password" [(ngModel)]="user.password" type="password" placeholder="Password"
+                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="!validateField('password')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+                  <div *ngIf="!validateField('password')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('password').hasError('required')">Password required.</span>
+                    <span *ngIf="profileForm.get('password').hasError('minlength')">
+                Password invalid. Password must be at least six characters long.</span>
                   </div>
                 </div>
+                <button class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#changePassword">Change password</button>
               </div>
-
             </div>
             <br/>
           </div>
@@ -135,7 +144,7 @@
 
         <div class="row">
           <div class="col-md-2 col-md-offset-1">
-            <button type="submit" class="btn btn-success" (click)="update(profileForm)" style="width: 150px;">
+            <button type="submit" class="btn btn-success" (click)="update()" style="width: 150px;">
               Update
             </button>
           </div>
@@ -149,12 +158,12 @@
       </form>
     </div>
   </div>
-  <div class="modal fade" id="newTopicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header form-title">
-          <p class="modal-title"><b>Create new topic</b></p>
+          <p class="modal-title"><b>Change Password</b></p>
         </div>
         <div class="modal-header">
           <form autocomplete="off" novalidate>

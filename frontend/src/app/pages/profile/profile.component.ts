@@ -30,10 +30,11 @@ export class ProfileComponent implements OnInit {
     this.initForm();
   }
 
-  update(params): void {
+  update(): void {
 
-    this.userService.update(params.user).subscribe(
-      ()=> alert(params.user.firstName)
+    this.userService.update(this.user).subscribe( () => {
+        this.toastr.success('Your profile has been updated');
+      }, e => this.toastr.error('Enter ur password','Wrong')
     );
   }
 
@@ -44,7 +45,7 @@ export class ProfileComponent implements OnInit {
     }
 
     if (newPass!=confirmPass) {
-      this.toastr.error("Password isn't match");
+      this.toastr.error("Passwords don't match");
     }
   }
 
