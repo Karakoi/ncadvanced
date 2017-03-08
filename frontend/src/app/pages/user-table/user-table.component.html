@@ -28,25 +28,19 @@
               <td>{{user.email}}</td>
               <td>{{user.dateOfBirth}}</td>
               <td>{{user.role.name}}</td>
-              <td>
+              <td class="text-center">
                 <button [attr.value]="user.id" class="glyphicon glyphicon-trash" (click)="deleteRow($event)"></button>
               </td>
             </tr>
             </tbody>
           </table>
+          <input type="submit" class="btn btn-primary pull-left" (click)="showModal()" value="New User"/>
+          <ul class="pagination pull-right">
+            <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
+            <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageNumber)">
+              <a>{{item}}</a></li>
+          </ul>
         </div>
-        <div class="panel-footer text-right">
-          <input type="submit" class="btn btn-primary" (click)="showModal()" value="Add"/>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="pull-right">
-        <ul class="pagination">
-          <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
-          <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageNumber)">
-            <a>{{item}}</a></li>
-        </ul>
       </div>
     </div>
   </div>
@@ -90,9 +84,9 @@
     </form>
   </div>
   <div class="app-modal-footer">
-    <div class="form-group col-lg-12 col-sm-12">
+    <div class="form-group col-lg-12 col-sm-12 buttons">
       <button type="submit" class="btn btn-primary col-lg-5 col-sm-5" [disabled]="userForm.invalid">Submit</button>
-      <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5"
+      <button type="submit" class="btn btn-danger col-lg-5 col-sm-5 pull-right"
               data-dismiss="modal" (click)="modal.hide()">Close
       </button>
     </div>
