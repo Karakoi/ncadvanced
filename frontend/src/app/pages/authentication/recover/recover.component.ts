@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
-import {RecoverService} from "../../service/recover.service";
 import {ToastsManager} from "ng2-toastr";
 import {CustomValidators} from "ng2-validation";
 import {Router} from "@angular/router";
+import {RecoverService} from "../../../service/recover.service";
 
 @Component({
   selector: 'overseer-recover',
@@ -28,7 +28,7 @@ export class RecoverComponent implements OnInit {
     this.recoverService.sendRecoverInfo(email)
       .subscribe(() => {
         this.toastr.success("Please check your email inbox", "Success!");
-        this.router.navigate(['/login']);
+        this.router.navigate(['/authentication/login']);
       }, e => {
         this.handleError(e);
       });

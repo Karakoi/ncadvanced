@@ -1,10 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
 import {Router} from "@angular/router";
-import {AuthService} from "../../service/auth.service";
-import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "ng2-validation";
+import {AuthService} from "../../../service/auth.service";
+import {UserService} from "../../../service/user.service";
 
 @Component({
   selector: 'overseer-signup',

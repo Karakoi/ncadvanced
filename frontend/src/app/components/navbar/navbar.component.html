@@ -14,10 +14,10 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li routerLinkActive="active" *ngIf="!isSignedIn">
-          <a [routerLink]="['/login']">Log In</a>
+          <a [routerLink]="['/authentication/login']">Log In</a>
         </li>
         <li routerLinkActive="active" *ngIf="!isSignedIn">
-          <a [routerLink]="['/signup']">Sign Up</a>
+          <a [routerLink]="['/authentication/signup']">Sign Up</a>
         </li>
         <li routerLinkActive="active" *ngIf="isSignedIn">
           <a style="cursor: pointer" (click)="logout()">Logout</a>

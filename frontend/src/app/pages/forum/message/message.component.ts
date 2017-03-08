@@ -1,10 +1,9 @@
 import {Component, OnInit} from "@angular/core";
-import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {User} from "../../model/user.model";
-import {AuthService} from "../../service/auth.service";
-import {Message} from "../../model/message.model";
-import {createUrlResolverWithoutPackagePrefix} from "@angular/compiler";
+import {User} from "../../../model/user.model";
+import {Message} from "../../../model/message.model";
+import {UserService} from "../../../service/user.service";
+import {AuthService} from "../../../service/auth.service";
 
 
 @Component({
@@ -25,7 +24,7 @@ export class MessageComponent implements OnInit {
 
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.messageForm = this.formBuilder.group({
       recipient: ['', [Validators.required]],
       text: ['', [Validators.required]]
@@ -39,21 +38,21 @@ export class MessageComponent implements OnInit {
         text: null,
         topic: null,
         creationDateTime: null
-      }
+      };
       this.userService.getPotentialRecipientForManager(user.id).subscribe((potential) => {
-          this.potentialRecipients = potential;
+        this.potentialRecipients = potential;
       })
     });
 
   }
 
-  sendMessage(param){
+  sendMessage(param) {
     this.message.text = param.text;
-    this.message.recipient = this.potentialRecipients.filter( r => r.id == param.recipient).pop();
+    this.message.recipient = this.potentialRecipients.filter(r => r.id == param.recipient).pop();
     this.message.creationDateTime = new Date();
     this.message.sender.password = "";
     this.message.recipient.password = "";
-    console.log(this.message.sender)
+    console.log(this.message.sender);
     this.userService.sendMessage(this.message).subscribe(() => {
       console.log("Send completed")
     });

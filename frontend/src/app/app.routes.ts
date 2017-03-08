@@ -1,14 +1,5 @@
 import {Routes} from "@angular/router";
-import {
-  NoContentComponent,
-  LoginComponent,
-  SignupComponent,
-  RecoverComponent,
-  ChatComponent,
-  MessageComponent,
-  ForumComponent,
-  TopicComponent
-} from "./components/barrel";
+import {NoContentComponent, LoginComponent, SignupComponent, RecoverComponent} from "./components/barrel";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {PrivatePageGuard} from "./service/private-page.guard";
 import {AdminPageGuard} from "./service/admin-page.guard";
@@ -16,23 +7,13 @@ import {AdminPageGuard} from "./service/admin-page.guard";
 export const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'authentication',
     pathMatch: 'full'
   },
   // Available for unregistered user
   {
-    path: 'signup',
-    component: SignupComponent,
-    canActivate: [PublicPageGuard]
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-    canActivate: [PublicPageGuard]
-  },
-  {
-    path: 'recover',
-    component: RecoverComponent,
+    path: 'authentication',
+    loadChildren: './pages/authentication/authentication.module#AuthenticationModule',
     canActivate: [PublicPageGuard]
   },
   // Available for registered user
@@ -48,22 +29,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'forum',
-    component: ForumComponent,
-    canActivate: [PrivatePageGuard]
-  },
-  {
-    path: 'topic',
-    component: TopicComponent,
-    canActivate: [PrivatePageGuard]
-  },
-  {
-    path: 'message',
-    component: MessageComponent,
-    canActivate: [PrivatePageGuard]
-  },
-  {
-    path: 'chat',
-    component: ChatComponent,
+    loadChildren: './pages/forum/forum.module#ForumModule',
     canActivate: [PrivatePageGuard]
   },
   // Available for admin

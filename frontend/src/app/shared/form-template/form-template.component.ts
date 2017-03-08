@@ -5,9 +5,9 @@ import {Component} from "@angular/core";
   template:
     `<div class="panel panel-default">
       <div class="panel-heading">
-        <strong>
-          <ng-content select=".template-header"></ng-content>
-        </strong>
+      <span class="panel-title">
+        <b><ng-content select=".template-header"></ng-content></b>
+      </span>
       </div>
       <div class="panel-body">
         <ng-content select=".template-body"></ng-content>

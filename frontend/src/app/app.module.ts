@@ -2,37 +2,24 @@ import {BrowserModule} from "@angular/platform-browser";
 import {NgModule} from "@angular/core";
 import {HttpModule, Http, RequestOptions} from "@angular/http";
 import {RouterModule} from "@angular/router";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SideBarDirective} from "./directive/barrel";
 import {AuthHttp, AuthConfig} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
 import {
   PrivatePageGuard,
   PublicPageGuard,
-  UserService,
-  AuthService,
-  RecoverService,
   AdminPageGuard,
-  RequestService
+  RequestService,
+  RecoverService,
+  AuthService,
+  UserService
 } from "./service/barrel";
-import {
-  FooterComponent,
-  NavbarComponent,
-  NoContentComponent,
-  SideBarComponent,
-  LoginComponent,
-  SignupComponent,
-  RecoverComponent,
-  MessageComponent,
-  ForumComponent,
-  ChatComponent,
-  TopicComponent
-} from "./components/barrel";
-import {GravatarSharedModule} from "./pages/shared/sharedGravatar.module";
-import {FormTemplateComponent} from "./shared/form-template/form-template.component";
+import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} from "./components/barrel";
+import {GravatarModule} from "./shared/gravatar/gravatar.module";
 
 @NgModule({
   declarations: [
@@ -41,14 +28,6 @@ import {FormTemplateComponent} from "./shared/form-template/form-template.compon
     NavbarComponent,
     NoContentComponent,
     SideBarComponent,
-    LoginComponent,
-    SignupComponent,
-    RecoverComponent,
-    FormTemplateComponent,
-    MessageComponent,
-    ForumComponent,
-    ChatComponent,
-    TopicComponent,
     SideBarDirective
   ],
   imports: [
@@ -56,19 +35,19 @@ import {FormTemplateComponent} from "./shared/form-template/form-template.compon
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    GravatarSharedModule,
+    GravatarModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
-    CacheService,
-    RecoverService,
-    AuthService,
     UserService,
+    AuthService,
+    CacheService,
     PrivatePageGuard,
-    AdminPageGuard,
     PublicPageGuard,
+    AdminPageGuard,
     RequestService,
+    RecoverService,
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
-import {GravatarSharedModule} from "../../pages/shared/sharedGravatar.module";
+import {GravatarSharedModule} from "../../shared/gravatar/gravatar.module";
 import {SideBarComponent} from "./sidebar.component";
 
 @NgModule({

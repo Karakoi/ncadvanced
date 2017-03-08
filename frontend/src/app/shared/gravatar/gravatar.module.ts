@@ -1,5 +1,5 @@
 import {NgModule} from "@angular/core";
-import {GravatarComponent} from "../../components/gravatar/gravatar.component";
+import {GravatarComponent} from "./gravatar.component";
 import {CommonModule} from "@angular/common";
 
 @NgModule({
@@ -13,5 +13,5 @@ import {CommonModule} from "@angular/common";
     GravatarComponent
   ]
 })
-export class GravatarSharedModule {
+export class GravatarModule {
 }
