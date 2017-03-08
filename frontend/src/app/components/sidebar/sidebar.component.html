@@ -1,8 +1,8 @@
 <!-- Sidebar -->
-<div id="sidebar-wrapper" *ngIf="user">
+<div id="sidebar-wrapper">
 
   <ul class="sidebar-nav">
-    <li class="logo">
+    <li class="logo" *ngIf="user">
       <gravatar [email]="user.email" [size]="80"></gravatar>
     </li>
     <!--This div will be visible regardless of role-->
