@@ -1,5 +1,5 @@
 import {Routes} from "@angular/router";
-import {NoContentComponent, LoginComponent, SignupComponent, RecoverComponent} from "./components/barrel";
+import {NoContentComponent} from "./components/barrel";
 import {PublicPageGuard} from "./service/public-page.guard";
 import {PrivatePageGuard} from "./service/private-page.guard";
 import {AdminPageGuard} from "./service/admin-page.guard";
