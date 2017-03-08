@@ -6,6 +6,7 @@ import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
 import {Message} from "../model/message.model";
+import {Role} from "../model/role.model";
 
 const url = '/api/users';
 
@@ -21,8 +22,16 @@ export class UserService {
     return this.http.post(url, user);
   }
 
+  delete(id: number): Observable<Response> {
+    return this.authHttp.delete(`${url}/${id}`);
+  }
+
   update(user: User): Observable<Response> {
     return this.authHttp.put(url, user).map(resp => resp.json());
+  }
+
+  getRoles(): Observable<Role[]> {
+    return this.authHttp.get(`${url}/roles`).map(resp => resp.json());
   }
 
   get(id: number): Observable<User> {

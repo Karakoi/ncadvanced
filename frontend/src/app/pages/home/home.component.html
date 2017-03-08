@@ -19,13 +19,15 @@
         <div class="panel-body">
           <table class="table table-bordered table-hover table-striped">
             <thead>
-            <th></th>
-            <th>Title</th>
-            <th>Creation Date</th>
-            <th>Priority</th>
-            <th>Progress</th>
-            <th>Reporter</th>
-            <th>Assignee</th>
+            <tr>
+              <th width="30px"></th>
+              <th>Title</th>
+              <th>Creation Date</th>
+              <th>Priority</th>
+              <th>Progress</th>
+              <th>Reporter</th>
+              <th>Assignee</th>
+            </tr>
             </thead>
             <tbody id="list">
             <tr *ngFor="let req of requests">
@@ -41,19 +43,13 @@
             </tr>
             </tbody>
           </table>
-        </div>
-        <div class="panel-footer text-right">
           <input type="submit" class="btn btn-primary" [disabled]="!canUnite()" (click)="info($event)" value="Unite">
+          <ul class="pagination pull-right">
+            <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
+            <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)"><a>{{item}}</a></li>
+          </ul>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="pull-right">
-      <ul class="pagination">
-        <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
-        <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)"><a>{{item}}</a></li>
-      </ul>
     </div>
   </div>
 </div>

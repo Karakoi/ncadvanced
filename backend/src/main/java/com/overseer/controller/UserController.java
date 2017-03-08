@@ -1,6 +1,7 @@
 package com.overseer.controller;
 
 import com.overseer.model.Message;
+import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,9 @@ public class UserController {
      */
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<User> fetchUser(@PathVariable Long id) {
         User user = userService.findOne(id);
+        LOG.debug("Fetching user with id: {}", id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -47,22 +49,10 @@ public class UserController {
      * @return json representation of created {@link User} entity.
      */
     @PostMapping("/users")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         User saveUser = userService.create(user);
+        LOG.debug("Saved user with id: {}", saveUser.getId());
         return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
-    }
-
-    /**
-     * Updates {@link User} entity associated with provided id param.
-     *
-     * @param user user to update.
-     * @return http status 201 CREATED.
-     */
-    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
-    @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        User updatedUser = userService.update(user);
-        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
     /**
@@ -76,6 +66,20 @@ public class UserController {
     public ResponseEntity deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    /**
+     * Updates {@link User} entity associated with provided id param.
+     *
+     * @param user user to update.
+     * @return http status 201 CREATED.
+     */
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        User updatedUser = userService.update(user);
+        LOG.debug("Updated user with id: {}", updatedUser.getId());
+        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
     /**
@@ -98,6 +102,7 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUser(@RequestParam int page) {
         List<User> users = userService.fetchPage(page);
+        LOG.debug("Fetched {} users for page: {}", users.size(), page);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -107,6 +112,18 @@ public class UserController {
     @Value
     private static final class RecoverInfo {
         private final String email;
+    }
+
+    /**
+     * Returns all {@link Role} entities.
+     *
+     * @return all {@link Role} entities.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> roles = userService.findAllRoles();
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")

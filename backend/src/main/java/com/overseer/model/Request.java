@@ -3,8 +3,6 @@ package com.overseer.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.overseer.util.LocalDateTimeDeserializer;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
@@ -48,7 +46,6 @@ public class Request extends AbstractEntity {
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "dd-MM-yyyy")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @NonNull
     @NotNull
     private LocalDateTime dateOfCreation;
