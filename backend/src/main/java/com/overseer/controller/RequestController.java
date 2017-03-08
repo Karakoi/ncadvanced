@@ -32,7 +32,7 @@ public class RequestController {
      * @param page identifier.
      * @return {@link Request} entity with http status 200 OK.
      */
-    @GetMapping("/request/fetch")
+    @GetMapping("/requests/fetch")
     public List<Request> fetchRequestPage(@RequestParam int page) {
         System.out.println(page);
         return requestService.fetchPage(page);
@@ -44,7 +44,7 @@ public class RequestController {
      * @param id request identifier.
      * @return {@link Request} entity with http status 200 OK.
      */
-    @GetMapping("/request/{id}")
+    @GetMapping("/requests/{id}")
     public ResponseEntity<Request> getRequest(@PathVariable Long id) {
         Request request = requestService.findOne(id);
         LOG.debug("Getting request with id: {}", id);
@@ -57,7 +57,7 @@ public class RequestController {
      * @param request json object which represents {@link Request} entity.
      * @return json representation of created {@link Request} entity.
      */
-    @PostMapping("/request/create")
+    @PostMapping("/requests")
     public ResponseEntity<Request> createRequest(@RequestBody Request request) {
         requestService.create(request);
         LOG.debug("Request has been added with id: {}", request.getId());
@@ -70,7 +70,7 @@ public class RequestController {
      * @param id request identifier.
      * @return http status 204 NO_CONTENT.
      */
-    @DeleteMapping("/request/delete/{id}")
+    @DeleteMapping("/requests/{id}")
     public ResponseEntity deleteRequest(@PathVariable Long id) {
         requestService.delete(id);
         LOG.debug("Request has been deleted with id: {}", id);
@@ -83,7 +83,7 @@ public class RequestController {
      * @param request json object which represents {@link Request} entity.
      * @return json representation of created {@link Request} entity.
      */
-    @PutMapping("/request/update/")
+    @PutMapping("/requests")
     public ResponseEntity updateRequest(@RequestBody Request request) {
         requestService.update(request);
         LOG.debug("Request has been updated with id: {}", request.getId());

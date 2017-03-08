@@ -6,15 +6,14 @@
     </modal-header>
     <modal-body>
       <!--REQUEST TITLE-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('title')}">
+      <div class="form-group" [ngClass]="{'has-error': !validate('title')}">
         <label for="title">Title:</label>
         <input id="title" type="text" class="form-control" formControlName="title"/>
-        <div *ngIf="!validateField('title')" class="help-block text-left">
+        <div *ngIf="!validate('title')" class="help-block text-left">
           <span *ngIf="requestForm.get('title').hasError('required')">Title required.</span>
+          <span *ngIf="requestForm.get('title').hasError('maxlength')">Must not be more then 100 characters.</span>
         </div>
       </div>
-      <!--REQUEST PRIORITY STATUS-->
-      <input type="hidden" name="progressStatus" value="free">
       <!--REQUEST PRIORITY STATUS-->
       <div class="form-group">
         <label for="priorityStatus">Priority status:</label>
@@ -25,23 +24,22 @@
         </select>
       </div>
       <!--REQUEST ESTIMATE TIME-->
-      <div class="form-group">
-        <label for="estimate">Estimate time (in days):</label>
-        <input id="estimate" type="number" min="1" class="form-control" value="1"/>
+      <div class="form-group" [ngClass]="{'has-error': !validate('estimateTimeInDays')}">
+        <label for="estimateTimeInDays">Estimate time (in days):</label>
+        <input id="estimateTimeInDays" type="number" class="form-control" formControlName="estimateTimeInDays"/>
+        <div *ngIf="!validate('estimateTimeInDays')" class="help-block text-left">
+          <span *ngIf="requestForm.get('estimateTimeInDays').hasError('min')">Time in days must be greater then 0.</span>
+          <span *ngIf="requestForm.get('estimateTimeInDays').hasError('max')">Time in days must be less then 30.</span>
+        </div>
       </div>
-      <!--REQUEST REPORTER-->
-      <input type="hidden" name="reporter" value="">
-      <!--REQUEST ASSIGNEE-->
-      <div class="form-group">
-        <label for="assignee">Assignee:</label>
-        <select id="assignee" class="form-control">
-          <option value="">Ivan Ivanov</option>
-        </select>
-      </div>
-      <!--REQUEST DESCRIPTION-->
-      <div class="form-group">
+       <!--REQUEST DESCRIPTION-->
+      <div class="form-group" [ngClass]="{'has-error': !validate('description')}">
         <label for="description">Description:</label>
-        <textarea id="description" class="form-control" rows="5"></textarea>
+        <textarea id="description" class="form-control" rows="5" formControlName="description"></textarea>
+        <div *ngIf="!validate('description')" class="help-block text-left">
+          <span *ngIf="requestForm.get('description').hasError('required')">Description required.</span>
+          <span *ngIf="requestForm.get('description').hasError('maxlength')">Must not be more then 255 characters.</span>
+        </div>
       </div>
     </modal-body>
     <modal-footer>

@@ -5,7 +5,7 @@ import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {Request} from "../model/request.model";
 
-const url = '/api/request';
+const url = '/api/requests';
 
 @Injectable()
 export class RequestService {
