@@ -1,6 +1,7 @@
 package com.overseer.controller;
 
 import com.overseer.model.Message;
+import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -107,6 +108,18 @@ public class UserController {
     @Value
     private static final class RecoverInfo {
         private final String email;
+    }
+
+    /**
+     * Returns all {@link Role} entities.
+     *
+     * @return all {@link Role} entities.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> roles = userService.findAllRoles();
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
