@@ -56,7 +56,7 @@ public class ProgressStatusDaoImpl extends SimpleEntityDaoImpl<ProgressStatus> i
     @Override
     protected RowMapper<ProgressStatus> getMapper() {
         return (resultSet, i) -> {
-            ProgressStatus progressStatus = new ProgressStatus(resultSet.getString("name"));
+            ProgressStatus progressStatus = new ProgressStatus(resultSet.getString("name"), resultSet.getInt("value"));
             progressStatus.setId(resultSet.getLong("id"));
             return progressStatus;
         };

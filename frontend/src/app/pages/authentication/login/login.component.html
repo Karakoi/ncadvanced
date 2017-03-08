@@ -1,10 +1,10 @@
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>Sign In</strong>
+    <form-template>
+      <div class="template-header">
+        Sign In
       </div>
-      <div class="panel-body">
+      <div class="template-body">
         <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)" autocomplete="off" novalidate>
           <!--EMAIL-->
           <div class="form-group" [ngClass]="{'has-error': !validateField('email')}">
@@ -36,11 +36,9 @@
           <button type="submit" class="btn btn-primary col-lg-12" [disabled]="loginForm.invalid">Login</button>
         </form>
       </div>
-      <div class="panel-footer">
-        <div class="login-helper">Forgot password?
-          <a [routerLink]="['/recover']">Recover password</a>
-        </div>
+      <div class="template-footer">
+        Forgot password? <a [routerLink]="['../recover']">Recover password</a>
       </div>
-    </div>
+    </form-template>
   </div>
 </div>

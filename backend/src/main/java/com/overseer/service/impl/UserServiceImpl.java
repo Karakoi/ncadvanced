@@ -96,4 +96,16 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         LOG.debug("Retrieving user with role: {}", role);
         return userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
     }
+
+    @Override
+    public List<User> findManagersByEmployee(Long employeeId) {
+        LOG.debug("Retrieving Managers by employee with employeeId: {}", employeeId);
+        return userDao.findManagersByEmployee(employeeId);
+    }
+
+    @Override
+    public List<User> findUsersByManager(Long managerId) {
+        LOG.debug("Retrieving employees by manager with managerId: {}", managerId);
+        return userDao.findUsersByManager(managerId);
+    }
 }

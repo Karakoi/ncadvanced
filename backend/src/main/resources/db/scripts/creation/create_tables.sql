@@ -45,7 +45,8 @@ WITH (OIDS=FALSE);
 DROP TABLE IF EXISTS "public"."priority_status";
 CREATE TABLE "public"."priority_status" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
-"name" varchar(45) COLLATE "default" NOT NULL
+"name" varchar(45) COLLATE "default" NOT NULL,
+"value" int4 NOT NULL NOT NULL
 )
 WITH (OIDS=FALSE);
 
@@ -55,7 +56,8 @@ WITH (OIDS=FALSE);
 DROP TABLE IF EXISTS "public"."progress_status";
 CREATE TABLE "public"."progress_status" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
-"name" varchar(45) COLLATE "default" NOT NULL
+"name" varchar(45) COLLATE "default" NOT NULL,
+"value" int4 NOT NULL NOT NULL
 )
 WITH (OIDS=FALSE);
 

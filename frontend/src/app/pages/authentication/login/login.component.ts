@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {AuthService} from "../../service/auth.service";
 import {ToastsManager} from "ng2-toastr";
 import {CustomValidators} from "ng2-validation";
+import {AuthService} from "../../../service/auth.service";
 
 @Component({
   selector: 'overseer-login',

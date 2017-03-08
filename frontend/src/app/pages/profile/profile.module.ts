@@ -3,7 +3,7 @@ import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {ProfileComponent} from "./profile.component";
-import {GravatarSharedModule} from "../shared/sharedGravatar.module";
+import {GravatarModule} from "../../shared/gravatar/gravatar.module";
 
 const routes: Routes = [
   {path: '', component: ProfileComponent},
@@ -15,7 +15,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    GravatarSharedModule
+    GravatarModule
   ],
   declarations: [
     ProfileComponent

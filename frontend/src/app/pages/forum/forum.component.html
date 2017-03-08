@@ -1,10 +1,12 @@
 <div class="container">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <span class="panel-title"><b>Forum</b></span>
-      <button class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target="#newTopicModal">New topic</button>
+
+  <form-template>
+    <div class="template-header">
+      Forum
+      <button class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#newTopicModal">New topic
+      </button>
     </div>
-    <div class="panel-body">
+    <div class="template-body">
       <ul class="list-group">
         <li class="list-group-item titles">
           <div class="row">
@@ -41,17 +43,19 @@
           </div>
         </li>
       </ul>
-        <ul class="pagination pull-left">
-          <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-          <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">5</a></li>
-          <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-        </ul>
+      <ul class="pagination pull-left">
+        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+      </ul>
     </div>
-  </div>
+  </form-template>
+
+  <!--MODAL WINDOW-->
   <div class="modal fade" id="newTopicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -77,11 +81,14 @@
             <br>
             <div class="form-group col-lg-12 col-sm-12 btn-div">
               <button type="submit" class="btn btn-success col-lg-5 col-sm-5">Create</button>
-              <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5"
+                      data-dismiss="modal">Close
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+
 </div>
