@@ -1,10 +1,7 @@
-/*
-  There is no original class for testing HistoryDaoImpl, because we do not
-  */
 DELETE FROM request
 WHERE id = 999;
 
-INSERT INTO request (id, title, description, parent_id,reporter_id,date_of_creation, last_changer_id)
+INSERT INTO request (id, title, description, parent_id, reporter_id,date_of_creation, last_changer_id)
 VALUES (999, 'title 1', 'desc 1', 113,34,'2015-02-07 13:48:30', 13);
 
 DROP TRIGGER IF EXISTS tr__history_adding_for_request ON request;
