@@ -10,16 +10,16 @@ DELETE FROM role;
 
 SELECT setval('"public"."main_id_seq"', 1, true);
 
-insert into priority_status(id,name) values (1,'High');
-insert into priority_status(name) values ('Normal');
-insert into priority_status(name) values ('Low');
+insert into priority_status(id, name, value) values (1, 'High', 300);
+insert into priority_status(name, value) values ('Normal', 200);
+insert into priority_status(name, value) values ('Low', 100);
 
-insert into progress_status(name) values ('Registered');
-insert into progress_status(name) values ('Free');
-insert into progress_status(name) values ('Joined');
-insert into progress_status(name) values ('In progress');
-insert into progress_status(name) values ('Closed');
-insert into progress_status(name) values ('Reopen');
+insert into progress_status(name, value) values ('Registered', 100);
+insert into progress_status(name, value) values ('Free', 200);
+insert into progress_status(name, value) values ('Joined', 300);
+insert into progress_status(name, value) values ('In progress', 400);
+insert into progress_status(name, value) values ('Closed', 500);
+insert into progress_status(name, value) values ('Reopen', 600);
 
 insert into role (name) values ('admin');
 insert into role (name) values ('office manager');

@@ -140,6 +140,16 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public List<Request> findRequestsByIds(List<Long> ids) {
+        Assert.notNull(ids, "ids must not be null");
+        String subRequestsQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findRequestsByIds"));
+        return jdbc().query(subRequestsQuery,
+                new MapSqlParameterSource("ids", ids),
+                this.getMapper());
+    }
+
+    @Override
     protected String getInsertQuery() {
         return queryService().getQuery("request.insert");
     }
@@ -190,6 +200,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             PriorityStatus priorityStatus = new PriorityStatus();
             priorityStatus.setName(resultSet.getString("priority_name"));
             priorityStatus.setId(resultSet.getLong("priority_id"));
+            priorityStatus.setValue(resultSet.getInt("priority_value"));
 
             Request request = new Request();
             request.setId(resultSet.getLong("id"));

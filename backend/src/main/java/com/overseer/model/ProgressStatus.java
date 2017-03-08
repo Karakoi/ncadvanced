@@ -23,4 +23,7 @@ import lombok.ToString;
 public class ProgressStatus extends AbstractEntity {
     @NonNull
     private String name;
+
+    @NonNull
+    private int value;
 }
