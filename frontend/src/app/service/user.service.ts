@@ -27,7 +27,7 @@ export class UserService {
   }
 
   update(user: User): Observable<Response> {
-    return this.authHttp.put(url, user).map(resp => resp.json());
+    return this.authHttp.put(`${url}/${user.id}`, user).map(resp => resp.json());
   }
 
   getRoles(): Observable<Role[]> {
