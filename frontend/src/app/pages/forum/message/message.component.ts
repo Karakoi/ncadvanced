@@ -4,7 +4,7 @@ import {User} from "../../../model/user.model";
 import {Message} from "../../../model/message.model";
 import {UserService} from "../../../service/user.service";
 import {AuthService} from "../../../service/auth.service";
-
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'message-menu',
@@ -20,7 +20,8 @@ export class MessageComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private toastr: ToastsManager) {
 
   }
 
@@ -28,33 +29,36 @@ export class MessageComponent implements OnInit {
     this.messageForm = this.formBuilder.group({
       recipient: ['', [Validators.required]],
       text: ['', [Validators.required]]
-    })
+    });
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
       this.message = {
-        id: null,
         sender: user,
         recipient: null,
         text: null,
         topic: null,
-        creationDateTime: null
+        dateAndTime: null
       };
-      this.userService.getPotentialRecipientForManager(user.id).subscribe((potential) => {
+      if(this.authService.role === 'office manager') {
+        this.userService.getPotentialRecipientForManager(user.id).subscribe((potential) => {
         this.potentialRecipients = potential;
-      })
+        }) }
+      else if(this.authService.role === 'employee') {
+        this.userService.getPotentialRecipientForEmployee(user.id).subscribe((potential) => {
+          this.potentialRecipients = potential;
+        })
+      }
     });
-
   }
 
   sendMessage(param) {
     this.message.text = param.text;
     this.message.recipient = this.potentialRecipients.filter(r => r.id == param.recipient).pop();
-    this.message.creationDateTime = new Date();
+    this.message.dateAndTime = new Date();
     this.message.sender.password = "";
     this.message.recipient.password = "";
-    console.log(this.message.sender);
     this.userService.sendMessage(this.message).subscribe(() => {
-      console.log("Send completed")
+      this.toastr.success("Message sent.", "Success");
     });
   }
 

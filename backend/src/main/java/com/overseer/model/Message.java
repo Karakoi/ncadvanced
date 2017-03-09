@@ -29,6 +29,6 @@ public class Message extends AbstractEntity{
     private String text;
 
     @NotNull(message = "Message has to have a time of creation")
-    private LocalDateTime creationDateTime;
+    private LocalDateTime dateAndTime;
 
 }

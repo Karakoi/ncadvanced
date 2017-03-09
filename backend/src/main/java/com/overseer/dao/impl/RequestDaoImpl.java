@@ -50,7 +50,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                 .concat(queryService().getQuery("request.findByAssignee"));
         try {
             val parameterSource = new MapSqlParameterSource("limit", pageSize);
-            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
             parameterSource.addValue("assigneeId", assigneeId);
             return jdbc().query(findByAssigneeQuery,
                     parameterSource,
@@ -67,7 +67,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                 .concat(queryService().getQuery("request.findByReporter"));
         try {
             val parameterSource = new MapSqlParameterSource("limit", pageSize);
-            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
             parameterSource.addValue("reporterId", reporterId);
             return jdbc().query(findByReporterQuery,
                     parameterSource,
@@ -84,7 +84,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                 .concat(queryService().getQuery("request.findByStatus"));
         try {
             val parameterSource = new MapSqlParameterSource("limit", pageSize);
-            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
             parameterSource.addValue("progress_status_id", statusId);
             return jdbc().query(findByStatusQuery,
                     parameterSource,
@@ -101,7 +101,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                 .concat(queryService().getQuery("request.findByPriority"));
         try {
             val parameterSource = new MapSqlParameterSource("limit", pageSize);
-            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
             parameterSource.addValue("priority_status_id", priorityId);
             return jdbc().query(findByPriorityQuery,
                     parameterSource,
@@ -119,7 +119,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                 .concat(queryService().getQuery("request.findByPeriod"));
         try {
             val parameterSource = new MapSqlParameterSource("limit", pageSize);
-            parameterSource.addValue("offset", pageSize * pageNumber - 1);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
             parameterSource.addValue("begin", java.sql.Date.valueOf(begin));
             parameterSource.addValue("end", java.sql.Date.valueOf(end));
             return jdbc().query(findByPeriodQuery,
