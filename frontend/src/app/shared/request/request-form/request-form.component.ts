@@ -9,6 +9,7 @@ import {ToastsManager} from "ng2-toastr";
 import {UserService} from "../../../service/user.service";
 import {PriorityStatus, ProgressStatus, Request} from "../../../model/request.model";
 import {Role} from "../../../model/role.model";
+import {DatePipe} from "@angular/common";
 
 declare let $: any;
 
@@ -33,7 +34,8 @@ export class RequestFormComponent implements OnInit {
               private userService: UserService,
               private requestService: RequestService,
               private authService: AuthService,
-              private toastr: ToastsManager) {
+              private toastr: ToastsManager,
+              private datePipe: DatePipe) {
   }
 
   ngOnInit(): void {
@@ -79,8 +81,12 @@ export class RequestFormComponent implements OnInit {
     });
   }
 
+  closeModal() {
+    this.requestForm.reset();
+  }
+
   createNewRequest(params): void {
-    this.request.dateOfCreation = new Date().toISOString();
+    this.request.dateOfCreation = this.datePipe.transform(new Date(), 'MMMM d, yyyy HH:mm:ss');
     this.request.title = params.title;
     this.request.description = params.description;
     this.request.estimateTimeInDays = params.estimateTimeInDays;
@@ -88,6 +94,7 @@ export class RequestFormComponent implements OnInit {
     this.request.progressStatus = this.progressStatus;
     this.request.reporter.password = "";
     this.requestService.create(this.request).subscribe(() => {
+      this.modal.close();
       this.toastr.success("Request was created successfully", "Success!");
     }, e => this.handleErrorCreateRequest(e));
   }
