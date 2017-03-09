@@ -37,7 +37,7 @@ export class ProfileComponent implements OnInit {
     this.userService.update(this.user).subscribe( () => {
         this.toastr.success('Your profile has been updated');
         this.cach.clearAll();
-      }, e => this.toastr.error('Enter ur password','Error')
+      }, e => this.toastr.error('Enter ur password','Wrong')
     );
   }
   updatePass(newPass, confirmPass): void {
