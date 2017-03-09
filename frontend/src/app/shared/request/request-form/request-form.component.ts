@@ -10,6 +10,8 @@ import {UserService} from "../../../service/user.service";
 import {PriorityStatus, ProgressStatus, Request} from "../../../model/request.model";
 import {Role} from "../../../model/role.model";
 
+declare let $: any;
+
 @Component({
   selector: 'request-form',
   templateUrl: 'request-form.component.html',
@@ -78,15 +80,13 @@ export class RequestFormComponent implements OnInit {
   }
 
   createNewRequest(params): void {
-    console.log(params.priorityStatus);
-    this.request.dateOfCreation = new Date();
+    this.request.dateOfCreation = new Date().toISOString();
     this.request.title = params.title;
     this.request.description = params.description;
     this.request.estimateTimeInDays = params.estimateTimeInDays;
     this.request.priorityStatus = params.priorityStatus;
     this.request.progressStatus = this.progressStatus;
     this.request.reporter.password = "";
-    console.log(this.request);
     this.requestService.create(this.request).subscribe(() => {
       this.toastr.success("Request was created successfully", "Success!");
     }, e => this.handleErrorCreateRequest(e));
