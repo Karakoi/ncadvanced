@@ -4,9 +4,11 @@ import {RequestDetailsComponent} from "./request-details/request-details.compone
 import {RequestFormComponent} from "./request-form/request-form.component";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {InlineEditorModule} from 'ng2-inline-editor';
 
 @NgModule({
   imports: [
+    InlineEditorModule,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
