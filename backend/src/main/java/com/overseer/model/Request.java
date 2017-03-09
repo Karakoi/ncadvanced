@@ -1,15 +1,8 @@
 package com.overseer.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
@@ -43,9 +36,6 @@ public class Request extends AbstractEntity {
     @Size(min = MIN_DESCRIPTION_LENGTH, max = MAX_DESCRIPTION_LENGTH)
     private String description;
 
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "dd-MM-yyyy")
     @NonNull
     @NotNull
     private LocalDateTime dateOfCreation;
