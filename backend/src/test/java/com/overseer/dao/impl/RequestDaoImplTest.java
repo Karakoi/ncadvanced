@@ -33,6 +33,7 @@ public class RequestDaoImplTest {
     private Request request;
     private User assignee;
     private User reporter;
+    private User lastChanger;
     private ProgressStatus progress;
     private PriorityStatus priority;
     private List<Long> requestsGroupIds;
@@ -47,9 +48,14 @@ public class RequestDaoImplTest {
         reporter = this.userDao.save(reporter);
 
         Role assigneeRole = new Role("office manager");
-        reporterRole.setId(11L);
+        assigneeRole.setId(11L);
         assignee = new User("Gavin", "Clarks", "rondo1890_", "blessed@email.com", assigneeRole);
         assignee = this.userDao.save(assignee);
+
+        Role changerRole = new Role("admin");
+        changerRole.setId(10L);
+        lastChanger = new User("Bruce", "li", "qwerty123", "bruceli@email.com", changerRole);
+        lastChanger = this.userDao.save(lastChanger);
 
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
@@ -67,8 +73,9 @@ public class RequestDaoImplTest {
         request.setAssignee(assignee);
         request.setPriorityStatus(priority);
         request.setProgressStatus(progress);
+        request.setLastChanger(lastChanger);
 
-        this.requestDao.save(request);
+        request = requestDao.save(request);
     }
 
     @Test

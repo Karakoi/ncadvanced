@@ -56,5 +56,8 @@ public class Request extends AbstractEntity {
 
     private Long parentId;
 
+    @NonNull
+    private User lastChanger;
+
     private Integer estimateTimeInDays;
 }
