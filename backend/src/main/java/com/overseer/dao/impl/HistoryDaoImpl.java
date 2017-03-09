@@ -1,6 +1,7 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.HistoryDAO;
+import com.overseer.dao.UserDao;
 import com.overseer.model.History;
 import com.overseer.service.QueryService;
 import io.jsonwebtoken.lang.Assert;
@@ -12,9 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -32,6 +30,9 @@ public class HistoryDaoImpl implements HistoryDAO{
 
     @Autowired
     private QueryService queryService;
+
+    @Autowired
+    private UserDao userDao;
 
     /**
      * {@inheritDoc}.
@@ -51,9 +52,7 @@ public class HistoryDaoImpl implements HistoryDAO{
             history.setColumnName(resultSet.getString("column_name"));
             history.setOldValue(resultSet.getString("old_value"));
             history.setNewValue(resultSet.getString("new_value"));
-            Date dateOfLastChanges = resultSet.getDate("date_of_last_changes");
-            history.setDateOfChange(LocalDateTime.ofInstant(dateOfLastChanges.toInstant(), ZoneId.systemDefault()));
-            UserDaoImpl userDao = new UserDaoImpl();
+            history.setDateOfChange(resultSet.getTimestamp("date_of_change").toLocalDateTime());
             history.setChanger(userDao.findOne(resultSet.getLong("changer_id")));
             history.setRecordId(resultSet.getLong("record_id"));
             return history;

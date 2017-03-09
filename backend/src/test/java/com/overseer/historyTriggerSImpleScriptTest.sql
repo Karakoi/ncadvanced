@@ -15,7 +15,9 @@ VALUES (997, 'test', 'test', NULL , 34, '2015-02-08 13:48:30', 13);
 
 INSERT INTO request (id, title, description, priority_status_id, progress_status_id, reporter_id, assignee_id,
                      estimate_time_in_days, date_of_creation, last_changer_id, parent_id)
-VALUES (999, 'title 1', 'desc 1', 1, 5, 101, 34 , 2, '2017-02-09 21:04:00', 13, 997);
+VALUES (999, 'title 1', 'desc 1', 1, 5, 101, NULL, 2, '2017-02-09 21:04:00', 13, 997);
+
+
 
 UPDATE request
 SET title = 'title 2',

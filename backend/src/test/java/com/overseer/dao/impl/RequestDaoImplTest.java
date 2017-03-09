@@ -71,9 +71,9 @@ public class RequestDaoImplTest {
         request.setDateOfCreation(LocalDateTime.of(2017, 6, 21, 12, 30));
         request.setReporter(reporter);
         request.setAssignee(assignee);
+        request.setLastChanger(lastChanger);
         request.setPriorityStatus(priority);
         request.setProgressStatus(progress);
-        request.setLastChanger(lastChanger);
 
         request = requestDao.save(request);
     }
