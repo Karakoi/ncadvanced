@@ -40,12 +40,17 @@ export class RequestDetailsComponent {
     this.request.reporter.email = "";
     this.request.assignee.password = "";
     this.request.assignee.email = "";
+    this.request.assignee.firstName = "";
+    this.request.assignee.lastName = "";
     this.request.parentId = null;
 
     this.request.reporter.role = this.role;
     this.request.assignee.role = this.role;
 
     this.requestService.update(this.request)
-      .subscribe(() => this.toastr.success("Request updated", "Success"));
+      .subscribe(() => {
+        this.modal.close();
+        this.toastr.success("Request updated", "Success")
+      });
   }
 }

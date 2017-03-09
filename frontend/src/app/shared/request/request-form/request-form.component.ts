@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild, EventEmitter, Output, Input} from "@angular/core";
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {ModalComponent} from "ng2-bs3-modal/components/modal";
 import {RequestService} from "../../../service/request.service";
@@ -10,6 +10,7 @@ import {UserService} from "../../../service/user.service";
 import {PriorityStatus, ProgressStatus, Request} from "../../../model/request.model";
 import {Role} from "../../../model/role.model";
 import {DatePipe} from "@angular/common";
+import {Response} from "@angular/http";
 
 declare let $: any;
 
@@ -26,6 +27,11 @@ export class RequestFormComponent implements OnInit {
   progressStatus: ProgressStatus;
   assignee: User;
   role: Role;
+
+  @Input()
+  requests: Request[];
+  @Output()
+  updated: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('requestFormModal')
   modal: ModalComponent;
@@ -85,6 +91,10 @@ export class RequestFormComponent implements OnInit {
     this.requestForm.reset();
   }
 
+  validate(field: string): boolean {
+    return this.requestForm.get(field).valid || !this.requestForm.get(field).dirty;
+  }
+
   createNewRequest(params): void {
     this.request.dateOfCreation = this.datePipe.transform(new Date(), 'MMMM d, yyyy HH:mm:ss');
     this.request.title = params.title;
@@ -93,10 +103,16 @@ export class RequestFormComponent implements OnInit {
     this.request.priorityStatus = params.priorityStatus;
     this.request.progressStatus = this.progressStatus;
     this.request.reporter.password = "";
-    this.requestService.create(this.request).subscribe(() => {
+    this.requestService.create(this.request).subscribe((resp: Response) => {
+      this.updateArray(<Request> resp.json());
       this.modal.close();
       this.toastr.success("Request was created successfully", "Success!");
     }, e => this.handleErrorCreateRequest(e));
+  }
+
+  private updateArray(request: Request): void {
+    this.requests.unshift(request);
+    this.updated.emit(this.requests);
   }
 
   private handleErrorCreateRequest(error) {
@@ -104,9 +120,5 @@ export class RequestFormComponent implements OnInit {
       case 500:
         this.toastr.error("Can't create request", 'Error');
     }
-  }
-
-  validate(field: string): boolean {
-    return this.requestForm.get(field).valid || !this.requestForm.get(field).dirty;
   }
 }
