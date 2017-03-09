@@ -43,7 +43,6 @@ public class Request extends AbstractEntity {
     @Size(min = MIN_DESCRIPTION_LENGTH, max = MAX_DESCRIPTION_LENGTH)
     private String description;
 
-
     @NonNull
     @NotNull
     private LocalDateTime dateOfCreation;

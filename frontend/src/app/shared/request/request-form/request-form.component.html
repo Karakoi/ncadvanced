@@ -17,10 +17,8 @@
       <!--REQUEST PRIORITY STATUS-->
       <div class="form-group">
         <label for="priorityStatus">Priority status:</label>
-        <select id="priorityStatus" class="form-control">
-          <option selected>High</option>
-          <option>Normal</option>
-          <option>Low</option>
+        <select id="priorityStatus" class="form-control" formControlName="priorityStatus">
+          <option [ngValue]="priorityStatus" *ngFor="let priorityStatus of priorityStatuses">{{priorityStatus.name}}</option>
         </select>
       </div>
       <!--REQUEST ESTIMATE TIME-->
