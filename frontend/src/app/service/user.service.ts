@@ -12,11 +12,9 @@ const url = '/api/users';
 
 @Injectable()
 export class UserService {
-  userData:Map<number,User[]>;
-
-  constructor(private http:Http,
-              private authHttp:AuthHttp,
-              private cache:CacheService) {
+  constructor(private http: Http,
+              private authHttp: AuthHttp,
+              private cache: CacheService) {
     this.cache = cache;
   }
 
@@ -36,7 +34,7 @@ export class UserService {
     return this.authHttp.get(`${url}/roles`).map(resp => resp.json());
   }
 
-  get(id:number):Observable<User> {
+  get(id: number): Observable<User> {
     let path = `${url}/${id}`;
     let cacheKey = path;
     let request = this.authHttp.get(path).map(res => res.json());
@@ -45,11 +43,11 @@ export class UserService {
   }
 
   getAll(page: number): Observable<User[]> {
-    return this.authHttp.get(`${url}?page=`+ page).map(resp => resp.json()).publishReplay(1,2000).refCount();
+    return this.authHttp.get(`${url}?page=` + page).map(resp => resp.json()).publishReplay(1, 2000).refCount();
   }
 
   getPageCount(): Observable<number> {
-    return this.authHttp.get(`${url}/pageCount`).map( resp => resp.json());
+    return this.authHttp.get(`${url}/pageCount`).map(resp => resp.json());
   }
 
   getPotentialRecipientForManager(managerId: number) {
@@ -57,6 +55,6 @@ export class UserService {
   }
 
   sendMessage(message: Message): Observable<Response> {
-    return this.authHttp.post('/api/sendMessage',message);
+    return this.authHttp.post('/api/sendMessage', message);
   }
 }

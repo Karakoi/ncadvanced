@@ -1,7 +1,10 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
-declare var $:any;
+import {RequestDetailsComponent} from "../../shared/request/request-details/request-details.component";
+import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
+
+declare let $: any;
 
 @Component({
   selector: 'request-table',
@@ -11,6 +14,12 @@ declare var $:any;
 export class RequestTableComponent implements OnInit {
   requests: Request[];
   pageCount: number;
+
+  @ViewChild(RequestDetailsComponent)
+  requestDetails: RequestDetailsComponent;
+
+  @ViewChild(RequestFormComponent)
+  requestForm: RequestFormComponent;
 
   constructor(private requestService: RequestService) {
   }
@@ -26,27 +35,35 @@ export class RequestTableComponent implements OnInit {
     return this.requests
       .map(request => request)
       .sort((a, b) => {
-        if (a.id > b.id) return 1;
-        else if (a.id < b.id) return -1;
+        if (a.dateOfCreation > b.dateOfCreation) return 1;
+        else if (a.dateOfCreation < b.dateOfCreation) return -1;
         else return 0;
       });
   }
 
-  createRange(number){
-    var items: number[] = [];
-    for(var i = 2; i <= number; i++){
+  createRange(number) {
+    let items: number[] = [];
+    for (let i = 2; i <= number; i++) {
       items.push(i);
     }
     return items;
   }
 
-  load(data){
-    console.log(this.pageCount);
-    $('.paginate_button').removeClass('active')
+  load(data) {
+    $('.paginate_button').removeClass('active');
     let page = data.target.text;
-    console.log($(data.target.parentElement).addClass('active'))
+    $(data.target.parentElement).addClass('active');
     this.requestService.getAll(page).subscribe((requests: Request[]) => {
       this.requests = requests;
     });
+  }
+
+  openDetailsModal(request: Request): void {
+    this.requestDetails.modal.open();
+    this.requestDetails.request = request;
+  }
+
+  openFormModal(): void {
+    this.requestForm.modal.open();
   }
 }

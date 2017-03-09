@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -33,16 +34,20 @@ public class Request extends AbstractEntity {
     private static final int MAX_DESCRIPTION_LENGTH = 200;
 
     @NonNull
+    @NotNull
     @Size(min = MIN_TITLE_LENGTH, max = MAX_TITLE_LENGTH)
-    protected String title;
+    private String title;
 
+    @NonNull
+    @NotNull
     @Size(min = MIN_DESCRIPTION_LENGTH, max = MAX_DESCRIPTION_LENGTH)
-    protected String description;
+    private String description;
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "dd-MM-yyyy")
     @NonNull
+    @NotNull
     private LocalDateTime dateOfCreation;
 
     private PriorityStatus priorityStatus;
@@ -50,6 +55,7 @@ public class Request extends AbstractEntity {
     private ProgressStatus progressStatus;
 
     @NonNull
+    @NotNull
     private User reporter;
 
     private User assignee;
