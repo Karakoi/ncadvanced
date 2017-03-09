@@ -1,0 +1,54 @@
+<modal [animation]="true" #requestFormModal>
+
+  <form [formGroup]="requestForm" (ngSubmit)="createNewRequest(requestForm.value)" autocomplete="off" novalidate>
+    <modal-header [show-close]="true">
+      <h4 class="modal-title"><b>Create new request</b></h4>
+    </modal-header>
+    <modal-body>
+      <!--REQUEST TITLE-->
+      <div class="form-group" [ngClass]="{'has-error': !validate('title')}">
+        <label for="title">Title:</label>
+        <input id="title" type="text" class="form-control" formControlName="title"/>
+        <div *ngIf="!validate('title')" class="help-block text-left">
+          <span *ngIf="requestForm.get('title').hasError('required')">Title required.</span>
+          <span *ngIf="requestForm.get('title').hasError('maxlength')">Must not be more then 100 characters.</span>
+        </div>
+      </div>
+      <!--REQUEST PRIORITY STATUS-->
+      <div class="form-group">
+        <label for="priorityStatus">Priority status:</label>
+        <select id="priorityStatus" class="form-control">
+          <option selected>High</option>
+          <option>Normal</option>
+          <option>Low</option>
+        </select>
+      </div>
+      <!--REQUEST ESTIMATE TIME-->
+      <div class="form-group" [ngClass]="{'has-error': !validate('estimateTimeInDays')}">
+        <label for="estimateTimeInDays">Estimate time (in days):</label>
+        <input id="estimateTimeInDays" type="number" class="form-control" formControlName="estimateTimeInDays"/>
+        <div *ngIf="!validate('estimateTimeInDays')" class="help-block text-left">
+          <span *ngIf="requestForm.get('estimateTimeInDays').hasError('min')">Time in days must be greater then 0.</span>
+          <span *ngIf="requestForm.get('estimateTimeInDays').hasError('max')">Time in days must be less then 30.</span>
+        </div>
+      </div>
+       <!--REQUEST DESCRIPTION-->
+      <div class="form-group" [ngClass]="{'has-error': !validate('description')}">
+        <label for="description">Description:</label>
+        <textarea id="description" class="form-control" rows="5" formControlName="description"></textarea>
+        <div *ngIf="!validate('description')" class="help-block text-left">
+          <span *ngIf="requestForm.get('description').hasError('required')">Description required.</span>
+          <span *ngIf="requestForm.get('description').hasError('maxlength')">Must not be more then 255 characters.</span>
+        </div>
+      </div>
+    </modal-body>
+    <modal-footer>
+      <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary col-md-5" [disabled]="requestForm.invalid">Submit</button>
+        <button type="submit" class="btn btn-danger col-md-5" data-dismiss="modal">Close
+        </button>
+      </div>
+    </modal-footer>
+  </form>
+
+</modal>

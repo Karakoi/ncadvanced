@@ -5,7 +5,7 @@ import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {Request} from "../model/request.model";
 
-const url = '/api/request';
+const url = '/api/requests';
 
 @Injectable()
 export class RequestService {
@@ -13,7 +13,7 @@ export class RequestService {
   }
 
   create(request: Request): Observable<Response> {
-    return this.authHttp.post(url, request);
+    return this.authHttp.post(url, request).map(resp => resp.json());
   }
 
   update(request: Request): Observable<Response> {

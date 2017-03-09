@@ -6,7 +6,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
-import {SideBarDirective} from "./directive/barrel";
 import {AuthHttp, AuthConfig} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
 import {
@@ -20,6 +19,7 @@ import {
 } from "./service/barrel";
 import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} from "./components/barrel";
 import {GravatarModule} from "./shared/gravatar/gravatar.module";
+import {SideBarDirective} from "./directive/sidebar.directive";
 
 @NgModule({
   declarations: [

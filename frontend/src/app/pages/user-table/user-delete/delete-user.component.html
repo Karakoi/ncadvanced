@@ -1,16 +1,23 @@
-<div class="modal fade" tabindex="-1" [ngClass]="{'in': visibleAnimate}"
-     [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
-  <div class="modal-dialog">
-    <div class="modal-content panel panel-default" style="width: 500px; margin-top: 200px;">
-      <div class="modal-header panel-heading">
-        <ng-content select=".app-modal-header"></ng-content>
+<modal [animation]="true" #deleteUserFormModal>
+  <div *ngIf="user">
+    <modal-header [show-close]="true">
+      <b>Do you want to delete this user?</b>
+    </modal-header>
+    <modal-body>
+      <div class="form-group">
+        Full name: <label>{{user.secondName}} {{user.firstName}}</label>
       </div>
-      <div class="modal-body panel-body">
-        <ng-content select=".app-modal-body"></ng-content>
+
+      <div class="form-group">
+        Role: <label>{{user.role.name}}</label>
       </div>
-      <div class="modal-footer">
-        <ng-content select=".app-modal-footer"></ng-content>
+    </modal-body>
+    <modal-footer>
+      <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary col-md-5" (click)="deleteUser($event)">Delete
+        </button>
+        <button type="submit" class="btn btn-danger col-md-5" data-dismiss="modal">Close</button>
       </div>
-    </div>
+    </modal-footer>
   </div>
-</div>
+</modal>
