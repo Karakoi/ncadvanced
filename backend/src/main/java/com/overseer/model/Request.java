@@ -43,9 +43,6 @@ public class Request extends AbstractEntity {
     @Size(min = MIN_DESCRIPTION_LENGTH, max = MAX_DESCRIPTION_LENGTH)
     private String description;
 
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "dd-MM-yyyy")
     @NonNull
     @NotNull
     private LocalDateTime dateOfCreation;
