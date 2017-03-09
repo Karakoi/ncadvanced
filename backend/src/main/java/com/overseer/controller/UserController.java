@@ -32,7 +32,7 @@ public class UserController {
      * @param id user identifier.
      * @return {@link User} entity with http status 200 OK.
      */
-    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN','MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<User> fetchUser(@PathVariable Long id) {
         User user = userService.findOne(id);
@@ -96,8 +96,8 @@ public class UserController {
      *
      * @return all {@link User} entities.
      */
-    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
-    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping()
     public ResponseEntity<List<User>> getAllUser(@RequestParam int page) {
         List<User> users = userService.fetchPage(page);
         LOG.debug("Fetched {} users for page: {}", users.size(), page);
