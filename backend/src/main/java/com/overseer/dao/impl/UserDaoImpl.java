@@ -68,7 +68,7 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
     public List<User> findByRole(Role role, int pageSize, int pageNumber) {
         Assert.notNull(role, "role must not be null");
         val parameterSource = new MapSqlParameterSource("limit", pageSize);
-        parameterSource.addValue("offset", pageSize * pageNumber - 1);
+        parameterSource.addValue("offset", pageSize * (pageNumber - 1));
         parameterSource.addValue("role", role.getId());
         return this.jdbc().query(this.queryService().getQuery("user.findByRole"),
                 parameterSource,

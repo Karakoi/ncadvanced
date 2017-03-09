@@ -54,7 +54,15 @@ export class UserService {
     return this.authHttp.get(`${url}/empByManager?managerId=${managerId}`).map(resp => resp.json());
   }
 
+  getPotentialRecipientForEmployee(empId: number) {
+    return this.authHttp.get(`${url}/managersByEmp?empId=${empId}`).map(resp => resp.json());
+  }
+
   sendMessage(message: Message): Observable<Response> {
     return this.authHttp.post('/api/sendMessage', message);
+  }
+
+  getMyMessages(recipient: number, page: number): Observable<Message[]> {
+    return this.authHttp.get(`/api/messagesByRecipient?recipient=${recipient}&pageNumber=${page}`).map(resp => resp.json());
   }
 }
