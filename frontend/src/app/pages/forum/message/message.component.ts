@@ -39,7 +39,7 @@ export class MessageComponent implements OnInit {
         topic: null,
         dateAndTime: null
       };
-      if(this.authService.role === 'office manager') {
+      if(this.authService.role === 'office manager' || this.authService.role === 'admin') {
         this.userService.getPotentialRecipientForManager(user.id).subscribe((potential) => {
         this.potentialRecipients = potential;
         }) }
