@@ -1,5 +1,6 @@
 package com.overseer.model;
 
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
