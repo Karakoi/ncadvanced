@@ -25,7 +25,7 @@ public class RoleServiceImpl extends CrudServiceImpl<Role> implements RoleServic
      */
     @Override
     public List<Role> findAllRoles() {
-        val list = roleDao.findAllRoles();
+        val list = roleDao.findAll();
         log.debug("Fetched {} roles", list.size());
         return list;
     }

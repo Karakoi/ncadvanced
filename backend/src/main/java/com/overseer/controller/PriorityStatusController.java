@@ -29,7 +29,7 @@ public class PriorityStatusController {
      */
     @GetMapping
     public ResponseEntity<List<PriorityStatus>> getPriorityStatuses() {
-        val roles = priorityStatusService.findAllPriorityStatuses();
-        return new ResponseEntity<>(roles, HttpStatus.OK);
+        val priorityStatuses = priorityStatusService.findAllPriorityStatuses();
+        return new ResponseEntity<>(priorityStatuses, HttpStatus.OK);
     }
 }

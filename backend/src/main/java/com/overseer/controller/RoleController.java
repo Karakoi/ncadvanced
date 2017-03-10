@@ -29,8 +29,9 @@ public class RoleController {
      * @param role json object which represents {@link Role} entity.
      * @return json representation of created {@link Role} entity.
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Role> createUser(@RequestBody Role role) {
+    public ResponseEntity<Role> createRole(@RequestBody Role role) {
         Role saveRole = roleService.create(role);
         LOG.debug("Saved role with id: {}", saveRole.getId());
         return new ResponseEntity<>(saveRole, HttpStatus.CREATED);

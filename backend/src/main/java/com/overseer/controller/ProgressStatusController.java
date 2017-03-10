@@ -28,8 +28,8 @@ public class ProgressStatusController {
      * @return all {@link ProgressStatus} entities.
      */
     @GetMapping
-    public ResponseEntity<List<ProgressStatus>> getAllRoles() {
-        val roles = progressStatusService.findAllProgressStatuses();
-        return new ResponseEntity<>(roles, HttpStatus.OK);
+    public ResponseEntity<List<ProgressStatus>> getProgressStatuses() {
+        val progressStatuses = progressStatusService.findAllProgressStatuses();
+        return new ResponseEntity<>(progressStatuses, HttpStatus.OK);
     }
 }

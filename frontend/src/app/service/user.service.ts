@@ -30,11 +30,6 @@ export class UserService {
     return this.authHttp.put(`${url}/${user.id}`, user).map(resp => resp.json());
   }
 
-  // getRoles(): Observable<Role[]> {
-  //   // return this.authHttp.get(`${url}/roles`).map(resp => resp.json());
-  //   return this.authHttp.get('/api/roles').map(resp => resp.json());
-  // }
-
   getPriorityStatuses(): Observable<PriorityStatus[]> {
     return this.authHttp.get(`/api/priorityStatuses`).map(resp => resp.json());
   }
