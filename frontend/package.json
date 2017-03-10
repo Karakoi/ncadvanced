@@ -11,13 +11,13 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^2.3.1",
-    "@angular/compiler": "^2.3.1",
-    "@angular/core": "^2.3.1",
-    "@angular/forms": "^2.3.1",
-    "@angular/http": "^2.3.1",
-    "@angular/platform-browser": "^2.3.1",
-    "@angular/platform-browser-dynamic": "^2.3.1",
+    "@angular/common": "^2.4.9",
+    "@angular/compiler": "^2.4.9",
+    "@angular/core": "^2.4.9",
+    "@angular/forms": "^2.4.9",
+    "@angular/http": "^2.4.9",
+    "@angular/platform-browser": "^2.4.9",
+    "@angular/platform-browser-dynamic": "^2.4.9",
     "@angular/router": "^3.3.1",
     "@types/jquery": "^2.0.40",
     "angular2-jwt": "^0.1.28",
@@ -27,7 +27,6 @@
     "ionic-cache": "^1.1.2",
     "jquery": "^3.1.1",
     "ng2-bs3-modal": "^0.10.4",
-    "ng2-inline-editor": "^0.1.1-alpha.12",
     "ng2-toastr": "^1.4.1",
     "ng2-validation": "^3.8.0",
     "rxjs": "^5.0.1",
@@ -38,8 +37,8 @@
     "zone.js": "^0.7.2"
   },
   "devDependencies": {
-    "@angular/cli": "1.0.0-beta.30",
-    "@angular/compiler-cli": "^2.3.1",
+    "@angular/cli": "^1.0.0-rc.1",
+    "@angular/compiler-cli": "^2.4.9",
     "@types/jasmine": "2.5.38",
     "@types/node": "^6.0.42",
     "codelyzer": "~2.0.0-beta.1",
@@ -50,9 +49,10 @@
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.0.2",
     "karma-remap-istanbul": "^0.2.1",
+    "ng2-inline-editor": "^0.1.1-alpha.12",
     "protractor": "~4.0.13",
     "ts-node": "1.2.1",
     "tslint": "^4.3.0",
-    "typescript": "~2.0.3"
+    "typescript": "~2.0.2"
   }
 }

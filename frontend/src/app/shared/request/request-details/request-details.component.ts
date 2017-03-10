@@ -38,6 +38,7 @@ export class RequestDetailsComponent {
   updateRequest(value) {
     this.request.reporter.password = "";
     this.request.reporter.email = "";
+    this.request.assignee.id = null;
     this.request.assignee.password = "";
     this.request.assignee.email = "";
     this.request.assignee.firstName = "";
