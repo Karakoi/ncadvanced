@@ -1,6 +1,5 @@
 package com.overseer.service.impl;
 
-import com.overseer.dao.RoleDao;
 import com.overseer.dao.UserDao;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -37,12 +36,10 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     private UserDao userDao;
 
     public UserServiceImpl(UserDao userDao,
-                           RoleDao roleDao,
                            EmailService emailService,
                            @Qualifier("recoverBuilderImpl") EmailBuilder<User> emailStrategy) {
         super(userDao);
         this.userDao = userDao;
-        this.roleDao = roleDao;
         this.emailService = emailService;
         this.emailStrategy = emailStrategy;
     }
@@ -114,5 +111,4 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         log.debug("Fetched {} employees for manager with id: {}", list.size(), managerId);
         return list;
     }
-
 }
