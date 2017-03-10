@@ -1,8 +1,8 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.HistoryDAO;
-import com.overseer.dao.UserDao;
 import com.overseer.model.History;
+import com.overseer.model.User;
 import com.overseer.service.QueryService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +31,6 @@ public class HistoryDaoImpl implements HistoryDAO{
     @Autowired
     private QueryService queryService;
 
-    @Autowired
-    private UserDao userDao;
-
     /**
      * {@inheritDoc}.
      */
@@ -47,23 +44,28 @@ public class HistoryDaoImpl implements HistoryDAO{
 
     private RowMapper<History> getMapper() {
         return (resultSet, i) -> {
+            User changer = new User();
+            changer.setId(resultSet.getLong("changer_id"));
+            changer.setFirstName(resultSet.getString("changer_first_name"));
+            changer.setLastName(resultSet.getString("changer_last_name"));
+
             History history = new History();
             history.setId(resultSet.getLong("id"));
             history.setColumnName(resultSet.getString("column_name"));
             history.setOldValue(resultSet.getString("old_value"));
             history.setNewValue(resultSet.getString("new_value"));
             history.setDateOfChange(resultSet.getTimestamp("date_of_change").toLocalDateTime());
-            history.setChanger(userDao.findOne(resultSet.getLong("changer_id")));
+            history.setChanger(changer);
             history.setRecordId(resultSet.getLong("record_id"));
             return history;
         };
     }
 
-    NamedParameterJdbcOperations jdbc() {
+    private NamedParameterJdbcOperations jdbc() {
         return this.jdbc;
     }
 
-    QueryService queryService() {
+    private QueryService queryService() {
         return this.queryService;
     }
 }
