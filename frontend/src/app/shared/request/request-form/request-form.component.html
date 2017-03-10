@@ -1,4 +1,4 @@
-<modal [animation]="true" #requestFormModal>
+<modal [animation]="true" (onClose)="closeModal()" (onDismiss)="closeModal()" #requestFormModal>
 
   <form [formGroup]="requestForm" (ngSubmit)="createNewRequest(requestForm.value)" autocomplete="off" novalidate>
     <modal-header [show-close]="true">

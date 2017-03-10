@@ -4,7 +4,7 @@ export interface Request {
   id?: number,
   title: string,
   description: string,
-  dateOfCreation: Date,
+  dateOfCreation: string,
   priorityStatus?: PriorityStatus,
   progressStatus?: ProgressStatus,
   reporter: User,

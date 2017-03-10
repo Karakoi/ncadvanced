@@ -1,7 +1,15 @@
 <modal [animation]="true" #requestDetailsModal>
   <div *ngIf="request">
     <modal-header [show-close]="true">
-      <h4 class="modal-title"><b>{{request.title}}</b></h4>
+      <h4 class="modal-title">
+        <b>
+          <inline-editor type="text"
+                         [(ngModel)]="request.title"
+                         (onSave)="updateRequest($event)"
+                         size="40">
+          </inline-editor>
+        </b>
+      </h4>
     </modal-header>
     <modal-body>
       <!-- DETAILS & PEOPLE -->
@@ -93,7 +101,14 @@
           <table class="table">
             <tbody>
             <tr>
-              <td *ngIf="showDescription">{{request.description}}</td>
+              <td *ngIf="showDescription">
+                <inline-editor type="textarea"
+                               [(ngModel)]="request.description"
+                               (onSave)="updateRequest($event)"
+                               cols="60"
+                               rows="3">
+                </inline-editor>
+              </td>
               <td *ngIf="!showDescription"><i>Click arrow down to show full description</i></td>
             </tr>
             </tbody>

@@ -41,7 +41,6 @@ export class UserTableComponent implements OnInit {
   }
 
   updateUsers(users: User[]) {
-    console.log("updated: ", users);
     this.users = users;
   }
 

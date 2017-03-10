@@ -58,6 +58,10 @@ export class RequestTableComponent implements OnInit {
     });
   }
 
+  updateRequests(users: Request[]) {
+    this.requests = users;
+  }
+
   openDetailsModal(request: Request): void {
     this.requestDetails.modal.open();
     this.requestDetails.request = request;
