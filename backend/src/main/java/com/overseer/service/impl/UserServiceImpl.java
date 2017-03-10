@@ -116,9 +116,4 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return list;
     }
 
-    @Override
-    public List<Role> findAllRoles() {
-        log.debug("Retrieving all roles");
-        return roleDao.findAll();
-    }
 }

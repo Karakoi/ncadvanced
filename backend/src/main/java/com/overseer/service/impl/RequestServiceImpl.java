@@ -196,4 +196,5 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                 .max(Comparator.comparingInt(PriorityStatus::getValue))
                 .orElseThrow(UnsupportedOperationException::new);
     }
+
 }

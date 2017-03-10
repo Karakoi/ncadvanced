@@ -7,6 +7,7 @@ import {UserService} from "../../../service/user.service";
 import {Role} from "../../../model/role.model";
 import {User} from "../../../model/user.model";
 import {Response} from "@angular/http";
+import {RoleService} from "../../../service/role.service";
 
 @Component({
   selector: 'add-user',
@@ -25,12 +26,13 @@ export class AddUserComponent implements OnInit {
   modal: ModalComponent;
 
   constructor(private userService: UserService,
+              private roleService: RoleService,
               private formBuilder: FormBuilder,
               private toastr: ToastsManager) {
   }
 
   ngOnInit() {
-    this.userService.getRoles().subscribe((roles: Role[]) => {
+    this.roleService.getAll().subscribe((roles: Role[]) => {
       this.roles = roles;
     });
     this.initForm();

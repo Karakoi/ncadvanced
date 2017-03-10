@@ -28,6 +28,9 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
         this.crudDao = crudDao;
     }
 
+    protected CrudServiceImpl() {
+    }
+
     @Override
     public T create(T entity) throws EntityAlreadyExistsException {
         Assert.notNull(entity);

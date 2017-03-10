@@ -22,6 +22,7 @@ import {
 import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} from "./components/barrel";
 import {GravatarModule} from "./shared/gravatar/gravatar.module";
 import {SideBarDirective} from "./directive/sidebar.directive";
+import {RoleService} from "./service/role.service";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {SideBarDirective} from "./directive/sidebar.directive";
   ],
   providers: [
     UserService,
+    RoleService,
     AuthService,
     CacheService,
     PrivatePageGuard,
