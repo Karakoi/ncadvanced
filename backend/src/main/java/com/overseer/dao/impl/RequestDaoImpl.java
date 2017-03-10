@@ -195,6 +195,11 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                 assignee.setLastName(resultSet.getString("assignee_last_name"));
             }
 
+            User lastChanger = new User();
+            lastChanger.setId(resultSet.getLong("last_changer_id"));
+            lastChanger.setFirstName(resultSet.getString("last_changer_first_name"));
+            lastChanger.setLastName(resultSet.getString("last_changer_last_name"));
+
             ProgressStatus progressStatus = new ProgressStatus();
             progressStatus.setName(resultSet.getString("progress_name"));
             progressStatus.setId(resultSet.getLong("progress_id"));
@@ -214,6 +219,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             request.setDateOfCreation(resultSet.getTimestamp("date_of_creation").toLocalDateTime());
             request.setReporter(reporter);
             request.setAssignee(assignee);
+            request.setLastChanger(lastChanger);
             request.setPriorityStatus(priorityStatus);
             request.setProgressStatus(progressStatus);
             return request;
