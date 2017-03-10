@@ -1,7 +1,5 @@
 package com.overseer.service.impl;
 
-import static java.util.Comparator.comparingInt;
-
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -15,6 +13,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -183,7 +182,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requests
                 .stream()
                 .map(Request::getPriorityStatus)
-                .max(comparingInt(PriorityStatus::getValue))
+                .max(Comparator.comparingInt(PriorityStatus::getValue))
                 .orElseThrow(UnsupportedOperationException::new);
     }
+
 }

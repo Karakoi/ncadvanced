@@ -2,8 +2,13 @@ package com.overseer.dao.impl;
 
 import com.overseer.dao.RoleDao;
 import com.overseer.model.Role;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * <p>
@@ -11,9 +16,8 @@ import org.springframework.stereotype.Repository;
  * </p>
  */
 @Repository
-public class RoleDaoImpl extends SimpleEntityDaoImpl<Role> implements RoleDao {
+public class RoleDaoImpl extends CrudDaoImpl<Role> implements RoleDao {
 
-    @Override
     protected String getFindByNameQuery() {
         return this.queryService().getQuery("role.findByName");
     }
@@ -61,4 +65,23 @@ public class RoleDaoImpl extends SimpleEntityDaoImpl<Role> implements RoleDao {
             return role;
         };
     }
+
+    @Override
+    public List<Role> findAllRoles() {
+        return this.jdbc().query(getFindAllQuery(),
+                this.getMapper());
+    }
+
+    @Override
+    public Role findByName(String name) {
+        Assert.notNull(name, "name must not be null");
+        try {
+            return this.jdbc().queryForObject(getFindByNameQuery(),
+                    new MapSqlParameterSource("name", name),
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
 }

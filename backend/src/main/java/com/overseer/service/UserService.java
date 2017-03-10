@@ -47,9 +47,4 @@ public interface UserService extends CrudService<User, Long> {
      */
     List<User> findUsersByManager(Long managerId);
 
-    /**
-     * Method find all roles.
-     * @return list of roles.
-     */
-    List<Role> findAllRoles();
 }

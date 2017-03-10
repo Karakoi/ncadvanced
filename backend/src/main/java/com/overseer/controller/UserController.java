@@ -1,6 +1,5 @@
 package com.overseer.controller;
 
-import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -102,18 +101,6 @@ public class UserController {
         List<User> users = userService.fetchPage(page);
         LOG.debug("Fetched {} users for page: {}", users.size(), page);
         return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    /**
-     * Returns all {@link Role} entities.
-     *
-     * @return all {@link Role} entities.
-     */
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/roles")
-    public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> roles = userService.findAllRoles();
-        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
