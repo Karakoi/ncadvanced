@@ -31,11 +31,6 @@
     <li>
       <a [routerLink]="['/requests']" *ngIf="isAdmin()">Show all requests</a>
     </li>
-
-    <!--Show this div, if user's role is Manager -->
-    <li>
-      <a href="#" *ngIf="isManager()">Show all requests</a>
-    </li>
   </ul>
 </div>
 <!-- /#sidebar-wrapper -->

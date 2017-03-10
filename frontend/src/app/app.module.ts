@@ -15,7 +15,9 @@ import {
   RequestService,
   RecoverService,
   AuthService,
-  UserService
+  UserService,
+  UserPageGuard,
+  ManagerPageGuard
 } from "./service/barrel";
 import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} from "./components/barrel";
 import {GravatarModule} from "./shared/gravatar/gravatar.module";
@@ -48,6 +50,8 @@ import {SideBarDirective} from "./directive/sidebar.directive";
     AdminPageGuard,
     RequestService,
     RecoverService,
+    ManagerPageGuard,
+    UserPageGuard,
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

@@ -1,8 +1,8 @@
 import {Routes} from "@angular/router";
 import {NoContentComponent} from "./components/barrel";
-import {PublicPageGuard} from "./service/public-page.guard";
-import {PrivatePageGuard} from "./service/private-page.guard";
-import {AdminPageGuard} from "./service/admin-page.guard";
+import {PublicPageGuard} from "./service/guard/public-page.guard";
+import {PrivatePageGuard} from "./service/guard/private-page.guard";
+import {AdminPageGuard} from "./service/guard/admin-page.guard";
 
 export const appRoutes: Routes = [
   {
