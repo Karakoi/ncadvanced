@@ -5,12 +5,18 @@ import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,7 +27,6 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
     private static final Long DEFAULT_PAGE_SIZE = 20L;
 
     private final UserService userService;
@@ -32,11 +37,10 @@ public class UserController {
      * @param id user identifier.
      * @return {@link User} entity with http status 200 OK.
      */
-    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN', 'MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<User> fetchUser(@PathVariable Long id) {
         User user = userService.findOne(id);
-        LOG.debug("Fetching user with id: {}", id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -49,7 +53,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User saveUser = userService.create(user);
-        LOG.debug("Saved user with id: {}", saveUser.getId());
         return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
     }
 
@@ -76,7 +79,6 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         User updatedUser = userService.update(user);
-        LOG.debug("Updated user with id: {}", updatedUser.getId());
         return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
@@ -87,7 +89,6 @@ public class UserController {
      */
     @PostMapping(value = "/changePassword")
     public void changePassword(@RequestBody RecoverInfo recoverInfo) {
-        LOG.debug("Sending recover info to: {}", recoverInfo.email);
         userService.changePassword(recoverInfo.email);
     }
 
@@ -97,10 +98,9 @@ public class UserController {
      * @return all {@link User} entities.
      */
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping()
-    public ResponseEntity<List<User>> getAllUser(@RequestParam int page) {
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam int page) {
         List<User> users = userService.fetchPage(page);
-        LOG.debug("Fetched {} users for page: {}", users.size(), page);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 

@@ -4,9 +4,10 @@ import com.overseer.dao.PriorityStatusDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.service.PriorityStatusService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,19 +15,19 @@ import java.util.List;
  * Implementation of {@link PriorityStatusService} interface.
  */
 @Service
+@Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class PriorityStatusServiceImpl implements PriorityStatusService {
-
     private final PriorityStatusDao priorityStatusDao;
-
-    private static final Logger LOG = LoggerFactory.getLogger(PriorityStatusServiceImpl.class);
 
     /**
      * {@inheritDoc}.
      */
     @Override
     public List<PriorityStatus> findAllPriorityStatuses() {
-        LOG.debug("Fetching all priority statuses values");
-        return priorityStatusDao.findAll();
+        val list = priorityStatusDao.findAll();
+        log.debug("Fetched {} priority statuses", list.size());
+        return list;
     }
 }

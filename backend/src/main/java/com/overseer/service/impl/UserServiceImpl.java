@@ -9,13 +9,12 @@ import com.overseer.model.User;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import com.overseer.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -25,9 +24,9 @@ import java.util.List;
  * Implementation of {@link UserService} interface.
  */
 @Service
+@Slf4j
 @PropertySource("classpath:security.properties")
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
-    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final short DEFAULT_PAGE_SIZE = 20;
 
     @Value("${password.length}")
@@ -68,7 +67,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
      * @return true if email available, false otherwise.
      */
     private boolean emailAvailable(User user) {
-        String email = user.getEmail();
+        val email = user.getEmail();
         return this.findByEmail(email) == null;
     }
 
@@ -78,10 +77,11 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     @Override
     public void changePassword(String email) throws NoSuchEntityException {
         Assert.notNull(email, "email must not be null");
-        User user = this.findByEmail(email);
-        String newPassword = RandomStringUtils.randomAlphanumeric(newPasswordLength);
+        val user = this.findByEmail(email);
+        log.debug("Generating new password for user with email: {}", email);
+        val newPassword = RandomStringUtils.randomAlphanumeric(newPasswordLength);
         user.setPassword(newPassword);
-        SimpleMailMessage message = this.emailStrategy.buildMessage(user);
+        val message = this.emailStrategy.buildMessage(user);
         emailService.sendMessage(message);
         userDao.save(user);
     }
@@ -90,32 +90,35 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     public User findByEmail(String email) throws NoSuchEntityException {
         Assert.notNull(email, "email must not be null");
         User user = userDao.findByEmail(email);
-        LOG.debug("Retrieving user with email: {}", email);
+        log.debug("Retrieving user with email: {}", email);
         return user;
     }
 
     @Override
     public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
-        LOG.debug("Retrieving user with role: {}", role);
-        return userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} users with role: {} for page number: {}", list.size(), role, pageNumber);
+        return list;
     }
 
     @Override
     public List<User> findManagersByEmployee(Long employeeId) {
-        LOG.debug("Retrieving Managers by employee with employeeId: {}", employeeId);
-        return userDao.findManagersByEmployee(employeeId);
+        val list = userDao.findManagersByEmployee(employeeId);
+        log.debug("Fetched {} managers for employee with id: {}", list.size(), employeeId);
+        return list;
     }
 
     @Override
     public List<User> findUsersByManager(Long managerId) {
-        LOG.debug("Retrieving employees by manager with managerId: {}", managerId);
-        return userDao.findUsersByManager(managerId);
+        val list = userDao.findUsersByManager(managerId);
+        log.debug("Fetched {} employees for manager with id: {}", list.size(), managerId);
+        return list;
     }
 
     @Override
     public List<Role> findAllRoles() {
-        LOG.debug("Retrieving all roles");
+        log.debug("Retrieving all roles");
         return roleDao.findAll();
     }
 }

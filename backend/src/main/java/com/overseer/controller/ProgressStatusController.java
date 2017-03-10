@@ -3,6 +3,7 @@ package com.overseer.controller;
 import com.overseer.model.ProgressStatus;
 import com.overseer.service.ProgressStatusService;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ import java.util.List;
  * Controller provides api for progress status operations.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/progressStatuses")
 @RequiredArgsConstructor
 public class ProgressStatusController {
 
@@ -26,9 +27,9 @@ public class ProgressStatusController {
      *
      * @return all {@link ProgressStatus} entities.
      */
-    @GetMapping("/progressStatuses")
+    @GetMapping
     public ResponseEntity<List<ProgressStatus>> getAllRoles() {
-        List<ProgressStatus> roles = progressStatusService.findAllProgressStatuses();
+        val roles = progressStatusService.findAllProgressStatuses();
         return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 }

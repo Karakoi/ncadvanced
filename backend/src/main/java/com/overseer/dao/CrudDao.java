@@ -50,11 +50,18 @@ public interface CrudDao<T, ID extends Serializable> {
     boolean exists(ID id);
 
     /**
-     * Returns all entities of the type.
+     * Returns list of entities for provided page.
      *
-     * @return all entities.
+     * @param pageSize   number of entities on the page.
+     * @param pageNumber number of page.
+     * @return a list of entities.
      */
     List<T> fetchPage(int pageSize, int pageNumber);
 
+    /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @return number of entities of type <code>T</code>.
+     */
     Long count();
 }

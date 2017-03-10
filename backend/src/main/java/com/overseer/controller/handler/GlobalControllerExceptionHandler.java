@@ -1,9 +1,7 @@
 package com.overseer.controller.handler;
 
-import com.overseer.exception.email.EmptyMessageException;
-import com.overseer.exception.entity.EntityAlreadyExistsException;
-import com.overseer.exception.entity.NoSuchEntityException;
 import lombok.Data;
+import lombok.val;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +21,14 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
      * Handles application exceptions and send response data to client side.
      *
      * @param exception handled exception
-     * @param request input web request
+     * @param request   input web request
      * @return error response object
      */
-    @ExceptionHandler(value = {NoSuchEntityException.class, EmptyMessageException.class,
-                               EntityAlreadyExistsException.class, NoSuchEntityException.class})
-    protected ResponseEntity<Object> exceptionHandler(RuntimeException exception, WebRequest request) {
-        String message = exception.getMessage();
-        int status = HttpStatus.CONFLICT.value();
-        ErrorResponse response = new ErrorResponse(message, status);
+    @ExceptionHandler(value = Exception.class)
+    protected ResponseEntity<Object> handleException(RuntimeException exception, WebRequest request) {
+        val message = exception.getMessage();
+        val status = HttpStatus.CONFLICT.value();
+        val response = new ErrorResponse(message, status);
         return handleExceptionInternal(exception, response, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
