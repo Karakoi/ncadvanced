@@ -35,6 +35,6 @@
       </ul>
     </div>
   </form-template>
-  <request-form></request-form>
+  <request-form [requests]="requests" (updated)="updateRequests($event)"></request-form>
   <request-details></request-details>
 </div>

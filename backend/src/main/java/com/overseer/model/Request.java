@@ -2,6 +2,10 @@ package com.overseer.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.overseer.util.LocalDateTimeDeserializer;
+import com.overseer.util.LocalDateTimeSerializer;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -38,6 +42,8 @@ public class Request extends AbstractEntity {
 
     @NonNull
     @NotNull
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateOfCreation;
 
     private PriorityStatus priorityStatus;

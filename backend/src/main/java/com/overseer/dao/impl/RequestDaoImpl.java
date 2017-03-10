@@ -190,8 +190,10 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
             User assignee = new User();
             assignee.setId(resultSet.getLong("assignee_id"));
-            assignee.setFirstName(resultSet.getString("assignee_first_name"));
-            assignee.setLastName(resultSet.getString("assignee_last_name"));
+            if (resultSet.getString("assignee_first_name") != null) {
+                assignee.setFirstName(resultSet.getString("assignee_first_name"));
+                assignee.setLastName(resultSet.getString("assignee_last_name"));
+            }
 
             User lastChanger = new User();
             lastChanger.setId(resultSet.getLong("last_changer_id"));
