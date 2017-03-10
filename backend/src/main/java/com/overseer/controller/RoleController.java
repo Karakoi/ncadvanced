@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleController {
     private static final Logger LOG = LoggerFactory.getLogger(RoleController.class);
-    private static final Long DEFAULT_PAGE_SIZE = 20L;
 
     private final RoleService roleService;
 

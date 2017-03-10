@@ -35,7 +35,6 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     private EmailService emailService;
     private EmailBuilder<User> emailStrategy;
     private UserDao userDao;
-    private RoleDao roleDao;
 
     public UserServiceImpl(UserDao userDao,
                            RoleDao roleDao,
