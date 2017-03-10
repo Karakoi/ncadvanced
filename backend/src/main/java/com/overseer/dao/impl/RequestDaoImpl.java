@@ -197,8 +197,8 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
             User lastChanger = new User();
             lastChanger.setId(resultSet.getLong("last_changer_id"));
-            lastChanger.setFirstName(resultSet.getString("last_changer_first_name"));
-            lastChanger.setLastName(resultSet.getString("last_changer_last_name"));
+            lastChanger.setFirstName(resultSet.getString("changer_first_name"));
+            lastChanger.setLastName(resultSet.getString("changer_last_name"));
 
             ProgressStatus progressStatus = new ProgressStatus();
             progressStatus.setName(resultSet.getString("progress_name"));
