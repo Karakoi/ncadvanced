@@ -1,5 +1,7 @@
 package com.overseer.dao.impl;
 
+import static com.overseer.util.ValidationUtil.validate;
+
 import com.overseer.dao.CrudDao;
 import com.overseer.model.AbstractEntity;
 import com.overseer.service.QueryService;
@@ -34,7 +36,7 @@ public abstract class CrudDaoImpl<T extends AbstractEntity> implements CrudDao<T
 
     @Override
     public T save(T entity) {
-        Assert.notNull(entity, "entity must not be null");
+        validate(entity);
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(entity);
         String insertQuery = this.getInsertQuery();
         if (entity.isNew()) {

@@ -1,29 +1,30 @@
 package com.overseer.service.impl;
 
-import static java.util.Comparator.comparingInt;
-
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.service.RequestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * Implementation of {@link RequestService} interface.
  */
 @Service
+@Slf4j
 public class RequestServiceImpl extends CrudServiceImpl<Request> implements RequestService {
-    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final short DEFAULT_PAGE_SIZE = 20;
+    private static final Long IN_PROGRESS_STATUS = 7L;
+    private static final Long JOINED_STATUS = 6L;
 
     private RequestDao requestDao;
 
@@ -38,8 +39,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findSubRequests(Request parent) {
         Assert.notNull(parent, "parent request must not be null");
-        LOG.debug("Fetching sub requests for parent: {}", parent.getTitle());
-        return this.requestDao.findSubRequests(parent);
+        val list = this.requestDao.findSubRequests(parent);
+        log.debug("Fetched {} sub requests for parent with id: {}", list.size(), parent.getId());
+        return list;
     }
 
     /**
@@ -48,8 +50,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findJoinedRequests(Request parent) {
         Assert.notNull(parent, "parent request must not be null");
-        LOG.debug("Fetching joined requests for parent: {}", parent.getTitle());
-        return this.requestDao.findJoinedRequests(parent);
+        val list = this.requestDao.findJoinedRequests(parent);
+        log.debug("Fetched {} joined requests for parent with id: {}", list.size(), parent.getId());
+        return list;
     }
 
     /**
@@ -58,8 +61,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findRequestsByAssignee(User assignee, int pageNumber) {
         Assert.notNull(assignee, "assignee must not be null");
-        LOG.debug("Fetching requests for assignee: {}", assignee.getEmail());
-        return this.requestDao.findRequestsByAssignee(assignee, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findRequestsByAssignee(assignee, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
+                list.size(), assignee.getId(), pageNumber);
+        return list;
     }
 
     /**
@@ -68,8 +73,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findRequestsByReporter(User reporter, int pageNumber) {
         Assert.notNull(reporter, "reporter must not be null");
-        LOG.debug("Fetching requests for reporter: {}", reporter.getEmail());
-        return this.requestDao.findRequestsByReporter(reporter, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findRequestsByReporter(reporter, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests for reporter with id: {} for page number: {}",
+                list.size(), reporter.getId(), pageNumber);
+        return list;
     }
 
     /**
@@ -78,8 +85,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageNumber) {
         Assert.notNull(progressStatus, "progress status must not be null");
-        LOG.debug("Fetching requests with progress status: {}", progressStatus.getName());
-        return this.requestDao.findRequestsByProgress(progressStatus, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findRequestsByProgress(progressStatus, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests with progress status: {} for page number: {}",
+                list.size(), progressStatus.getName(), pageNumber);
+        return list;
     }
 
     /**
@@ -88,8 +97,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findRequestsByPriority(PriorityStatus priorityStatus, int pageNumber) {
         Assert.notNull(priorityStatus, "priority status must not be null");
-        LOG.debug("Fetching requests with priority status: {}", priorityStatus.getName());
-        return this.requestDao.findRequestsByPriority(priorityStatus, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findRequestsByPriority(priorityStatus, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests with priority status: {} for page number: {}",
+                list.size(), priorityStatus.getName(), pageNumber);
+        return list;
     }
 
     /**
@@ -99,8 +110,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber) {
         Assert.notNull(start, "start date must not be null");
         Assert.notNull(end, "end date must not be null");
-        LOG.debug("Fetching requests between {} and {} dates", start, end);
-        return this.requestDao.findRequestsByPeriod(start, end, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findRequestsByPeriod(start, end, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests for period {} - {} for page number: {}", list.size(), start, end, pageNumber);
+        return list;
     }
 
     /**
@@ -109,8 +121,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findRequestsByDate(LocalDate date) {
         Assert.notNull(date, "date must not be null");
-        LOG.debug("Fetching requests for date: {}", date);
-        return this.requestDao.findRequestsByDate(date);
+        val list = this.requestDao.findRequestsByDate(date);
+        log.debug("Fetched {} requests for date: {}", list.size(), date);
+        return list;
     }
 
     /**
@@ -120,40 +133,37 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Request joinRequestsIntoParent(List<Long> ids, Request parentRequest) {
         Assert.notNull(ids, "ids must not be null");
         Assert.notNull(parentRequest, "parent request must not be null");
-        LOG.debug("Joining requests with ids {} into parent request {}", ids, parentRequest);
+        log.debug("Joining requests with ids {} into parent request {}", ids, parentRequest);
 
         // Retrieve specified requests for joining from database
-        List<Request> joinedRequests = requestDao.findRequestsByIds(ids);
+        val joinedRequests = requestDao.findRequestsByIds(ids);
 
         // Find and set max priority status from specified requests to parent request
-        PriorityStatus maxPriorityStatus = getMaxPriorityStatus(joinedRequests);
+        val maxPriorityStatus = getMaxPriorityStatus(joinedRequests);
         parentRequest.setPriorityStatus(maxPriorityStatus);
 
         // Define and set progress status and date of creation to parent
-        ProgressStatus parentProgressStatus = new ProgressStatus();
+        val parentProgressStatus = new ProgressStatus();
         parentProgressStatus.setName("In progress");
-        final Long inProgressStatusValue = 7L;
-        parentProgressStatus.setId(inProgressStatusValue);
+        parentProgressStatus.setId(IN_PROGRESS_STATUS);
         parentRequest.setProgressStatus(parentProgressStatus);
         parentRequest.setDateOfCreation(LocalDateTime.now());
 
         // Save parent request to database
-        Request parent = requestDao.save(parentRequest);
+        val parent = requestDao.save(parentRequest);
 
         // Define progress status with 'Joined' value for child requests
-        ProgressStatus childProgressStatus = new ProgressStatus();
+        val childProgressStatus = new ProgressStatus();
         childProgressStatus.setName("Joined");
-        final Long joinedStatusValue = 6L;
-        childProgressStatus.setId(joinedStatusValue);
+        childProgressStatus.setId(JOINED_STATUS);
 
         // Update child requests with new progress status and parent id
-        Long parentId = parent.getId();
+        val parentId = parent.getId();
         joinedRequests.forEach(request -> {
             request.setProgressStatus(childProgressStatus);
             request.setParentId(parentId);
             requestDao.save(request);
         });
-
         return parent;
     }
 
@@ -166,8 +176,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         Assert.notNull(parentRequest, "parent request must not be null");
         Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
         Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
-        LOG.debug("Create sub request {} for parent request {}", subRequest, parentRequest);
-        Long parentId = parentRequest.getId();
+        log.debug("Create sub request {} for parent request {}", subRequest, parentRequest);
+        val parentId = parentRequest.getId();
         subRequest.setParentId(parentId);
         return requestDao.save(subRequest);
     }
@@ -183,7 +193,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requests
                 .stream()
                 .map(Request::getPriorityStatus)
-                .max(comparingInt(PriorityStatus::getValue))
+                .max(Comparator.comparingInt(PriorityStatus::getValue))
                 .orElseThrow(UnsupportedOperationException::new);
     }
+
 }

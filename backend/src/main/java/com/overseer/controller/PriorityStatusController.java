@@ -3,6 +3,7 @@ package com.overseer.controller;
 import com.overseer.model.PriorityStatus;
 import com.overseer.service.PriorityStatusService;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ import java.util.List;
  * Controller provides api for priority status operations.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/priorityStatuses")
 @RequiredArgsConstructor
 public class PriorityStatusController {
 
@@ -26,9 +27,9 @@ public class PriorityStatusController {
      *
      * @return all {@link PriorityStatus} entities.
      */
-    @GetMapping("/priorityStatuses")
+    @GetMapping
     public ResponseEntity<List<PriorityStatus>> getPriorityStatuses() {
-        List<PriorityStatus> roles = priorityStatusService.findAllPriorityStatuses();
-        return new ResponseEntity<>(roles, HttpStatus.OK);
+        val priorityStatuses = priorityStatusService.findAllPriorityStatuses();
+        return new ResponseEntity<>(priorityStatuses, HttpStatus.OK);
     }
 }

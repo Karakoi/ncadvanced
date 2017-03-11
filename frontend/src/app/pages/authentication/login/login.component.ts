@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
 
   handleError(error) {
     switch (error.status) {
-      case 401:
+      case 409:
         this.toastr.error('Email or password is wrong.', "Error!");
     }
   }

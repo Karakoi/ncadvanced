@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -16,15 +15,15 @@ import javax.validation.constraints.NotNull;
 public class History extends AbstractEntity {
     private static final int MAX_COLUMN_NAME_LENGTH = 20;
 
-    @Max(MAX_COLUMN_NAME_LENGTH)
     @NotNull(message = "History has to have a column name")
     private String columnName;
 
-    @NotNull(message = "History has to have a old value")
-    private String modifiedValue;
+    private String oldValue;
+
+    private String newValue;
 
     @NotNull(message = "History has to have a change date")
-    private LocalDateTime dateOfLastChange;
+    private LocalDateTime dateOfChange;
 
     @NotNull(message = "History has to have a changer")
     private User changer;

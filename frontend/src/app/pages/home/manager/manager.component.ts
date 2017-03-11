@@ -1,15 +1,15 @@
 import {Component} from "@angular/core";
-import {Request} from "../../model/request.model";
-import {RequestService} from "../../service/request.service";
+import {Request} from "../../../model/request.model";
+import {RequestService} from "../../../service/request.service";
 
 declare let $: any;
 
 @Component({
-  selector: 'overseer-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css']
+  selector: 'manager-home',
+  templateUrl: 'manager.component.html',
+  styleUrls: ['manager.component.css']
 })
-export class HomeComponent {
+export class ManagerComponent {
   requests: Request[] = [];
   checked: number[] = [];
   pageCount: number;

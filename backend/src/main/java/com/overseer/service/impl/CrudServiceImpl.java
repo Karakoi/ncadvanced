@@ -5,8 +5,8 @@ import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.AbstractEntity;
 import com.overseer.service.CrudService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -18,14 +18,17 @@ import java.util.List;
  * @param <T> entity type.
  */
 @Transactional
+@Slf4j
 public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudService<T, Long> {
-    private static final Logger LOG = LoggerFactory.getLogger(CrudServiceImpl.class);
     private static final short DEFAULT_PAGE_SIZE = 20;
 
     private CrudDao<T, Long> crudDao;
 
     CrudServiceImpl(CrudDao<T, Long> crudDao) {
         this.crudDao = crudDao;
+    }
+
+    protected CrudServiceImpl() {
     }
 
     @Override
@@ -49,8 +52,7 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
     @Override
     public T findOne(Long id) throws NoSuchEntityException {
         Assert.notNull(id, "id must not be null");
-        Assert.notNull(crudDao, "Crud dao is null 8(");
-        LOG.debug("Searching for entity with id: {}", id);
+        log.debug("Searching for entity with id: {}", id);
         T entity = this.crudDao.findOne(id);
         if (entity == null) {
             throw new NoSuchEntityException("Failed to retrieve entity with id " + id);
@@ -60,31 +62,35 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
 
     @Override
     public void delete(T entity) {
-        Assert.notNull(entity);
+        Assert.notNull(entity, "entity must not be null");
         this.crudDao.delete(entity);
     }
 
     @Override
     public void delete(Long id) {
         Assert.notNull(id, "id must not be null");
-        LOG.debug("Deleting entity with id: {}", id);
+        log.debug("Deleting entity with id: {}", id);
         this.crudDao.delete(id);
     }
 
     @Override
     public boolean exists(Long id) {
         Assert.notNull(id, "id must not be null");
-        LOG.debug("Checking if entity with id: {} exists", id);
+        log.debug("Checking if entity with id: {} exists", id);
         return this.crudDao.exists(id);
     }
 
     @Override
     public List<T> fetchPage(int pageNumber) {
-        return this.crudDao.fetchPage(DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.crudDao.fetchPage(DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} entities for page number: {}", list.size(), pageNumber);
+        return list;
     }
 
     @Override
     public Long getCount() {
-        return crudDao.count();
+        val count = crudDao.count();
+        log.debug("Counted {} entities", count);
+        return count;
     }
 }

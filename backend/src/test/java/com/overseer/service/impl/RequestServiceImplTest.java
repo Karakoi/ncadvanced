@@ -31,6 +31,7 @@ public class RequestServiceImplTest {
     private Request request;
     private User assignee;
     private User reporter;
+    private User lastChanger;
     private ProgressStatus progress;
     private PriorityStatus priority;
     private List<Long> requestsGroupIds;
@@ -44,12 +45,33 @@ public class RequestServiceImplTest {
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
-        reporter = new User("Tom", "Hardy", "gunner12", "some@email.com", reporterRole);
+        reporter = new User();
+        reporter.setFirstName("Tom");
+        reporter.setLastName("Hardy");
+        reporter.setPassword("gunner12");
+        reporter.setEmail( "some@email.com");
+        reporter.setRole(reporterRole);
         reporter = this.userDao.save(reporter);
 
+
+        Role changerRole = new Role("admin");
+        changerRole.setId(10L);
+        lastChanger = new User();
+        lastChanger.setFirstName("Bruce");
+        lastChanger.setLastName("li");
+        lastChanger.setPassword("qwerty123");
+        lastChanger.setEmail("bruceli@email.com");
+        lastChanger.setRole(changerRole);
+        lastChanger = this.userDao.save(lastChanger);
+
         Role assigneeRole = new Role("office manager");
-        reporterRole.setId(11L);
-        assignee = new User("Tom", "Cruz", "cruzXXX", "cruzooo@email.com", assigneeRole);
+        assigneeRole.setId(11L);
+        assignee = new User();
+        assignee.setFirstName("Tom");
+        assignee.setLastName("Cruz");
+        assignee.setPassword("cruzXXX");
+        assignee.setEmail("cruzooo@email.com");
+        assignee.setRole(assigneeRole);
         assignee = this.userDao.save(assignee);
 
         priority = new PriorityStatus("Normal", 200);
@@ -66,6 +88,7 @@ public class RequestServiceImplTest {
         request.setDateOfCreation(LocalDateTime.of(2015, 6, 21, 12, 30));
         request.setReporter(reporter);
         request.setAssignee(assignee);
+        request.setLastChanger(lastChanger);
         request.setPriorityStatus(priority);
         request.setProgressStatus(progress);
 

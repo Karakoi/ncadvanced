@@ -3,8 +3,7 @@ package com.overseer.controller;
 import com.overseer.model.Request;
 import com.overseer.service.RequestService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +26,6 @@ import java.util.List;
 @RequestMapping("/api/requests")
 @RequiredArgsConstructor
 public class RequestController {
-    private static final Logger LOG = LoggerFactory.getLogger(RequestController.class);
     private static final Long DEFAULT_PAGE_SIZE = 20L;
 
     private final RequestService requestService;
@@ -40,8 +38,7 @@ public class RequestController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Request> fetchRequest(@PathVariable Long id) {
-        Request request = requestService.findOne(id);
-        LOG.debug("Fetching request with id: {}", id);
+        val request = requestService.findOne(id);
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
@@ -53,8 +50,7 @@ public class RequestController {
      */
     @PostMapping
     public ResponseEntity<Request> createRequest(@RequestBody Request request) {
-        Request createdRequest = requestService.create(request);
-        LOG.debug("Saved request with id: {}", createdRequest.getId());
+        val createdRequest = requestService.create(request);
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
 
@@ -67,7 +63,6 @@ public class RequestController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteRequest(@PathVariable Long id) {
         requestService.delete(id);
-        LOG.debug("Removed request with id: {}", id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -79,8 +74,7 @@ public class RequestController {
      */
     @PutMapping
     public ResponseEntity updateRequest(@RequestBody Request request) {
-        Request updatedRequest = requestService.update(request);
-        LOG.debug("Updated request with id: {}", updatedRequest.getId());
+        val updatedRequest = requestService.update(request);
         return new ResponseEntity<>(updatedRequest, HttpStatus.OK);
     }
 
@@ -92,8 +86,7 @@ public class RequestController {
      */
     @GetMapping("/fetch")
     public ResponseEntity<List<Request>> fetchRequestPage(@RequestParam int page) {
-        List<Request> requests = requestService.fetchPage(page);
-        LOG.debug("Fetched {} requests for page: {}", requests.size(), page);
+        val requests = requestService.fetchPage(page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -105,9 +98,8 @@ public class RequestController {
      */
     @GetMapping("/getJoinedGroupRequests/{id}")
     public ResponseEntity<List<Request>> getJoinedGroupRequests(@PathVariable Long id) {
-        Request parent = requestService.findOne(id);
-        List<Request> requests = requestService.findJoinedRequests(parent);
-        LOG.debug("Fetched {} requests for parent request with id: {}", requests.size(), id);
+        val parent = requestService.findOne(id);
+        val requests = requestService.findJoinedRequests(parent);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -119,9 +111,8 @@ public class RequestController {
      */
     @GetMapping("/getSubRequests/{id}")
     public ResponseEntity<List<Request>> getSubRequests(@PathVariable Long id) {
-        Request parent = requestService.findOne(id);
-        List<Request> requests = requestService.findSubRequests(parent);
-        LOG.debug("Fetched {} subRequests for request with id: {}", requests.size(), id);
+        val parent = requestService.findOne(id);
+        val requests = requestService.findSubRequests(parent);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -136,8 +127,7 @@ public class RequestController {
     public ResponseEntity<List<Request>> getRequestsByPeriod(@PathVariable LocalDate beginDate,
                                                              @PathVariable LocalDate endDate,
                                                              int pageNumber) {
-        List<Request> requests = requestService.findRequestsByPeriod(beginDate, endDate, pageNumber);
-        LOG.debug("Fetched {} requests created in period: {} - {}", requests.size(), beginDate, endDate);
+        val requests = requestService.findRequestsByPeriod(beginDate, endDate, pageNumber);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -149,8 +139,7 @@ public class RequestController {
      */
     @GetMapping("/getRequestByDate/{date}")
     public ResponseEntity<List<Request>> getRequestByDate(@PathVariable LocalDate date) {
-        List<Request> requests = requestService.findRequestsByDate(date);
-        LOG.debug("Fetched {} requests created on: {}", requests.size(), date);
+        val requests = requestService.findRequestsByDate(date);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 

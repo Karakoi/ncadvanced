@@ -6,7 +6,6 @@ import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
 import {Message} from "../model/message.model";
-import {Role} from "../model/role.model";
 import {PriorityStatus, ProgressStatus} from "../model/request.model";
 
 const url = '/api/users';
@@ -29,10 +28,6 @@ export class UserService {
 
   update(user: User): Observable<Response> {
     return this.authHttp.put(`${url}/${user.id}`, user).map(resp => resp.json());
-  }
-
-  getRoles(): Observable<Role[]> {
-    return this.authHttp.get(`${url}/roles`).map(resp => resp.json());
   }
 
   getPriorityStatuses(): Observable<PriorityStatus[]> {

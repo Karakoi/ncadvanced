@@ -3,6 +3,8 @@ package com.overseer.service.impl;
 import com.overseer.dao.MessageDao;
 import com.overseer.model.Message;
 import com.overseer.service.MessageService;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  * Implementation of {@link MessageService} interface.
  */
 @Service
+@Slf4j
 public class MessageServiceImpl extends CrudServiceImpl<Message> implements MessageService {
     private static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -23,11 +26,15 @@ public class MessageServiceImpl extends CrudServiceImpl<Message> implements Mess
 
     @Override
     public List<Message> findByRecipient(Long recipientId, int pageNumber) {
-        return messageDao.findByRecipient(recipientId, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = messageDao.findByRecipient(recipientId, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} messages for user with id: {}", list.size(), recipientId);
+        return list;
     }
 
     @Override
     public Long getCountByRecipient(Long recipientId) {
-        return messageDao.getCountByRecipient(recipientId);
+        val count = messageDao.getCountByRecipient(recipientId);
+        log.debug("Counted {} messages for user with id: {}", recipientId);
+        return count;
     }
 }

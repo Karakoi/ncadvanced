@@ -7,8 +7,6 @@ import com.overseer.service.UserService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,22 +25,18 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class MessageController {
-    private static final Logger LOG = LoggerFactory.getLogger(MessageController.class);
-
     private final UserService userService;
     private final MessageService messageService;
 
     @GetMapping("/users/managersByEmp")
     public ResponseEntity<List<User>> getManagersByEmployee(@RequestParam Long empId) {
         val managers = userService.findManagersByEmployee(empId);
-        LOG.debug("Fetched {} managers for employee with id: {}", managers.size(), empId);
         return new ResponseEntity<>(managers, HttpStatus.OK);
     }
 
     @GetMapping("/users/empByManager")
     public ResponseEntity<List<User>> getUsersByManager(@RequestParam Long managerId) {
         val users = userService.findUsersByManager(managerId);
-        LOG.debug("Fetched {} users for manager with id: {}", users.size(), managerId);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -57,7 +51,6 @@ public class MessageController {
     public ResponseEntity<List<Message>> getMessagesByRecipient(@RequestParam Long recipient,
                                                                 @RequestParam int pageNumber) {
         val messages = messageService.findByRecipient(recipient, pageNumber);
-        LOG.debug("Fetched {} messages for recipient with id: {}", messages.size(), recipient);
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 }

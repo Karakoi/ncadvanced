@@ -15,12 +15,12 @@ import javax.validation.constraints.Size;
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
  */
+@AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
-@ToString(of = {"title", "description", "dateOfCreation", "estimateTimeInDays"})
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
@@ -30,17 +30,14 @@ public class Request extends AbstractEntity {
     private static final int MIN_DESCRIPTION_LENGTH = 10;
     private static final int MAX_DESCRIPTION_LENGTH = 200;
 
-    @NonNull
     @NotNull
     @Size(min = MIN_TITLE_LENGTH, max = MAX_TITLE_LENGTH)
     private String title;
 
-    @NonNull
     @NotNull
     @Size(min = MIN_DESCRIPTION_LENGTH, max = MAX_DESCRIPTION_LENGTH)
     private String description;
 
-    @NonNull
     @NotNull
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -50,13 +47,15 @@ public class Request extends AbstractEntity {
 
     private ProgressStatus progressStatus;
 
-    @NonNull
     @NotNull
     private User reporter;
 
     private User assignee;
 
     private Long parentId;
+
+    @NonNull
+    private User lastChanger;
 
     private Integer estimateTimeInDays;
 }

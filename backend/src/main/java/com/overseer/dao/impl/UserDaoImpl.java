@@ -39,6 +39,7 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
      * @return user entity with encoded password.
      */
     private User encryptPassword(User user) {
+        Assert.notNull(user.getPassword(), "User has to have a password");
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String password = user.getPassword();
         String encodedPassword = encoder.encode(password);
@@ -111,12 +112,12 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
             Role role = new Role(resultSet.getString("name"));
             role.setId(resultSet.getLong("role"));
 
-            User user = new User(
-                    resultSet.getString("first_name"),
-                    resultSet.getString("last_name"),
-                    resultSet.getString("password"),
-                    resultSet.getString("email"),
-                    role);
+            User user = new User();
+            user.setFirstName(resultSet.getString("first_name"));
+            user.setLastName(resultSet.getString("last_name"));
+            user.setPassword(resultSet.getString("password"));
+            user.setEmail(resultSet.getString("email"));
+            user.setRole(role);
             user.setId(resultSet.getLong("id"));
             user.setSecondName(resultSet.getString("second_name"));
             String dateOfBirth = resultSet.getString("date_of_birth");
