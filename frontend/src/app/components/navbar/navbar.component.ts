@@ -1,6 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {AuthService} from "../../service/auth.service";
+import {UserService} from "../../service/user.service";
+import {ErrorService} from "../../service/error.service";
+import {User} from "../../model/user.model";
 
 @Component({
   selector: 'overseer-navbar',
@@ -11,7 +14,9 @@ export class NavbarComponent implements OnInit {
   isSignedIn: boolean;
 
   constructor(private router: Router,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private userService: UserService,
+              private errorService: ErrorService) {
   }
 
   ngOnInit() {
@@ -25,5 +30,17 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/authentication/login']);
+  }
+
+  errorTest() {
+    this.userService.get(10000)
+      .subscribe(
+        data => {
+          console.log("Success")
+        },
+        error => {
+          this.errorService.updateError(error);
+        }
+      );
   }
 }
