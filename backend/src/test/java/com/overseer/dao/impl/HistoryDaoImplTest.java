@@ -38,8 +38,8 @@ public class HistoryDaoImplTest {
 
     private static final String TEST_TITLE_1 = "title 1";
     private static final String TEST_TITLE_2 = "title 2";
-    private static final String TEST_DESCRIPTION_1 = "desc 1";
-    private static final String TEST_DESCRIPTION_2 = "desc 2";
+    private static final String TEST_DESCRIPTION_1 = "desc 1 some more text";
+    private static final String TEST_DESCRIPTION_2 = "desc 2 some more text";
 
     private Request request;
     private User assignee;
@@ -50,7 +50,12 @@ public class HistoryDaoImplTest {
 
         Role assigneeRole = new Role("office manager");
         assigneeRole.setId(11L);
-        assignee = new User("office manager 2", "office manager 2", "office manager 2", "office manager 2@email.com", assigneeRole);
+        assignee = new User();
+        assignee.setFirstName("office manager 2");
+        assignee.setLastName("office manager 2");
+        assignee.setPassword("office manager 2");
+        assignee.setEmail("officemanager2@email.com");
+        assignee.setRole(assigneeRole);
         assignee = this.userDao.save(assignee);
         request.setAssignee(assignee);
     }
@@ -59,18 +64,34 @@ public class HistoryDaoImplTest {
     public void createReporter() throws Exception{
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
-        User reporter = new User("EmployeeName", "EmployeeSurname", "EmployeePassword", "employeeEmail@email.com", reporterRole);
+        User reporter = new User();
+        reporter.setFirstName("EmployeeName");
+        reporter.setLastName("EmployeeSurname");
+        reporter.setPassword("EmployeePassword");
+        reporter.setEmail("employeeEmail@email.com");
+        reporter.setRole(reporterRole);
         reporter = this.userDao.save(reporter);
 
         Role assigneeRole = new Role("office manager");
         assigneeRole.setId(11L);
-        assignee = new User("office manager 1", "office manager 1", "office manager 1", "office manager 1@email.com", assigneeRole);
+        assignee = new User();
+        assignee.setFirstName("office manager 1");
+        assignee.setLastName("office manager 1");
+        assignee.setPassword("office manager 1");
+        assignee.setEmail("officemanager1@email.com");
+        assignee.setRole(assigneeRole);
         assignee = this.userDao.save(assignee);
         oldAssigneeId = assignee.getId();
 
         Role changerRole = new Role("admin");
         changerRole.setId(10L);
-        User lastChanger = new User("Bruce", "li", "qwerty123", "bruceli@email.com", changerRole);
+        User lastChanger = new User();
+        lastChanger.setFirstName("Bruce");
+        lastChanger.setLastName("li");
+        lastChanger.setPassword("qwerty123");
+        lastChanger.setEmail("bruceli@email.com");
+        lastChanger.setRole(changerRole);
+
         lastChanger = this.userDao.save(lastChanger);
 
         PriorityStatus priority = new PriorityStatus("Normal", 200);
@@ -100,8 +121,13 @@ public class HistoryDaoImplTest {
 
         Role assigneeRole = new Role("office manager");
         assigneeRole.setId(11L);
-        assignee = new User("office manager 2", "office manager 2", "office manager 2", "office manager 2@email.com", assigneeRole);
-        assignee = this.userDao.save(assignee);
+        assignee = new User();
+        assignee.setFirstName("office manager 2");
+        assignee.setLastName("office manager 2");
+        assignee.setPassword("office manager 2");
+        assignee.setEmail("officemanager2@email.com");
+        assignee.setRole(assigneeRole);
+        assignee = userDao.save(assignee);
         request.setAssignee(assignee);
 
         // when

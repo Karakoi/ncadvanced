@@ -44,17 +44,32 @@ public class RequestDaoImplTest {
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
-        reporter = new User("Mark", "Biggles", "securepass22", "valid@email.com", reporterRole);
+        reporter = new User();
+        reporter.setFirstName("Mark");
+        reporter.setLastName("Biggles");
+        reporter.setPassword("securepass22");
+        reporter.setEmail("valid@email.com");
+        reporter.setRole(reporterRole);
         reporter = this.userDao.save(reporter);
 
         Role assigneeRole = new Role("office manager");
         assigneeRole.setId(11L);
-        assignee = new User("Gavin", "Clarks", "rondo1890_", "blessed@email.com", assigneeRole);
+        assignee = new User();
+        assignee.setFirstName("Gavin");
+        assignee.setLastName("Clarks");
+        assignee.setPassword("rondo1890_");
+        assignee.setEmail("blessed@email.com");
+        assignee.setRole(assigneeRole);
         assignee = this.userDao.save(assignee);
 
         Role changerRole = new Role("admin");
         changerRole.setId(10L);
-        lastChanger = new User("Bruce", "li", "qwerty123", "bruceli@email.com", changerRole);
+        lastChanger = new User();
+        lastChanger.setFirstName("Bruce");
+        lastChanger.setLastName("li");
+        lastChanger.setPassword("qwerty123");
+        lastChanger.setEmail("bruceli@email.com");
+        lastChanger.setRole(changerRole);
         lastChanger = this.userDao.save(lastChanger);
 
         priority = new PriorityStatus("Normal", 200);

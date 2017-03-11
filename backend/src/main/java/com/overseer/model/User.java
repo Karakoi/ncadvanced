@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.validator.constraints.Email;
 
 import java.time.LocalDate;
 import javax.validation.constraints.*;
@@ -13,10 +14,9 @@ import javax.validation.constraints.*;
  * User entity.
  */
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
@@ -27,28 +27,22 @@ public class User extends AbstractEntity {
     private static final int MAX_PHONE_LENGTH = 20;
 
     @NotNull(message = "User have to have first name")
-    @NonNull
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 30")
     private String firstName;
 
     @NotNull(message = "User have to have last name")
-    @NonNull
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of last name has to be between 3 and 30")
     private String lastName;
 
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 40")
     private String secondName;
 
-    @NotNull(message = "User have to have password")
-    @NonNull
-    @Min(MIN_PASSWORD_LENGTH)
+    @NotNull(message = "User has to have password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NotNull(message = "User have to have email")
-    @NonNull
-    @Pattern(regexp = "^(?:[a-zA-Z0-9_'^&/+-])+(?:\\.(?:[a-zA-Z0-9_'^&/+-])+) *@(?:(?:\\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\\           .){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\]?)|(?:[a-zA-Z0-9-]+\\.)+(?:[a-zA-Z]){2,}\\.?)$",
-            message = "Incorrect email")
+    @Email
     private String email;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -58,7 +52,6 @@ public class User extends AbstractEntity {
     private String phoneNumber;
 
     @NotNull(message = "User have to have role")
-    @NonNull
     private Role role;
 
 }
