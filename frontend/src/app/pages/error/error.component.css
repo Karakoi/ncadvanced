@@ -1,0 +1,21 @@
+.err-msg {
+  margin-top: 25px;
+}
+
+img {
+  height: 200px;
+  width: 200px;
+}
+
+.panel {
+  border: 1px solid #EC3939;
+  color: #ffffff;
+}
+
+.panel-body {
+  color: black;
+}
+
+.panel-heading {
+  background-color: #EC3939;
+}
