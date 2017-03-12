@@ -23,6 +23,7 @@ import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} 
 import {GravatarModule} from "./shared/gravatar/gravatar.module";
 import {SideBarDirective} from "./directive/sidebar.directive";
 import {RoleService} from "./service/role.service";
+import {TopicService} from "./service/topic.service";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {RoleService} from "./service/role.service";
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
+    TopicService,
     UserService,
     RoleService,
     AuthService,
