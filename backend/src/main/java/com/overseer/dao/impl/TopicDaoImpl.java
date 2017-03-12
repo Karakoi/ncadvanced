@@ -50,7 +50,7 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
 
     @Override
     protected String getFindAllQuery() {
-        return this.queryService().getQuery("topic.findAll");
+        return this.queryService().getQuery("topic.fetchPage");
     }
 
     @Override

@@ -1,57 +1,43 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
+import {Topic} from "../../model/topic.model";
+import {TopicService} from "../../service/topic.service";
+
+declare let $: any;
 
 @Component({
   selector: 'forum-info',
   templateUrl: 'forum.component.html',
   styleUrls: ['forum.component.css']
 })
-export class ForumComponent {
+export class ForumComponent implements OnInit {
+  topics: Topic[];
+  pageCount: number;
 
-  topics = [
-    {
-      title: "Some general topic",
-      role: "Employees",
-      messages: 12,
-      lastUpdate: {
-        date: "2017-02-28 01:21",
-        author: "Eugene Deyneka"
-      }
-    },
-    {
-      title: "Some flood topic",
-      role: "Office managers",
-      messages: 21,
-      lastUpdate: {
-        date: "2017-03-02 16:21",
-        author: "Eugene Deyneka"
-      }
-    },
-    {
-      title: "Some development topic",
-      role: "Office managers",
-      messages: 34,
-      lastUpdate: {
-        date: "2017-03-02 17:33",
-        author: "Bohdan Bachkala"
-      }
-    },
-    {
-      title: "Some random topic",
-      role: "Employees",
-      messages: 7,
-      lastUpdate: {
-        date: "2017-03-04 11:21",
-        author: "Bohdan Bachkala"
-      }
-    },
-    {
-      title: "Some test topic",
-      role: "Office managers",
-      messages: 121,
-      lastUpdate: {
-        date: "2017-03-05 13:55",
-        author: "Eugene Deyneka"
-      }
+  ngOnInit(): void {
+    this.topicService.getAll(1).subscribe((topics: Topic[]) => {
+      this.topics = topics;
+      console.log(topics)
+    });
+    this.topicService.getPageCount().subscribe((count) => this.pageCount = count);
+  }
+
+  constructor(private topicService: TopicService) {
+  }
+
+  createRange(number) {
+    let items: number[] = [];
+    for (let i = 2; i <= number; i++) {
+      items.push(i);
     }
-  ]
+    return items;
+  }
+
+  load(data) {
+    $('.paginate_button').removeClass('active');
+    let page = data.target.text;
+    $(data.target.parentElement).addClass('active');
+    this.topicService.getAll(page).subscribe((topics: Topic[]) => {
+      this.topics = topics;
+    });
+  }
 }

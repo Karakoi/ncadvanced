@@ -29,7 +29,11 @@ export class TopicService {
     return this.authHttp.put(`${url}/${topic.id}`, topic).map(resp => resp.json());
   }
 
-  getAll(): Observable<Topic[]> {
-    return this.authHttp.get(`${url}`).map(resp => resp.json());
+  getAll(page: number): Observable<Topic[]> {
+    return this.authHttp.get(`${url}/fetch?page=` + page).map(resp => resp.json());
+  }
+
+  getPageCount(): Observable<number> {
+    return this.authHttp.get(`${url}/pageCount`).map(resp => resp.json());
   }
 }

@@ -20,6 +20,8 @@ public class TopicController {
 
     private final TopicService topicService;
 
+    private static final Long DEFAULT_PAGE_SIZE = 10L;
+
     /**
      * Gets {@link Topic} entity associated with provided id param.
      *
@@ -78,5 +80,28 @@ public class TopicController {
     public ResponseEntity<List<Topic>> getUserTopics(@PathVariable Long id) {
         val userTopics = topicService.findUserTopics(id);
         return new ResponseEntity<>(userTopics, HttpStatus.OK);
+    }
+
+    /**
+     * Returns number of pages.
+     *
+     * @return number of pages.
+     */
+    @GetMapping("/pageCount")
+    public ResponseEntity<Long> getPagesCount() {
+        Long pageCount = topicService.getCount() / DEFAULT_PAGE_SIZE + 1;
+        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+    }
+
+    /**
+     * Gets {@link Topic} list which corresponds to provided page.
+     *
+     * @param page identifier.
+     * @return {@link Topic} list with http status 200 OK..
+     */
+    @GetMapping("/fetch")
+    public ResponseEntity<List<Topic>> fetchRequestPage(@RequestParam int page) {
+        val topics = topicService.fetchPage(page);
+        return new ResponseEntity<>(topics, HttpStatus.OK);
     }
 }
