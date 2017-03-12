@@ -31,8 +31,15 @@ public class UserDaoImplTest {
     public void setUp() throws Exception {
         Role role = new Role("employee");
         role.setId(12L);
-        this.testUser = new User("Mark", "Bronson", "securepass22", "garry@email.com", role);
+        this.testUser = new User();
+        testUser.setFirstName("Mark");
+        testUser.setLastName("Bronson");
+        testUser.setPassword("securepass22");
+        testUser.setEmail("garry@email.com");
+        testUser.setRole(role);
+
         this.userDao.save(testUser);
+
     }
 
     @Test

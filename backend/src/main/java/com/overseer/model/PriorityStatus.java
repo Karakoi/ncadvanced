@@ -3,11 +3,13 @@ package com.overseer.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * The <code>PriorityStatus</code> class represents priority of request {@link Request}.
  */
+@AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -15,9 +17,10 @@ import lombok.*;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class PriorityStatus extends AbstractEntity {
-    @NonNull
+
+    @NotNull(message = "Role has to have name")
     private String name;
 
-    @NonNull
+    @NotNull(message = "Role has to have value")
     private int value;
 }
