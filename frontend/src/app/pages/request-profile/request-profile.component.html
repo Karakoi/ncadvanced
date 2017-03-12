@@ -1,88 +1,63 @@
-<modal [animation]="true" #requestDetailsModal>
-  <div *ngIf="request">
-    <modal-header [show-close]="true">
-      <h4 class="modal-title">
-        <b>
-          <inline-editor type="text"
-                         [(ngModel)]="request.title"
-                         (onSave)="updateRequest($event)"
-                         size="40">
-          </inline-editor>
-        </b>
-      </h4>
-    </modal-header>
-    <modal-body>
-      <!-- DETAILS & PEOPLE -->
+<div class="container" *ngIf="request">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title">
+        <inline-editor type="text"
+                       [(ngModel)]="request.title"
+                       (onSave)="updateRequest($event)"
+                       size="40"
+        >
+        </inline-editor>
+      </p>
+    </div>
+    <div class="panel-body">
+      <!-- DETAILS & PEOPLES -->
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-8">
           <p><b>Details:</b></p>
           <table class="table">
             <tbody>
-            <!--<tr>
+            <tr>
               <td><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Type:</td>
-              <td>{{request.type}}</td>
-            </tr>-->
+              <td>Request</td>
+            </tr>
             <tr>
               <td><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Progress status:</td>
               <td>
-                <div class="btn-group btn-group-xs">
-                  <button type="button" class="btn btn-success btn-sm">{{request.progressStatus.name}}</button>
-                  <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Registered</a></li>
-                    <li><a href="#">Free</a></li>
-                    <li><a href="#">In progress</a></li>
-                    <li><a href="#">Closed</a></li>
-                    <li><a href="#">Reopen</a></li>
-                  </ul>
-                </div>
+                <span class="label label-success">{{request?.progressStatus.name}}</span>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Priority status:</td>
               <td>
-                <div class="btn-group btn-group-xs">
-                  <button type="button" class="btn btn-danger btn-sm">{{request.priorityStatus.name}}</button>
-                  <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">High</a></li>
-                    <li><a href="#">Middle</a></li>
-                    <li><a href="#">Low</a></li>
-                  </ul>
-                </div>
+                <span class="label label-primary">{{request?.priorityStatus.name}}</span>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
-              <td>{{request.dateOfCreation }}</td>
+              <td>{{request?.dateOfCreation}}</td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
-              <td>{{request.estimateTimeInDays}}</td>
+              <td>{{request?.estimateTimeInDays}}</td>
             </tr>
             </tbody>
           </table>
         </div>
-        <div class="col-lg-12">
+        <div class="col-lg-4">
           <p><b>People:</b></p>
           <table class="table">
             <tbody>
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a href="#">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+                <a href="#">{{request?.reporter.firstName}} {{request?.reporter.lastName}}</a>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a href="#">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+                <a href="#">{{request?.assignee.firstName}} {{request?.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>
@@ -105,7 +80,7 @@
                 <inline-editor type="textarea"
                                [(ngModel)]="request.description"
                                (onSave)="updateRequest($event)"
-                               cols="60"
+                               cols="100"
                                rows="3">
                 </inline-editor>
               </td>
@@ -115,18 +90,46 @@
           </table>
         </div>
       </div>
-      <!--<div class="row" *ngIf="request.type == 'Request group'">
+      <!-- SUB REQUESTS -->
+      <div class="row">
         <div class="col-lg-12">
-          <p><b>Sub requests:</b></p>
-          <ul class="list-group">
-            <li *ngFor="let subRequest of request.subRequests" class="list-group-item">
-              <a href="#">{{subRequest.title}}</a>
-            </li>
-          </ul>
+          <p><b>Sub requests:</b>
+            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == true"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td *ngIf="showSubRequests"></td>
+              <td *ngIf="!showSubRequests"><i>Click arrow down to show full sub requests list</i></td>
+            </tr>
+            </tbody>
+          </table>
         </div>
-      </div>-->
+      </div>
+      <!-- JOINED REQUESTS -->
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Joined requests:</b>
+            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == true"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td *ngIf="showJoinedRequests"></td>
+              <td *ngIf="!showJoinedRequests"><i>Click arrow down to show full joined requests list</i></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       <!-- HISTORY -->
-      <!--<div class="row">
+      <div class="row">
         <div class="col-lg-12">
           <p><b>History:</b>
             <span (click)="changeShowHistory()" *ngIf="showHistory == true"
@@ -135,12 +138,6 @@
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
           <ul class="list-group" *ngIf="showHistory">
-            <li *ngFor="let historyItem of request.historyDetails" class="list-group-item">
-              <span class="badge">{{historyItem.dateOfChange}}</span>
-              <a href="#">{{historyItem.changer.firstName}} {{historyItem.changer.lastName}}</a>
-              changed {{historyItem.columnName}}
-              from '{{historyItem.oldValue}}' to '{{historyItem.newValue}}'
-            </li>
           </ul>
           <table class="table" *ngIf="!showHistory">
             <tbody>
@@ -150,8 +147,7 @@
             </tbody>
           </table>
         </div>
-      </div>-->
-    </modal-body>
+      </div>
+    </div>
   </div>
-</modal>
-
+</div>

@@ -48,6 +48,11 @@ export const appRoutes: Routes = [
     loadChildren: './pages/error/error.module#ErrorModule',
     canActivate: [PrivatePageGuard]
   },
+  {
+    path: 'request/:id',
+    loadChildren: './pages/request-profile/request-profile.module#RequestProfileModule',
+    canActivate: [PrivatePageGuard]
+  },
   // If route does not match any previous ones
   {
     path: '**',
