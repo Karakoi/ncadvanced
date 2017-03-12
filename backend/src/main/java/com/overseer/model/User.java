@@ -34,7 +34,7 @@ public class User extends AbstractEntity {
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of last name has to be between 3 and 30")
     private String lastName;
 
-    @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 40")
+    @Size(max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 40")
     private String secondName;
 
     @NotNull(message = "User has to have password")
@@ -48,7 +48,7 @@ public class User extends AbstractEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
-    @Max(value = MAX_PHONE_LENGTH, message = "Max length of phone number is 20")
+    @Size(max = MAX_PHONE_LENGTH, message = "Max length of phone number is 20")
     private String phoneNumber;
 
     @NotNull(message = "User have to have role")

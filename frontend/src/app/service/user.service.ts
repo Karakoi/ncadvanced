@@ -47,7 +47,7 @@ export class UserService {
   }
 
   getAll(page: number): Observable<User[]> {
-    return this.authHttp.get(`${url}?page=` + page).map(resp => resp.json()).publishReplay(1, 2000).refCount();
+    return this.authHttp.get(`${url}?page=${page}`).map(resp => resp.json()).publishReplay(1, 2000).refCount();
   }
 
   getPageCount(): Observable<number> {

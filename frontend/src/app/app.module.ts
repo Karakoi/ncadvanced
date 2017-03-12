@@ -6,6 +6,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ToastModule} from "ng2-toastr";
 import {appRoutes} from "./app.routes";
 import {AppComponent} from "./app.component";
+import {AlertModule} from 'ng2-bootstrap';
 import {AuthHttp, AuthConfig} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
 import {
@@ -14,6 +15,7 @@ import {
   AdminPageGuard,
   RequestService,
   RecoverService,
+  EmployeeService,
   AuthService,
   UserService,
   UserPageGuard,
@@ -34,6 +36,7 @@ import {RoleService} from "./service/role.service";
     SideBarDirective
   ],
   imports: [
+    AlertModule.forRoot(),
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
@@ -47,6 +50,7 @@ import {RoleService} from "./service/role.service";
     RoleService,
     AuthService,
     CacheService,
+    EmployeeService,
     PrivatePageGuard,
     PublicPageGuard,
     AdminPageGuard,

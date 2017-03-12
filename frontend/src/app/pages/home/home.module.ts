@@ -6,22 +6,26 @@ import {UserComponent} from "./user/user.component";
 import {AdminComponent} from "./admin/admin.component";
 import {ManagerComponent} from "./manager/manager.component";
 import {homeRoutes} from "./home.routes";
+import {PaginationModule} from "ng2-bootstrap";
+import {Ng2TableModule} from 'ng2-table/ng2-table';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(homeRoutes),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Ng2TableModule,
+    PaginationModule.forRoot()
   ],
   declarations: [
     UserComponent,
     AdminComponent,
-    ManagerComponent
+    ManagerComponent,
   ],
   exports: [
     UserComponent,
     AdminComponent,
-    ManagerComponent
+    ManagerComponent,
   ]
 })
 export class HomeModule {
