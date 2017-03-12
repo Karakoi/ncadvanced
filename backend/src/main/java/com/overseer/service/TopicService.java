@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The <code>TopicService</code> interface represents access to TopicDao.
  */
-public interface TopicService extends CrudService<Topic, Long>{
+public interface TopicService extends CrudService<Topic, Long> {
 
     /**
      * Returns all topics where user take participant.
