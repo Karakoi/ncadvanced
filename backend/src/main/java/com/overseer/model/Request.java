@@ -1,5 +1,7 @@
 package com.overseer.model;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,11 +10,10 @@ import com.overseer.util.LocalDateTimeDeserializer;
 import com.overseer.util.LocalDateTimeSerializer;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
