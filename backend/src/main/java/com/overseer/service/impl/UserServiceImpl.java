@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
+
 /**
  * Implementation of {@link UserService} interface.
  */
@@ -49,7 +50,6 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
      */
     @Override
     public User create(User user) throws EntityAlreadyExistsException {
-        Assert.notNull(user, "user must not be null");
         if (!this.emailAvailable(user)) {
             throw new EntityAlreadyExistsException("Supplied email is already taken: " + user.getEmail());
         }
