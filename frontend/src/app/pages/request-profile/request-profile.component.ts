@@ -48,8 +48,8 @@ export class RequestProfileComponent implements OnInit {
     this.showJoinedRequests = !this.showJoinedRequests;
   }
 
-  updateRequest(value) {
-
+  updateRequest() {
+    this.request.parentId = null;
     this.requestService.update(this.request)
       .subscribe(() => {
         this.toastr.success("Request updated", "Success")
