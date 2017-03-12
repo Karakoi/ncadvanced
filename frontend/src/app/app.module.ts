@@ -25,6 +25,7 @@ import {SideBarDirective} from "./directive/sidebar.directive";
 import {RoleService} from "./service/role.service";
 import {ErrorModule} from "./pages/error/error.module";
 import {ErrorService} from "./service/error.service";
+import {RequestProfileModule} from "./pages/request-profile/request-profile.module";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {ErrorService} from "./service/error.service";
   ],
   imports: [
     ErrorModule,
+    RequestProfileModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
