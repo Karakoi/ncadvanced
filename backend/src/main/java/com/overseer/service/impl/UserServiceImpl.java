@@ -27,7 +27,6 @@ import java.util.List;
 @Slf4j
 @PropertySource("classpath:security.properties")
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
-    private static final short DEFAULT_PAGE_SIZE = 20;
 
     @Value("${password.length}")
     private Integer newPasswordLength;
@@ -93,7 +92,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     @Override
     public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
-        val list = userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = userDao.findByRole(role, this.DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} users with role: {} for page number: {}", list.size(), role, pageNumber);
         return list;
     }
@@ -110,5 +109,25 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         val list = userDao.findUsersByManager(managerId);
         log.debug("Fetched {} employees for manager with id: {}", list.size(), managerId);
         return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findAllDeactivated(int pageNumber) {
+        val list = userDao.findAllDeactivated(this.DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} deactivated users for page number: {}", list.size(), pageNumber);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void activate(Long id) {
+        Assert.notNull(id, "id must not be null");
+        log.debug("Activating entity with id: {}", id);
+        userDao.activate(id);
     }
 }

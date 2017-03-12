@@ -3,10 +3,15 @@ package com.overseer.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.overseer.util.LocalDateTimeDeserializer;
+import com.overseer.util.LocalDateTimeSerializer;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.validation.constraints.*;
 
 
@@ -53,5 +58,12 @@ public class User extends AbstractEntity {
 
     @NotNull(message = "User have to have role")
     private Role role;
+
+    private Boolean isDeactivated;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime dateOfDeactivation;
+
 
 }

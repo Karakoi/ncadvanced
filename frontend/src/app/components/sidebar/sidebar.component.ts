@@ -3,6 +3,7 @@ import {AuthService, AuthEvent, DidLogin} from "../../service/auth.service";
 import {Subject} from "rxjs";
 import {User} from "../../model/user.model";
 
+
 @Component({
   selector: 'overseer-sidebar',
   templateUrl: 'sidebar.component.html',

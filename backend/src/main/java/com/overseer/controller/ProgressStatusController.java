@@ -28,7 +28,7 @@ public class ProgressStatusController {
      * @return all {@link ProgressStatus} entities.
      */
     @GetMapping
-    public ResponseEntity<List<ProgressStatus>> getProgressStatuses() {
+    public ResponseEntity<List<ProgressStatus>> getAllProgressStatuses() {
         val progressStatuses = progressStatusService.findAllProgressStatuses();
         return new ResponseEntity<>(progressStatuses, HttpStatus.OK);
     }
