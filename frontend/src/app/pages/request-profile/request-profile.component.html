@@ -1,4 +1,4 @@
-<div class="container" *ngIf="request">
+<div class="container col-lg-offset-1 col-lg-10" *ngIf="request">
   <div class="panel panel-default">
     <div class="panel-heading">
       <p class="panel-title">
@@ -99,10 +99,33 @@
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <table class="table">
+          <table class="table table-bordered">
             <tbody>
             <tr>
-              <td *ngIf="showSubRequests"></td>
+              <td *ngIf="showSubRequests"><b>Title</b></td>
+              <td *ngIf="showSubRequests"><b>Reporter</b></td>
+              <td *ngIf="showSubRequests"><b>Status</b></td>
+              <td *ngIf="showSubRequests"><b>Priority</b></td>
+            </tr>
+            <tr>
+              <td *ngIf="showSubRequests">Implement this fixture</td>
+              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showSubRequests">In progress</td>
+              <td *ngIf="showSubRequests">High</td>
+            </tr>
+            <tr>
+              <td *ngIf="showSubRequests">Fix this wonderful bug</td>
+              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showSubRequests">In progress</td>
+              <td *ngIf="showSubRequests">Low</td>
+            </tr>
+            <tr>
+              <td *ngIf="showSubRequests">Realize that functional</td>
+              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showSubRequests">In progress</td>
+              <td *ngIf="showSubRequests">Medium</td>
+            </tr>
+            <tr>
               <td *ngIf="!showSubRequests"><i>Click arrow down to show full sub requests list</i></td>
             </tr>
             </tbody>
@@ -118,11 +141,34 @@
             <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <table class="table">
+          <table class="table table-bordered">
             <tbody>
             <tr>
-              <td *ngIf="showJoinedRequests"></td>
-              <td *ngIf="!showJoinedRequests"><i>Click arrow down to show full joined requests list</i></td>
+              <td *ngIf="showJoinedRequests"><b>Title</b></td>
+              <td *ngIf="showJoinedRequests"><b>Reporter</b></td>
+              <td *ngIf="showJoinedRequests"><b>Status</b></td>
+              <td *ngIf="showJoinedRequests"><b>Priority</b></td>
+            </tr>
+            <tr>
+              <td *ngIf="showJoinedRequests">Implement this fixture</td>
+              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showJoinedRequests">In progress</td>
+              <td *ngIf="showJoinedRequests">High</td>
+            </tr>
+            <tr>
+              <td *ngIf="showJoinedRequests">Fix this wonderful bug</td>
+              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showJoinedRequests">In progress</td>
+              <td *ngIf="showJoinedRequests">Low</td>
+            </tr>
+            <tr>
+              <td *ngIf="showJoinedRequests">Realize that functional</td>
+              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showJoinedRequests">In progress</td>
+              <td *ngIf="showJoinedRequests">Medium</td>
+            </tr>
+            <tr *ngIf="!showJoinedRequests">
+              <td>Click arrow down to show full joined requests list</td>
             </tr>
             </tbody>
           </table>
@@ -137,12 +183,28 @@
             <span (click)="changeShowHistory()" *ngIf="showHistory == false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <ul class="list-group" *ngIf="showHistory">
-          </ul>
-          <table class="table" *ngIf="!showHistory">
+          <table class="table table-bordered">
             <tbody>
             <tr>
-              <td><i>Click arrow down to show full history</i></td>
+              <td *ngIf="showHistory">
+                <a href="#">Evgeniy Deyneka</a> changed Progress status from 'Open' to 'In progress'
+                <span class="badge pull-right">2017-02-28 01:23</span>
+              </td>
+            </tr>
+            <tr>
+              <td *ngIf="showHistory">
+                <a href="#">Evgeniy Deyneka</a> changed Title from 'Implement' to 'Implement profile'
+                <span class="badge pull-right">2017-02-28 00:48</span>
+              </td>
+            </tr>
+            <tr>
+              <td *ngIf="showHistory">
+                <a href="#">Bohdan Bachkala</a> changed Title from 'Implement profile' to 'Implement request profile'
+                <span class="badge pull-right">2017-02-28 01:14</span>
+              </td>
+            </tr>
+            <tr *ngIf="!showHistory">
+              <td>Click arrow down to show full history</td>
             </tr>
             </tbody>
           </table>
