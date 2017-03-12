@@ -1,0 +1,22 @@
+<modal [animation]="true" #activateUserFormModal>
+  <div *ngIf="user">
+    <modal-header [show-close]="true">
+      <b>Do you want to activate this user?</b>
+    </modal-header>
+    <modal-body>
+      <div class="form-group">
+        Full name: <label>{{user.secondName}} {{user.firstName}}</label>
+      </div>
+
+      <div class="form-group">
+        Role: <label>{{user.role.name}}</label>
+      </div>
+    </modal-body>
+    <modal-footer>
+      <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary col-md-5" (click)="activateUser($event)">Activate</button>
+        <button type="submit" class="btn btn-danger col-md-5" data-dismiss="modal">Close</button>
+      </div>
+    </modal-footer>
+  </div>
+</modal>
