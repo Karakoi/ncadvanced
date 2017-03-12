@@ -17,8 +17,8 @@ DROP TABLE IF EXISTS "public"."history";
 CREATE TABLE "public"."history" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "column_name" varchar(45) COLLATE "default" NOT NULL,
-"old_value" varchar(45) COLLATE "default",
-"new_value" varchar(45) COLLATE "default",
+"old_value" varchar(200) COLLATE "default",
+"new_value" varchar(200) COLLATE "default",
 "date_of_change" TIMESTAMP NOT NULL,
 "changer_id" int4 NOT NULL,
 "record_id" int4 NOT NULL

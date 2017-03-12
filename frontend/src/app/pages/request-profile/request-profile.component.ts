@@ -3,6 +3,8 @@ import {RequestService} from "../../service/request.service";
 import {Request} from "../../model/request.model";
 import {ActivatedRoute} from "@angular/router";
 import {ToastsManager} from "ng2-toastr";
+import {AuthService} from "../../service/auth.service";
+import {User} from "../../model/user.model";
 
 @Component({
   selector: 'request-profile',
@@ -11,6 +13,7 @@ import {ToastsManager} from "ng2-toastr";
 })
 export class RequestProfileComponent implements OnInit {
 
+  currentUser: User;
   request: Request;
   showDescription: boolean = true;
   showHistory: boolean = true;
@@ -19,7 +22,8 @@ export class RequestProfileComponent implements OnInit {
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
-              private toastr: ToastsManager) {
+              private toastr: ToastsManager,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -29,6 +33,9 @@ export class RequestProfileComponent implements OnInit {
         this.request = request;
         console.log(request)
       });
+    });
+    this.authService.currentUser.subscribe((user: User) => {
+      this.currentUser = user;
     });
   }
 
@@ -50,6 +57,7 @@ export class RequestProfileComponent implements OnInit {
 
   updateRequest() {
     this.request.parentId = null;
+    this.request.lastChanger = this.currentUser;
     this.requestService.update(this.request)
       .subscribe(() => {
         this.toastr.success("Request updated", "Success")
