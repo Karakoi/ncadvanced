@@ -25,6 +25,12 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
     }
 
     @Override
+    public List<Message> findByTopic(Long topicId) {
+        val parameterSource = new MapSqlParameterSource("topicId", topicId);
+        return jdbc().query(getByTopicQuery(), parameterSource, getMapper());
+    }
+
+    @Override
     public List<Message> findByRecipient(Long recipientId, int pageSize, int pageNumber) {
         val parameterSource = new MapSqlParameterSource("recipient", recipientId);
         parameterSource.addValue("limit", pageSize);
@@ -91,5 +97,9 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
 
     private String getCountByRecipientQuery() {
         return queryService().getQuery("message.countByRecipient");
+    }
+
+    private String getByTopicQuery() {
+        return queryService().getQuery("message.getByTopicQuery");
     }
 }
