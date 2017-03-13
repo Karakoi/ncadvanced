@@ -21,4 +21,5 @@ public class Topic extends AbstractEntity {
     @Size(min = MIN_TITLE_LENGTH, max = MAX_TITLE_LENGTH)
     private String title;
 
+    private Role role;
 }

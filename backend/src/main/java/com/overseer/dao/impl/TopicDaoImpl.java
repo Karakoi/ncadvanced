@@ -1,6 +1,7 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.TopicDao;
+import com.overseer.model.Role;
 import com.overseer.model.Topic;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -66,8 +67,12 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
     @Override
     protected RowMapper<Topic> getMapper() {
         return (resultSet, rowNum) -> {
+            Role role = new Role(resultSet.getString("name"));
+            role.setId(resultSet.getLong("id"));
+
             Topic topic = new Topic(resultSet.getString("title"));
             topic.setId(resultSet.getLong("id"));
+            topic.setRole(role);
 
             return topic;
         };
