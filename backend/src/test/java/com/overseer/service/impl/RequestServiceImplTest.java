@@ -45,18 +45,34 @@ public class RequestServiceImplTest {
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
-        reporter = new User("Tom", "Hardy", "gunner12", "some@email.com", reporterRole);
+        reporter = new User();
+        reporter.setFirstName("Tom");
+        reporter.setLastName("Hardy");
+        reporter.setPassword("gunner12");
+        reporter.setEmail( "some@email.com");
+        reporter.setRole(reporterRole);
         reporter = this.userDao.save(reporter);
 
-        Role assigneeRole = new Role("office manager");
-        assigneeRole.setId(11L);
-        assignee = new User("Tom", "Cruz", "cruzXXX", "cruzooo@email.com", assigneeRole);
-        assignee = this.userDao.save(assignee);
 
         Role changerRole = new Role("admin");
         changerRole.setId(10L);
-        lastChanger = new User("Bruce", "li", "qwerty123", "bruceli@email.com", changerRole);
+        lastChanger = new User();
+        lastChanger.setFirstName("Bruce");
+        lastChanger.setLastName("li");
+        lastChanger.setPassword("qwerty123");
+        lastChanger.setEmail("bruceli@email.com");
+        lastChanger.setRole(changerRole);
         lastChanger = this.userDao.save(lastChanger);
+
+        Role assigneeRole = new Role("office manager");
+        assigneeRole.setId(11L);
+        assignee = new User();
+        assignee.setFirstName("Tom");
+        assignee.setLastName("Cruz");
+        assignee.setPassword("cruzXXX");
+        assignee.setEmail("cruzooo@email.com");
+        assignee.setRole(assigneeRole);
+        assignee = this.userDao.save(assignee);
 
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);

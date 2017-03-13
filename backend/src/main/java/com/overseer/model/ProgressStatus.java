@@ -1,19 +1,15 @@
 package com.overseer.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The <code>ProgressStatus</code> class represents progress status of request {@link Request}.
  */
+@AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -21,9 +17,10 @@ import lombok.ToString;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class ProgressStatus extends AbstractEntity {
-    @NonNull
+
+    @NotNull(message = "ProgressStatus has to have name")
     private String name;
 
-    @NonNull
+    @NotNull(message = "ProgressStatus has to have name")
     private int value;
 }

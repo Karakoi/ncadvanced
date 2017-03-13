@@ -10,7 +10,8 @@ export interface Request {
   reporter: User,
   assignee?: User,
   parentId?: number,
-  estimateTimeInDays: number;
+  estimateTimeInDays: number,
+  lastChanger: User
 }
 
 export interface PriorityStatus {

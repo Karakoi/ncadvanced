@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
-import {RequestDetailsComponent} from "../../shared/request/request-details/request-details.component";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
 
 declare let $: any;
@@ -14,9 +13,6 @@ declare let $: any;
 export class RequestTableComponent implements OnInit {
   requests: Request[];
   pageCount: number;
-
-  @ViewChild(RequestDetailsComponent)
-  requestDetails: RequestDetailsComponent;
 
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;
@@ -60,11 +56,6 @@ export class RequestTableComponent implements OnInit {
 
   updateRequests(users: Request[]) {
     this.requests = users;
-  }
-
-  openDetailsModal(request: Request): void {
-    this.requestDetails.modal.open();
-    this.requestDetails.request = request;
   }
 
   openFormModal(): void {
