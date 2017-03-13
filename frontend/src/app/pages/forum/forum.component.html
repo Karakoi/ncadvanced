@@ -7,29 +7,25 @@
       </button>
     </div>
     <div class="template-body">
-      <ul class="list-group">
-        <li class="list-group-item titles">
-          <div class="row">
-            <div class="col-lg-9 col-sm-7 col-xs-7">
-              <b>Topic title</b>
-            </div>
-            <div class="col-lg-3 col-sm-2 col-xs-2">
-              <b>Topic role</b>
-            </div>
-          </div>
-        </li>
-        <li class="list-group-item" *ngFor="let topic of topics">
-          <div class="row">
-            <div class="col-lg-9 col-sm-6 col-xs-6">
-              <img class="topic-logo" src="http://www.crazynomad.in/img/Article1.png" alt="article-logo">
-              <a href="/topic">{{topic.title}}</a>
-            </div>
-            <div class="col-lg-3 col-sm-2 col-xs-2">
-
-            </div>
-          </div>
-        </li>
-      </ul>
+      <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Topic title</th>
+          <th>Topic role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="cursor: pointer;" *ngFor="let topic of topics" [routerLink]="['./topic', topic.id]">
+          <td class="title">
+            <img class="topic-logo" src="http://www.crazynomad.in/img/Article1.png" alt="article-logo">
+            {{topic.title}}
+          </td>
+          <td>
+            {{topic.role.name}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
       <ul class="pagination pull-right">
         <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
         <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)"><a>{{item}}</a>
@@ -39,7 +35,7 @@
   </form-template>
 
   <modal [animation]="true" #topicModal>
-    <form autocomplete="off" novalidate>
+    <form [formGroup]="topicForm" (ngSubmit)="createNewTopic(topicForm.value)" autocomplete="off" novalidate>
       <modal-header [show-close]="true">
         <h4 class="modal-title"><b>Create new topic</b></h4>
       </modal-header>
@@ -47,7 +43,7 @@
         <!--TOPIC TITLE-->
         <div class="form-group">
           <label for="title">Title:</label>
-          <input id="title" type="text" class="form-control" required/>
+          <input id="title" type="text" class="form-control" required formControlName="title"/>
         </div>
         <!--TOPIC ROLE-->
         <div class="form-group">
@@ -58,7 +54,13 @@
           </select>
         </div>
       </modal-body>
-      <modal-footer [show-default-buttons]="true"></modal-footer>
+      <modal-footer>
+        <div class="btn-toolbar">
+          <button type="submit" class="btn btn-primary col-lg-5 pull-left" [disabled]="topicForm.invalid">Submit</button>
+          <button type="button" class="btn btn-danger col-lg-5 pull-right" data-dismiss="modal">Close
+          </button>
+        </div>
+      </modal-footer>
     </form>
   </modal>
 
