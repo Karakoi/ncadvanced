@@ -84,7 +84,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
-     *
      * @param reporter requests reporter, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
@@ -93,6 +92,28 @@ public interface RequestDao extends CrudDao<Request, Long> {
         Long id = reporter.getId();
         return findRequestsByReporter(id, pageSize, pageNumber);
     }
+
+    /**
+     * Returns number of requests for reporter.
+     * @param reporterId reporter id must be not null.
+     * @return number of requests for reporter.
+     */
+    Long countRequestsByReporter(Long reporterId);
+
+    /**
+     * Returns a list of closed requests which have provided {@link User} as reporter.
+     *
+     * @param reporterId id of the reporter, must not be {@literal null}.
+     * @return list of closed requests which have provided {@link User} as reporter.
+     */
+    List<Request> findClosedRequestsByReporter(Long reporterId, int pageSize, int pageNumber);
+
+    /**
+     * Returns number of closed requests for reporter.
+     * @param reporterId reporter id must be not null.
+     * @return number of requests for reporter.
+     */
+    Long countClosedRequestsByReporter(Long reporterId);
 
     /**
      * Returns a list of requests with provided progress status {@link ProgressStatus}.

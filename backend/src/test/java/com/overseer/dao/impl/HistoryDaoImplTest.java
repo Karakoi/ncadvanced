@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Test for {@link HistoryDAO}.
  */
-/*@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 public class HistoryDaoImplTest {
@@ -187,4 +187,4 @@ public class HistoryDaoImplTest {
         assertThat(new Long(allHistoryForRequest.get(2).getNewValue()), is(assignee.getId()));
         assertThat(allHistoryForRequest.get(2).getRecordId(), is(request.getId()));
     }
-}*/
+}

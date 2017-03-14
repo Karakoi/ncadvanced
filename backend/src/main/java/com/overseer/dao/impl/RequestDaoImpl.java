@@ -24,6 +24,35 @@ import java.util.List;
 public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
     @Override
+    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageSize, int pageNumber) {
+        Assert.notNull(reporterId, "id must not be null");
+        try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+            parameterSource.addValue("reporterId", reporterId);
+            return jdbc().query(queryService().getQuery("request.select").concat(
+                    queryService().getQuery("request.findClosedByReporter")),
+                    parameterSource,
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Long countClosedRequestsByReporter(Long reporterId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countClosedByReporter"),
+                new MapSqlParameterSource("reporterId", reporterId), Long.class);
+    }
+
+    @Override
+    public Long countRequestsByReporter(Long reporterId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countByReporter"),
+                new MapSqlParameterSource("reporterId", reporterId), Long.class);
+    }
+
+    @Override
     public List<Request> findSubRequests(Long id) {
         Assert.notNull(id, "id must not be null");
         String subRequestsQuery = this.queryService().getQuery("request.select")
@@ -73,6 +102,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                     parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -172,7 +202,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
     @Override
     protected String getFindAllQuery() {
-        return queryService().getQuery("request.fetchPage");
+        return queryService().getQuery("request.select").concat("request.fetchPage");
     }
 
     @Override

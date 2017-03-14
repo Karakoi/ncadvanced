@@ -1,6 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {RequestService} from "../../../../service/request.service";
 import {LocalDataSource} from "ng2-smart-table";
+import {AuthService} from "../../../../service/auth.service";
+import {User} from "../../../../model/user.model";
+import {EmployeeService} from "../../../../service/employee.service";
 
 
 @Component({
@@ -9,56 +12,66 @@ import {LocalDataSource} from "ng2-smart-table";
   styleUrls: ['active-request.component.css']
 })
 export class ActiveRequest implements OnInit {
-  private totalItems: number = 100;
+  private totalItems: number;
   private per: number = 20;
   private data: Array<any> = new Array();
   private source: LocalDataSource = new LocalDataSource();
 
-  constructor(private requestService: RequestService) {
+  constructor(private requestService: RequestService,
+              private authService: AuthService,
+              private employeeService: EmployeeService) {
   }
 
   changed(data) {
-    this.requestService.getAll(data.page).subscribe(requests => {
-      requests.forEach(r => {
-        if (r.assignee.firstName === null) {
-          r.assignee.firstName = "";
-          r.assignee.lastName = "";
-        }
-        this.data.shift()
-        this.data.push({
-          "title": r.title,
-          "description": r.description,
-          "estimateTime": r.estimateTimeInDays,
-          "dateOfCreation": r.dateOfCreation,
-          "assignee": r.assignee.firstName + " " + r.assignee.lastName,
-          "priority": r.priorityStatus.name,
-          "progress": r.progressStatus.name
+    this.authService.currentUser.subscribe(u => {
+      u;
+      this.employeeService.getRequestsByReporter(u.id, data.page).subscribe(requests => {
+        requests.forEach(r => {
+          if (r.assignee.firstName === null) {
+            r.assignee.firstName = "";
+            r.assignee.lastName = "";
+          }
+          this.data.shift()
+          this.data.push({
+            "title": r.title,
+            "description": r.description,
+            "estimateTime": r.estimateTimeInDays,
+            "dateOfCreation": r.dateOfCreation,
+            "assignee": r.assignee.firstName + " " + r.assignee.lastName,
+            "priority": r.priorityStatus.name,
+            "progress": r.progressStatus.name
+          })
         })
+        this.source.load(this.data);
       })
-      this.source.load(this.data);
+      this.source.setPage(data.page)
     })
-
-    this.source.setPage(data.page)
   }
 
   ngOnInit() {
-    this.requestService.getAll(1).subscribe(requests => {
-      requests.forEach(r => {
-        if (r.assignee.firstName === null) {
-          r.assignee.firstName = "";
-          r.assignee.lastName = "";
-        }
-        this.data.push({
-          "title": r.title,
-          "description": r.description,
-          "estimateTime": r.estimateTimeInDays,
-          "dateOfCreation": r.dateOfCreation,
-          "assignee": r.assignee.firstName + " " + r.assignee.lastName,
-          "priority": r.priorityStatus.name,
-          "progress": r.progressStatus.name
+    this.authService.currentUser.subscribe(u => {
+      u;
+      this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
+        requests.forEach(r => {
+          if (r.assignee.firstName === null) {
+            r.assignee.firstName = "";
+            r.assignee.lastName = "";
+          }
+          this.data.push({
+            "title": r.title,
+            "description": r.description,
+            "estimateTime": r.estimateTimeInDays,
+            "dateOfCreation": r.dateOfCreation,
+            "assignee": r.assignee.firstName + " " + r.assignee.lastName,
+            "priority": r.priorityStatus.name,
+            "progress": r.progressStatus.name
+          })
         })
+        this.source.load(this.data);
       })
-      this.source.load(this.data);
+      this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
+          this.totalItems = count;
+        })
     })
   }
 

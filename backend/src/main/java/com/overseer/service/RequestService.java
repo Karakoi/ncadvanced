@@ -13,7 +13,22 @@ import java.util.List;
  * The <code>RequestService</code> interface represents access to RequestDao.
  */
 public interface RequestService extends CrudService<Request, Long> {
+    /**
+     * Returns a list of closed requests which have provided {@link User} as reporter.
+     *
+     * @param reporterId id of the reporter, must not be {@literal null}.
+     * @return list of closed requests which have provided {@link User} as reporter.
+     */
+    List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber);
 
+    /**
+     * Returns number of closed requests for reporter.
+     * @param reporterId reporter id must be not null.
+     * @return number of requests for reporter.
+     */
+    Long countClosedRequestsByReporter(Long reporterId);
+
+    Long countRequestByReporter(Long reporterId);
     /**
      * Returns a list of sub requests for the given request {@link Request}.
      *

@@ -155,9 +155,26 @@ public class RequestController {
     }
 
     @GetMapping("/requestsByReporter")
-    public ResponseEntity<List<Request>> getRequestsByAssignee(@RequestParam long userId, int pageNumber) {
-        System.out.println("userid:" + userId + "pageNumber" + pageNumber);
+    public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
         val requests = requestService.findRequestsByReporter(userId, pageNumber);
         return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/closedRequestsByReporter")
+    public ResponseEntity<List<Request>> getClosedRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
+        val requests = requestService.findClosedRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/countRequestsByReporter")
+    public ResponseEntity<Long> countRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countRequestByReporter(reporterId), HttpStatus.OK);
+    }
+
+    @GetMapping("/countClosedRequestsByReporter")
+    public ResponseEntity<Long> countClosedRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countClosedRequestsByReporter(reporterId), HttpStatus.OK);
     }
 }
