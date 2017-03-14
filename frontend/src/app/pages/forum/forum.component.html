@@ -41,9 +41,12 @@
       </modal-header>
       <modal-body>
         <!--TOPIC TITLE-->
-        <div class="form-group">
+        <div class="form-group" [ngClass]="{'has-error': !validate('title')}">
           <label for="title">Title:</label>
           <input id="title" type="text" class="form-control" required formControlName="title"/>
+          <div *ngIf="!validate('title')" class="help-block text-left">
+            <span *ngIf="topicForm.get('title')">Title length should be between 2 and 20 characters.</span>
+          </div>
         </div>
         <!--TOPIC ROLE-->
         <div class="form-group">

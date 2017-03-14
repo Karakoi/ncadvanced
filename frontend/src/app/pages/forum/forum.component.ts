@@ -31,7 +31,7 @@ export class ForumComponent implements OnInit {
       title: null
     };
     this.topicForm = this.formBuilder.group({
-      title: ['', Validators.required]
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]]
     });
     this.topicService.getAll(1).subscribe((topics: Topic[]) => {
       this.topics = topics;
@@ -43,6 +43,10 @@ export class ForumComponent implements OnInit {
   constructor(private topicService: TopicService,
               private formBuilder: FormBuilder,
               private toastr: ToastsManager) {
+  }
+
+  validate(field: string): boolean {
+    return this.topicForm.get(field).valid || !this.topicForm.get(field).dirty;
   }
 
   createNewTopic(params) {

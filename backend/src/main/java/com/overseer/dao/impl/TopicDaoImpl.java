@@ -4,7 +4,6 @@ import com.overseer.dao.TopicDao;
 import com.overseer.model.Message;
 import com.overseer.model.Role;
 import com.overseer.model.Topic;
-import com.overseer.model.User;
 import lombok.val;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
