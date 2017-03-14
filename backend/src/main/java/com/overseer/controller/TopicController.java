@@ -108,8 +108,9 @@ public class TopicController {
     }
 
     @PostMapping("/message")
-    public void createTopicMessage(@RequestBody Message message) {
+    public ResponseEntity<Message> createTopicMessage(@RequestBody Message message) {
         Assert.notNull(message.getText(), "Message has to have text");
-        topicService.saveTopicMessage(message);
+        val savedMessage = topicService.saveTopicMessage(message);
+        return new ResponseEntity<>(savedMessage, HttpStatus.OK);
     }
 }

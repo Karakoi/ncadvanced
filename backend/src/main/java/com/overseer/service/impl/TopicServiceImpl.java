@@ -38,7 +38,7 @@ public class TopicServiceImpl extends CrudServiceImpl<Topic> implements TopicSer
      * {@inheritDoc}.
      */
     @Override
-    public void saveTopicMessage(Message message) {
-        topicDao.saveTopicMessage(message);
+    public Message saveTopicMessage(Message message) {
+        return topicDao.saveTopicMessage(message);
     }
 }

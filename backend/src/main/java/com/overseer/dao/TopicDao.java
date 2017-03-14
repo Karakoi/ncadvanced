@@ -23,5 +23,5 @@ public interface TopicDao extends SimpleEntityDao<Topic> {
      *
      * @param message topic message
      */
-    void saveTopicMessage(Message message);
+    Message saveTopicMessage(Message message);
 }

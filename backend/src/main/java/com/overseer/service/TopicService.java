@@ -23,5 +23,5 @@ public interface TopicService extends CrudService<Topic, Long> {
      *
      * @param message topic message
      */
-    void saveTopicMessage(Message message);
+    Message saveTopicMessage(Message message);
 }

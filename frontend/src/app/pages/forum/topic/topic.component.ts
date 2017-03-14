@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
 import {TopicService} from "../../../service/topic.service";
 import {Topic} from "../../../model/topic.model";
 import {ActivatedRoute} from "@angular/router";
@@ -9,6 +9,7 @@ import {AuthService} from "../../../service/auth.service";
 import {Response} from "@angular/http";
 import {ToastsManager} from "ng2-toastr";
 
+
 @Component({
   selector: 'topic-info',
   templateUrl: 'topic.component.html',
@@ -17,7 +18,10 @@ import {ToastsManager} from "ng2-toastr";
 export class TopicComponent implements OnInit {
   messageForm: FormGroup;
   topic: Topic;
+  @Input()
   messages: Message[];
+  @Output()
+  updated: EventEmitter<any> = new EventEmitter();
   message: Message;
   user: User;
 
@@ -40,7 +44,7 @@ export class TopicComponent implements OnInit {
     });
 
     this.messageForm = this.formBuilder.group({
-      text: ['', Validators.required]
+      text: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(500)]]
     });
 
     this.route.params.subscribe(params => {
@@ -59,13 +63,24 @@ export class TopicComponent implements OnInit {
     });
   }
 
+  validate(field: string): boolean {
+    return this.messageForm.get(field).valid || !this.messageForm.get(field).dirty;
+  }
+
   createNewMessage(params) {
     this.message.text = params.text;
     this.message.dateAndTime = new Date();
     this.message.topic = this.topic;
     this.topicService.createMessage(this.message).subscribe((resp: Response) => {
+      console.log(resp);
+      this.updateArray(<Message> resp.json());
       this.toastr.success("Message sended", "Success")
     }, e => this.handleErrorCreateMessage(e));
+  }
+
+  private updateArray(message: Message): void {
+    this.messages.push(message);
+    this.updated.emit(this.messages);
   }
 
   private handleErrorCreateMessage(error) {

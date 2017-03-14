@@ -38,7 +38,7 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
      * {@inheritDoc}.
      */
     @Override
-    public void saveTopicMessage(Message message) {
+    public Message saveTopicMessage(Message message) {
         Assert.notNull(message, "message must not be null");
         val parameterSource = new MapSqlParameterSource("text", message.getText());
         parameterSource.addValue("senderId", message.getSender().getId());
@@ -48,6 +48,7 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
         this.jdbc().update(this.queryService().getQuery("topic.saveTopicMessage"),
                 parameterSource,
                 keyHolder);
+        return message;
     }
 
     @Override
@@ -95,6 +96,31 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
             topic.setId(resultSet.getLong("id"));
 
             return topic;
+        };
+    }
+
+    protected RowMapper<Message> getTopicMessageMapper() {
+        return (resultSet, i) -> {
+            Role role = new Role();
+            role.setName(resultSet.getString("name"));
+
+            User sender = new User();
+            sender.setId(resultSet.getLong("sender_id"));
+            sender.setFirstName(resultSet.getString("sender_first_name"));
+            sender.setLastName(resultSet.getString("sender_last_name"));
+            sender.setRole(role);
+
+            Topic topic = new Topic(resultSet.getString("title"), role);
+            topic.setId(resultSet.getLong("id"));
+
+            Message message = new Message();
+            message.setText(resultSet.getString("text"));
+            message.setId(resultSet.getLong("id"));
+            message.setSender(sender);
+            message.setTopic(topic);
+            message.setDateAndTime(resultSet.getTimestamp("date_and_time").toLocalDateTime());
+
+            return message;
         };
     }
 }

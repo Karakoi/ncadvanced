@@ -22,8 +22,11 @@
           </div>
         </li>
       </ul>
-      <form [formGroup]="messageForm" (ngSubmit)="createNewMessage(messageForm.value)">
+      <form [formGroup]="messageForm" (ngSubmit)="createNewMessage(messageForm.value)" [ngClass]="{'has-error': !validate('text')}">
         <textarea class="form-control" rows="3" formControlName="text"></textarea>
+        <div *ngIf="!validate('text')" class="help-block text-left">
+          <span *ngIf="messageForm.get('text')">Message length should be between 2 and 500 characters.</span>
+        </div>
         <button type="submit" class="btn btn-primary pull-right" [disabled]="messageForm.invalid">Submit message</button>
       </form>
       <ul class="pagination pull-left">
