@@ -153,4 +153,11 @@ public class RequestController {
         Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
+
+    @GetMapping("/requestsByReporter")
+    public ResponseEntity<List<Request>> getRequestsByAssignee(@RequestParam long userId, int pageNumber) {
+        System.out.println("userid:" + userId + "pageNumber" + pageNumber);
+        val requests = requestService.findRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
 }

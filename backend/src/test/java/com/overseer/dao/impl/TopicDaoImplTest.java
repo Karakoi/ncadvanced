@@ -69,12 +69,12 @@ public class TopicDaoImplTest {
         Assert.assertTrue(actual);
     }
 
-    @Test
+    /* @Test Bad test for production db
     public void count() throws Exception {
         final Long expected = 23L;
         final Long actual = topicDao.count();
         Assert.assertEquals(expected, actual);
-    }
+    } */
 
     @Test
     public void findByName() throws Exception {

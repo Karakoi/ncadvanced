@@ -4,6 +4,7 @@ import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
+import io.jsonwebtoken.lang.Assert;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,10 +33,18 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Returns a list of requests which have provided {@link User} as assignee.
      *
-     * @param assignee requests assignee, must not be {@literal null}.
+     * @param assigneeId requests assignee, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as assignee.
      */
-    List<Request> findRequestsByAssignee(User assignee, int pageNumber);
+    List<Request> findRequestsByAssignee(Long assigneeId, int pageNumber);
+
+    /**
+     * Returns a list of requests which have provided {@link User} as reporter.
+     *
+     * @param reporterId requests reporterId, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as reporter.
+     */
+    List<Request> findRequestsByReporter(Long reporterId, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -43,7 +52,10 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param reporter requests reporter, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    List<Request> findRequestsByReporter(User reporter, int pageNumber);
+    default List<Request> findRequestsByReporter(User reporter, int pageNumber) {
+        Assert.notNull(reporter);
+        return findRequestsByReporter(reporter.getId(), pageNumber);
+    }
 
     /**
      * Returns a list of requests with provided progress status {@link ProgressStatus}.
@@ -93,7 +105,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * Sub request will have null {@link Request#progressStatus}, {@link Request#priorityStatus}
      * and not null {@link Request#parentId}
      *
-     * @param subRequest specified sub request
+     * @param subRequest    specified sub request
      * @param parentRequest specified parent request
      * @return joined sub request
      */

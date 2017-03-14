@@ -4,7 +4,6 @@ import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
-import com.overseer.model.User;
 import com.overseer.service.RequestService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -59,11 +58,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByAssignee(User assignee, int pageNumber) {
-        Assert.notNull(assignee, "assignee must not be null");
-        val list = this.requestDao.findRequestsByAssignee(assignee, DEFAULT_PAGE_SIZE, pageNumber);
+    public List<Request> findRequestsByAssignee(Long assigneeId, int pageNumber) {
+        Assert.notNull(assigneeId, "assignee must not be null");
+        val list = this.requestDao.findRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
-                list.size(), assignee.getId(), pageNumber);
+                list.size(), assigneeId, pageNumber);
         return list;
     }
 
@@ -71,11 +70,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByReporter(User reporter, int pageNumber) {
-        Assert.notNull(reporter, "reporter must not be null");
-        val list = this.requestDao.findRequestsByReporter(reporter, DEFAULT_PAGE_SIZE, pageNumber);
+    public List<Request> findRequestsByReporter(Long reporterId, int pageNumber) {
+        Assert.notNull(reporterId, "reporter must not be null");
+        val list = this.requestDao.findRequestsByReporter(reporterId, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests for reporter with id: {} for page number: {}",
-                list.size(), reporter.getId(), pageNumber);
+                list.size(), reporterId, pageNumber);
         return list;
     }
 

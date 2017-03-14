@@ -51,6 +51,7 @@ public class RequestServiceImplTest {
         reporter.setPassword("gunner12");
         reporter.setEmail( "some@email.com");
         reporter.setRole(reporterRole);
+
         reporter = this.userDao.save(reporter);
 
 
