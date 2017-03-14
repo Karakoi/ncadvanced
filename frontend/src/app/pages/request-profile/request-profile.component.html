@@ -185,24 +185,19 @@
           </p>
           <table class="table table-bordered">
             <tbody>
-            <tr>
+
+            <tr *ngFor="let history of historyRecords" >
               <td *ngIf="showHistory">
-                <a href="#">Evgeniy Deyneka</a> changed Progress status from 'Open' to 'In progress'
-                <span class="badge pull-right">2017-02-28 01:23</span>
+                <span>
+                  Field <span class="bold-text">"{{history.columnName}}"</span>
+                  was changed from <span class="bold-text">"{{history.oldValue}}"</span>
+                  to <span class="bold-text">"{{history.newValue}}"</span>
+                  by <span class="bold-text"><a href="">"{{history.changer.firstName}} {{history.changer.lastName}}"</a></span>
+                  <span class="bold-text"><span class="badge pull-right">"todo DATE :)"{{history.dateOfChanges}}</span></span>
+                </span>
               </td>
             </tr>
-            <tr>
-              <td *ngIf="showHistory">
-                <a href="#">Evgeniy Deyneka</a> changed Title from 'Implement' to 'Implement profile'
-                <span class="badge pull-right">2017-02-28 00:48</span>
-              </td>
-            </tr>
-            <tr>
-              <td *ngIf="showHistory">
-                <a href="#">Bohdan Bachkala</a> changed Title from 'Implement profile' to 'Implement request profile'
-                <span class="badge pull-right">2017-02-28 01:14</span>
-              </td>
-            </tr>
+
             <tr *ngIf="!showHistory">
               <td>Click arrow down to show full history</td>
             </tr>
