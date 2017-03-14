@@ -9,11 +9,9 @@
         <li class="list-group-item" *ngFor="let message of messages">
           <div class="row">
             <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
-              <p><img class="topic-user-logo"
-                      src="http://www.iconsfind.com/wp-content/uploads/2016/10/20161014_58006bf27a2d0.png"
-                      alt="topic-user-logo"></p>
-              <b><a href="">{{message.sender.firstName}} {{message.sender.lastName}}</a></b>
-              <!--<span>{{message.sender.role}}</span><br>-->
+              <p><gravatar [email]="message.sender.email" [size]="80"></gravatar></p>
+              <b><a href="">{{message.sender.firstName}} {{message.sender.lastName}}</a></b><br>
+              <span>{{message.sender.role.name}}</span><br>
             </div>
             <div class="col-lg-10 col-sm-9 col-xs-9">
               <p>{{message.text}}</p>

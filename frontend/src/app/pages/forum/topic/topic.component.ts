@@ -40,6 +40,7 @@ export class TopicComponent implements OnInit {
     };
 
     this.authService.currentUser.subscribe((user: User) => {
+      console.log(user);
       this.message.sender = user;
     });
 
@@ -72,7 +73,6 @@ export class TopicComponent implements OnInit {
     this.message.dateAndTime = new Date();
     this.message.topic = this.topic;
     this.topicService.createMessage(this.message).subscribe((resp: Response) => {
-      console.log(resp);
       this.updateArray(<Message> resp.json());
       this.toastr.success("Message sended", "Success")
     }, e => this.handleErrorCreateMessage(e));

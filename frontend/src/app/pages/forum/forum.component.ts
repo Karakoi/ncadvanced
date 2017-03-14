@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild, Input, Output, EventEmitter} from "@angular/core";
 import {Topic} from "../../model/topic.model";
 import {TopicService} from "../../service/topic.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -15,7 +15,10 @@ declare let $: any;
 })
 export class ForumComponent implements OnInit {
   topicForm: FormGroup;
+  @Input()
   topics: Topic[];
+  @Output()
+  updated: EventEmitter<any> = new EventEmitter();
   topic: Topic;
   pageCount: number;
 
@@ -45,9 +48,15 @@ export class ForumComponent implements OnInit {
   createNewTopic(params) {
     this.topic.title = params.title;
     this.topicService.create(this.topic).subscribe((resp: Response) => {
-      this.toastr.success("Topic " + this.topic.title + " created", "Success")
+      this.toastr.success("Topic " + this.topic.title + " created", "Success");
+      this.updateArray(this.topic);
       this.modal.close();
     }, e => this.handleErrorCreateTopic(e));
+  }
+
+  private updateArray(topic: Topic): void {
+    this.topics.unshift(topic);
+    this.updated.emit(this.topics);
   }
 
   private handleErrorCreateTopic(error) {
@@ -70,6 +79,7 @@ export class ForumComponent implements OnInit {
     let page = data.target.text;
     $(data.target.parentElement).addClass('active');
     this.topicService.getAll(page).subscribe((topics: Topic[]) => {
+      console.log(topics);
       this.topics = topics;
     });
   }

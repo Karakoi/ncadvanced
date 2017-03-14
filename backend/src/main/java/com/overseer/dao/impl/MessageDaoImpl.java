@@ -3,6 +3,7 @@ package com.overseer.dao.impl;
 
 import com.overseer.dao.MessageDao;
 import com.overseer.model.Message;
+import com.overseer.model.Role;
 import com.overseer.model.User;
 import lombok.val;
 import org.springframework.jdbc.core.RowMapper;
@@ -45,10 +46,14 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
     @Override
     protected RowMapper<Message> getMapper() {
         return (resultSet, i) -> {
+            Role role = new Role(resultSet.getString("name"));
+
             User sender = new User();
             sender.setId(resultSet.getLong("sender_id"));
             sender.setFirstName(resultSet.getString("sender_first_name"));
             sender.setLastName(resultSet.getString("sender_last_name"));
+            sender.setEmail(resultSet.getString("sender_email"));
+            sender.setRole(role);
 
             User recipient = new User();
             recipient.setId(resultSet.getLong("recipient_id"));
