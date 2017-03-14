@@ -51,7 +51,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     default List<Request> findJoinedRequests(Request parent) {
         Assert.notNull(parent);
         Long id = parent.getId();
-        return findSubRequests(id);
+        return findJoinedRequests(id);
     }
 
     /**
@@ -158,4 +158,20 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return filtered list of requests
      */
     List<Request> findRequestsByIds(List<Long> ids);
+
+    /**
+     * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
+     *
+     * @param statusIds list of progress status ids, must not be {@literal null}
+     * @param reporterId id of the reporter, must not be {@literal null}.
+     * @return list of requests
+     */
+    List<Request> findRequestsByProgressStatusesAndReporterId(List<Long> statusIds, Long reporterId);
+
+    /**
+     * Deletes parent request if it has no children.
+     *
+     * @param parentId list of progress status ids, must not be {@literal null}
+     */
+    void deleteParentRequestIfItHasNoChildren(Long parentId);
 }

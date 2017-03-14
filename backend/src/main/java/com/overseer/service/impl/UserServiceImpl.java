@@ -1,12 +1,15 @@
 package com.overseer.service.impl;
 
+import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.UserDao;
+import com.overseer.exception.RemovingYourselfException;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
+import com.overseer.service.RequestService;
 import com.overseer.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -31,15 +34,22 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     @Value("${password.length}")
     private Integer newPasswordLength;
 
+    private SecurityContextService securityContextService;
+
     private EmailService emailService;
     private EmailBuilder<User> emailStrategy;
     private UserDao userDao;
+    private RequestService requestService;
 
     public UserServiceImpl(UserDao userDao,
+                           RequestService requestService,
+                           SecurityContextService securityContextService,
                            EmailService emailService,
                            @Qualifier("recoverBuilderImpl") EmailBuilder<User> emailStrategy) {
         super(userDao);
         this.userDao = userDao;
+        this.requestService = requestService;
+        this.securityContextService = securityContextService;
         this.emailService = emailService;
         this.emailStrategy = emailStrategy;
     }
@@ -53,6 +63,19 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
             throw new EntityAlreadyExistsException("Supplied email is already taken: " + user.getEmail());
         }
         return super.create(user);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void delete(Long id) {
+        User currentUser = securityContextService.currentUser();
+        if (id.equals(currentUser.getId())) {
+            throw new RemovingYourselfException("Id of current user is equals to id of user that is deleting ");
+        }
+        requestService.closeAllRequestsOfGivenReporter(id);
+        super.delete(id);
     }
 
     /**

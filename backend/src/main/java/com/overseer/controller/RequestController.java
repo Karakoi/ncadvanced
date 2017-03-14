@@ -43,6 +43,20 @@ public class RequestController {
     }
 
     /**
+     * Creates sub request of {@link Request} entity.
+     *
+     * @param subRequest json object which represents {@link Request} entity.
+     * @param idParentRequest id of parent request.
+     * @return json representation of created {@link Request} entity.
+     */
+    @PostMapping("/createSubRequest")
+    public ResponseEntity<Request> createSubRequest(@RequestBody Request subRequest,
+                                                    @RequestParam Long idParentRequest) {
+        val createdRequest = requestService.saveSubRequest(subRequest, idParentRequest);
+        return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
+    }
+
+    /**
      * Creates {@link Request} entity.
      *
      * @param request json object which represents {@link Request} entity.
@@ -70,12 +84,48 @@ public class RequestController {
      * Updates {@link Request} entity.
      *
      * @param request json object which represents {@link Request} entity.
-     * @return json representation of created {@link Request} entity.
+     * @return json representation of updated {@link Request} entity.
      */
     @PutMapping
     public ResponseEntity updateRequest(@RequestBody Request request) {
         val updatedRequest = requestService.update(request);
         return new ResponseEntity<>(updatedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Assignes {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of assigned {@link Request} entity.
+     */
+    @PutMapping("/assignRequest")
+    public ResponseEntity assignRequest(@RequestBody Request request) {
+        val assignedRequest = requestService.assignRequest(request);
+        return new ResponseEntity<>(assignedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Closes {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of closed {@link Request} entity.
+     */
+    @PutMapping("/closeRequest")
+    public ResponseEntity closeRequest(@RequestBody Request request) {
+        val closedRequest = requestService.closeRequest(request);
+        return new ResponseEntity<>(closedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Reopens {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of reopend {@link Request} entity.
+     */
+    @PutMapping("/reopenRequest")
+    public ResponseEntity reopenRequest(@RequestBody Request request) {
+        val reopendRequest = requestService.reopenRequest(request);
+        return new ResponseEntity<>(reopendRequest, HttpStatus.OK);
     }
 
     /**
