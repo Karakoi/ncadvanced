@@ -60,7 +60,8 @@ export class RequestFormComponent implements OnInit {
         description: null,
         priorityStatus: null,
         estimateTimeInDays: null,
-        dateOfCreation: null
+        dateOfCreation: null,
+        lastChanger: user
       };
     });
 
