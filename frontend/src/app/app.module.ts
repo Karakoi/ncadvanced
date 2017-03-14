@@ -23,6 +23,9 @@ import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} 
 import {GravatarModule} from "./shared/gravatar/gravatar.module";
 import {SideBarDirective} from "./directive/sidebar.directive";
 import {RoleService} from "./service/role.service";
+import {ErrorModule} from "./pages/error/error.module";
+import {ErrorService} from "./service/error.service";
+import {RequestProfileModule} from "./pages/request-profile/request-profile.module";
 import {TopicService} from "./service/topic.service";
 
 @NgModule({
@@ -35,6 +38,8 @@ import {TopicService} from "./service/topic.service";
     SideBarDirective
   ],
   imports: [
+    ErrorModule,
+    RequestProfileModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
@@ -44,6 +49,7 @@ import {TopicService} from "./service/topic.service";
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
+    ErrorService,
     TopicService,
     UserService,
     RoleService,
