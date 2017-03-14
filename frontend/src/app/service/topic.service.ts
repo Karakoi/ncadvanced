@@ -4,6 +4,7 @@ import {Http, Response} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {Topic} from "../model/topic.model";
+import {Message} from "../model/message.model";
 
 const url = '/api/topics';
 
@@ -35,5 +36,13 @@ export class TopicService {
 
   getPageCount(): Observable<number> {
     return this.authHttp.get(`${url}/pageCount`).map(resp => resp.json());
+  }
+
+  getMessages(id: number): Observable<Message[]> {
+    return this.authHttp.get(`/api/messagesByTopic?topicId=${id}`).map(resp => resp.json());
+  }
+
+  createMessage(message: Message): Observable<Response> {
+    return this.authHttp.post(`/api/sendMessage`, message);
   }
 }

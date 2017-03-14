@@ -1,8 +1,8 @@
-<div class="container">
+<div class="container" *ngIf="topic">
 
   <form-template>
     <div class="template-header">
-      Some important topic title
+      {{topic.title}}
     </div>
     <div class="template-body">
       <ul class="list-group">
@@ -10,21 +10,21 @@
           <div class="row">
             <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
               <p><img class="topic-user-logo"
-                      src="{{message.img}}"
+                      src="http://www.iconsfind.com/wp-content/uploads/2016/10/20161014_58006bf27a2d0.png"
                       alt="topic-user-logo"></p>
-              <b><a href="">{{message.author.firstName}} {{message.author.lastName}}</a></b>
-              <span>{{message.author.role}}</span><br>
+              <b><a href="">{{message.sender.firstName}} {{message.sender.lastName}}</a></b>
+              <!--<span>{{message.sender.role}}</span><br>-->
             </div>
             <div class="col-lg-10 col-sm-9 col-xs-9">
               <p>{{message.text}}</p>
-              <p class="pull-right">{{message.dateOfCreation}}</p>
+              <p class="pull-right">{{message.dateAndTime[2]}}-{{message.dateAndTime[1]}}-{{message.dateAndTime[0]}}</p>
             </div>
           </div>
         </li>
       </ul>
-      <form action="">
-        <textarea class="form-control" rows="3"></textarea>
-        <button type="submit" class="btn btn-primary pull-right">Submit message</button>
+      <form [formGroup]="messageForm" (ngSubmit)="createNewMessage(messageForm.value)">
+        <textarea class="form-control" rows="3" formControlName="text"></textarea>
+        <button type="submit" class="btn btn-primary pull-right" [disabled]="messageForm.invalid">Submit message</button>
       </form>
       <ul class="pagination pull-left">
         <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
