@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.model.Message;
 import com.overseer.model.Topic;
 
 import java.util.List;
@@ -16,4 +17,11 @@ public interface TopicService extends CrudService<Topic, Long> {
      * @return all user topics
      */
     List<Topic> findUserTopics(Long userId);
+
+    /**
+     * Saved specified topic message.
+     *
+     * @param message topic message
+     */
+    void saveTopicMessage(Message message);
 }

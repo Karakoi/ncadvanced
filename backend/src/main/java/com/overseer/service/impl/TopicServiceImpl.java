@@ -2,6 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.CrudDao;
 import com.overseer.dao.TopicDao;
+import com.overseer.model.Message;
 import com.overseer.model.Topic;
 import com.overseer.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,13 @@ public class TopicServiceImpl extends CrudServiceImpl<Topic> implements TopicSer
     public List<Topic> findUserTopics(Long userId) {
         log.debug("Fetched all topics for user with id: {}", userId);
         return topicDao.findUserTopics(userId);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void saveTopicMessage(Message message) {
+        topicDao.saveTopicMessage(message);
     }
 }

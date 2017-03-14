@@ -1,10 +1,15 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.TopicDao;
+import com.overseer.model.Message;
 import com.overseer.model.Role;
 import com.overseer.model.Topic;
+import com.overseer.model.User;
+import lombok.val;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -27,6 +32,22 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
         return this.jdbc().query(this.queryService().getQuery("topic.findUserTopics"),
                 new MapSqlParameterSource("userId", userId),
                 this.getMapper());
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void saveTopicMessage(Message message) {
+        Assert.notNull(message, "message must not be null");
+        val parameterSource = new MapSqlParameterSource("text", message.getText());
+        parameterSource.addValue("senderId", message.getSender().getId());
+        parameterSource.addValue("topicId", message.getTopic().getId());
+        parameterSource.addValue("dateAndTime", message.getDateAndTime());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbc().update(this.queryService().getQuery("topic.saveTopicMessage"),
+                parameterSource,
+                keyHolder);
     }
 
     @Override
@@ -75,6 +96,31 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
             topic.setRole(role);
 
             return topic;
+        };
+    }
+
+    protected RowMapper<Message> getTopicMessageMapper() {
+        return (resultSet, i) -> {
+            Role role = new Role();
+            role.setName(resultSet.getString("name"));
+
+            User sender = new User();
+            sender.setId(resultSet.getLong("sender_id"));
+            sender.setFirstName(resultSet.getString("sender_first_name"));
+            sender.setLastName(resultSet.getString("sender_last_name"));
+            sender.setRole(role);
+
+            Topic topic = new Topic(resultSet.getString("title"));
+            topic.setId(resultSet.getLong("id"));
+
+            Message message = new Message();
+            message.setText(resultSet.getString("text"));
+            message.setId(resultSet.getLong("id"));
+            message.setSender(sender);
+            message.setTopic(topic);
+            message.setDateAndTime(resultSet.getTimestamp("date_and_time").toLocalDateTime());
+
+            return message;
         };
     }
 }

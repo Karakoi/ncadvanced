@@ -1,7 +1,9 @@
 package com.overseer.controller;
 
+import com.overseer.model.Message;
 import com.overseer.model.Topic;
 import com.overseer.service.TopicService;
+import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -103,5 +105,11 @@ public class TopicController {
     public ResponseEntity<List<Topic>> fetchRequestPage(@RequestParam int page) {
         val topics = topicService.fetchPage(page);
         return new ResponseEntity<>(topics, HttpStatus.OK);
+    }
+
+    @PostMapping("/message")
+    public void createTopicMessage(@RequestBody Message message) {
+        Assert.notNull(message.getText(), "Message has to have text");
+        topicService.saveTopicMessage(message);
     }
 }
