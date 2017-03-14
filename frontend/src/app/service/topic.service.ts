@@ -43,6 +43,6 @@ export class TopicService {
   }
 
   createMessage(message: Message): Observable<Response> {
-    return this.authHttp.post(`/api/sendMessage`, message);
+    return this.authHttp.post(`${url}/message`, message);
   }
 }

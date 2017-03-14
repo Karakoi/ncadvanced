@@ -28,7 +28,7 @@ public class TopicDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-        testTopic = new Topic("Some topic");
+//        testTopic = new Topic("Some topic");
         testTopic = topicDao.save(testTopic);
         testTopicId = testTopic.getId();
     }

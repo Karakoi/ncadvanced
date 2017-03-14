@@ -30,7 +30,7 @@ export class TopicComponent implements OnInit {
 
   ngOnInit(): void {
     this.message = {
-      sender: this.user,
+      sender: null,
       text: null,
       dateAndTime: null
     };
@@ -46,7 +46,6 @@ export class TopicComponent implements OnInit {
     this.route.params.subscribe(params => {
       let id = +params['id'];
       this.topicService.get(id).subscribe((topic: Topic) => {
-        console.log(topic);
         this.topic = topic;
       });
     });
@@ -63,8 +62,7 @@ export class TopicComponent implements OnInit {
   createNewMessage(params) {
     this.message.text = params.text;
     this.message.dateAndTime = new Date();
-    this.message.sender.password = "";
-    console.log(this.message);
+    this.message.topic = this.topic;
     this.topicService.createMessage(this.message).subscribe((resp: Response) => {
       this.toastr.success("Message sended", "Success")
     }, e => this.handleErrorCreateMessage(e));
