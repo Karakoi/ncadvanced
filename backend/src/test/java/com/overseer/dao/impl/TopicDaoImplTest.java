@@ -1,6 +1,7 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.TopicDao;
+import com.overseer.model.Role;
 import com.overseer.model.Topic;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,9 +27,12 @@ public class TopicDaoImplTest {
 
     private Long testTopicId;
 
+    private Role role;
+
     @Before
     public void setUp() throws Exception {
-        testTopic = new Topic("Some topic");
+        role = new Role("admin");
+        testTopic = new Topic("Some topic", role);
         testTopic = topicDao.save(testTopic);
         testTopicId = testTopic.getId();
     }
@@ -67,11 +71,5 @@ public class TopicDaoImplTest {
     public void exists() throws Exception {
         final boolean actual = topicDao.exists(testTopicId);
         Assert.assertTrue(actual);
-    }
-
-    @Test
-    public void findByName() throws Exception {
-        final Topic actual = topicDao.findByName(testTopic.getTitle());
-        Assert.assertEquals(testTopic, actual);
     }
 }

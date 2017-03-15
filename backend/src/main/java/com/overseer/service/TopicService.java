@@ -1,4 +1,4 @@
-package com.overseer.dao;
+package com.overseer.service;
 
 import com.overseer.model.Message;
 import com.overseer.model.Topic;
@@ -6,15 +6,15 @@ import com.overseer.model.Topic;
 import java.util.List;
 
 /**
- * The <code>TopicDao</code> interface represents access to {@link Topic} object in database.
+ * The <code>TopicService</code> interface represents access to TopicDao.
  */
-public interface TopicDao extends SimpleEntityDao<Topic> {
+public interface TopicService extends CrudService<Topic, Long> {
 
     /**
-     * Find all topics where user post messages.
+     * Returns all topics where user take participant.
      *
-     * @param userId specified user id
-     * @return all topics for input user
+     * @param userId user id
+     * @return all user topics
      */
     List<Topic> findUserTopics(Long userId);
 
