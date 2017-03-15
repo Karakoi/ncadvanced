@@ -19,7 +19,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-/*@Transactional*/
+@Transactional
 public class RequestServiceImplTest {
 
     @Autowired
