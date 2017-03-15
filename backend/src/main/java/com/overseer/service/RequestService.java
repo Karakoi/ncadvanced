@@ -126,4 +126,11 @@ public interface RequestService extends CrudService<Request, Long> {
      */
     Request saveSubRequest(Request subRequest, Request parentRequest);
 
+    /**
+     * Save plain request from employee.
+     * @param request specified  request.
+     * @return saved request
+     */
+    Request createEmpRequest(Request request);
+
 }

@@ -1,9 +1,11 @@
 package com.overseer.service.impl;
 
+import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
+import com.overseer.model.User;
 import com.overseer.service.RequestService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -26,15 +28,17 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     private static final Long JOINED_STATUS = 6L;
 
     private RequestDao requestDao;
+    private ProgressStatusDao progressStatusDao;
 
     @Override
     public Long countRequestByReporter(Long reporterId) {
         return requestDao.countRequestsByReporter(reporterId);
     }
 
-    public RequestServiceImpl(RequestDao requestDao) {
+    public RequestServiceImpl(RequestDao requestDao, ProgressStatusDao progressStatusDao) {
         super(requestDao);
         this.requestDao = requestDao;
+        this.progressStatusDao = progressStatusDao;
     }
 
     /**
@@ -214,5 +218,14 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Long countClosedRequestsByReporter(Long reporterId) {
         Assert.notNull(reporterId, "Reporter id must be not null");
         return requestDao.countRequestsByReporterAndProgress(reporterId, "Closed");
+    }
+
+    @Override
+    public Request createEmpRequest(Request request) {
+        request.setDateOfCreation(LocalDateTime.now());
+        val progress = progressStatusDao.findByName("Free");
+        request.setProgressStatus(progress);
+        request.setAssignee(new User());
+        return requestDao.save(request);
     }
 }

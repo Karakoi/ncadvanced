@@ -64,4 +64,9 @@ export class EmployeeService {
         return Observable.throw(error);
       });
   }
+
+  createEmployeeRequest(request: Request): Observable<Response> {
+    console.log(request);
+    return this.authHttp.post(`${url}/employeeRequest`, request);
+  }
 }

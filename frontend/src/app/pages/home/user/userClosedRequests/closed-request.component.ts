@@ -1,9 +1,15 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {RequestService} from "../../../../service/request.service";
 import {LocalDataSource} from "ng2-smart-table";
 import {AuthService} from "../../../../service/auth.service";
 import {EmployeeService} from "../../../../service/employee.service";
 import {PriorityStatus} from "../../../../model/priority.model";
+import {UserService} from "../../../../service/user.service";
+import {FormBuilder, Validators, FormGroup} from "@angular/forms";
+import {User} from "../../../../model/user.model";
+import {Response} from "@angular/http";
+import {ToastsManager} from "ng2-toastr";
+import {ModalDirective} from "ng2-bootstrap";
 
 
 
@@ -13,20 +19,25 @@ import {PriorityStatus} from "../../../../model/priority.model";
   styleUrls: ['closed-request.component.css']
 })
 export class ClosedRequest implements OnInit {
+  @ViewChild('staticModal') public staticModal:ModalDirective;
   private priorities: PriorityStatus[];
+  private currentUser: User;
   private totalItems: number = 20;
   private per: number = 20;
   private data:Array<any> = new Array();
   private source: LocalDataSource = new LocalDataSource() ;
+  private userFormGroup: FormGroup;
 
-  constructor(private requestService: RequestService,
-              private authService: AuthService,
-              private employeeService: EmployeeService) {
+  constructor(private authService: AuthService,
+              private employeeService: EmployeeService,
+              private formBuilder: FormBuilder,
+              private userService: UserService,
+              private toastr: ToastsManager) {
   }
 
   changed(data) {
     this.authService.currentUser.subscribe(u => {
-      u;
+      this.currentUser = u;
       this.employeeService.getClosedRequestsByReporter(u.id, data.page).subscribe(requests => {
         requests.forEach(r => {
           if (r.assignee.firstName === null) {
@@ -51,8 +62,17 @@ export class ClosedRequest implements OnInit {
   }
 
   ngOnInit() {
+    this.userFormGroup = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(45)]],
+      priorityStatus: ['', Validators.required],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
+    });
+
+    this.userService.getPriorityStatuses().subscribe(priorities => {
+      this.priorities = priorities;
+    });
     this.authService.currentUser.subscribe(u => {
-      u;
+      this.currentUser = u;
       this.employeeService.getClosedRequestsByReporter(u.id, 1).subscribe(requests => {
         requests.forEach(r => {
           if (r.assignee.firstName === null) {
@@ -108,7 +128,22 @@ export class ClosedRequest implements OnInit {
     },
   };
 
-  some(data){
-    console.log(data)
+  createNewSimpleRequest(param){
+    console.log("trying to send");
+    param.lastChanger = this.currentUser;
+    param.reporter = this.currentUser;
+    this.employeeService.createEmployeeRequest(param).subscribe(
+      (resp: Response) => {
+        this.staticModal.hide();
+        this.toastr.success("Request have been added");
+      },
+      (err) => { // on error console.log(err);
+        this.toastr.error("Something gone wrong");
+      }
+    );
+  }
+
+  validate(field: string): boolean {
+    return this.userFormGroup.get(field).valid || !this.userFormGroup.get(field).dirty;
   }
 }

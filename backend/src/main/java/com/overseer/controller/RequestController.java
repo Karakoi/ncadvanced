@@ -177,4 +177,9 @@ public class RequestController {
     public ResponseEntity<Long> countClosedRequestByReporter(@RequestParam Long reporterId) {
         return new ResponseEntity<>(requestService.countClosedRequestsByReporter(reporterId), HttpStatus.OK);
     }
+
+    @PostMapping("/employeeRequest")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Request request) {
+        return new ResponseEntity<>(requestService.createEmpRequest(request), HttpStatus.OK);
+    }
 }
