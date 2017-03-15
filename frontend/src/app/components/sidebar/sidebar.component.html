@@ -29,6 +29,9 @@
       <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
     </li>
     <li>
+      <a [routerLink]="['/deactivatedUsers']" *ngIf="isAdmin()">Show all deactivated users</a>
+    </li>
+    <li>
       <a [routerLink]="['/requests']" *ngIf="isAdmin()">Show all requests</a>
     </li>
   </ul>

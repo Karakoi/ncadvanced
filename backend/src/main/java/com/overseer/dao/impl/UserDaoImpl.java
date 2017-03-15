@@ -125,6 +125,13 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
                 user.setDateOfBirth(LocalDate.parse(dateOfBirth));
             }
             user.setPhoneNumber(resultSet.getString("phone_number"));
+            try {
+                user.setIsDeactivated(resultSet.getBoolean("is_deactivated"));
+                user.setDateOfDeactivation(resultSet.getTimestamp("date_of_deactivation").toLocalDateTime());
+            } catch (java.sql.SQLException e) {
+                user.setIsDeactivated(null);
+                user.setDateOfDeactivation(null);
+            }
             return user;
         };
     }
@@ -154,5 +161,26 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
         return this.jdbc().query(this.queryService().getQuery("manager.users"),
                 new MapSqlParameterSource("assignee", managerId),
                 this.getMapper());
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findAllDeactivated(int pageSize, int pageNumber) {
+        Assert.state(pageNumber > 0, "Must be greater then 0");
+        val parameterSource = new MapSqlParameterSource("limit", pageSize);
+        parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+        String findAllDeactivatedQuery = this.queryService().getQuery("user.findAllDeactivated");
+        return this.jdbc().query(findAllDeactivatedQuery, parameterSource, this.getMapper());
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void activate(Long id) {
+        Assert.notNull(id, "id must not be null");
+        this.jdbc().update(this.queryService().getQuery("user.activate"), new MapSqlParameterSource("id", id));
     }
 }

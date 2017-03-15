@@ -94,9 +94,40 @@ public interface RequestService extends CrudService<Request, Long> {
      * and not null {@link Request#parentId}
      *
      * @param subRequest specified sub request
-     * @param parentRequest specified parent request
+     * @param idParentRequest id of specified parent request
      * @return joined sub request
      */
-    Request saveSubRequest(Request subRequest, Request parentRequest);
+    Request saveSubRequest(Request subRequest, Long idParentRequest);
+
+    /**
+     * Assigns request to specified office manager and changes it {@link Request#progressStatus}.
+     *
+     * @param request specified request
+     * @return assigned request
+     */
+    Request assignRequest(Request request);
+
+    /**
+     * Closes request and changes it {@link Request#progressStatus}.
+     *
+     * @param request specified request
+     * @return closed request
+     */
+    Request closeRequest(Request request);
+
+    /**
+     * Reopens request and changes it {@link Request#progressStatus}.
+     *
+     * @param requestId id of specified request
+     * @return reopened request
+     */
+    Request reopenRequest(Long requestId);
+
+    /**
+     * Closes all requests which have provided {@link User} as reporter and have specified {@link ProgressStatus}.
+     *
+     * @param reporterId id of the reporter, must not be {@literal null}.
+     */
+    void closeAllRequestsOfGivenReporter(Long reporterId);
 
 }

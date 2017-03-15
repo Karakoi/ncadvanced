@@ -47,4 +47,19 @@ public interface UserService extends CrudService<User, Long> {
      */
     List<User> findUsersByManager(Long managerId);
 
+    /**
+     * Returns a list of {@link User} entities who's deactivated.
+     *
+     * @param pageNumber number of page.
+     * @return a list of {@link User} entities.
+     */
+    List<User> findAllDeactivated(int pageNumber);
+
+    /**
+     * Activates {@link User} entity with given id.
+     *
+     * @param id user's id, must not be {@literal null}.
+     */
+    void activate(Long id);
+
 }
