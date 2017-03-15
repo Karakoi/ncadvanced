@@ -26,27 +26,14 @@ public class TopicDaoImplTest {
 
     private Long testTopicId;
 
+    private Role role;
+
     @Before
     public void setUp() throws Exception {
-        testTopic = new Topic("Some topic");
+        role = new Role("admin");
+        testTopic = new Topic("Some topic", role);
         testTopic = topicDao.save(testTopic);
         testTopicId = testTopic.getId();
-    }
-
-    @Test
-    public void findUserTopics() throws Exception {
-        final Long userId = 16L;
-        final List<Topic> userTopics = topicDao.findUserTopics(userId);
-        final int expected = 12;
-        final int actual = userTopics.size();
-        Assert.assertEquals(expected, actual);
-    }
-
-
-    @Test
-    public void save() throws Exception {
-        final Topic actual = topicDao.findOne(testTopicId);
-        Assert.assertEquals(testTopic, actual);
     }
 
     @Test
@@ -67,18 +54,5 @@ public class TopicDaoImplTest {
     public void exists() throws Exception {
         final boolean actual = topicDao.exists(testTopicId);
         Assert.assertTrue(actual);
-    }
-
-    /* @Test Bad test for production db
-    public void count() throws Exception {
-        final Long expected = 23L;
-        final Long actual = topicDao.count();
-        Assert.assertEquals(expected, actual);
-    } */
-
-    @Test
-    public void findByName() throws Exception {
-        final Topic actual = topicDao.findByName(testTopic.getTitle());
-        Assert.assertEquals(testTopic, actual);
     }
 }

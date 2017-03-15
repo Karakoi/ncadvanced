@@ -10,3 +10,7 @@ table {
 .paginate_button {
     cursor: pointer;
 }
+
+.delete-col {
+  width: 20px;
+}

@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -37,6 +36,7 @@ public class UserDaoImplTest {
         testUser.setPassword("securepass22");
         testUser.setEmail("garry@email.com");
         testUser.setRole(role);
+        //testUser.setIsDeactivated(false);
 
         this.userDao.save(testUser);
 

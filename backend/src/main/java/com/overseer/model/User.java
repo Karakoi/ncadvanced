@@ -54,4 +54,11 @@ public class User extends AbstractEntity {
     @NotNull(message = "User have to have role")
     private Role role;
 
+    private Boolean isDeactivated;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime dateOfDeactivation;
+
+
 }

@@ -39,6 +39,11 @@ export const appRoutes: Routes = [
     canActivate: [PrivatePageGuard, AdminPageGuard]
   },
   {
+    path: 'deactivatedUsers',
+    loadChildren: './pages/user-table-deactivated/user-table-deactivated.module#UserTableDeactivatedModule',
+    canActivate: [PrivatePageGuard, AdminPageGuard]
+  },
+  {
     path: 'requests',
     loadChildren: './pages/request-table/request-table.module#RequestTableModule',
     canActivate: [PrivatePageGuard, AdminPageGuard]

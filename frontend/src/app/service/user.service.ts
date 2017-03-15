@@ -44,7 +44,14 @@ export class UserService {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
+  }
 
+  activate(id: number): Observable<Response> {
+    return this.authHttp.get(`${url}/activate/${id}`)
+        .catch((error: any) => {
+          this.errorService.processError(error);
+          return Observable.throw(error);
+        });
   }
 
   getPriorityStatuses(): Observable<PriorityStatus[]> {
@@ -85,6 +92,15 @@ export class UserService {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
+  }
+
+  getAllDeactivated(page: number): Observable<User[]> {
+    return this.authHttp.get(`${url}/deactivated?page=` + page)
+        .map(resp => resp.json()).publishReplay(1, 2000).refCount()
+        .catch((error: any) => {
+          this.errorService.processError(error);
+          return Observable.throw(error);
+        });
   }
 
   getPageCount(): Observable<number> {

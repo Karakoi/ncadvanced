@@ -24,22 +24,22 @@
             <tr>
               <td><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Progress status:</td>
               <td>
-                <span class="label label-success">{{request?.progressStatus.name}}</span>
+                <span class="label label-success">{{request.progressStatus.name}}</span>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Priority status:</td>
               <td>
-                <span class="label label-primary">{{request?.priorityStatus.name}}</span>
+                <span class="label label-primary">{{request.priorityStatus.name}}</span>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
-              <td>{{request?.dateOfCreation}}</td>
+              <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
-              <td>{{request?.estimateTimeInDays}}</td>
+              <td>{{request.estimateTimeInDays}}</td>
             </tr>
             </tbody>
           </table>
@@ -51,13 +51,13 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a href="#">{{request?.reporter.firstName}} {{request?.reporter.lastName}}</a>
+                <a href="#">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a href="#">{{request?.assignee.firstName}} {{request?.assignee.lastName}}</a>
+                <a href="#">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>
@@ -126,7 +126,7 @@
               <td *ngIf="showSubRequests">Medium</td>
             </tr>
             <tr>
-              <td *ngIf="!showSubRequests"><i>Click arrow down to show full sub requests list</i></td>
+              <td *ngIf="!showSubRequests">Click arrow down to show full sub requests list</td>
             </tr>
             </tbody>
           </table>
@@ -178,36 +178,33 @@
       <div class="row">
         <div class="col-lg-12">
           <p><b>History:</b>
-            <span (click)="changeShowHistory()" *ngIf="showHistory == true"
+            <span (click)="changeShowHistory()" *ngIf="showHistory == true && historyRecords.length > 0"
                   class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
-            <span (click)="changeShowHistory()" *ngIf="showHistory == false"
+            <span (click)="changeShowHistory()" *ngIf="showHistory == false && historyRecords.length > 0"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
           <table class="table table-bordered">
             <tbody>
-            <tr>
+
+            <tr *ngFor="let history of historyRecords">
               <td *ngIf="showHistory">
-                <a href="#">Evgeniy Deyneka</a> changed Progress status from 'Open' to 'In progress'
-                <span class="badge pull-right">2017-02-28 01:23</span>
+                <span>
+                  Field <span class="bold-text">"{{history.columnName}}"</span>
+                  was changed from <span class="bold-text">"{{history.oldValue}}"</span>
+                  to <span class="bold-text">"{{history.newValue}}"</span>
+                  by <span class="bold-text"><a href="">"{{history.changer.firstName}} {{history.changer.lastName}}"</a></span>
+                  <span class="bold-text"><span class="badge pull-right">"2017-10-10"</span></span>
+                </span>
               </td>
-            </tr>
-            <tr>
-              <td *ngIf="showHistory">
-                <a href="#">Evgeniy Deyneka</a> changed Title from 'Implement' to 'Implement profile'
-                <span class="badge pull-right">2017-02-28 00:48</span>
-              </td>
-            </tr>
-            <tr>
-              <td *ngIf="showHistory">
-                <a href="#">Bohdan Bachkala</a> changed Title from 'Implement profile' to 'Implement request profile'
-                <span class="badge pull-right">2017-02-28 01:14</span>
-              </td>
-            </tr>
-            <tr *ngIf="!showHistory">
-              <td>Click arrow down to show full history</td>
             </tr>
             </tbody>
           </table>
+          <div *ngIf="!showHistory && historyRecords.length > 0">
+            Click arrow down to show full history
+          </div>
+          <div *ngIf="historyRecords.length == 0">
+            This object was not changed.
+          </div>
         </div>
       </div>
     </div>

@@ -27,6 +27,8 @@ import {RoleService} from "./service/role.service";
 import {ErrorModule} from "./pages/error/error.module";
 import {ErrorService} from "./service/error.service";
 import {RequestProfileModule} from "./pages/request-profile/request-profile.module";
+import {TopicService} from "./service/topic.service";
+import {HistoryService} from "./service/history.service";
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import {RequestProfileModule} from "./pages/request-profile/request-profile.modu
   ],
   providers: [
     ErrorService,
+    TopicService,
+    HistoryService,
     UserService,
     RoleService,
     AuthService,

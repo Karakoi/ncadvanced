@@ -1,13 +1,19 @@
 table {
   background-color: white;
 }
+
 .paginate_button {
   cursor: pointer;
 }
+
 .pagination {
   margin: 0;
 }
+
 .buttons {
   margin-bottom: 0;
 }
 
+.delete-col {
+  width: 20px;
+}

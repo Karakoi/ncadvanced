@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container col-lg-offset-2 col-lg-8" *ngIf="topics">
 
   <form-template>
     <div class="template-header">
@@ -7,64 +7,46 @@
       </button>
     </div>
     <div class="template-body">
-      <ul class="list-group">
-        <li class="list-group-item titles">
-          <div class="row">
-            <div class="col-lg-7 col-sm-7 col-xs-7">
-              <b>Topic title</b>
-            </div>
-            <div class="col-lg-2 col-sm-2 col-xs-2">
-              <b>Topic role</b>
-            </div>
-            <div class="col-lg-1 col-sm-1 col-xs-1">
-              <b>Messages</b>
-            </div>
-            <div class="col-lg-2 col-sm-2 col-xs-2">
-              <b>Last update</b>
-            </div>
-          </div>
+      <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Topic title</th>
+          <th>Topic role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="cursor: pointer;" *ngFor="let topic of topics" [routerLink]="['./topic', topic.id]">
+          <td class="title">
+            <img class="topic-logo" src="http://www.crazynomad.in/img/Article1.png" alt="article-logo">
+            {{topic.title}}
+          </td>
+          <td>
+            <!--{{topic.role.name}}-->
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <ul class="pagination pull-right">
+        <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
+        <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)"><a>{{item}}</a>
         </li>
-        <li class="list-group-item" *ngFor="let topic of topics">
-          <div class="row">
-            <div class="col-lg-7 col-sm-6 col-xs-6">
-              <img class="topic-logo" src="http://www.crazynomad.in/img/Article1.png" alt="article-logo">
-              <a href="/topic">{{topic.title}}</a>
-            </div>
-            <div class="col-lg-2 col-sm-2 col-xs-2">
-              {{topic.role}}
-            </div>
-            <div class="col-lg-1 col-sm-1 col-xs-1 text-center">
-              {{topic.messages}}
-            </div>
-            <div class="col-lg-2 col-sm-3 col-xs-3">
-              by <a href="#">{{topic.lastUpdate.author}}</a><br>
-              {{topic.lastUpdate.date}}
-            </div>
-          </div>
-        </li>
-      </ul>
-      <ul class="pagination pull-left">
-        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
       </ul>
     </div>
   </form-template>
 
   <modal [animation]="true" #topicModal>
-    <form autocomplete="off" novalidate>
+    <form [formGroup]="topicForm" (ngSubmit)="createNewTopic(topicForm.value)" autocomplete="off" novalidate>
       <modal-header [show-close]="true">
         <h4 class="modal-title"><b>Create new topic</b></h4>
       </modal-header>
       <modal-body>
         <!--TOPIC TITLE-->
-        <div class="form-group">
+        <div class="form-group" [ngClass]="{'has-error': !validate('title')}">
           <label for="title">Title:</label>
-          <input id="title" type="text" class="form-control" required/>
+          <input id="title" type="text" class="form-control" required formControlName="title"/>
+          <div *ngIf="!validate('title')" class="help-block text-left">
+            <span *ngIf="topicForm.get('title')">Title length should be between 2 and 20 characters.</span>
+          </div>
         </div>
         <!--TOPIC ROLE-->
         <div class="form-group">
@@ -75,7 +57,13 @@
           </select>
         </div>
       </modal-body>
-      <modal-footer [show-default-buttons]="true"></modal-footer>
+      <modal-footer>
+        <div class="btn-toolbar">
+          <button type="submit" class="btn btn-primary col-lg-5 pull-left" [disabled]="topicForm.invalid">Submit</button>
+          <button type="button" class="btn btn-danger col-lg-5 pull-right" data-dismiss="modal">Close
+          </button>
+        </div>
+      </modal-footer>
     </form>
   </modal>
 
