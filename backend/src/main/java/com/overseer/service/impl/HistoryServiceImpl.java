@@ -1,12 +1,10 @@
 package com.overseer.service.impl;
 
 import com.overseer.dao.HistoryDAO;
-import com.overseer.dao.impl.HistoryDaoImpl;
 import com.overseer.model.History;
 import com.overseer.service.HistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

@@ -1,12 +1,11 @@
 package com.overseer.service;
 
-import com.overseer.dao.HistoryDAO;
 import com.overseer.model.History;
 
 import java.util.List;
 
 /**
- * The <code>HistoryService</code> interface represents access to {@link HistoryDAO}.
+ * The <code>HistoryService</code> interface represents access to {@link com.overseer.dao.HistoryDAO}.
  */
 public interface HistoryService {
 
