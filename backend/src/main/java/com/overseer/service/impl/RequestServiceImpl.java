@@ -40,6 +40,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     private RequestDao requestDao;
     private ProgressStatusDao progressStatusDao;
 
+    @Override
+    public Long countRequestByReporter(Long reporterId) {
+        return requestDao.countRequestsByReporter(reporterId);
+    }
+
     private EmailBuilder<Request> emailStrategyForAssignee;
     private EmailBuilder<Request> emailStrategyForReporter;
     private EmailService emailService;
@@ -51,6 +56,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                               @Qualifier("employeeNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForReporter) {
         super(requestDao);
         this.requestDao = requestDao;
+        this.progressStatusDao = progressStatusDao;
         this.progressStatusDao = progressStatusDao;
         this.emailService = emailService;
         this.emailStrategyForAssignee = emailStrategyForAssignee;
@@ -83,11 +89,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByAssignee(User assignee, int pageNumber) {
-        Assert.notNull(assignee, "assignee must not be null");
-        val list = this.requestDao.findRequestsByAssignee(assignee, DEFAULT_PAGE_SIZE, pageNumber);
+    public List<Request> findRequestsByAssignee(Long assigneeId, int pageNumber) {
+        Assert.notNull(assigneeId, "assignee must not be null");
+        val list = this.requestDao.findRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
-                list.size(), assignee.getId(), pageNumber);
+                list.size(), assigneeId, pageNumber);
         return list;
     }
 
@@ -95,11 +101,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByReporter(User reporter, int pageNumber) {
-        Assert.notNull(reporter, "reporter must not be null");
-        val list = this.requestDao.findRequestsByReporter(reporter, DEFAULT_PAGE_SIZE, pageNumber);
+    public List<Request> findRequestsByReporter(Long reporterId, int pageNumber) {
+        Assert.notNull(reporterId, "reporter must not be null");
+        val list = this.requestDao.findRequestsByReporter(reporterId, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests for reporter with id: {} for page number: {}",
-                list.size(), reporter.getId(), pageNumber);
+                list.size(), reporterId, pageNumber);
         return list;
     }
 
@@ -355,5 +361,29 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                 .map(Request::getPriorityStatus)
                 .max(Comparator.comparingInt(PriorityStatus::getValue))
                 .orElseThrow(UnsupportedOperationException::new);
+    }
+
+
+    @Override
+    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber) {
+        Assert.notNull(reporterId, "Reporter id must be not null");
+        Assert.notNull(pageNumber, "Page number must be not null");
+        return requestDao.findRequestsByReporterAndProgress(reporterId, "Closed",
+                DEFAULT_PAGE_SIZE, pageNumber);
+    }
+
+    @Override
+    public Long countClosedRequestsByReporter(Long reporterId) {
+        Assert.notNull(reporterId, "Reporter id must be not null");
+        return requestDao.countRequestsByReporterAndProgress(reporterId, "Closed");
+    }
+
+    @Override
+    public Request createEmpRequest(Request request) {
+        request.setDateOfCreation(LocalDateTime.now());
+        val progress = progressStatusDao.findByName("Free");
+        request.setProgressStatus(progress);
+        request.setAssignee(new User());
+        return requestDao.save(request);
     }
 }

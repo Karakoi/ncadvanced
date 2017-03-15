@@ -203,4 +203,47 @@ public class RequestController {
         Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
+
+    @GetMapping("/requestsByReporter")
+    public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
+        val requests = requestService.findRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/closedRequestsByReporter")
+    public ResponseEntity<List<Request>> getClosedRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
+        val requests = requestService.findClosedRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/countRequestsByReporter")
+    public ResponseEntity<Long> countRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countRequestByReporter(reporterId), HttpStatus.OK);
+    }
+
+    @GetMapping("/countClosedRequestsByReporter")
+    public ResponseEntity<Long> countClosedRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countClosedRequestsByReporter(reporterId), HttpStatus.OK);
+    }
+
+    @PostMapping("/employeeRequest")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Request request) {
+        return new ResponseEntity<>(requestService.createEmpRequest(request), HttpStatus.OK);
+    }
+
+    /**
+     * Reopen array of requests.
+     * @param requestsId array of request id's.
+     * @return reopened requests.
+     */
+    @PostMapping("/reopen")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Long[] requestsId) {
+        System.out.println("requests id ");
+        for (Long g : requestsId) {
+            System.out.println(g);
+        }
+        return new ResponseEntity<>(new Request(), HttpStatus.OK);
+    }
 }

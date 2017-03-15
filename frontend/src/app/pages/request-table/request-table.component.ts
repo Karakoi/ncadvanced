@@ -36,9 +36,6 @@ export class RequestTableComponent implements OnInit {
     this.deleteRequestComponent.modal.open();
   }
 
-  updateRequests(requests: Request[]) {
-    this.requests = requests;
-  }
 
   get sorted(): Request[] {
     return this.requests
@@ -65,6 +62,10 @@ export class RequestTableComponent implements OnInit {
     this.requestService.getAll(page).subscribe((requests: Request[]) => {
       this.requests = requests;
     });
+  }
+
+  updateRequests(request: Request[]) {
+    this.requests = request;
   }
 
   openFormModal(): void {
