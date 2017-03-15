@@ -201,16 +201,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                 .orElseThrow(UnsupportedOperationException::new);
     }
 
+
     @Override
     public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber) {
         Assert.notNull(reporterId, "Reporter id must be not null");
         Assert.notNull(pageNumber, "Page number must be not null");
-        return requestDao.findClosedRequestsByReporter(reporterId, DEFAULT_PAGE_SIZE, pageNumber);
+        return requestDao.findRequestsByReporterAndProgress(reporterId, "Closed",
+                DEFAULT_PAGE_SIZE, pageNumber);
     }
 
     @Override
     public Long countClosedRequestsByReporter(Long reporterId) {
         Assert.notNull(reporterId, "Reporter id must be not null");
-        return requestDao.countClosedRequestsByReporter(reporterId);
+        return requestDao.countRequestsByReporterAndProgress(reporterId, "Closed");
     }
 }

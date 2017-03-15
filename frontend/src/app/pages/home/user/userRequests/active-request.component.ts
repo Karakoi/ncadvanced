@@ -2,7 +2,10 @@ import {Component, OnInit} from "@angular/core";
 import {LocalDataSource} from "ng2-smart-table";
 import {AuthService} from "../../../../service/auth.service";
 import {EmployeeService} from "../../../../service/employee.service";
-
+import {PriorityStatus} from "../../../../model/priority.model";
+import {UserService} from "../../../../service/user.service";
+import {FormGroup, Validators, FormBuilder} from "@angular/forms";
+import {CustomValidators} from "ng2-validation";
 
 
 @Component({
@@ -11,14 +14,19 @@ import {EmployeeService} from "../../../../service/employee.service";
   styleUrls: ['active-request.component.css'],
 })
 export class ActiveRequest implements OnInit {
+  private priorities: PriorityStatus[];
   private totalItems: number;
   private per: number = 20;
   private data: Array<any> = new Array();
   private source: LocalDataSource = new LocalDataSource();
 
+  private userFormGroup: FormGroup;
+
 
   constructor(private authService: AuthService,
-              private employeeService: EmployeeService) {
+              private employeeService: EmployeeService,
+              private formBuilder: FormBuilder,
+              private userService: UserService) {
   }
 
   changed(data) {
@@ -48,6 +56,17 @@ export class ActiveRequest implements OnInit {
   }
 
   ngOnInit() {
+    this.userFormGroup = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      priorityStatus: [null, Validators.required],
+      description: ['', [Validators.required, Validators.maxLength(255)]],
+      estimateTimeInDays: ['', [CustomValidators.min(0), CustomValidators.max(30)]]
+    });
+
+    this.userService.getPriorityStatuses().subscribe(priorities => {
+      this.priorities = priorities;
+    });
+
     this.authService.currentUser.subscribe(u => {
       u;
       this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
@@ -69,8 +88,8 @@ export class ActiveRequest implements OnInit {
         this.source.load(this.data);
       })
       this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
-          this.totalItems = count;
-        })
+        this.totalItems = count;
+      })
     })
   }
 
@@ -104,5 +123,7 @@ export class ActiveRequest implements OnInit {
     },
   };
 
-
+  validate(field: string): boolean {
+    return this.userFormGroup.get(field).valid || !this.userFormGroup.get(field).dirty;
+  }
 }

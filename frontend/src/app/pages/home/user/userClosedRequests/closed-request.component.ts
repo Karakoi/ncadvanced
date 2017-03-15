@@ -3,6 +3,7 @@ import {RequestService} from "../../../../service/request.service";
 import {LocalDataSource} from "ng2-smart-table";
 import {AuthService} from "../../../../service/auth.service";
 import {EmployeeService} from "../../../../service/employee.service";
+import {PriorityStatus} from "../../../../model/priority.model";
 
 
 
@@ -12,6 +13,7 @@ import {EmployeeService} from "../../../../service/employee.service";
   styleUrls: ['closed-request.component.css']
 })
 export class ClosedRequest implements OnInit {
+  private priorities: PriorityStatus[];
   private totalItems: number = 20;
   private per: number = 20;
   private data:Array<any> = new Array();

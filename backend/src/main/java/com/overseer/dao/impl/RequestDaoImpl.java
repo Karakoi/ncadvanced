@@ -24,14 +24,15 @@ import java.util.List;
 public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
     @Override
-    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageSize, int pageNumber) {
+    public List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber) {
         Assert.notNull(reporterId, "id must not be null");
         try {
             val parameterSource = new MapSqlParameterSource("limit", pageSize);
             parameterSource.addValue("offset", pageSize * (pageNumber - 1));
             parameterSource.addValue("reporterId", reporterId);
+            parameterSource.addValue("progress", progress);
             return jdbc().query(queryService().getQuery("request.select").concat(
-                    queryService().getQuery("request.findClosedByReporter")),
+                    queryService().getQuery("request.findByReporterAndProgress")),
                     parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
@@ -41,9 +42,11 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public Long countClosedRequestsByReporter(Long reporterId) {
-        return jdbc().queryForObject(queryService().getQuery("request.countClosedByReporter"),
-                new MapSqlParameterSource("reporterId", reporterId), Long.class);
+    public Long countRequestsByReporterAndProgress(Long reporterId, String progress) {
+        val parameterSource = new MapSqlParameterSource("reporterId", reporterId);
+        parameterSource.addValue("progress", progress);
+        return jdbc().queryForObject(queryService().getQuery("request.countByReporterAndProgress"),
+                parameterSource, Long.class);
     }
 
     @Override
