@@ -38,22 +38,6 @@ public class TopicDaoImplTest {
     }
 
     @Test
-    public void findUserTopics() throws Exception {
-        final Long userId = 16L;
-        final List<Topic> userTopics = topicDao.findUserTopics(userId);
-        final int expected = 12;
-        final int actual = userTopics.size();
-        Assert.assertEquals(expected, actual);
-    }
-
-
-    @Test
-    public void save() throws Exception {
-        final Topic actual = topicDao.findOne(testTopicId);
-        Assert.assertEquals(testTopic, actual);
-    }
-
-    @Test
     public void deleteById() throws Exception {
         topicDao.delete(testTopicId);
         final Topic actual = topicDao.findOne(testTopicId);
