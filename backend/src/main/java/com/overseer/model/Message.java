@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Message extends AbstractEntity{
-    private static final int MIN_MESSAGE_LENGTH = 10;
+    private static final int MIN_MESSAGE_LENGTH = 2;
     private static final int MAX_MESSAGE_LENGTH = 500;
 
     @NotNull(message = "Message has to have a sender")

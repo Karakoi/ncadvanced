@@ -37,4 +37,11 @@ public class MessageServiceImpl extends CrudServiceImpl<Message> implements Mess
         log.debug("Counted {} messages for user with id: {}", recipientId);
         return count;
     }
+
+    @Override
+    public List<Message> findByTopic(Long topicId) {
+        val list = messageDao.findByTopic(topicId);
+        log.debug("Fetched messages for topic with id: {}", topicId);
+        return list;
+    }
 }

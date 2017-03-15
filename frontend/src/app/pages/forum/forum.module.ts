@@ -9,9 +9,13 @@ import {FormTemplateModule} from "../../shared/form-template/form-template.modul
 import {IncomingMessageListComponent} from "./incoming-messages/incoming-message-list.component";
 import {MessageItemComponent} from "./incoming-messages/incom-message/incoming-message.component";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
+import {GravatarModule} from "../../shared/gravatar/gravatar.module";
+import {DateParseModule} from "../../util/date-parser/date-parse.module";
 
 @NgModule({
   imports: [
+    DateParseModule,
+    GravatarModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
