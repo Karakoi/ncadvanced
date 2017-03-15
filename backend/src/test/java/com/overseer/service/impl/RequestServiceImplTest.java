@@ -41,7 +41,7 @@ public class RequestServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        requestsGroupIds = Arrays.asList(113L, 122L, 130L);
+        requestsGroupIds = Arrays.asList(113L, 114L, 115L);
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
