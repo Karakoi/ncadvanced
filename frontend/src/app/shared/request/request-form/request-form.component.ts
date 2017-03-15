@@ -46,10 +46,9 @@ export class RequestFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(45)]],
       priorityStatus: [null, Validators.required],
-      description: ['', [Validators.required, Validators.maxLength(255)]],
-      estimateTimeInDays: ['', [CustomValidators.min(0), CustomValidators.max(30)]]
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]]
     });
 
     this.authService.currentUser.subscribe((user: User) => {
@@ -97,10 +96,9 @@ export class RequestFormComponent implements OnInit {
   }
 
   createNewRequest(params): void {
-    this.request.dateOfCreation = this.datePipe.transform(new Date(), 'MMMM d, yyyy HH:mm:ss');
+    this.request.dateOfCreation = new Date();
     this.request.title = params.title;
     this.request.description = params.description;
-    this.request.estimateTimeInDays = params.estimateTimeInDays;
     this.request.priorityStatus = params.priorityStatus;
     this.request.progressStatus = this.progressStatus;
     this.request.reporter.password = "";
