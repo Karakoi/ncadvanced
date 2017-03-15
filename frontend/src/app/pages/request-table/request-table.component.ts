@@ -36,9 +36,6 @@ export class RequestTableComponent implements OnInit {
     this.deleteRequestComponent.modal.open();
   }
 
-  updateRequests(requests: Request[]) {
-    this.requests = requests;
-  }
 
   get sorted(): Request[] {
     return this.requests

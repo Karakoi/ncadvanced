@@ -1,6 +1,7 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.TopicDao;
+import com.overseer.model.Role;
 import com.overseer.model.Topic;
 import org.junit.Assert;
 import org.junit.Before;

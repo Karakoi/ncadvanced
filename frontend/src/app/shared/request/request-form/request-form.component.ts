@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild, EventEmitter, Output, Input} from "@angula
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {ModalComponent} from "ng2-bs3-modal/components/modal";
 import {RequestService} from "../../../service/request.service";
-import {CustomValidators} from "ng2-validation";
 import {User} from "../../../model/user.model";
 import {AuthService} from "../../../service/auth.service";
 import {ToastsManager} from "ng2-toastr";

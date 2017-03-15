@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.validation.constraints.*;
 
 
@@ -56,8 +57,6 @@ public class User extends AbstractEntity {
 
     private Boolean isDeactivated;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateOfDeactivation;
 
 

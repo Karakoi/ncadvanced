@@ -45,7 +45,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.countRequestsByReporter(reporterId);
     }
 
-    public RequestServiceImpl(RequestDao requestDao, ProgressStatusDao progressStatusDao) {
     private EmailBuilder<Request> emailStrategyForAssignee;
     private EmailBuilder<Request> emailStrategyForReporter;
     private EmailService emailService;
