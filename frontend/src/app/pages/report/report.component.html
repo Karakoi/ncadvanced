@@ -1,0 +1,39 @@
+<div class="conteiner">
+  <form [formGroup]="reportForm">
+    <!--(ngSubmit)="go(reportForm.value)">-->
+    <div style="width: 200px;">
+      <div class="input-group">
+        <label>Begin date:</label>
+        <input id="dateOfStart" formControlName="dateOfStart" type="date" class="form-control"/>
+      </div>
+
+      <div class="form-group" [ngClass]="{'has-error': !validateField('countMonths')}">
+        <div class="input-group">
+          <label>Months count:</label>
+          <input id="countMonths" formControlName="countMonths" type="text" placeholder="Count of months"
+                 class="form-control"/>
+          <span *ngIf="!validateField('countMonths')"
+                class="glyphicon glyphicon-remove form-control-feedback"></span>
+        </div>
+        <div *ngIf="!validateField('countMonths')" class="help-block text-left">
+          <span *ngIf="reportForm.get('countMonths').hasError('phone')">Value must be number.</span>
+        </div>
+      </div>
+      <div>
+        <button style="width: 200px;" type="submit" (click)="go(reportForm.value)" class="btn btn-primary">Build report</button>
+      </div>
+    </div>
+  </form>
+  <div class="barChart">
+    <span style="text-align:  center;"><h3>Counts of created requests by period</h3></span>
+    <!--<bar-chart [startDate]="dateOfStart"></bar-chart>-->
+    <bar-chart></bar-chart>
+  </div>
+
+  <div class="lineChart">
+    <span style="text-align:  center;"><h3>Charts which show ...</h3></span>
+    <line-chart></line-chart>
+  </div>
+
+</div>
+

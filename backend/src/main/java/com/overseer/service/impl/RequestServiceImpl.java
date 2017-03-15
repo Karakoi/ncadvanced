@@ -119,6 +119,16 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
+        val count = this.requestDao.findCountsRequestsByPeriod(start, end);
+        log.debug("Fetched {} count of requests for period {} - {}", count, start, end);
+        return count;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public List<Request> findRequestsByDate(LocalDate date) {
         Assert.notNull(date, "date must not be null");
         val list = this.requestDao.findRequestsByDate(date);

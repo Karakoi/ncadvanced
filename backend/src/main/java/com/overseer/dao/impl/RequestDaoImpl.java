@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -125,6 +127,20 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             return jdbc().query(findByPeriodQuery,
                     parameterSource,
                     this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
+        String findByPeriodQuery = this.queryService().getQuery("request.countByPeriod");
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            return jdbc().queryForObject(findByPeriodQuery,
+                    parameterSource, (resultSet, i) -> resultSet.getLong("count"));
         } catch (DataAccessException e) {
             return null;
         }

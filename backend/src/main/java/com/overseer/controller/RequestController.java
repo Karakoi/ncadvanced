@@ -6,17 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RequestController {
     private static final Long DEFAULT_PAGE_SIZE = 20L;
-
+    private static final Long DEFAULT_DATE_MOUNTS_STEP = 1L;
     private final RequestService requestService;
 
     /**
@@ -129,6 +123,45 @@ public class RequestController {
                                                              int pageNumber) {
         val requests = requestService.findRequestsByPeriod(beginDate, endDate, pageNumber);
         return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets count of requests objects which created in the same period.
+     *
+     * @param beginDate date from
+     * @param endDate   date to
+     * @return return count of requests from one period of time
+     */
+    @GetMapping("/getCountRequestsByPeriod")
+    public ResponseEntity<Long> getCountRequestsByPeriod(@RequestParam String beginDate,
+                                                         @RequestParam String endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(beginDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+        val count = requestService.findCountsRequestsByPeriod(start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    /**
+     * Gets counts list of requests objects which created in the same period.
+     *
+     * @param beginDate date from
+     * @param months    show mounts from begin date
+     * @return return counts list of requests from one period of time
+     */
+    @GetMapping("/getCountRequestsByStartDate")
+    public ResponseEntity<List<Long>> getCountRequestsByStartDate(@RequestParam String beginDate,
+                                                                   @RequestParam int months) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(beginDate, formatter);
+        List<Long> list = new ArrayList<>();
+        for (int i = 0; i < months; i++) {
+            LocalDate end = start.plusMonths(DEFAULT_DATE_MOUNTS_STEP);
+            list.add(requestService.findCountsRequestsByPeriod(start, end));
+            start = end;
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     /**

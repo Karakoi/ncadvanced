@@ -27,6 +27,9 @@ import {RoleService} from "./service/role.service";
 import {ErrorModule} from "./pages/error/error.module";
 import {ErrorService} from "./service/error.service";
 import {RequestProfileModule} from "./pages/request-profile/request-profile.module";
+import {ReportModule} from "./pages/report/report.module";
+import {ChartsModule} from "ng2-charts";
+// import {ChartsModule} from 'ng2-charts/ng2-charts';
 
 @NgModule({
   declarations: [
@@ -38,6 +41,8 @@ import {RequestProfileModule} from "./pages/request-profile/request-profile.modu
     SideBarDirective
   ],
   imports: [
+    ChartsModule,
+    ReportModule,
     ErrorModule,
     RequestProfileModule,
     BrowserModule,

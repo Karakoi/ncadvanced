@@ -70,13 +70,6 @@ public class TopicDaoImplTest {
     }
 
     @Test
-    public void count() throws Exception {
-        final Long expected = 23L;
-        final Long actual = topicDao.count();
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
     public void findByName() throws Exception {
         final Topic actual = topicDao.findByName(testTopic.getTitle());
         Assert.assertEquals(testTopic, actual);

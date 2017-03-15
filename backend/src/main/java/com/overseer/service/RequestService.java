@@ -71,6 +71,15 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber);
 
     /**
+     * Returns a count of requests created in provided period.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return count of requests created in provided period.
+     */
+    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+
+    /**
      * Returns a list of requests created in provided date.
      *
      * @param date creation date, must not be {@literal null}.

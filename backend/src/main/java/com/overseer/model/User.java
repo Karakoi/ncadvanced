@@ -1,5 +1,6 @@
 package com.overseer.model;
 
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,8 +8,8 @@ import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
 import java.time.LocalDate;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * User entity.
@@ -25,6 +26,7 @@ public class User extends AbstractEntity {
     private static final int MAX_NAME_LENGTH = 40;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MAX_PHONE_LENGTH = 20;
+    private static final int MIN_PHONE_LENGTH = 3;
 
     @NotNull(message = "User have to have first name")
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 30")
@@ -45,13 +47,13 @@ public class User extends AbstractEntity {
     @Email
     private String email;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate dateOfBirth;
-
-    @Max(value = MAX_PHONE_LENGTH, message = "Max length of phone number is 20")
+    @Size(min = MAX_PHONE_LENGTH, max = MAX_PHONE_LENGTH, message = "Size of  phone number has to be between 3 and 20")
     private String phoneNumber;
 
     @NotNull(message = "User have to have role")
     private Role role;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
 }
