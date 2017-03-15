@@ -118,10 +118,10 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Reopens request and changes it {@link Request#progressStatus}.
      *
-     * @param request specified request
+     * @param requestId id of specified request
      * @return reopened request
      */
-    Request reopenRequest(Request request);
+    Request reopenRequest(Long requestId);
 
     /**
      * Closes all requests which have provided {@link User} as reporter and have specified {@link ProgressStatus}.

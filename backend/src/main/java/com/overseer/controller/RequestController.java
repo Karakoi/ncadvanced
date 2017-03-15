@@ -124,7 +124,7 @@ public class RequestController {
      */
     @PutMapping("/reopenRequest")
     public ResponseEntity reopenRequest(@RequestBody Request request) {
-        val reopendRequest = requestService.reopenRequest(request);
+        val reopendRequest = requestService.reopenRequest(request.getId());
         return new ResponseEntity<>(reopendRequest, HttpStatus.OK);
     }
 

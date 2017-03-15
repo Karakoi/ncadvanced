@@ -3,6 +3,8 @@ package com.overseer.service.impl;
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.exception.RmovingNotFreeRequestException;
+import com.overseer.exception.UnpropreateJoinRequest;
+import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -176,8 +178,13 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         val childProgressStatus = progressStatusDao.findOne(JOINED_STATUS);
 
         // Update child requests with new progress status and parent id
-        val parentId = parent.getId();
+        Long parentId = parent.getId();
+
         joinedRequests.forEach(request -> {
+            if (request.getProgressStatus().getId() != FREE_STATUS || request.getAssignee() == null) {
+                throw new UnpropreateJoinRequest("Can not join request with id: " + request.getId()
+                        + " because it has progress status not Free or has Assignee ");
+            }
             request.setProgressStatus(childProgressStatus);
             request.setParentId(parentId);
             request.setAssignee(parentRequest.getAssignee());
@@ -250,10 +257,14 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     }
 
     @Override
-    public Request reopenRequest(Request request) {
-        Assert.notNull(request, "request must not be null");
-        log.debug("Close request with id: {} ", request.getId());
+    public Request reopenRequest(Long requestId) {
+        Assert.notNull(requestId, "id of request must not be null");
+        log.debug("Close request with id: {} ", requestId);
 
+        Request request = requestDao.findOne(requestId);
+        if (request == null) {
+            throw new NoSuchEntityException("Request with given id: " + requestId + " is absent in DB");
+        }
         ProgressStatus freeProgressStatus = progressStatusDao.findOne(FREE_STATUS);
         request.setProgressStatus(freeProgressStatus);
 
