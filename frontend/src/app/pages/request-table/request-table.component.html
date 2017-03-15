@@ -20,7 +20,7 @@
         </thead>
         <tbody>
         <tr style="cursor: pointer;" *ngFor="let request of sorted" >
-          <td [routerLink]="['/request', request.id]">{{request.title}}</td>
+          <td [routerLink]="['/request', request.id]"><a>{{request.title}}</a></td>
           <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
           <td>{{request.priorityStatus.name}}</td>
           <td>{{request.progressStatus.name}}</td>

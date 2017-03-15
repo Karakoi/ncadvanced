@@ -24,22 +24,22 @@
             <tr>
               <td><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Progress status:</td>
               <td>
-                <span class="label label-success">{{request?.progressStatus.name}}</span>
+                <span class="label label-success">{{request.progressStatus.name}}</span>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Priority status:</td>
               <td>
-                <span class="label label-primary">{{request?.priorityStatus.name}}</span>
+                <span class="label label-primary">{{request.priorityStatus.name}}</span>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
-              <td>{{request?.dateOfCreation}}</td>
+              <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
-              <td>{{request?.estimateTimeInDays}}</td>
+              <td>{{request.estimateTimeInDays}}</td>
             </tr>
             </tbody>
           </table>
@@ -51,13 +51,13 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a href="#">{{request?.reporter.firstName}} {{request?.reporter.lastName}}</a>
+                <a href="#">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a href="#">{{request?.assignee.firstName}} {{request?.assignee.lastName}}</a>
+                <a href="#">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>

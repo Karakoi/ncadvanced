@@ -2,11 +2,11 @@
 
   <form [formGroup]="requestForm" (ngSubmit)="createNewRequest(requestForm.value)" autocomplete="off" novalidate>
     <modal-header [show-close]="true">
-      <h4 class="modal-title"><b>Create new request</b></h4>
+      <b>Create new request</b>
     </modal-header>
-    <modal-body>
+    <modal-header>
       <!--REQUEST TITLE-->
-      <div class="form-group" [ngClass]="{'has-error': !validate('title')}">
+      <div class="form-group col-lg-12" [ngClass]="{'has-error': !validate('title')}">
         <label for="title">Title:</label>
         <input id="title" type="text" class="form-control" formControlName="title"/>
         <div *ngIf="!validate('title')" class="help-block text-left">
@@ -14,7 +14,7 @@
         </div>
       </div>
       <!--REQUEST PRIORITY STATUS-->
-      <div class="form-group">
+      <div class="form-group col-lg-12">
         <label for="priorityStatus">Priority status:</label>
         <select id="priorityStatus" class="form-control" formControlName="priorityStatus">
           <option [ngValue]="priorityStatus" *ngFor="let priorityStatus of priorityStatuses">{{priorityStatus.name}}</option>
@@ -30,16 +30,16 @@
         </div>
       </div>-->
        <!--REQUEST DESCRIPTION-->
-      <div class="form-group" [ngClass]="{'has-error': !validate('description')}">
+      <div class="form-group col-lg-12" [ngClass]="{'has-error': !validate('description')}">
         <label for="description">Description:</label>
         <textarea id="description" class="form-control" rows="5" formControlName="description"></textarea>
         <div *ngIf="!validate('description')" class="help-block text-left">
           <span *ngIf="requestForm.get('description')">Message length should be between 10 and 200 characters.</span>
         </div>
       </div>
-    </modal-body>
+    </modal-header>
     <modal-footer>
-      <div class="btn-toolbar">
+      <div class="btn-toolbar col-lg-12">
         <button type="submit" class="btn btn-primary col-md-5 pull-left" [disabled]="requestForm.invalid">Submit</button>
         <button type="submit" class="btn btn-danger col-md-5 pull-right" data-dismiss="modal">Close
         </button>
