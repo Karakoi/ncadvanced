@@ -30,6 +30,7 @@ import {RequestProfileModule} from "./pages/request-profile/request-profile.modu
 import {ReportModule} from "./pages/report/report.module";
 import {ChartsModule} from "ng2-charts";
 // import {ChartsModule} from 'ng2-charts/ng2-charts';
+import {TopicService} from "./service/topic.service";
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import {ChartsModule} from "ng2-charts";
   ],
   providers: [
     ErrorService,
+    TopicService,
     UserService,
     RoleService,
     ReportService,
