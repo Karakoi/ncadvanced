@@ -31,6 +31,14 @@ export class RequestService {
       });
   }
 
+  delete(id: number): Observable<Response> {
+    return this.authHttp.delete(`${url}/${id}`)
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
   get(id: number): Observable<Request> {
     return this.authHttp.get(`${url}/${id}`)
       .map(resp => resp.json())

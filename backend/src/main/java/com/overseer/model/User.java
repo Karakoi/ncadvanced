@@ -53,7 +53,6 @@ public class User extends AbstractEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
-    @Max(value = MAX_PHONE_LENGTH, message = "Max length of phone number is 20")
     private String phoneNumber;
 
     @NotNull(message = "User have to have role")

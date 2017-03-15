@@ -15,16 +15,21 @@
           <th>Progress Status</th>
           <th>Reporter</th>
           <th>Assignee</th>
+          <th>Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr style="cursor: pointer;" *ngFor="let request of sorted" [routerLink]="['/request', request.id]">
-          <td>{{request.title}}</td>
-          <td>{{request.dateOfCreation}}</td>
+        <tr style="cursor: pointer;" *ngFor="let request of sorted" >
+          <td [routerLink]="['/request', request.id]"><a>{{request.title}}</a></td>
+          <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
           <td>{{request.priorityStatus.name}}</td>
           <td>{{request.progressStatus.name}}</td>
           <td>{{request.reporter.firstName}}</td>
           <td>{{request.assignee.firstName}}</td>
+          <td class="text-center delete-col">
+            <button [attr.value]="request.id" class="glyphicon glyphicon-trash"
+                    (click)="openDeleteRequestModal(request)"></button>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -36,4 +41,6 @@
     </div>
   </form-template>
   <request-form [requests]="requests" (updated)="updateRequests($event)"></request-form>
+  <delete-request [requests]="requests" (updated)="updateRequests($event)"></delete-request>
 </div>
+

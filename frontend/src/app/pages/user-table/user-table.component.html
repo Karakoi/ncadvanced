@@ -22,7 +22,7 @@
           <td>{{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>{{user.role.name}}</td>
-          <td class="text-center">
+          <td class="text-center delete-col">
             <button [attr.value]="user.id" class="glyphicon glyphicon-trash"
                     (click)="openDeleteUserModal(user)"></button>
           </td>
@@ -38,4 +38,4 @@
   </form-template>
 </div>
 <add-user [users]="users" (updated)="updateUsers($event)"></add-user>
-<delete-user [users]="users" (updated)="updateUsers($event)"><delete-user>
+<delete-user [users]="users" (updated)="updateUsers($event)"></delete-user>
