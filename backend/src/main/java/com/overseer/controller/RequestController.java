@@ -153,4 +153,27 @@ public class RequestController {
         Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
+
+    /**
+     * Returns number of pages.
+     *
+     * @return number of pages.
+     */
+    @GetMapping("/pageCountFree")
+    public ResponseEntity<Long> getPagesCountFree() {
+        Long pageCount = requestService.countFreeRequests() / DEFAULT_PAGE_SIZE + 1;
+        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+    }
+
+    /**
+     * Gets {@link Request} list which corresponds to provided page.
+     *
+     * @param page identifier.
+     * @return {@link Request} list with http status 200 OK..
+     */
+    @GetMapping("/fetchFree")
+    public ResponseEntity<List<Request>> fetchFreeRequestPage(@RequestParam int page) {
+        val requests = requestService.findFreeRequests(page);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
 }

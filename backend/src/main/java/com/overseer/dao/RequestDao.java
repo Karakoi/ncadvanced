@@ -158,4 +158,18 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return filtered list of requests
      */
     List<Request> findRequestsByIds(List<Long> ids);
+
+    /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countFree();
+
+    /**
+     * Returns a list of requests with Free progress status {@link ProgressStatus}.
+     *
+     * @return list of requests with Free progress status {@link ProgressStatus}.
+     */
+    List<Request> findFreeRequests(int pageSize, int pageNumber);
 }

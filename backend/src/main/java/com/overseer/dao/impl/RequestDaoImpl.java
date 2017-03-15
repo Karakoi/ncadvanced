@@ -150,6 +150,27 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public Long countFree() {
+        String findCountQuery = queryService().getQuery("request.countFree");
+        return jdbc().queryForObject(findCountQuery, new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public List<Request> findFreeRequests(int pageSize, int pageNumber) {
+        String findByStatusQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findFree"));
+        try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+            return jdbc().query(findByStatusQuery,
+                    parameterSource,
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     protected String getInsertQuery() {
         return queryService().getQuery("request.insert");
     }

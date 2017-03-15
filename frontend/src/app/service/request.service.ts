@@ -57,4 +57,22 @@ export class RequestService {
         return Observable.throw(error);
       });
   }
+
+  getPageCountFree(): Observable<number> {
+    return this.authHttp.get(`${url}/pageCountFree`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getFree(page: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/fetchFree?page=` + page)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
 }

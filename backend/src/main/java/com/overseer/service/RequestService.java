@@ -99,4 +99,18 @@ public interface RequestService extends CrudService<Request, Long> {
      */
     Request saveSubRequest(Request subRequest, Request parentRequest);
 
+    /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countFreeRequests();
+
+    /**
+     * Returns a list of requests with Free progress status {@link ProgressStatus}.
+     *
+     * @return list of requests with Free progress status {@link ProgressStatus}.
+     */
+    List<Request> findFreeRequests(int pageNumber);
+
 }

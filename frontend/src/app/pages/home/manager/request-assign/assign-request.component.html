@@ -1,0 +1,50 @@
+<modal [animation]="true" #assignRequestFormModal>
+  <div *ngIf="request">
+    <modal-header [show-close]="true">
+      <b>Do you want to assign this request?</b>
+    </modal-header>
+
+    <modal-body>
+      <div class="form-group">
+        Title: <label>{{request.title}}</label>
+      </div>
+      <div class="form-group">
+        Description: <label>{{request.description}}</label>
+      </div>
+      <div class="form-group">
+        Creation date: <label>{{request.dateOfCreation}}</label>
+      </div>
+      <div class="form-group">
+        Priority: <label>{{request.priorityStatus.name}}</label>
+      </div>
+      <div class="form-group">
+        Reporter: <label>{{request.reporter.firstName}} {{request.reporter.lastName}}</label>
+      </div>
+      <div class="col-sm-12">
+        <div class="col-sm-4" align="left">Estimate time(days) :</div>
+        <div class="col-sm-3">
+          <input type="number"
+                 [value]="request.estimateTimeInDays"
+                 (input)="request.estimateTimeInDays = $event.target.value"
+                 class="form-control"
+                 min="1"
+                 max="30">
+        </div>
+      </div>
+      <br>
+      <br>
+
+    </modal-body>
+
+    <modal-footer>
+      <div class="btn-toolbar col-md-12">
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-primary col-md-12" (click)="assignRequest()">Assign</button>
+        </div>
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-danger col-md-12" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </modal-footer>
+  </div>
+</modal>

@@ -182,6 +182,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.save(subRequest);
     }
 
+    @Override
+    public Long countFreeRequests() {
+        val freeRequestsQuantity = requestDao.countFree();
+        log.debug("Counted requests with Free progress status: {}", freeRequestsQuantity);
+        return freeRequestsQuantity;
+    }
+
+    @Override
+    public List<Request> findFreeRequests(int pageNumber) {
+        return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
+    }
+
     /**
      * Returns max {@link PriorityStatus} of specified requests list.
      * Statuses compares by {@link PriorityStatus#value}.
