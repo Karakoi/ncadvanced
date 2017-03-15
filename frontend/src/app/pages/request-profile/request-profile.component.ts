@@ -5,6 +5,8 @@ import {ActivatedRoute} from "@angular/router";
 import {ToastsManager} from "ng2-toastr";
 import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
+import {HistoryService} from "../../service/history.service";
+import {History} from "../../model/history.model";
 
 @Component({
   selector: 'request-profile',
@@ -19,16 +21,24 @@ export class RequestProfileComponent implements OnInit {
   showHistory: boolean = true;
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
+  historyRecords: History[];
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
               private toastr: ToastsManager,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private historyService: HistoryService) {
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       let id = +params['id'];
+
+      this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
+        this.historyRecords = historyRecords;
+        console.log(historyRecords);
+      });
+
       this.requestService.get(id).subscribe((request: Request) => {
         this.request = request;
         console.log(request)
