@@ -1,15 +1,14 @@
 import {Component, OnInit} from "@angular/core";
-import {RequestService} from "../../../../service/request.service";
 import {LocalDataSource} from "ng2-smart-table";
 import {AuthService} from "../../../../service/auth.service";
-import {User} from "../../../../model/user.model";
 import {EmployeeService} from "../../../../service/employee.service";
+
 
 
 @Component({
   selector: 'user-home',
   templateUrl: 'active-request.component.html',
-  styleUrls: ['active-request.component.css']
+  styleUrls: ['active-request.component.css'],
 })
 export class ActiveRequest implements OnInit {
   private totalItems: number;
@@ -17,8 +16,8 @@ export class ActiveRequest implements OnInit {
   private data: Array<any> = new Array();
   private source: LocalDataSource = new LocalDataSource();
 
-  constructor(private requestService: RequestService,
-              private authService: AuthService,
+
+  constructor(private authService: AuthService,
               private employeeService: EmployeeService) {
   }
 
@@ -39,7 +38,7 @@ export class ActiveRequest implements OnInit {
             "dateOfCreation": r.dateOfCreation,
             "assignee": r.assignee.firstName + " " + r.assignee.lastName,
             "priority": r.priorityStatus.name,
-            "progress": r.progressStatus.name
+            "progress": r.progressStatus.name,
           })
         })
         this.source.load(this.data);
@@ -64,7 +63,7 @@ export class ActiveRequest implements OnInit {
             "dateOfCreation": r.dateOfCreation,
             "assignee": r.assignee.firstName + " " + r.assignee.lastName,
             "priority": r.priorityStatus.name,
-            "progress": r.progressStatus.name
+            "progress": r.progressStatus.name,
           })
         })
         this.source.load(this.data);
@@ -76,6 +75,7 @@ export class ActiveRequest implements OnInit {
   }
 
   settings = {
+    hideHeader: true,
     actions: {
       edit: false,
       delete: false,
@@ -103,5 +103,6 @@ export class ActiveRequest implements OnInit {
       },
     },
   };
+
 
 }

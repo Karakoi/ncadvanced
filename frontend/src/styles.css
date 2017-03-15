@@ -108,4 +108,15 @@ h6 {
         position: relative;
         margin-right: 0;
     }
+
+    table {
+      background-color: white;
+      text-align: center !important;
+      vertical-align: middle !important;
+    }
+
+    td{
+      vertical-align: middle !important;
+      font-size: 100% !important;
+    }
 }

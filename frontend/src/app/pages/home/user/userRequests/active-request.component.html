@@ -6,8 +6,9 @@
         <ul class="nav nav-tabs">
           <li class="active"><a [routerLink]="['/home/user/active']">My active requests</a></li>
           <li><a [routerLink]="['/home/user/closed']">My completed request</a></li>
+          <li><a><span ngClass="glyphicon glyphicon-plus" (click)="staticModal.show()"></span></a></li>
         </ul>
-        <ng2-smart-table ngClass="table" [settings]="settings"
+        <ng2-smart-table [settings]="settings"
                          [source]="source">
         </ng2-smart-table>
         <pagination [totalItems]="totalItems" [itemsPerPage]="per" (pageChanged)="changed($event)"></pagination>
@@ -16,3 +17,19 @@
   </div>
 </div>
 
+<div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Add new request</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        TODO // add there form
+      </div>
+    </div>
+  </div>
+</div>

@@ -12,7 +12,7 @@ import {EmployeeService} from "../../../../service/employee.service";
   styleUrls: ['closed-request.component.css']
 })
 export class ClosedRequest implements OnInit {
-  private totalItems: number = 100;
+  private totalItems: number = 20;
   private per: number = 20;
   private data:Array<any> = new Array();
   private source: LocalDataSource = new LocalDataSource() ;
@@ -58,6 +58,7 @@ export class ClosedRequest implements OnInit {
             r.assignee.lastName = "";
           }
           this.data.push({
+            "id": r.id,
             "title": r.title,
             "description": r.description,
             "estimateTime": r.estimateTimeInDays,
@@ -75,6 +76,8 @@ export class ClosedRequest implements OnInit {
     })
   }
   settings = {
+    selectMode: 'multi',
+
     actions: {
       edit: false,
       delete: false,
@@ -103,4 +106,7 @@ export class ClosedRequest implements OnInit {
     },
   };
 
+  some(data){
+    console.log(data)
+  }
 }
