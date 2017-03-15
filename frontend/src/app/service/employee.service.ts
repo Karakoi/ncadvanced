@@ -66,7 +66,10 @@ export class EmployeeService {
   }
 
   createEmployeeRequest(request: Request): Observable<Response> {
-    console.log(request);
     return this.authHttp.post(`${url}/employeeRequest`, request);
+  }
+
+  reopenRequests(requestId: number[]): Observable<Response>{
+    return this.authHttp.post(`${url}/reopen`,requestId);
   }
 }

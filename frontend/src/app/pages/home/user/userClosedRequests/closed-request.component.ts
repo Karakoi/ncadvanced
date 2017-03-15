@@ -10,6 +10,7 @@ import {User} from "../../../../model/user.model";
 import {Response} from "@angular/http";
 import {ToastsManager} from "ng2-toastr";
 import {ModalDirective} from "ng2-bootstrap";
+import {Request} from "../../../../model/request.model";
 
 
 
@@ -20,6 +21,7 @@ import {ModalDirective} from "ng2-bootstrap";
 })
 export class ClosedRequest implements OnInit {
   @ViewChild('staticModal') public staticModal:ModalDirective;
+  private selected: number[];
   private priorities: PriorityStatus[];
   private currentUser: User;
   private totalItems: number = 20;
@@ -44,19 +46,11 @@ export class ClosedRequest implements OnInit {
             r.assignee.firstName = "";
             r.assignee.lastName = "";
           }
-          this.data.shift()
-          this.data.push({
-            "title": r.title,
-            "description": r.description,
-            "estimateTime": r.estimateTimeInDays,
-            "dateOfCreation": r.dateOfCreation,
-            "assignee": r.assignee.firstName + " " + r.assignee.lastName,
-            "priority": r.priorityStatus.name,
-            "progress": r.progressStatus.name
-          })
-        })
+          this.data.shift();
+          this.data.push(this.mapRequestToReadable(r))
+        });
         this.source.load(this.data);
-      })
+      });
       this.source.setPage(data.page)
     })
   }
@@ -79,19 +73,10 @@ export class ClosedRequest implements OnInit {
             r.assignee.firstName = "";
             r.assignee.lastName = "";
           }
-          this.data.push({
-            "id": r.id,
-            "title": r.title,
-            "description": r.description,
-            "estimateTime": r.estimateTimeInDays,
-            "dateOfCreation": r.dateOfCreation,
-            "assignee": r.assignee.firstName + " " + r.assignee.lastName,
-            "priority": r.priorityStatus.name,
-            "progress": r.progressStatus.name
-          })
-        })
+          this.data.push(this.mapRequestToReadable(r))
+        });
         this.source.load(this.data);
-      })
+      });
       this.employeeService.countClosedRequestsByReporter(u.id).subscribe(count => {
         this.totalItems = count;
       })
@@ -141,6 +126,35 @@ export class ClosedRequest implements OnInit {
         this.toastr.error("Something gone wrong");
       }
     );
+  }
+
+  onSelect(data){
+    this.selected = data.selected.map(e => e.id)
+    console.log(this.selected)
+  }
+
+  reopen(data){
+    if(this.selected.length > 0){
+      this.employeeService.reopenRequests(this.selected).subscribe(resp => {
+        console.log("it's good")
+      })
+    }
+  }
+
+  mapRequestToReadable(request: Request){
+    if (request.assignee.firstName === null) {
+      request.assignee.firstName = "";
+      request.assignee.lastName = "";
+    }
+    return {
+      "title": request.title,
+      "description": request.description,
+      "estimateTime": request.estimateTimeInDays,
+      "dateOfCreation": request.dateOfCreation,
+      "assignee": request.assignee.firstName + " " + request.assignee.lastName,
+      "priority": request.priorityStatus.name,
+      "progress": request.progressStatus.name,
+    }
   }
 
   validate(field: string): boolean {

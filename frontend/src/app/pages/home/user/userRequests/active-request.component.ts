@@ -9,6 +9,7 @@ import {Response} from "@angular/http";
 import {User} from "../../../../model/user.model";
 import {ModalDirective} from "ng2-bootstrap";
 import {ToastsManager} from "ng2-toastr";
+import {Request} from "../../../../model/request.model";
 
 
 @Component({
@@ -43,19 +44,11 @@ export class ActiveRequest implements OnInit {
             r.assignee.firstName = "";
             r.assignee.lastName = "";
           }
-          this.data.shift()
-          this.data.push({
-            "title": r.title,
-            "description": r.description,
-            "estimateTime": r.estimateTimeInDays,
-            "dateOfCreation": r.dateOfCreation,
-            "assignee": r.assignee.firstName + " " + r.assignee.lastName,
-            "priority": r.priorityStatus.name,
-            "progress": r.progressStatus.name,
-          })
-        })
+          this.data.shift();
+          this.data.push(this.mapRequestToReadable(r))
+        });
         this.source.load(this.data);
-      })
+      });
       this.source.setPage(data.page)
     })
   }
@@ -79,18 +72,10 @@ export class ActiveRequest implements OnInit {
             r.assignee.firstName = "";
             r.assignee.lastName = "";
           }
-          this.data.push({
-            "title": r.title,
-            "description": r.description,
-            "estimateTime": r.estimateTimeInDays,
-            "dateOfCreation": r.dateOfCreation,
-            "assignee": r.assignee.firstName + " " + r.assignee.lastName,
-            "priority": r.priorityStatus.name,
-            "progress": r.progressStatus.name,
-          })
-        })
+          this.data.push(this.mapRequestToReadable(r))
+        });
         this.source.load(this.data);
-      })
+      });
       this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
         this.totalItems = count;
       })
@@ -133,6 +118,8 @@ export class ActiveRequest implements OnInit {
     param.reporter = this.currentUser;
     this.employeeService.createEmployeeRequest(param).subscribe(
       (resp: Response) => {
+        this.data.unshift(this.mapRequestToReadable(<Request>resp.json()));
+        this.source.load(this.data);
         this.staticModal.hide();
         this.toastr.success("Request have been added");
       },
@@ -140,7 +127,22 @@ export class ActiveRequest implements OnInit {
         this.toastr.error("Something gone wrong");
       }
     );
+  }
 
+  mapRequestToReadable(request: Request){
+    if (request.assignee.firstName === null) {
+      request.assignee.firstName = "";
+      request.assignee.lastName = "";
+    }
+    return {
+      "title": request.title,
+      "description": request.description,
+      "estimateTime": request.estimateTimeInDays,
+      "dateOfCreation": request.dateOfCreation,
+      "assignee": request.assignee.firstName + " " + request.assignee.lastName,
+      "priority": request.priorityStatus.name,
+      "progress": request.progressStatus.name,
+    }
   }
 
   validate(field: string): boolean {

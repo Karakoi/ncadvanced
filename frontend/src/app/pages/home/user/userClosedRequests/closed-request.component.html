@@ -10,9 +10,9 @@
         </ul>
         <ng2-smart-table [settings]="settings"
                           [source]="source"
-                         (userRowSelect)="some($event)">
+                         (userRowSelect)="onSelect($event)">
         </ng2-smart-table>
-        <button class="btn btn-primary block glyphicon glyphicon-share" >Reopen</button>
+        <button class="btn btn-primary block glyphicon glyphicon-share" (click)="reopen()">Reopen</button>
         <pagination [totalItems]="totalItems" [itemsPerPage]="per" (pageChanged)="changed($event)"></pagination>
       </div>
     </div>

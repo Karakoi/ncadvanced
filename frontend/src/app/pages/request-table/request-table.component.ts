@@ -54,8 +54,8 @@ export class RequestTableComponent implements OnInit {
     });
   }
 
-  updateRequests(users: Request[]) {
-    this.requests = users;
+  updateRequests(request: Request[]) {
+    this.requests = request;
   }
 
   openFormModal(): void {

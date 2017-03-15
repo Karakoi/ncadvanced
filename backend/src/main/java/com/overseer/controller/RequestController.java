@@ -182,4 +182,18 @@ public class RequestController {
     public ResponseEntity<Request> createEmployeeRequest(@RequestBody Request request) {
         return new ResponseEntity<>(requestService.createEmpRequest(request), HttpStatus.OK);
     }
+
+    /**
+     * Reopen array of requests.
+     * @param requestsId array of request id's.
+     * @return reopened requests.
+     */
+    @PostMapping("/reopen")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Long[] requestsId) {
+        System.out.println("requests id ");
+        for (Long g : requestsId) {
+            System.out.println(g);
+        }
+        return new ResponseEntity<>(new Request(), HttpStatus.OK);
+    }
 }
