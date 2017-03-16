@@ -188,8 +188,6 @@ public class RequestController {
      */
     @PostMapping("/join/{ids}")
     public ResponseEntity<Request> joinRequests(@RequestBody Request request, @PathVariable String ids) {
-        System.out.println(request);
-        System.out.println(ids);
         List<Long> list = Arrays.asList(ids.split(",")).stream().map(Long::parseLong).collect(Collectors.toList());
         val createdRequest = requestService.joinRequestsIntoParent(list, request);
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);

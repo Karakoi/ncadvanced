@@ -33,7 +33,6 @@ export class AssignRequestComponent {
       if (this.request.parentId === 0) {
         this.request.parentId = null;
       }
-      console.log(this.request);
       this.requestService.update(this.request).subscribe(() => {
         this.toastr.success("Request was assigned successfully", "Success!");
         this.requests = this.requests.filter(item => item["id"] !== this.request.id);
@@ -47,7 +46,7 @@ export class AssignRequestComponent {
   private handleErrorAssignRequest(error) {
     switch (error.status) {
       case 500:
-        this.toastr.error("Can't delete user", 'Error');
+        this.toastr.error("Can't assign request", 'Error');
     }
   }
 }
