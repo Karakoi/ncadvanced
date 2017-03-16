@@ -14,6 +14,7 @@ declare let $: any;
 export class RequestTableComponent implements OnInit {
   requests: Request[];
   pageCount: number;
+  term: any;
 
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;

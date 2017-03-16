@@ -14,6 +14,7 @@ declare var $: any;
 export class UserTableComponent implements OnInit {
   users: User[];
   pageNumber: number;
+  term: any;
 
   @ViewChild(AddUserComponent)
   addUserComponent: AddUserComponent;

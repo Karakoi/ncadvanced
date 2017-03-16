@@ -6,6 +6,9 @@
       </button>
     </div>
     <div class="template-body">
+      <div class="form-group col-lg-3 pull-right search">
+        <input type="text" class="form-control" [(ngModel)]="term" placeholder="Search"/>
+      </div>
       <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
@@ -13,17 +16,21 @@
           <th>Last Name</th>
           <th>Email</th>
           <th>Role</th>
+          <th>Details</th>
           <th>Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of users | filter:term">
           <td>{{user.firstName}}</td>
           <td>{{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>{{user.role.name}}</td>
           <td class="text-center delete-col">
-            <button [attr.value]="user.id" class="glyphicon glyphicon-trash"
+            <button [routerLink]="['/user', user.id]" class="glyphicon glyphicon-info-sign center-block"></button>
+          </td>
+          <td class="text-center delete-col">
+            <button [attr.value]="user.id" class="glyphicon glyphicon-trash center-block"
                     (click)="openDeleteUserModal(user)"></button>
           </td>
         </tr>
