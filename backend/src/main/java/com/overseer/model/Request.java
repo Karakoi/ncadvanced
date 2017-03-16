@@ -4,15 +4,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.overseer.util.LocalDateTimeDeserializer;
-import com.overseer.util.LocalDateTimeSerializer;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 
 
 /**
@@ -42,8 +39,6 @@ public class Request extends AbstractEntity {
     private String description;
 
     @NotNull
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateOfCreation;
 
     private PriorityStatus priorityStatus;

@@ -39,8 +39,18 @@ export const appRoutes: Routes = [
     canActivate: [PrivatePageGuard, AdminPageGuard]
   },
   {
+    path: 'deactivatedUsers',
+    loadChildren: './pages/user-table-deactivated/user-table-deactivated.module#UserTableDeactivatedModule',
+    canActivate: [PrivatePageGuard, AdminPageGuard]
+  },
+  {
     path: 'requests',
     loadChildren: './pages/request-table/request-table.module#RequestTableModule',
+    canActivate: [PrivatePageGuard, AdminPageGuard]
+  },
+  {
+    path: 'reports',
+    loadChildren: './pages/report/report.module#ReportModule',
     canActivate: [PrivatePageGuard, AdminPageGuard]
   },
   {
@@ -51,6 +61,11 @@ export const appRoutes: Routes = [
   {
     path: 'request/:id',
     loadChildren: './pages/request-profile/request-profile.module#RequestProfileModule',
+    canActivate: [PrivatePageGuard]
+  },
+  {
+    path: 'user/:id',
+    loadChildren: './pages/user-profile/user-profile.module#UserProfileModule',
     canActivate: [PrivatePageGuard]
   },
   // If route does not match any previous ones

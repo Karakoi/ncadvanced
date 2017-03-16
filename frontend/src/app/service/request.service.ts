@@ -31,7 +31,15 @@ export class RequestService {
       });
   }
 
-  get(id:number):Observable<Request> {
+  delete(id: number): Observable<Response> {
+    return this.authHttp.delete(`${url}/${id}`)
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  get(id: number): Observable<Request> {
     return this.authHttp.get(`${url}/${id}`)
       .map(resp => resp.json())
       .catch((error:any) => {
@@ -39,6 +47,25 @@ export class RequestService {
         return Observable.throw(error);
       });
   }
+
+  getCountRequestsByPeriod(beginDate: string, endDate: string): Observable<number> {
+    return this.authHttp.get(`${url}/getCountRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getCountRequestsByStartDate(beginDate: Date, months: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/getCountRequestsByStartDate?beginDate=${beginDate}&months=${months}`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
 
   getAll(page:number):Observable<Request[]> {
     return this.authHttp.get(`${url}/fetch?page=` + page)

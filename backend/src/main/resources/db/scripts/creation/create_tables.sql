@@ -1,3 +1,5 @@
+
+
 -- ----------------------------
 -- Sequence structure for main_id_seq
 -- ----------------------------
@@ -124,7 +126,9 @@ CREATE TABLE "public"."user" (
 "email" varchar(45) COLLATE "default" NOT NULL,
 "date_of_birth" date,
 "phone_number" varchar(45) COLLATE "default",
-"role" int4
+"role" int4,
+"is_deactivated" boolean NOT NULL DEFAULT false,
+"date_of_deactivation" TIMESTAMP
 )
 WITH (OIDS=FALSE);
 

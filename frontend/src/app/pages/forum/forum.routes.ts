@@ -11,7 +11,7 @@ export const forumRoutes: Routes = [
     component: ForumComponent
   },
   {
-    path: 'topic',
+    path: 'topic/:id',
     component: TopicComponent
   },
   {

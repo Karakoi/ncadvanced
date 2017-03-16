@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="row">
+    <div class="header-content">
+      <div class="header-content-inner text-center">
+        <h1>User dashboard</h1>
+        <ul class="nav nav-tabs">
+          <li class="active"><a [routerLink]="['/home/user/active']">My active requests</a></li>
+          <li><a [routerLink]="['/home/user/closed']">My completed request</a></li>
+          <li><a><span ngClass="glyphicon glyphicon-plus" (click)="staticModal.show()"></span></a></li>
+        </ul>
+        <ng2-smart-table [settings]="settings"
+                         [source]="source">
+        </ng2-smart-table>
+        <pagination [totalItems]="totalItems" [itemsPerPage]="per" (pageChanged)="changed($event)"></pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Add new request</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userFormGroup" (submit)="createNewSimpleRequest(userFormGroup.value)"  novalidate>
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input id="title" class="form-control" type="text" formControlName="title"/>
+            <div *ngIf="!validate('title')" class="help-block text-left">
+              <span *ngIf="userFormGroup.get('title').hasError('required')">Title required.</span>
+              <span *ngIf="userFormGroup.get('title').hasError('maxlength')">Must not be more then 45 characters.</span>
+              <span *ngIf="userFormGroup.get('title').hasError('minlength')">Must  be more then 5 characters.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" class="form-control" formControlName="description"></textarea>
+            <div *ngIf="!validate('description')" class="help-block text-left">
+              <span *ngIf="userFormGroup.get('description').hasError('required')">Description required.</span>
+              <span *ngIf="userFormGroup.get('description').hasError('maxlength')">Must not be more then 200 characters.</span>
+              <span *ngIf="userFormGroup.get('description').hasError('minlength')">Must  be more then 10 characters.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="priorityStatus">Priority</label>
+            <select id="priorityStatus" class="form-control" formControlName="priorityStatus">
+              <option *ngFor="let priority of priorities" [ngValue]="priority">{{priority.name}}</option>
+            </select>
+            <div *ngIf="!validate('priorityStatus')" class="help-block text-left">
+              <span *ngIf="userFormGroup.get('priorityStatus').hasError('required')" class="error">Priority required.</span>
+            </div>
+          </div>
+          <br>
+          <div class="form-group">
+            <button class="btn btn-success" type="submit" [disabled]="userFormGroup.invalid">Create</button>
+            <button class="btn btn-danger" (click)="staticModal.hide(); $event.preventDefault()" > Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

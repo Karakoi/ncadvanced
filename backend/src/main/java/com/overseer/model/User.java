@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.validation.constraints.*;
 
 
@@ -25,6 +26,7 @@ public class User extends AbstractEntity {
     private static final int MAX_NAME_LENGTH = 40;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MAX_PHONE_LENGTH = 20;
+    private static final int MIN_PHONE_LENGTH = 3;
 
     @NotNull(message = "User have to have first name")
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 30")
@@ -34,7 +36,7 @@ public class User extends AbstractEntity {
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of last name has to be between 3 and 30")
     private String lastName;
 
-    @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 40")
+    @Size(max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 40")
     private String secondName;
 
     @NotNull(message = "User has to have password")
@@ -48,10 +50,15 @@ public class User extends AbstractEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
-    @Max(value = MAX_PHONE_LENGTH, message = "Max length of phone number is 20")
+    @Size(max = MAX_PHONE_LENGTH, message = "Max length of phone number is 20")
     private String phoneNumber;
 
     @NotNull(message = "User have to have role")
     private Role role;
+
+    private Boolean isDeactivated;
+
+    private LocalDateTime dateOfDeactivation;
+
 
 }

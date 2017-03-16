@@ -13,7 +13,9 @@ import {
   PublicPageGuard,
   AdminPageGuard,
   RequestService,
+  ReportService,
   RecoverService,
+  EmployeeService,
   AuthService,
   UserService,
   UserPageGuard,
@@ -26,6 +28,11 @@ import {RoleService} from "./service/role.service";
 import {ErrorModule} from "./pages/error/error.module";
 import {ErrorService} from "./service/error.service";
 import {RequestProfileModule} from "./pages/request-profile/request-profile.module";
+import {ReportModule} from "./pages/report/report.module";
+import {ChartsModule} from "ng2-charts";
+// import {ChartsModule} from 'ng2-charts/ng2-charts';
+import {TopicService} from "./service/topic.service";
+import {HistoryService} from "./service/history.service";
 
 @NgModule({
   declarations: [
@@ -37,6 +44,8 @@ import {RequestProfileModule} from "./pages/request-profile/request-profile.modu
     SideBarDirective
   ],
   imports: [
+    ChartsModule,
+    ReportModule,
     ErrorModule,
     RequestProfileModule,
     BrowserModule,
@@ -49,10 +58,14 @@ import {RequestProfileModule} from "./pages/request-profile/request-profile.modu
   ],
   providers: [
     ErrorService,
+    TopicService,
+    HistoryService,
     UserService,
     RoleService,
+    ReportService,
     AuthService,
     CacheService,
+    EmployeeService,
     PrivatePageGuard,
     PublicPageGuard,
     AdminPageGuard,

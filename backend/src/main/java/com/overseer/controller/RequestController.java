@@ -6,18 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RequestController {
     private static final Long DEFAULT_PAGE_SIZE = 20L;
-
+    private static final Long DEFAULT_DATE_MOUNTS_STEP = 1L;
     private final RequestService requestService;
 
     /**
@@ -42,6 +36,20 @@ public class RequestController {
     public ResponseEntity<Request> fetchRequest(@PathVariable Long id) {
         val request = requestService.findOne(id);
         return new ResponseEntity<>(request, HttpStatus.OK);
+    }
+
+    /**
+     * Creates sub request of {@link Request} entity.
+     *
+     * @param subRequest json object which represents {@link Request} entity.
+     * @param idParentRequest id of parent request.
+     * @return json representation of created {@link Request} entity.
+     */
+    @PostMapping("/createSubRequest")
+    public ResponseEntity<Request> createSubRequest(@RequestBody Request subRequest,
+                                                    @RequestParam Long idParentRequest) {
+        val createdRequest = requestService.saveSubRequest(subRequest, idParentRequest);
+        return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
 
     /**
@@ -72,12 +80,48 @@ public class RequestController {
      * Updates {@link Request} entity.
      *
      * @param request json object which represents {@link Request} entity.
-     * @return json representation of created {@link Request} entity.
+     * @return json representation of updated {@link Request} entity.
      */
     @PutMapping
     public ResponseEntity updateRequest(@RequestBody Request request) {
         val updatedRequest = requestService.update(request);
         return new ResponseEntity<>(updatedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Assignes {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of assigned {@link Request} entity.
+     */
+    @PutMapping("/assignRequest")
+    public ResponseEntity assignRequest(@RequestBody Request request) {
+        val assignedRequest = requestService.assignRequest(request);
+        return new ResponseEntity<>(assignedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Closes {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of closed {@link Request} entity.
+     */
+    @PutMapping("/closeRequest")
+    public ResponseEntity closeRequest(@RequestBody Request request) {
+        val closedRequest = requestService.closeRequest(request);
+        return new ResponseEntity<>(closedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Reopens {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of reopend {@link Request} entity.
+     */
+    @PutMapping("/reopenRequest")
+    public ResponseEntity reopenRequest(@RequestBody Request request) {
+        val reopendRequest = requestService.reopenRequest(request.getId());
+        return new ResponseEntity<>(reopendRequest, HttpStatus.OK);
     }
 
     /**
@@ -131,6 +175,45 @@ public class RequestController {
                                                              int pageNumber) {
         val requests = requestService.findRequestsByPeriod(beginDate, endDate, pageNumber);
         return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Gets count of requests objects which created in the same period.
+     *
+     * @param beginDate date from
+     * @param endDate   date to
+     * @return return count of requests from one period of time
+     */
+    @GetMapping("/getCountRequestsByPeriod")
+    public ResponseEntity<Long> getCountRequestsByPeriod(@RequestParam String beginDate,
+                                                         @RequestParam String endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(beginDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+        val count = requestService.findCountsRequestsByPeriod(start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    /**
+     * Gets counts list of requests objects which created in the same period.
+     *
+     * @param beginDate date from
+     * @param months    show mounts from begin date
+     * @return return counts list of requests from one period of time
+     */
+    @GetMapping("/getCountRequestsByStartDate")
+    public ResponseEntity<List<Long>> getCountRequestsByStartDate(@RequestParam String beginDate,
+                                                                   @RequestParam int months) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(beginDate, formatter);
+        List<Long> list = new ArrayList<>();
+        for (int i = 0; i < months; i++) {
+            LocalDate end = start.plusMonths(DEFAULT_DATE_MOUNTS_STEP);
+            list.add(requestService.findCountsRequestsByPeriod(start, end));
+            start = end;
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     /**
@@ -193,4 +276,46 @@ public class RequestController {
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
 
+
+    @GetMapping("/requestsByReporter")
+    public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
+        val requests = requestService.findRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/closedRequestsByReporter")
+    public ResponseEntity<List<Request>> getClosedRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
+        val requests = requestService.findClosedRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/countRequestsByReporter")
+    public ResponseEntity<Long> countRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countRequestByReporter(reporterId), HttpStatus.OK);
+    }
+
+    @GetMapping("/countClosedRequestsByReporter")
+    public ResponseEntity<Long> countClosedRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countClosedRequestsByReporter(reporterId), HttpStatus.OK);
+    }
+
+    @PostMapping("/employeeRequest")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Request request) {
+        return new ResponseEntity<>(requestService.createEmpRequest(request), HttpStatus.OK);
+    }
+
+    /**
+     * Reopen array of requests.
+     * @param requestsId array of request id's.
+     * @return reopened requests.
+     */
+    @PostMapping("/reopen")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Long[] requestsId) {
+        for (Long g : requestsId) {
+            requestService.reopenRequest(g);
+        }
+        return new ResponseEntity<>(new Request(), HttpStatus.OK);
+    }
 }

@@ -25,4 +25,6 @@ public interface MessageDao extends CrudDao<Message, Long> {
         Assert.notNull(recipient, "Recipient have to be not null");
         return getCountByRecipient(recipient.getId());
     }
+
+    List<Message> findByTopic(Long topicId);
 }

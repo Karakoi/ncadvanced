@@ -10,3 +10,15 @@ table {
 .paginate_button {
     cursor: pointer;
 }
+
+.delete-col {
+  width: 20px;
+}
+
+.search {
+  padding-right: 0;
+}
+
+td {
+  text-align: left;
+}

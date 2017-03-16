@@ -103,6 +103,31 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    /**
+     * Gets all deactivated {@link User} entities.
+     *
+     * @return all deactivated {@link User} entities with http status 200 OK.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/deactivated")
+    public ResponseEntity<List<User>> getAllDeactivatedUsers(@RequestParam int page) {
+        List<User> users = userService.findAllDeactivated(page);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    /**
+     * Activates {@link User} entity associated with provided id param.
+     *
+     * @param id user identifier.
+     * @return http status 200 OK.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/activate/{id}")
+    public ResponseEntity activateUser(@PathVariable Long id) {
+        userService.activate(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/pageCount")
     public ResponseEntity<Long> getPageCount() {
