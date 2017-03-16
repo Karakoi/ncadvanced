@@ -57,7 +57,7 @@ export class RequestService {
       });
   }
 
-  getCountRequestsByStartDate(beginDate: string, months: number): Observable<number[]> {
+  getCountRequestsByStartDate(beginDate: Date, months: number): Observable<number[]> {
     return this.authHttp.get(`${url}/getCountRequestsByStartDate?beginDate=${beginDate}&months=${months}`)
       .map(resp => resp.json())
       .catch((error: any) => {
@@ -65,6 +65,7 @@ export class RequestService {
         return Observable.throw(error);
       });
   }
+
 
   getAll(page: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/fetch?page=` + page)

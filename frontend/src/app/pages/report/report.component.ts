@@ -1,12 +1,10 @@
-import {Component, OnInit, Inject} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, FormControl, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
 import {CustomValidators} from "ng2-validation";
 import {BarChartComponent} from "./bar-chart/bar-chart.component";
-import {NumberValidator} from "ng2-validation/dist/number";
 
 @Component({
   selector: 'report',
@@ -15,10 +13,13 @@ import {NumberValidator} from "ng2-validation/dist/number";
 })
 
 export class ReportComponent implements OnInit {
+
   private reportForm: FormGroup;
 
+  @ViewChild(BarChartComponent)
   public barChart: BarChartComponent;
   private date: any;
+  private countMonths: any;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -30,6 +31,7 @@ export class ReportComponent implements OnInit {
     this.initForm();
     // this.barChartComponent.generate();
   }
+
   // public barChartComponent: BarChartComponent;
   // public reportForm: FormGroup;
   // public startDate: Date;
@@ -41,9 +43,9 @@ export class ReportComponent implements OnInit {
   //   });
   // }
 
-  // public generateReport() {
-  //   // this.barChartComponent.generate();
-  // }
+  public generateReport() {
+    // this.barChartComponent.generate();
+  }
 
   validateField(field: string): boolean {
     return this.reportForm.get(field).valid || !this.reportForm.get(field).dirty;
@@ -58,8 +60,12 @@ export class ReportComponent implements OnInit {
 
   private go(formData) {
     this.date = formData.dateOfStart;
+    this.countMonths = formData.countMonths;
     this.toastr.success("Data: ".concat(this.date.toString() + ", counts:" + formData.countMonths), "DATA:");
-    // this.barChart.buildBarChart();
+  }
+
+  private go2() {
+    this.barChart.buildBarChart();
   }
 
   private handleError(error) {
