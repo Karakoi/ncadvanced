@@ -283,6 +283,11 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             priorityStatus.setId(resultSet.getLong("priority_id"));
             priorityStatus.setValue(resultSet.getInt("priority_value"));
 
+            Long parentId = resultSet.getLong("parent_id");
+            if (parentId == 0) {
+                parentId = null;
+            }
+
             Request request = new Request();
             request.setId(resultSet.getLong("id"));
             request.setTitle(resultSet.getString("title"));
@@ -294,6 +299,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             request.setAssignee(assignee);
             request.setLastChanger(lastChanger);
             request.setPriorityStatus(priorityStatus);
+            request.setParentId(parentId);
             request.setProgressStatus(progressStatus);
             return request;
         };
