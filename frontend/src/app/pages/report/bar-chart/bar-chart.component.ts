@@ -12,6 +12,7 @@ export class BarChartComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
   constructor(private requestService: RequestService,
               private toastr: ToastsManager) {
   }
