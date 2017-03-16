@@ -222,4 +222,11 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param parentId list of progress status ids, must not be {@literal null}
      */
     void deleteParentRequestIfItHasNoChildren(Long parentId);
+
+    /**
+     * Returns list to build pie chart.
+     *
+     * @return list of statistic request. 
+     */
+    List<Long> countRequestByProgressStatus();
 }

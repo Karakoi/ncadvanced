@@ -1,10 +1,12 @@
+
 <div class="container">
-  <div class="row">
-    <div class="header-content">
-      <div class="header-content-inner text-center">
-        <h1>Admin dashboard</h1>
-      </div>
-    </div>
+  <div class="header-content">
+    <h1 align="center">Requests Info</h1>
+    <google-chart [data]="pieChartRequest"></google-chart>
+  </div>
+
+  <br>
+  <div>
+  <ng2-smart-table [settings]="settings" [source]="testTable"></ng2-smart-table>
   </div>
 </div>
-

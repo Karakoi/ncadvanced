@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,12 @@ import java.util.List;
  */
 @Repository
 public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
+
+    private static final int REGISTERED = 4;
+    private static final int FREE = 5;
+    private static final int JOINED = 6;
+    private static final int IN_PROGRESS = 7;
+    private static final int REOPEN = 9;
 
     @Override
     public List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber) {
@@ -217,6 +224,18 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         Assert.notNull(parentId, "id must not be null");
         String deleteQuery = this.queryService().getQuery("request.deleteParentRequestIfHasNoChildren");
         this.jdbc().update(deleteQuery, new MapSqlParameterSource("id", parentId));
+    }
+
+    @Override
+    public List<Long> countRequestByProgressStatus() {
+        String quantityQuery = queryService().getQuery("request.countByProgressStatus");
+        List<Long> list = new ArrayList<>();
+        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", REGISTERED), Long.class));
+        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", FREE), Long.class));
+        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", JOINED), Long.class));
+        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", IN_PROGRESS), Long.class));
+        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", REOPEN), Long.class));
+        return list;
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -317,5 +318,17 @@ public class RequestController {
             requestService.reopenRequest(g);
         }
         return new ResponseEntity<>(new Request(), HttpStatus.OK);
+    }
+
+    /**
+     * Returns number of progress.
+     *
+     * @return number of progress.
+     */
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("/countRequest")
+    public ResponseEntity<List<Long>> getQuantityRequest() {
+        List<Long> quantity = requestService.quantity();
+        return new ResponseEntity<>(quantity, HttpStatus.OK);
     }
 }
