@@ -33,25 +33,32 @@ export class ProfileComponent implements OnInit {
     this.initForm();
   }
 
+  hasUpdate() {
+    this.authService.login(this.user.email, this.user.password).subscribe(() => {
+      this.update();
+    }, e => this.toastr.error('Wrong', 'Password is not correct'));
+  }
+
   update(): void {
+
     this.userService.update(this.user).subscribe( () => {
         this.toastr.success('Your profile has been updated');
         this.cach.clearAll();
-      }, e => this.toastr.error('Enter ur password','Wrong')
+      }, e => this.toastr.error(" Can't update",'Wrong')
     );
   }
-  updatePass(newPass, confirmPass): void {
+
+  updatePass(oldPass,newPass, confirmPass): void {
 
     if (newPass!=confirmPass) {
       this.toastr.error('Passwords do not match');
       return;
     }
 
-    this.user.password = newPass;
-    this.userService.update(this.user).subscribe(() => {
-        this.toastr.success("Your password has been changed");
-      }, e => this.toastr.error("Wrong")
-    );
+    this.authService.login(this.user.email, oldPass).subscribe(() => {
+      this.user.password = newPass;
+      this.update();
+    }, e => this.toastr.warning('old password is incorrect','Wrong'));
   }
 
   cancel(): void {
