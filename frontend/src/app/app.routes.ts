@@ -58,6 +58,11 @@ export const appRoutes: Routes = [
     loadChildren: './pages/request-profile/request-profile.module#RequestProfileModule',
     canActivate: [PrivatePageGuard]
   },
+  {
+    path: 'user/:id',
+    loadChildren: './pages/user-profile/user-profile.module#UserProfileModule',
+    canActivate: [PrivatePageGuard]
+  },
   // If route does not match any previous ones
   {
     path: '**',
