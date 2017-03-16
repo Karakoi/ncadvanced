@@ -1,0 +1,212 @@
+<div class="container col-lg-offset-1 col-lg-10" *ngIf="request">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title">
+        <inline-editor type="text"
+                       [(ngModel)]="request.title"
+                       (onSave)="updateRequest($event)"
+                       size="40"
+        >
+        </inline-editor>
+      </p>
+    </div>
+    <div class="panel-body">
+      <!-- DETAILS & PEOPLES -->
+      <div class="row">
+        <div class="col-lg-8">
+          <p><b>Details:</b></p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Type:</td>
+              <td>Request</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Progress status:</td>
+              <td>
+                <span class="label label-success">{{request.progressStatus.name}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Priority status:</td>
+              <td>
+                <span class="label label-primary">{{request.priorityStatus.name}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
+              <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
+              <td>{{request.estimateTimeInDays}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-lg-4">
+          <p><b>People:</b></p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
+              <td>
+                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
+              <td>
+                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- DESCRIPTION -->
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Description:</b>
+            <span (click)="changeShowDescription()" *ngIf="showDescription == true"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowDescription()" *ngIf="showDescription == false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td *ngIf="showDescription">
+                <inline-editor type="textarea"
+                               [(ngModel)]="request.description"
+                               (onSave)="updateRequest($event)"
+                               cols="100"
+                               rows="3">
+                </inline-editor>
+              </td>
+              <td *ngIf="!showDescription"><i>Click arrow down to show full description</i></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- SUB REQUESTS -->
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Sub requests:</b>
+            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == true"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td *ngIf="showSubRequests"><b>Title</b></td>
+              <td *ngIf="showSubRequests"><b>Reporter</b></td>
+              <td *ngIf="showSubRequests"><b>Status</b></td>
+              <td *ngIf="showSubRequests"><b>Priority</b></td>
+            </tr>
+            <tr>
+              <td *ngIf="showSubRequests">Implement this fixture</td>
+              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showSubRequests">In progress</td>
+              <td *ngIf="showSubRequests">High</td>
+            </tr>
+            <tr>
+              <td *ngIf="showSubRequests">Fix this wonderful bug</td>
+              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showSubRequests">In progress</td>
+              <td *ngIf="showSubRequests">Low</td>
+            </tr>
+            <tr>
+              <td *ngIf="showSubRequests">Realize that functional</td>
+              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showSubRequests">In progress</td>
+              <td *ngIf="showSubRequests">Medium</td>
+            </tr>
+            <tr>
+              <td *ngIf="!showSubRequests">Click arrow down to show full sub requests list</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- JOINED REQUESTS -->
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Joined requests:</b>
+            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == true"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td *ngIf="showJoinedRequests"><b>Title</b></td>
+              <td *ngIf="showJoinedRequests"><b>Reporter</b></td>
+              <td *ngIf="showJoinedRequests"><b>Status</b></td>
+              <td *ngIf="showJoinedRequests"><b>Priority</b></td>
+            </tr>
+            <tr>
+              <td *ngIf="showJoinedRequests">Implement this fixture</td>
+              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showJoinedRequests">In progress</td>
+              <td *ngIf="showJoinedRequests">High</td>
+            </tr>
+            <tr>
+              <td *ngIf="showJoinedRequests">Fix this wonderful bug</td>
+              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showJoinedRequests">In progress</td>
+              <td *ngIf="showJoinedRequests">Low</td>
+            </tr>
+            <tr>
+              <td *ngIf="showJoinedRequests">Realize that functional</td>
+              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
+              <td *ngIf="showJoinedRequests">In progress</td>
+              <td *ngIf="showJoinedRequests">Medium</td>
+            </tr>
+            <tr *ngIf="!showJoinedRequests">
+              <td>Click arrow down to show full joined requests list</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- HISTORY -->
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>History:</b>
+            <span (click)="changeShowHistory()" *ngIf="showHistory == true && historyRecords !=false"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowHistory()" *ngIf="showHistory == false && historyRecords !=false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <table class="table table-bordered">
+            <tbody>
+
+            <tr *ngFor="let history of historyRecords">
+              <td *ngIf="showHistory">
+                <span>
+                  Field <span class="bold-text">"{{history.columnName}}"</span>
+                  was changed from <span class="bold-text">"{{history.oldValue}}"</span>
+                  to <span class="bold-text">"{{history.newValue}}"</span>
+                  by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
+                  <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
+                </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div *ngIf="showHistory == false && historyRecords">
+            Click arrow down to show full history
+          </div>
+          <div *ngIf="showHistory == true && historyRecords == false">
+            This object was not changed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

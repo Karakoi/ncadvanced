@@ -22,6 +22,11 @@ hr {
   background-color: #337AB7;
 }
 
-.panel-primary {
-  margin-top: 0;
+a {
+  border-bottom: none;
+  line-height: normal;
+}
+
+td {
+  text-align: left;
 }

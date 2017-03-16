@@ -19,3 +19,11 @@
 .list-group {
   margin-bottom: 10px;
 }
+
+.title {
+  color: #337AB7;
+}
+
+td {
+  text-align: left;
+}

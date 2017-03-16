@@ -1,3 +1,11 @@
 .pagination {
     margin: 0;
 }
+
+td {
+  text-align: left;
+}
+
+.assign {
+  width: 30px;
+}

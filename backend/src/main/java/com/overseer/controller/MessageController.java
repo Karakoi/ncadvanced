@@ -43,7 +43,6 @@ public class MessageController {
     @PostMapping("/sendMessage")
     public void sendMessageToEmail(@RequestBody Message message) {
         Assert.notNull(message.getText(), "Message has to have text");
-        Assert.notNull(message.getRecipient(), "Message has to have recipient");
         messageService.create(message);
     }
 
@@ -51,6 +50,12 @@ public class MessageController {
     public ResponseEntity<List<Message>> getMessagesByRecipient(@RequestParam Long recipient,
                                                                 @RequestParam int pageNumber) {
         val messages = messageService.findByRecipient(recipient, pageNumber);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+
+    @GetMapping("/messagesByTopic")
+    public ResponseEntity<List<Message>> getMessagesByTopic(@RequestParam Long topicId) {
+        val messages = messageService.findByTopic(topicId);
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 }

@@ -1,16 +1,16 @@
 package com.overseer.model;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.overseer.util.LocalDateTimeDeserializer;
-import com.overseer.util.LocalDateTimeSerializer;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+
 
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Request extends AbstractEntity {
@@ -39,8 +39,6 @@ public class Request extends AbstractEntity {
     private String description;
 
     @NotNull
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateOfCreation;
 
     private PriorityStatus priorityStatus;
@@ -48,13 +46,17 @@ public class Request extends AbstractEntity {
     private ProgressStatus progressStatus;
 
     @NotNull
+    @JsonInclude(NON_NULL)
     private User reporter;
 
+    @JsonInclude(NON_NULL)
     private User assignee;
 
+    @JsonInclude(NON_NULL)
     private Long parentId;
 
-    @NonNull
+    @NotNull
+    @JsonInclude(NON_NULL)
     private User lastChanger;
 
     private Integer estimateTimeInDays;

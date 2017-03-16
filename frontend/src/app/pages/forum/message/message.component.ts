@@ -8,6 +8,7 @@ import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'message-menu',
+  inputs: ['currentSender'],
   templateUrl: 'message.component.html',
   styleUrls: ['message.component.css']
 })
@@ -22,14 +23,17 @@ export class MessageComponent implements OnInit {
               private userService: UserService,
               private authService: AuthService,
               private toastr: ToastsManager) {
-
   }
 
-  ngOnInit() {
+  cleanForm() {
     this.messageForm = this.formBuilder.group({
       recipient: ['', [Validators.required]],
       text: ['', [Validators.required]]
     });
+  }
+
+  ngOnInit() {
+    this.cleanForm();
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
       this.message = {
@@ -39,11 +43,12 @@ export class MessageComponent implements OnInit {
         topic: null,
         dateAndTime: null
       };
-      if(this.authService.role === 'office manager' || this.authService.role === 'admin') {
+      if (this.authService.role === 'office manager' || this.authService.role === 'admin') {
         this.userService.getPotentialRecipientForManager(user.id).subscribe((potential) => {
-        this.potentialRecipients = potential;
-        }) }
-      else if(this.authService.role === 'employee') {
+          this.potentialRecipients = potential;
+        })
+      }
+      else if (this.authService.role === 'employee') {
         this.userService.getPotentialRecipientForEmployee(user.id).subscribe((potential) => {
           this.potentialRecipients = potential;
         })
@@ -59,6 +64,7 @@ export class MessageComponent implements OnInit {
     this.message.recipient.password = "";
     this.userService.sendMessage(this.message).subscribe(() => {
       this.toastr.success("Message sent.", "Success");
+      this.cleanForm();
     });
   }
 

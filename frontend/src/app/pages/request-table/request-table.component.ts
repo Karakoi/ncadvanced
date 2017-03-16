@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
-import {RequestDetailsComponent} from "../../shared/request/request-details/request-details.component";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
+// import * as FileSaver from "file-saver";
+import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 
 declare let $: any;
 
@@ -14,12 +15,13 @@ declare let $: any;
 export class RequestTableComponent implements OnInit {
   requests: Request[];
   pageCount: number;
-
-  @ViewChild(RequestDetailsComponent)
-  requestDetails: RequestDetailsComponent;
+  term: any;
 
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;
+
+  @ViewChild(DeleteRequestComponent)
+  deleteRequestComponent: DeleteRequestComponent;
 
   constructor(private requestService: RequestService) {
   }
@@ -30,6 +32,12 @@ export class RequestTableComponent implements OnInit {
     });
     this.requestService.getPageCount().subscribe((count) => this.pageCount = count);
   }
+
+  openDeleteRequestModal(request: Request): void {
+    this.deleteRequestComponent.request = request;
+    this.deleteRequestComponent.modal.open();
+  }
+
 
   get sorted(): Request[] {
     return this.requests
@@ -58,16 +66,29 @@ export class RequestTableComponent implements OnInit {
     });
   }
 
-  updateRequests(users: Request[]) {
-    this.requests = users;
-  }
-
-  openDetailsModal(request: Request): void {
-    this.requestDetails.modal.open();
-    this.requestDetails.request = request;
+  updateRequests(request: Request[]) {
+    this.requests = request;
   }
 
   openFormModal(): void {
     this.requestForm.modal.open();
   }
+
+  // getPDFReport() {
+  //   this.reportService.getPDFReport().subscribe(
+  //     data => {
+  //       console.log(data);
+  //       let blob = new Blob([data], {type: 'application/pdf'});
+  //       console.log(blob);
+  //       FileSaver.saveAs(blob, "report.pdf");
+  //       this.toastr.success("Report was created successfully", "Success!");
+  //     }, e => this.handleError(e));
+  // }
+
+  // private handleError(error) {
+  //   switch (error.status) {
+  //     case 500:
+  //       this.toastr.error("Can't create report", 'Error');
+  //   }
+  // }
 }

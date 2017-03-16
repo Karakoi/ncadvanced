@@ -1,0 +1,48 @@
+<div class="container col-lg-offset-2 col-lg-8" *ngIf="user">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title">
+        <b>{{user.firstName}} {{user.lastName}} profile</b>
+      </p>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-lg-4">
+          <gravatar [email]="user.email" [size]="160"></gravatar><br>
+          <a href="./forum/message"><button class="btn btn-primary center-block">Send message</button></a>
+        </div>
+        <div class="col-lg-8">
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span>First name:</td>
+              <td>{{user.firstName}}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Last name:</td>
+              <td>{{user.lastName}}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Second name:</td>
+              <td>{{user.secondName}}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Email:</td>
+              <td>{{user.email}}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>Birth date:</td>
+              <td>{{user.dateOfBirth}}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-phone" aria-hidden="true"></span>Phone:</td>
+              <td>{{user.phoneNumber}}</td>
+            </tr>
+            <tr><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

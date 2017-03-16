@@ -4,8 +4,22 @@
       Users
       <button class="btn btn-primary btn-xs pull-right" (click)="openAddUserModal()">New user
       </button>
+
+      <!--<div class="form-group" style="width: 300px">-->
+
+        <!--<div class="input-group">-->
+          <!--Users <label class="input-group-addon"><i class="fa fa-search"></i></label>-->
+          <!--<input type="text" class="form-control" placeholder="Search da Fish" [(ngModel)]="users">-->
+        <!--</div>-->
+        <!--<button class="btn btn-primary btn-xs pull-right" (click)="openAddUserModal()">New user-->
+        <!--</button>-->
+      <!--</div>-->
+
     </div>
     <div class="template-body">
+      <div class="form-group col-lg-3 pull-right search">
+        <input type="text" class="form-control" [(ngModel)]="term" placeholder="Search"/>
+      </div>
       <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
@@ -13,17 +27,21 @@
           <th>Last Name</th>
           <th>Email</th>
           <th>Role</th>
+          <th>Details</th>
           <th>Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of users | filter:term">
           <td>{{user.firstName}}</td>
           <td>{{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>{{user.role.name}}</td>
-          <td class="text-center">
-            <button [attr.value]="user.id" class="glyphicon glyphicon-trash"
+          <td class="text-center delete-col">
+            <button [routerLink]="['/user', user.id]" class="glyphicon glyphicon-info-sign center-block"></button>
+          </td>
+          <td class="text-center delete-col">
+            <button [attr.value]="user.id" class="glyphicon glyphicon-trash center-block"
                     (click)="openDeleteUserModal(user)"></button>
           </td>
         </tr>
@@ -38,4 +56,4 @@
   </form-template>
 </div>
 <add-user [users]="users" (updated)="updateUsers($event)"></add-user>
-<delete-user [users]="users" (updated)="updateUsers($event)"><delete-user>
+<delete-user [users]="users" (updated)="updateUsers($event)"></delete-user>
