@@ -26,6 +26,7 @@ public class User extends AbstractEntity {
     private static final int MAX_NAME_LENGTH = 40;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MAX_PHONE_LENGTH = 20;
+    private static final int MIN_PHONE_LENGTH = 3;
 
     @NotNull(message = "User have to have first name")
     @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH, message = "Size of first name has to be between 3 and 30")

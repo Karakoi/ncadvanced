@@ -49,6 +49,11 @@ export const appRoutes: Routes = [
     canActivate: [PrivatePageGuard, AdminPageGuard]
   },
   {
+    path: 'reports',
+    loadChildren: './pages/report/report.module#ReportModule',
+    canActivate: [PrivatePageGuard, AdminPageGuard]
+  },
+  {
     path: 'error',
     loadChildren: './pages/error/error.module#ErrorModule',
     canActivate: [PrivatePageGuard]

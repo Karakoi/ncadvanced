@@ -164,6 +164,20 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
+        String findByPeriodQuery = this.queryService().getQuery("request.countByPeriod");
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            return jdbc().queryForObject(findByPeriodQuery,
+                    parameterSource, (resultSet, i) -> resultSet.getLong("count"));
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<Request> findRequestsByDate(LocalDate date) {
         Assert.notNull(date, "Date must be not null");
         return jdbc().query(queryService().getQuery("request.select")
@@ -269,6 +283,11 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             priorityStatus.setId(resultSet.getLong("priority_id"));
             priorityStatus.setValue(resultSet.getInt("priority_value"));
 
+            Long parentId = resultSet.getLong("parent_id");
+            if (parentId == 0) {
+                parentId = null;
+            }
+
             Request request = new Request();
             request.setId(resultSet.getLong("id"));
             request.setTitle(resultSet.getString("title"));
@@ -280,6 +299,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             request.setAssignee(assignee);
             request.setLastChanger(lastChanger);
             request.setPriorityStatus(priorityStatus);
+            request.setParentId(parentId);
             request.setProgressStatus(progressStatus);
             return request;
         };
