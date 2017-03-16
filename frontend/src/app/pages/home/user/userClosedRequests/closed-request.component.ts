@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {RequestService} from "../../../../service/request.service";
 import {LocalDataSource} from "ng2-smart-table";
 import {AuthService} from "../../../../service/auth.service";
 import {EmployeeService} from "../../../../service/employee.service";
@@ -13,21 +12,20 @@ import {ModalDirective} from "ng2-bootstrap";
 import {Request} from "../../../../model/request.model";
 
 
-
 @Component({
   selector: 'user-home',
   templateUrl: 'closed-request.component.html',
   styleUrls: ['closed-request.component.css']
 })
 export class ClosedRequest implements OnInit {
-  @ViewChild('staticModal') public staticModal:ModalDirective;
+  @ViewChild('staticModal') public staticModal: ModalDirective;
   private selected: number[];
   private priorities: PriorityStatus[];
   private currentUser: User;
   private totalItems: number = 20;
   private per: number = 20;
-  private data:Array<any> = new Array();
-  private source: LocalDataSource = new LocalDataSource() ;
+  private data: Array<any> = new Array();
+  private source: LocalDataSource = new LocalDataSource();
   private userFormGroup: FormGroup;
 
   constructor(private authService: AuthService,
@@ -82,6 +80,7 @@ export class ClosedRequest implements OnInit {
       })
     })
   }
+
   settings = {
     selectMode: 'multi',
 
@@ -113,7 +112,7 @@ export class ClosedRequest implements OnInit {
     },
   };
 
-  createNewSimpleRequest(param){
+  createNewSimpleRequest(param) {
     console.log("trying to send");
     param.lastChanger = this.currentUser;
     param.reporter = this.currentUser;
@@ -128,25 +127,28 @@ export class ClosedRequest implements OnInit {
     );
   }
 
-  onSelect(data){
+  onSelect(data) {
     this.selected = data.selected.map(e => e.id)
-    console.log(this.selected)
   }
 
-  reopen(data){
-    if(this.selected.length > 0){
+  reopen(data) {
+    if (this.selected.length > 0) {
       this.employeeService.reopenRequests(this.selected).subscribe(resp => {
-        console.log("it's good")
+        for(let i = 0; i < this.selected.length; i++){
+          this.data = this.data.filter(r => r.id != this.selected[i])
+        }
+        this.source.load(this.data);
       })
     }
   }
 
-  mapRequestToReadable(request: Request){
+  mapRequestToReadable(request: Request) {
     if (request.assignee.firstName === null) {
       request.assignee.firstName = "";
       request.assignee.lastName = "";
     }
     return {
+      "id": request.id,
       "title": request.title,
       "description": request.description,
       "estimateTime": request.estimateTimeInDays,

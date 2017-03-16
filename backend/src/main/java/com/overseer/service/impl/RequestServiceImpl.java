@@ -206,7 +206,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Request saveSubRequest(Request subRequest,  Long idParentRequest) {
+    public Request saveSubRequest(Request subRequest, Long idParentRequest) {
         Assert.notNull(subRequest, "sub request must not be null");
         Assert.notNull(idParentRequest, "id of parent request must not be null");
         Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
@@ -247,14 +247,14 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
             requestDao.save(request);
             sendMessageToReporter(request);
         } else {
-            for (Request joinedRequest: joinedRequests) {
+            for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
                 joinedRequest.setProgressStatus(closedProgressStatus);
                 requestDao.save(joinedRequest);
                 sendMessageToReporter(joinedRequest);
             }
             List<Request> subRequests = requestDao.findSubRequests(request);
-            for (Request subRequest: subRequests) {
+            for (Request subRequest : subRequests) {
                 requestDao.delete(subRequest);
             }
             requestDao.deleteParentRequestIfItHasNoChildren(request.getParentId());
@@ -278,7 +278,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         sendMessageToReporter(request);
 
         request.setEstimateTimeInDays(null);
-        request.setAssignee(null);
+        request.setAssignee(new User());
 
         requestDao.save(request);
         return null;
@@ -311,7 +311,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         List<Request> requests = requestDao.findRequestsByProgressStatusesAndReporterId(idsOfProgresStatuses, reporterId);
         // Define and set progress status
         ProgressStatus closedProgressStatus = progressStatusDao.findOne(CLOSED_STATUS);
-        for (Request request: requests) {
+        for (Request request : requests) {
             Long progressStatusId = request.getProgressStatus().getId();
             if (progressStatusId.equals(JOINED_STATUS)) {
                 request.setProgressStatus(closedProgressStatus);

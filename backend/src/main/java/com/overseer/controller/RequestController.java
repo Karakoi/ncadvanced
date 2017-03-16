@@ -240,9 +240,8 @@ public class RequestController {
      */
     @PostMapping("/reopen")
     public ResponseEntity<Request> createEmployeeRequest(@RequestBody Long[] requestsId) {
-        System.out.println("requests id ");
         for (Long g : requestsId) {
-            System.out.println(g);
+            requestService.reopenRequest(g);
         }
         return new ResponseEntity<>(new Request(), HttpStatus.OK);
     }
