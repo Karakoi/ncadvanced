@@ -2,6 +2,7 @@ import {Component,ViewChild} from "@angular/core";
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
 import {AssignRequestComponent} from "../../../pages/home/manager/request-assign/assign-request.component"
+import {JoinRequestComponent} from "../../../pages/home/manager/request-join/join-request.component"
 
 declare let $: any;
 
@@ -17,6 +18,8 @@ export class ManagerComponent {
 
   @ViewChild(AssignRequestComponent)
   assignRequestComponent: AssignRequestComponent;
+  @ViewChild(JoinRequestComponent)
+  joinRequestComponent: JoinRequestComponent;
 
   constructor(private requestService: RequestService) {
   }
@@ -33,6 +36,14 @@ export class ManagerComponent {
     request.estimateTimeInDays = 3;
     this.assignRequestComponent.request = request;
     this.assignRequestComponent.modal.open();
+  }
+
+  join() {
+    this.joinRequestComponent.modal.open();
+  }
+
+  updateRequests(requests: Request[]) {
+    this.requests = requests;
   }
 
   toggle(id) {

@@ -36,20 +36,15 @@ export class AssignRequestComponent {
       console.log(this.request);
       this.requestService.update(this.request).subscribe(() => {
         this.toastr.success("Request was assigned successfully", "Success!");
-        let id = this.request.id;
-        let requests = this.requests;
-        this.requests.forEach(function (item, index) {
-          if (item["id"] === id) {
-            requests.splice(index, 1);
-          }
-        });
+        this.requests = this.requests.filter(item => item["id"] !== this.request.id);
+        this.updated.emit(this.requests);
         this.modal.close();
-      }, e => this.handleErrorDeleteUser(e));      
+      }, e => this.handleErrorAssignRequest(e));      
     });
   }
 
 
-  private handleErrorDeleteUser(error) {
+  private handleErrorAssignRequest(error) {
     switch (error.status) {
       case 500:
         this.toastr.error("Can't delete user", 'Error');

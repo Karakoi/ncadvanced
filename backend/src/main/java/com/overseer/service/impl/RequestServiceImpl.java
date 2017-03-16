@@ -150,6 +150,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         parentRequest.setDateOfCreation(LocalDateTime.now());
 
         // Save parent request to database
+        System.out.println(parentRequest.isNew());
+        System.out.println("HERE");
+        System.out.println(parentRequest);
+        System.out.println("HERE");
+
         val parent = requestDao.save(parentRequest);
 
         // Define progress status with 'Joined' value for child requests
@@ -162,6 +167,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         joinedRequests.forEach(request -> {
             request.setProgressStatus(childProgressStatus);
             request.setParentId(parentId);
+            request.setAssignee(parentRequest.getAssignee());
             requestDao.save(request);
         });
         return parent;

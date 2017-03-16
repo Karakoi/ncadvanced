@@ -47,7 +47,7 @@
             </tr>
             </tbody>
           </table>
-          <input *ngIf="canUnite()" type="submit" class="btn btn-primary" (click)="info($event)" value="Unite">
+          <input *ngIf="canUnite()" type="submit" class="btn btn-primary" (click)="join()" value="Unite">
           <input *ngIf="canUnite()" type="submit" class="btn btn-success" (click)="uncheckAll()" value="Uncheck All">
           <ul class="pagination pull-right">
             <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
@@ -58,4 +58,5 @@
     </div>
   </div>
 </div>
-<assign-request [requests]="requests" (updated)="assign($event)"></assign-request>
+<assign-request [requests]="requests" (updated)="updateRequests($event)"></assign-request>
+<join-request [requests]="requests" [checked]="checked" (updated)="updateRequests($event)"></join-request>

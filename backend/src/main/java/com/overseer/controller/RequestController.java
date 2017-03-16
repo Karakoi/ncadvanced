@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controller provides api for creating, getting and deleting request.
@@ -176,4 +178,21 @@ public class RequestController {
         val requests = requestService.findFreeRequests(page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
+
+    /**
+     * Creates {@link Request} entity of parent request and joins some another
+     * requests to it.
+     * @param request json object which represents {@link Request} entity.
+     * @param ids string representation if id`s array.
+     * @return json representation of created {@link Request} entity.
+     */
+    @PostMapping("/join/{ids}")
+    public ResponseEntity<Request> joinRequests(@RequestBody Request request, @PathVariable String ids) {
+        System.out.println(request);
+        System.out.println(ids);
+        List<Long> list = Arrays.asList(ids.split(",")).stream().map(Long::parseLong).collect(Collectors.toList());
+        val createdRequest = requestService.joinRequestsIntoParent(list, request);
+        return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
+    }
+
 }

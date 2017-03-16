@@ -60,7 +60,7 @@ public class Request extends AbstractEntity {
     @JsonInclude(NON_NULL)
     private Long parentId;
 
-    @NonNull
+    @NotNull
     @JsonInclude(NON_NULL)
     private User lastChanger;
 
