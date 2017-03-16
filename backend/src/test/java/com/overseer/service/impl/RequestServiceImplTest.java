@@ -41,7 +41,7 @@ public class RequestServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        requestsGroupIds = Arrays.asList(113L, 114L, 115L);
+        requestsGroupIds = Arrays.asList(176L, 191L, 130L);
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
@@ -51,6 +51,7 @@ public class RequestServiceImplTest {
         reporter.setPassword("gunner12");
         reporter.setEmail( "some@email.com");
         reporter.setRole(reporterRole);
+
         reporter = this.userDao.save(reporter);
 
 

@@ -26,3 +26,7 @@ a {
   border-bottom: none;
   line-height: normal;
 }
+
+.bold-text {
+  font-weight: bold;
+}

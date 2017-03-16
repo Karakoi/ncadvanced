@@ -3,6 +3,7 @@ import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
 // import * as FileSaver from "file-saver";
+import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 
 declare let $: any;
 
@@ -18,6 +19,9 @@ export class RequestTableComponent implements OnInit {
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;
 
+  @ViewChild(DeleteRequestComponent)
+  deleteRequestComponent: DeleteRequestComponent;
+
   constructor(private requestService: RequestService) {
   }
 
@@ -27,6 +31,12 @@ export class RequestTableComponent implements OnInit {
     });
     this.requestService.getPageCount().subscribe((count) => this.pageCount = count);
   }
+
+  openDeleteRequestModal(request: Request): void {
+    this.deleteRequestComponent.request = request;
+    this.deleteRequestComponent.modal.open();
+  }
+
 
   get sorted(): Request[] {
     return this.requests
@@ -55,8 +65,8 @@ export class RequestTableComponent implements OnInit {
     });
   }
 
-  updateRequests(users: Request[]) {
-    this.requests = users;
+  updateRequests(request: Request[]) {
+    this.requests = request;
   }
 
   openFormModal(): void {

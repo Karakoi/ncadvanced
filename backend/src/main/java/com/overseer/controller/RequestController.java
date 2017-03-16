@@ -37,6 +37,20 @@ public class RequestController {
     }
 
     /**
+     * Creates sub request of {@link Request} entity.
+     *
+     * @param subRequest json object which represents {@link Request} entity.
+     * @param idParentRequest id of parent request.
+     * @return json representation of created {@link Request} entity.
+     */
+    @PostMapping("/createSubRequest")
+    public ResponseEntity<Request> createSubRequest(@RequestBody Request subRequest,
+                                                    @RequestParam Long idParentRequest) {
+        val createdRequest = requestService.saveSubRequest(subRequest, idParentRequest);
+        return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
+    }
+
+    /**
      * Creates {@link Request} entity.
      *
      * @param request json object which represents {@link Request} entity.
@@ -64,12 +78,48 @@ public class RequestController {
      * Updates {@link Request} entity.
      *
      * @param request json object which represents {@link Request} entity.
-     * @return json representation of created {@link Request} entity.
+     * @return json representation of updated {@link Request} entity.
      */
     @PutMapping
     public ResponseEntity updateRequest(@RequestBody Request request) {
         val updatedRequest = requestService.update(request);
         return new ResponseEntity<>(updatedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Assignes {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of assigned {@link Request} entity.
+     */
+    @PutMapping("/assignRequest")
+    public ResponseEntity assignRequest(@RequestBody Request request) {
+        val assignedRequest = requestService.assignRequest(request);
+        return new ResponseEntity<>(assignedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Closes {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of closed {@link Request} entity.
+     */
+    @PutMapping("/closeRequest")
+    public ResponseEntity closeRequest(@RequestBody Request request) {
+        val closedRequest = requestService.closeRequest(request);
+        return new ResponseEntity<>(closedRequest, HttpStatus.OK);
+    }
+
+    /**
+     * Reopens {@link Request} entity.
+     *
+     * @param request json object which represents {@link Request} entity.
+     * @return json representation of reopend {@link Request} entity.
+     */
+    @PutMapping("/reopenRequest")
+    public ResponseEntity reopenRequest(@RequestBody Request request) {
+        val reopendRequest = requestService.reopenRequest(request.getId());
+        return new ResponseEntity<>(reopendRequest, HttpStatus.OK);
     }
 
     /**
@@ -185,5 +235,48 @@ public class RequestController {
     public ResponseEntity<Long> getPagesCount() {
         Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/requestsByReporter")
+    public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
+        val requests = requestService.findRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/closedRequestsByReporter")
+    public ResponseEntity<List<Request>> getClosedRequestsByReporter(@RequestParam long userId, int pageNumber) {
+        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
+        val requests = requestService.findClosedRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/countRequestsByReporter")
+    public ResponseEntity<Long> countRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countRequestByReporter(reporterId), HttpStatus.OK);
+    }
+
+    @GetMapping("/countClosedRequestsByReporter")
+    public ResponseEntity<Long> countClosedRequestByReporter(@RequestParam Long reporterId) {
+        return new ResponseEntity<>(requestService.countClosedRequestsByReporter(reporterId), HttpStatus.OK);
+    }
+
+    @PostMapping("/employeeRequest")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Request request) {
+        return new ResponseEntity<>(requestService.createEmpRequest(request), HttpStatus.OK);
+    }
+
+    /**
+     * Reopen array of requests.
+     * @param requestsId array of request id's.
+     * @return reopened requests.
+     */
+    @PostMapping("/reopen")
+    public ResponseEntity<Request> createEmployeeRequest(@RequestBody Long[] requestsId) {
+        System.out.println("requests id ");
+        for (Long g : requestsId) {
+            System.out.println(g);
+        }
+        return new ResponseEntity<>(new Request(), HttpStatus.OK);
     }
 }

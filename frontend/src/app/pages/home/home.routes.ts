@@ -1,5 +1,4 @@
 import {Routes} from "@angular/router";
-import {UserComponent} from "./user/user.component";
 import {ManagerComponent} from "./manager/manager.component";
 import {AdminComponent} from "./admin/admin.component";
 import {AdminPageGuard} from "../../service/guard/admin-page.guard";
@@ -14,7 +13,7 @@ export const homeRoutes: Routes = [
   },
   {
     path: 'user',
-    component: UserComponent,
+    loadChildren: './user/user.module#UserModule',
     canActivate: [UserPageGuard]
   },
   {

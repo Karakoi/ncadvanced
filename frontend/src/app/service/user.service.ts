@@ -6,8 +6,9 @@ import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
 import {Message} from "../model/message.model";
-import {PriorityStatus, ProgressStatus} from "../model/request.model";
+import {ProgressStatus} from "../model/request.model";
 import {ErrorService} from "./error.service";
+import {PriorityStatus} from "../model/priority.model";
 
 const url = '/api/users';
 
@@ -43,7 +44,14 @@ export class UserService {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
+  }
 
+  activate(id: number): Observable<Response> {
+    return this.authHttp.get(`${url}/activate/${id}`)
+        .catch((error: any) => {
+          this.errorService.processError(error);
+          return Observable.throw(error);
+        });
   }
 
   getPriorityStatuses(): Observable<PriorityStatus[]> {
@@ -84,6 +92,15 @@ export class UserService {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
+  }
+
+  getAllDeactivated(page: number): Observable<User[]> {
+    return this.authHttp.get(`${url}/deactivated?page=` + page)
+        .map(resp => resp.json()).publishReplay(1, 2000).refCount()
+        .catch((error: any) => {
+          this.errorService.processError(error);
+          return Observable.throw(error);
+        });
   }
 
   getPageCount(): Observable<number> {

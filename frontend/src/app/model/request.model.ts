@@ -1,10 +1,11 @@
 import {User} from "./user.model";
+import {PriorityStatus} from "./priority.model";
 
 export interface Request {
   id?: number,
   title: string,
   description: string,
-  dateOfCreation: string,
+  dateOfCreation: Date,
   priorityStatus?: PriorityStatus,
   progressStatus?: ProgressStatus,
   reporter: User,
@@ -12,12 +13,6 @@ export interface Request {
   parentId?: number,
   estimateTimeInDays: number,
   lastChanger: User
-}
-
-export interface PriorityStatus {
-  id?: number,
-  name: string,
-  value: number
 }
 
 export interface ProgressStatus {

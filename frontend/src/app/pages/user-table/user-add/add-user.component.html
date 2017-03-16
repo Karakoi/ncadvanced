@@ -3,9 +3,9 @@
     <modal-header [show-close]="true">
       <b>Create new user</b>
     </modal-header>
-    <modal-body>
+    <modal-header>
       <!--USER FIRST NAME-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('firstName')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('firstName')}">
         <label for="firstName">First Name</label>
         <input id="firstName" formControlName="firstName" type="text" placeholder="First Name"
                class="form-control"/>
@@ -14,7 +14,7 @@
         </div>
       </div>
       <!--USER LAST NAME-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('lastName')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('lastName')}">
         <label for="lastName">Last Name</label>
         <input id="lastName" formControlName="lastName" type="text" placeholder="Last Name" class="form-control"/>
         <div *ngIf="!validateField('lastName')" class="help-block text-left">
@@ -22,13 +22,13 @@
         </div>
       </div>
       <!--USER SECOND NAME-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('secondName')}">
+      <div class="form-group col-lg-12" [ngClass]="{'has-error': !validateField('secondName')}">
         <label for="secondName">Second Name</label>
         <input id="secondName" formControlName="secondName" type="text" placeholder="Second Name"
                class="form-control"/>
       </div>
       <!--USER ROLE-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('role')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('role')}">
         <label for="role">Role</label>
         <select id="role" formControlName="role" class="form-control">
           <option [ngValue]="role" *ngFor="let role of roles">{{role.name}}</option>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <!--USER EMAIL-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('email')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('email')}">
         <label for="email">Email</label>
         <input type="email" id="email" formControlName="email" class="form-control" placeholder="Email">
         <div *ngIf="!validateField('email')" class="help-block text-left">
@@ -47,7 +47,7 @@
         </div>
       </div>
       <!--USER PASSWORD-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('password')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('password')}">
         <label for="password">Password</label>
         <input type="password" id="password" formControlName="password" class="form-control"
                placeholder="Password">
@@ -57,7 +57,7 @@
         </div>
       </div>
       <!--USER CONFIRM PASSWORD-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('confirmPassword')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('confirmPassword')}">
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control"
                placeholder="Confirm Password">
@@ -68,7 +68,7 @@
         </div>
       </div>
       <!--USER BIRTH DATE-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('dateOfBirth')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('dateOfBirth')}">
         <label for="dateOfBirth">Date of Birth</label>
         <input id="dateOfBirth" formControlName="dateOfBirth" type="date" placeholder="Date of birth"
                class="form-control"/>
@@ -77,7 +77,7 @@
         </div>
       </div>
       <!--USER PHONE NUMBER-->
-      <div class="form-group" [ngClass]="{'has-error': !validateField('phoneNumber')}">
+      <div class="form-group col-lg-6" [ngClass]="{'has-error': !validateField('phoneNumber')}">
         <label for="phoneNumber">Phone number</label>
         <input id="phoneNumber" formControlName="phoneNumber" type="text" placeholder="Phone Number"
                class="form-control"/>
@@ -85,11 +85,12 @@
           <span *ngIf="addUserForm.get('phoneNumber').hasError('phone')">Invalid phone number. Example: 0995351242</span>
         </div>
       </div>
-    </modal-body>
+    </modal-header>
     <modal-footer>
-      <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary col-md-5" [disabled]="addUserForm.invalid">Submit</button>
-        <button type="submit" class="btn btn-danger col-md-5" data-dismiss="modal">Close</button>
+      <div class="btn-toolbar col-lg-12">
+        <button type="submit" class="btn btn-primary col-md-5 pull-left" [disabled]="addUserForm.invalid">Submit
+        </button>
+        <button type="submit" class="btn btn-danger col-md-5 pull-right" data-dismiss="modal">Close</button>
       </div>
     </modal-footer>
   </form>

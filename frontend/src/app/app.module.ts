@@ -15,6 +15,7 @@ import {
   RequestService,
   ReportService,
   RecoverService,
+  EmployeeService,
   AuthService,
   UserService,
   UserPageGuard,
@@ -31,6 +32,7 @@ import {ReportModule} from "./pages/report/report.module";
 import {ChartsModule} from "ng2-charts";
 // import {ChartsModule} from 'ng2-charts/ng2-charts';
 import {TopicService} from "./service/topic.service";
+import {HistoryService} from "./service/history.service";
 
 @NgModule({
   declarations: [
@@ -57,11 +59,13 @@ import {TopicService} from "./service/topic.service";
   providers: [
     ErrorService,
     TopicService,
+    HistoryService,
     UserService,
     RoleService,
     ReportService,
     AuthService,
     CacheService,
+    EmployeeService,
     PrivatePageGuard,
     PublicPageGuard,
     AdminPageGuard,

@@ -24,6 +24,38 @@ import java.util.List;
 public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
     @Override
+    public List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber) {
+        Assert.notNull(reporterId, "id must not be null");
+        try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+            parameterSource.addValue("reporterId", reporterId);
+            parameterSource.addValue("progress", progress);
+            return jdbc().query(queryService().getQuery("request.select").concat(
+                    queryService().getQuery("request.findByReporterAndProgress")),
+                    parameterSource,
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Long countRequestsByReporterAndProgress(Long reporterId, String progress) {
+        val parameterSource = new MapSqlParameterSource("reporterId", reporterId);
+        parameterSource.addValue("progress", progress);
+        return jdbc().queryForObject(queryService().getQuery("request.countByReporterAndProgress"),
+                parameterSource, Long.class);
+    }
+
+    @Override
+    public Long countRequestsByReporter(Long reporterId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countByReporter"),
+                new MapSqlParameterSource("reporterId", reporterId), Long.class);
+    }
+
+    @Override
     public List<Request> findSubRequests(Long id) {
         Assert.notNull(id, "id must not be null");
         String subRequestsQuery = this.queryService().getQuery("request.select")
@@ -36,9 +68,9 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     @Override
     public List<Request> findJoinedRequests(Long id) {
         Assert.notNull(id, "id must not be null");
-        String subRequestsQuery = this.queryService().getQuery("request.select")
+        String joinedRequestsQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findJoinedRequests"));
-        return jdbc().query(subRequestsQuery,
+        return jdbc().query(joinedRequestsQuery,
                 new MapSqlParameterSource("id", id),
                 this.getMapper());
     }
@@ -73,6 +105,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                     parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -164,6 +197,30 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public List<Request> findRequestsByProgressStatusesAndReporterId(List<Long> statusIds, Long reporterId) {
+        Assert.notNull(reporterId, "id must not be null");
+        Assert.notNull(statusIds, "list status ids must not be null");
+        String findRequestsByProgressStatusAndReporterIdQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findRequestsByProgressStatusAndReporterId"));
+        try {
+            val parameterSource = new MapSqlParameterSource("reporterId", reporterId);
+            parameterSource.addValue("progress_status_ids", statusIds);
+            return jdbc().query(findRequestsByProgressStatusAndReporterIdQuery,
+                    parameterSource,
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void deleteParentRequestIfItHasNoChildren(Long parentId) {
+        Assert.notNull(parentId, "id must not be null");
+        String deleteQuery = this.queryService().getQuery("request.deleteParentRequestIfHasNoChildren");
+        this.jdbc().update(deleteQuery, new MapSqlParameterSource("id", parentId));
+    }
+
+    @Override
     protected String getInsertQuery() {
         return queryService().getQuery("request.insert");
     }
@@ -186,7 +243,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
     @Override
     protected String getFindAllQuery() {
-        return queryService().getQuery("request.fetchPage");
+        return queryService().getQuery("request.select").concat(queryService().getQuery("request.fetchPage"));
     }
 
     @Override
@@ -201,12 +258,14 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             reporter.setId(resultSet.getLong("reporter_id"));
             reporter.setFirstName(resultSet.getString("reporter_first_name"));
             reporter.setLastName(resultSet.getString("reporter_last_name"));
+            reporter.setEmail(resultSet.getString("reporter_email"));
 
             User assignee = new User();
             assignee.setId(resultSet.getLong("assignee_id"));
             if (resultSet.getString("assignee_first_name") != null) {
                 assignee.setFirstName(resultSet.getString("assignee_first_name"));
                 assignee.setLastName(resultSet.getString("assignee_last_name"));
+                assignee.setEmail(resultSet.getString("assignee_email"));
             }
 
             User lastChanger = new User();

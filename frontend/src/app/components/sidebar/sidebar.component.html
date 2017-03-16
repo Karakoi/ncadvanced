@@ -13,9 +13,6 @@
       <a [routerLink]="['/forum']">Forum</a>
     </li>
     <li>
-      <a [routerLink]="['/forum/topic']">Topic</a>
-    </li>
-    <li>
       <a [routerLink]="['/forum/chat']">Chat</a>
     </li>
     <li>
@@ -27,6 +24,9 @@
     <!--Show this div, if user's role is Admin -->
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">Show all users</a>
+    </li>
+    <li>
+      <a [routerLink]="['/deactivatedUsers']" *ngIf="isAdmin()">Show all deactivated users</a>
     </li>
     <li>
       <a [routerLink]="['/requests']" *ngIf="isAdmin()">Show all requests</a>
