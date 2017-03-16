@@ -5,35 +5,39 @@
     </modal-header>
 
     <modal-body>
-      <div class="form-group">
-        Title: <label>{{request.title}}</label>
-      </div>
-      <div class="form-group">
-        Description: <label>{{request.description}}</label>
-      </div>
-      <div class="form-group">
-        Creation date: <label>{{request.dateOfCreation}}</label>
-      </div>
-      <div class="form-group">
-        Priority: <label>{{request.priorityStatus.name}}</label>
-      </div>
-      <div class="form-group">
-        Reporter: <label>{{request.reporter.firstName}} {{request.reporter.lastName}}</label>
-      </div>
-      <div class="col-sm-12">
-        <div class="col-sm-4" align="left">Estimate time(days) :</div>
-        <div class="col-sm-3">
-          <input type="number"
-                 [value]="request.estimateTimeInDays"
-                 (input)="request.estimateTimeInDays = $event.target.value"
-                 class="form-control"
-                 min="1"
-                 max="30">
-        </div>
-      </div>
-      <br>
-      <br>
-
+      <table class="table table-bordered">
+        <tbody>
+        <tr>
+          <td><b>Title:</b></td>
+          <td>{{request.title}}</td>
+        </tr>
+        <tr>
+          <td><b>Description:</b></td>
+          <td>{{request.description}}</td>
+        </tr>
+        <tr>
+          <td><b>Creation date:</b></td>
+          <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
+        </tr>
+        <tr>
+          <td><b>Priority:</b></td>
+          <td>{{request.priorityStatus.name}}</td>
+        </tr>
+        <tr>
+          <td><b>Reporter:</b></td>
+          <td>{{request.reporter.firstName}} {{request.reporter.lastName}}</td>
+        </tr>
+        <tr>
+          <td><b>Estimate time(days):</b></td>
+          <td><input type="number"
+                     [value]="request.estimateTimeInDays"
+                     (input)="request.estimateTimeInDays = $event.target.value"
+                     class="col-lg-3 center-block form-control"
+                     min="1"
+                     max="30"></td>
+        </tr>
+        </tbody>
+      </table>
     </modal-body>
 
     <modal-footer>

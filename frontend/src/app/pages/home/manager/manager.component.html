@@ -24,10 +24,8 @@
               <th>Title</th>
               <th>Creation Date</th>
               <th>Priority</th>
-              <th>Progress</th>
               <th>Reporter</th>
-              <th>Assignee</th>
-              <th></th>
+              <th>Assign</th>
             </tr>
             </thead>
             <tbody id="list">
@@ -35,14 +33,12 @@
               <td>
                 <input type="checkbox" (click)="toggle(req.id)" [checked]="isChecked(req.id)">
               </td>
-              <td>{{ req.title }}</td>
-              <td>{{ req.dateOfCreation }}</td>
+              <td><a [routerLink]="['/request', req.id]">{{ req.title }}</a></td>
+              <td><date-parse [date]="req.dateOfCreation"></date-parse></td>
               <td>{{ req.priorityStatus.name }}</td>
-              <td>{{ req.progressStatus.name }}</td>
-              <td>{{ req.reporter.firstName }}</td>
-              <td>{{ req.assignee.firstName }}</td>
-              <td>
-                <i class="fa fa-plus-circle" aria-hidden="true" (click)="assign(req)"></i>
+              <td><a [routerLink]="['/user', req.reporter.id]">{{ req.reporter.firstName }} {{ req.reporter.lastName }}</a></td>
+              <td class="assign">
+                <button class="center-block" (click)="assign(req)"><i class="fa fa-plus-circle" aria-hidden="true" ></i></button>
               </td>
             </tr>
             </tbody>
