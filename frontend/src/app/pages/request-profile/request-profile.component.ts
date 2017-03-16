@@ -67,6 +67,9 @@ export class RequestProfileComponent implements OnInit {
 
   updateRequest() {
     this.request.parentId = null;
+    if (this.request.assignee.id === 0){
+      this.request.assignee.id = null;
+    }
     this.request.lastChanger = this.currentUser;
     this.requestService.update(this.request)
       .subscribe(() => {
