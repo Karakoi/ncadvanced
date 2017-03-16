@@ -10,7 +10,7 @@
           <div class="row">
             <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
               <p><gravatar [email]="message.sender.email" [size]="80"></gravatar></p>
-              <b><a href="">{{message.sender.firstName}} {{message.sender.lastName}}</a></b><br>
+              <b><a [routerLink]="['/user', message.sender.id]">{{message.sender.firstName}} {{message.sender.lastName}}</a></b><br>
               <span><b>{{message.sender.role.name}}</b></span><br>
             </div>
             <div class="col-lg-10 col-sm-9 col-xs-9">

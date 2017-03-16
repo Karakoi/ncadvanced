@@ -1,13 +1,23 @@
 table {
   background-color: white;
 }
+
 .paginate_button {
   cursor: pointer;
 }
+
 .pagination {
   margin: 0;
 }
+
 .buttons {
   margin-bottom: 0;
 }
 
+td {
+  text-align: left;
+}
+
+.activate {
+  width: 30px;
+}

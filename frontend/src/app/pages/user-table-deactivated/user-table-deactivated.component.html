@@ -12,7 +12,7 @@
           <th>Email</th>
           <th>Role</th>
           <th>Date of deactivation</th>
-          <th>Activate</th>
+          <th class="activate">Activate</th>
         </tr>
         </thead>
         <tbody>
@@ -21,9 +21,9 @@
           <td>{{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>{{user.role.name}}</td>
-          <td>{{user.dateOfDeactivation}}</td>
-          <td class="text-center">
-            <button [attr.value]="user.id" class="glyphicon glyphicon-upload"
+          <td><date-parse [date]="user.dateOfDeactivation"></date-parse></td>
+          <td>
+            <button [attr.value]="user.id" class="glyphicon glyphicon-upload center-block"
                     (click)="openActivateUserModal(user)"></button>
           </td>
         </tr>
@@ -37,4 +37,4 @@
     </div>
   </form-template>
 </div>
-<activate-user [users]="users" (updated)="updateUsers($event)"><activate-user>
+<activate-user [users]="users" (updated)="updateUsers($event)"></activate-user>

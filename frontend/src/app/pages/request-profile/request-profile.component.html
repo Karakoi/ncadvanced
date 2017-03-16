@@ -51,13 +51,13 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a href="#">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a href="#">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>
