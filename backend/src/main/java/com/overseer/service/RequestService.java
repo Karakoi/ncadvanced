@@ -187,4 +187,10 @@ public interface RequestService extends CrudService<Request, Long> {
      */
     List<Request> findFreeRequests(int pageNumber);
 
+    /**
+     * Returns list to build pie chart.
+     *
+     * @return list of statistic request.
+     */
+    List<Long> quantity();
 }

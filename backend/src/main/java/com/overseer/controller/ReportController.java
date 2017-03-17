@@ -31,9 +31,7 @@ public class ReportController {
         Document document = null;
         try {
             document = reportService.generateAdminPDFReport();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DocumentException e) {
+        } catch (IOException | DocumentException e) {
             e.printStackTrace();
         }
         return document;

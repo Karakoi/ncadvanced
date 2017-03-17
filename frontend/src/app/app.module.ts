@@ -33,6 +33,7 @@ import {ChartsModule} from "ng2-charts";
 // import {ChartsModule} from 'ng2-charts/ng2-charts';
 import {TopicService} from "./service/topic.service";
 import {HistoryService} from "./service/history.service";
+import {Ng2GoogleChartsModule} from "ng2-google-charts";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {HistoryService} from "./service/history.service";
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    Ng2GoogleChartsModule,
     HttpModule,
     GravatarModule,
     ToastModule.forRoot(),
