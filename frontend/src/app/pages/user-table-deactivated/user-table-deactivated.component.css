@@ -21,3 +21,17 @@ td {
 .activate {
   width: 30px;
 }
+
+th:hover {
+  background-color: #337AB7;
+  color: white;
+  cursor: pointer;
+}
+
+.td-center {
+  text-align: center;
+}
+
+.glyphicon-triangle-bottom:before, .glyphicon-triangle-top:before {
+  vertical-align: middle;
+}

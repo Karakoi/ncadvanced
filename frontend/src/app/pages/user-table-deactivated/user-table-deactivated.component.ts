@@ -13,11 +13,23 @@ declare var $: any;
 export class UserTableDeactivatedComponent implements OnInit {
   users: User[];
   pageNumber: number;
+  orderType: boolean;
+  orderField: string;
+  searchTypes: any;
 
   @ViewChild(ActivateUserComponent)
   activateUserComponent: ActivateUserComponent;
 
   constructor(private userService: UserService) {
+    this.orderType = true;
+    this.orderField = 'firstName';
+    this.searchTypes = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+      dateOfDeactivation: ""
+    };
   }
 
   ngOnInit() {
@@ -25,6 +37,11 @@ export class UserTableDeactivatedComponent implements OnInit {
       this.users = users;
     });
     this.userService.getPageCount().subscribe((count) => this.pageNumber = count);
+  }
+
+  changeOrderParams(type, field) {
+    this.orderType = type;
+    this.orderField = field;
   }
 
   openActivateUserModal(user: User): void {

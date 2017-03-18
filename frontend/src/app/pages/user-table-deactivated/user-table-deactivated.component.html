@@ -1,29 +1,72 @@
 <div class="container" *ngIf="users">
   <form-template>
     <div class="template-header">
-      Users
+      Deactivated users
     </div>
     <div class="template-body">
       <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
-          <th>First name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Date of deactivation</th>
-          <th class="activate">Activate</th>
+          <th (click)="changeOrderParams(!orderType, 'firstName')">First name
+            <span *ngIf="orderType && orderField == 'firstName'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
+            <span *ngIf="!orderType && orderField == 'firstName'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
+          </th>
+          <th (click)="changeOrderParams(!orderType, 'lastName')">Last name
+            <span *ngIf="orderType && orderField == 'lastName'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
+            <span *ngIf="!orderType && orderField == 'lastName'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
+          </th>
+          <th (click)="changeOrderParams(!orderType, 'email')">Email
+            <span *ngIf="orderType && orderField == 'email'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
+            <span *ngIf="!orderType && orderField == 'email'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
+          </th>
+          <th (click)="changeOrderParams(!orderType, 'role')">Role
+            <span *ngIf="orderType && orderField == 'role'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
+            <span *ngIf="!orderType && orderField == 'role'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
+          </th>
+          <th (click)="changeOrderParams(!orderType, 'dateOfDeactivation')">Date of deactivation
+            <span *ngIf="orderType && orderField == 'dateOfDeactivation'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
+            <span *ngIf="!orderType && orderField == 'dateOfDeactivation'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
+          </th>
+          <th>Details</th>
+          <th>Activate</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let user of users">
+        <tr>
+          <td>
+            <input type="text" [(ngModel)]="searchTypes.firstName" class="form-control"/>
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="searchTypes.lastName" class="form-control"/>
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="searchTypes.email" class="form-control"/>
+          </td>
+          <td>
+            <select class="form-control" [(ngModel)]="searchTypes.role">
+              <option></option>
+              <option>admin</option>
+              <option>employee</option>
+              <option>office manager</option>
+            </select>
+          </td>
+          <td>
+            <input type="date" [(ngModel)]="searchTypes.dateOfDeactivation" class="form-control"/>
+          </td>
+          <td class="td-center"><span class="glyphicon glyphicon-info-sign"></span></td>
+          <td class="td-center"><span class="glyphicon glyphicon-upload"></span></td>
+        </tr>
+        <tr *ngFor="let user of sorted | filter: searchTypes | sort: {field: orderField, order: orderType}">
           <td>{{user.firstName}}</td>
           <td>{{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>{{user.role.name}}</td>
           <td><date-parse [date]="user.dateOfDeactivation"></date-parse></td>
+          <td class="text-center delete-col">
+            <button [routerLink]="['/user', user.id]" class="glyphicon glyphicon-info-sign btn btn-primary btn-xs center-block"></button>
+          </td>
           <td>
-            <button [attr.value]="user.id" class="glyphicon glyphicon-upload center-block"
+            <button [attr.value]="user.id" class="glyphicon glyphicon-upload btn btn-success btn-xs center-block"
                     (click)="openActivateUserModal(user)"></button>
           </td>
         </tr>

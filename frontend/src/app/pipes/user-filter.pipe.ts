@@ -20,6 +20,12 @@ export class UserFilterPipe implements PipeTransform {
       if (searchTypes.role != '') {
         res = res && item.role.name.toLowerCase().includes(searchTypes.role.toLowerCase());
       }
+      if (searchTypes.dateOfDeactivation != '') {
+        let dateStr = item.dateOfDeactivation[0] + "-" +
+          (item.dateOfDeactivation[1] > 9 ? item.dateOfDeactivation[1] : "0" + item.dateOfDeactivation[1]) + "-" +
+          (item.dateOfDeactivation[2] > 9 ? item.dateOfDeactivation[2] : "0" + item.dateOfDeactivation[2]);
+        res = res && dateStr.includes(searchTypes.dateOfDeactivation);
+      }
       return res;
     });
   }

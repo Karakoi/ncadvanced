@@ -27,7 +27,6 @@ import { ModalModule } from 'ng2-bootstrap';
   ],
   exports: [
     ActiveRequest,
-    ClosedRequest,
     ClosedRequest
   ]
 })
