@@ -1,8 +1,9 @@
-import {Component, OnInit,} from '@angular/core';
+import {Component, OnInit, ViewChild,} from '@angular/core';
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
-import {Observable} from "rxjs";
 import {ToastsManager} from "ng2-toastr";
+
+declare let $: any;
 
 @Component({
 
@@ -10,14 +11,28 @@ import {ToastsManager} from "ng2-toastr";
   templateUrl: 'admin.component.html',
 })
 export class AdminComponent implements OnInit {
-  request: Request[];
+  requests: Request[];
   progress: Array<number>;
-  testTable: Array<any> = [];
+  pageCount: number;
+  orderType: boolean;
+  orderField: string;
+  searchTypes: any;
 
   constructor(private requestService: RequestService, private toast: ToastsManager) {
       this.requestService.getQuantityRequest().subscribe((s => {
         this.progress = s;
       }));
+
+    this.orderType = true;
+    this.orderField = 'title';
+    this.searchTypes = {
+      title: "",
+      priorityStatus: "",
+      progressStatus: "",
+      reporterName: "",
+      assigneeName: "",
+      date: ""
+    };
   }
 
   setStatistic(){
@@ -25,11 +40,11 @@ export class AdminComponent implements OnInit {
       chartType: 'PieChart',
       dataTable: [
         ['Request', 'Info'],
-        ['In progress', this.progress[3]],
-        ['Free', this.progress[1]],
-        ['Registered', this.progress[0]],
-        ['Reopen', this.progress[4]],
-        ['Joined', this.progress[2]],
+        ['In progress: '+ this.progress[3], this.progress[3]],
+        ['Free: ' + this.progress[1],this.progress[1]],
+        ['Registered: ' + this.progress[0], this.progress[0]],
+        ['Reopen: ' + this.progress[4], this.progress[4]],
+        ['Joined: ' + this.progress[2],this.progress[2]],
       ],
       options: {
         title: 'Request statistic',
@@ -52,58 +67,48 @@ export class AdminComponent implements OnInit {
     }
   };
 
-  load(): void {
-    this.requestService.getAll(2).subscribe((rec: Request[])=>{
-      this.request = rec;
-      this.getRequest();
-    })
-  }
-
   ngOnInit(): void {
     this.requestService.getAll(1).subscribe((requests: Request[]) => {
-      this.request = requests;
-      this.getRequest();
+      this.requests = requests;
     });
+    this.requestService.getPageCount().subscribe((count) => this.pageCount = count);
   }
 
-  getRequest(): void {
-    this.request.forEach(s => {
-      this.testTable.push({
-        name: s.title,
-        data: s.dateOfCreation,
-        priority_status: s.progressStatus.name,
-        progress_status: s.progressStatus.name,
-        reporter: s.reporter.firstName,
-        assignee: s.assignee.firstName
+  changeOrderParams(type, field) {
+    this.orderType = type;
+    this.orderField = field;
+  }
+
+  get sorted(): Request[] {
+    return this.requests
+      .map(request => request)
+      .sort((a, b) => {
+        if (a.dateOfCreation > b.dateOfCreation) return 1;
+        else if (a.dateOfCreation < b.dateOfCreation) return -1;
+        else return 0;
       });
-    });
   }
 
-  settings = {
-    columns: {
-      name: {
-        title: 'Title'
-      },
-      data: {
-        title: 'Data of creation'
-      },
-      priority_status: {
-        title: 'Priority status'
-      },
-      progress_status: {
-        title: 'Progress status'
-      },
-      reporter: {
-        title: 'Reporter'
-      },
-      assignee: {
-        title: 'Assignee'
-      },
-    },
-    actions: {
-      add: false,
-      delete: false,
-      edit:false
-    },
-  };
+  createRange(number) {
+    let items: number[] = [];
+    for (let i = 2; i <= number; i++) {
+      items.push(i);
+    }
+    return items;
+  }
+
+  load(data) {
+    $('.paginate_button').removeClass('active');
+    let page = data.target.text;
+    $(data.target.parentElement).addClass('active');
+    this.requestService.getAll(page).subscribe((requests: Request[]) => {
+      requests.forEach(e => {
+        if (e.priorityStatus.name == null) e.priorityStatus.name = "";
+        if (e.progressStatus.name == null) e.progressStatus.name = "";
+        if (e.assignee.firstName == null) e.assignee.firstName = "";
+        if (e.assignee.lastName == null) e.assignee.lastName = "";
+      });
+      this.requests = requests;
+    });
+  }
 }
