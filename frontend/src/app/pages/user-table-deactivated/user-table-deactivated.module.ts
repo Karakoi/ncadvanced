@@ -9,6 +9,8 @@ import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {UserSortPipe} from "../../pipes/user-sort.pipe";
 import {UserFilterPipe} from "../../pipes/user-filter.pipe";
+import {DeatcivatedUserSortPipe} from "../../pipes/deactivated-user-sort.pipe";
+import {DeatcivatedUserFilterPipe} from "../../pipes/deacitvated-user-filter.pipe";
 
 const routes: Routes = [
   {path: '', component: UserTableDeactivatedComponent}
@@ -27,8 +29,8 @@ const routes: Routes = [
   declarations: [
     UserTableDeactivatedComponent,
     ActivateUserComponent,
-    /*UserSortPipe,
-    UserFilterPipe*/
+    DeatcivatedUserFilterPipe,
+    DeatcivatedUserSortPipe
   ],
   exports: [
     UserTableDeactivatedComponent,
