@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {UserService} from "../../service/user.service";
-import {User} from "../../model/user.model";
+import {UserService} from "../../../service/user.service";
+import {User} from "../../../model/user.model";
 import {ActivateUserComponent} from "./user-activate/activate-user.component";
 declare var $: any;
 

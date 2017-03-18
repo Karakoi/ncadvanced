@@ -1,14 +1,14 @@
 import {Component, ViewChild, Input, Output, EventEmitter} from "@angular/core";
-import {User} from "../../../model/user.model";
-import {UserService} from "../../../service/user.service";
 import {ToastsManager} from "ng2-toastr";
 import {ModalComponent} from "ng2-bs3-modal/components/modal";
+import {User} from "../../../../model/user.model";
+import {UserService} from "../../../../service/user.service";
 
 @Component({
-  selector: 'activate-user',
-  templateUrl: 'activate-user.component.html'
+  selector: 'delete-user',
+  templateUrl: 'delete-user.component.html'
 })
-export class ActivateUserComponent {
+export class DeleteUserComponent {
   @Input()
   users: User[];
   @Output()
@@ -16,30 +16,29 @@ export class ActivateUserComponent {
 
   public user: User;
 
-  @ViewChild('activateUserFormModal')
+  @ViewChild('deleteUserFormModal')
   modal: ModalComponent;
 
   constructor(private userService: UserService,
               private toastr: ToastsManager) {
   }
 
-  activateUser() {
-    this.user
-    this.userService.activate(this.user.id).subscribe(() => {
+  deleteUser() {
+    this.userService.delete(this.user.id).subscribe(() => {
       this.updateArray();
       this.modal.close();
-      this.toastr.success("User was activated successfully", "Success!");
-    }, e => this.handleErrorActivateUser(e));
+      this.toastr.success("User was deleted successfully", "Success!");
+    }, e => this.handleErrorDeleteUser(e));
   }
 
   private updateArray(): void {
     this.updated.emit(this.users.filter(u => u !== this.user));
   }
 
-  private handleErrorActivateUser(error) {
+  private handleErrorDeleteUser(error) {
     switch (error.status) {
       case 500:
-        this.toastr.error("Can't activate user", 'Error');
+        this.toastr.error("Can't delete user", 'Error');
     }
   }
 }

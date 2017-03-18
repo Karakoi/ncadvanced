@@ -1,22 +1,14 @@
 <div class="container" *ngIf="users">
-  <form-template>
-    <div class="template-header">
+  <ul class="nav nav-tabs">
+    <li class="active"><a [routerLink]="['/users/all']"><b>All users</b></a></li>
+    <li><a [routerLink]="['/users/deactivated']">Deactivated users</a></li>
+  </ul>
+  <div class="panel panel-default">
+    <!--<div class="template-header">
       Users
-      <button class="btn btn-primary btn-xs pull-right" (click)="openAddUserModal()">New user
-      </button>
-
-      <!--<div class="form-group" style="width: 300px">-->
-
-        <!--<div class="input-group">-->
-          <!--Users <label class="input-group-addon"><i class="fa fa-search"></i></label>-->
-          <!--<input type="text" class="form-control" placeholder="Search da Fish" [(ngModel)]="users">-->
-        <!--</div>-->
-        <!--<button class="btn btn-primary btn-xs pull-right" (click)="openAddUserModal()">New user-->
-        <!--</button>-->
-      <!--</div>-->
-
-    </div>
-    <div class="template-body">
+    </div>-->
+    <div class="panel-body">
+      <button class="btn btn-success btn-sm pull-right add-request" (click)="openAddUserModal()">New user</button>
       <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
@@ -89,7 +81,7 @@
           <a>{{item}}</a></li>
       </ul>
     </div>
-  </form-template>
+  </div>
 </div>
 <add-user [users]="users" (updated)="updateUsers($event)"></add-user>
 <delete-user [users]="users" (updated)="updateUsers($event)"></delete-user>

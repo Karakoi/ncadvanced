@@ -14,16 +14,12 @@ table {
   margin-bottom: 0;
 }
 
-.delete-col {
-  width: 20px;
-}
-
-.search {
-  padding-right: 0;
-}
-
 td {
   text-align: left;
+}
+
+.activate {
+  width: 30px;
 }
 
 th:hover {
@@ -38,4 +34,18 @@ th:hover {
 
 .glyphicon-triangle-bottom:before, .glyphicon-triangle-top:before {
   vertical-align: middle;
+}
+
+.panel {
+  border-top: 0;
+  border-radius: 0 4px 4px 4px;
+}
+
+.nav-tabs > li.active > a {
+  background-color: #337AB7;
+  color: white;
+}
+
+.nav-tabs > li > a {
+  font-weight: bold;
 }

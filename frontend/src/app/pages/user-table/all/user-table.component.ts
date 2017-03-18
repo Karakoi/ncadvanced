@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {UserService} from "../../service/user.service";
+import {UserService} from "../../../service/user.service";
 import {AddUserComponent} from "./user-add/add-user.component";
-import {User} from "../../model/user.model";
+import {User} from "../../../model/user.model";
 import {DeleteUserComponent} from "./user-delete/delete-user.component";
 declare var $: any;
 
