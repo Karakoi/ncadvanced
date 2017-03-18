@@ -93,6 +93,9 @@ export class RequestService {
         return Observable.throw(error);
       });
   }
+  getQuantityRequest():Observable<number[]> {
+    return this.authHttp.get(`${url}/countRequest`).map(resp => resp.json());
+  }
 
   getFree(page:number):Observable<Request[]> {
     return this.authHttp.get(`${url}/fetchFree?page=` + page)

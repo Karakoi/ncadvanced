@@ -2,11 +2,12 @@
 <div class="container">
   <div class="header-content">
     <h1 align="center">Request Info</h1>
-    <google-chart [data]="pieChartRequest"></google-chart>
+    <google-chart (click)="setStatistic()" [data]="pieChartRequest"></google-chart>
   </div>
 
   <br>
   <div>
-  <ng2-smart-table [settings]="settings" [source]="testTable"></ng2-smart-table>
+  <ng2-smart-table [settings]="settings" [source]="testTable">
+  </ng2-smart-table>
   </div>
 </div>

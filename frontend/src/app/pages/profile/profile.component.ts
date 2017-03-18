@@ -81,14 +81,10 @@ export class ProfileComponent implements OnInit {
       email: ['', [Validators.required, CustomValidators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       dateOfBirth: ['', CustomValidators.dateISO],
-      phoneNumber: ['', CustomValidators.phone()]
+      phoneNumber: ['',],
+      oldPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
     });
-  }
-
-  private handleError(error) {
-    switch (error.status) {
-      case 400:
-        this.toastr.error('This email is already taken.', 'Error.');
-    }
   }
 }
