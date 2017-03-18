@@ -1,39 +1,28 @@
 <div class="container">
   <div class="col-lg-offset-2 col-lg-8">
-
     <form-template>
       <div class="template-header">
         Send message to email
       </div>
       <div class="template-body">
         <form autocomplete="off" novalidate [formGroup]="messageForm" (ngSubmit)="sendMessage(messageForm.value)">
-          <!--<div class="form-group col-lg-6">
-             <div class="input-group">
-               <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-               <input type="text" placeholder="Theme" class="form-control">
-            </div>
-          </div>-->
           <div class="form-group col-lg-6">
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
               <select id="recipient" class="form-control" formControlName="recipient">
                 <option class="selected disabled">Recipient</option>
-                <option [attr.value]="user.id" *ngFor="let user of potentialRecipients">{{user.firstName}}
-                  {{user.lastName}}
+                <option [attr.value]="user.id" *ngFor="let user of potentialRecipients">
+                  {{user.firstName}} {{user.lastName}}
                 </option>
               </select>
             </div>
           </div>
           <div class="form-group col-lg-12">
-            <textarea rows="8" placeholder="Message text.." id="text" class="form-control"
-                      formControlName="text"></textarea>
+            <textarea rows="8" placeholder="Message text.." id="text" class="form-control" formControlName="text"></textarea>
           </div>
-
+          <button type="submit" class="btn btn-primary pull-right">Send message</button>
         </form>
       </div>
-    </form-template><div class="form-group col-lg-12 submit-form-group">
-    <button type="submit" class="btn btn-primary pull-right">Send message</button>
-  </div>
-
+    </form-template>
   </div>
 </div>

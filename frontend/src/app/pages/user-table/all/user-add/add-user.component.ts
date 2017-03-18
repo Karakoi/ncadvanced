@@ -3,11 +3,11 @@ import {ModalComponent} from "ng2-bs3-modal/components/modal";
 import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {CustomValidators} from "ng2-validation";
 import {ToastsManager} from "ng2-toastr";
-import {UserService} from "../../../service/user.service";
-import {Role} from "../../../model/role.model";
-import {User} from "../../../model/user.model";
+import {Role} from "../../../../model/role.model";
+import {User} from "../../../../model/user.model";
+import {UserService} from "../../../../service/user.service";
+import {RoleService} from "../../../../service/role.service";
 import {Response} from "@angular/http";
-import {RoleService} from "../../../service/role.service";
 
 @Component({
   selector: 'add-user',
