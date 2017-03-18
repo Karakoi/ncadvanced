@@ -40,7 +40,7 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
     }
 
     protected String getMessageByRecipientQuery() {
-        return queryService().getQuery("message.findByRecipient");
+        return queryService().getQuery("message.select") + queryService().getQuery("message.findByRecipient");
     }
 
     @Override
@@ -105,6 +105,6 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
     }
 
     private String getByTopicQuery() {
-        return queryService().getQuery("message.getByTopicQuery");
+        return queryService().getQuery("message.select") + queryService().getQuery("message.getByTopicQuery");
     }
 }
