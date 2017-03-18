@@ -8,7 +8,8 @@ import {RequestModule} from "../../shared/request/request.module";
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
-import {RequestFilterPipe} from "../pipes/request-filter.pipe";
+import {RequestSortPipe} from "../../pipes/request-sort.pipe";
+import {RequestFilterPipe} from "../../pipes/request-filter.pipe";
 
 const routes: Routes = [
   {path: '', component: RequestTableComponent}
@@ -28,7 +29,8 @@ const routes: Routes = [
   declarations: [
     RequestTableComponent,
     DeleteRequestComponent,
-    RequestFilterPipe
+    RequestFilterPipe,
+    RequestSortPipe
   ],
   exports: [
     RequestTableComponent,
