@@ -27,8 +27,8 @@ const routes: Routes = [
   declarations: [
     UserTableDeactivatedComponent,
     ActivateUserComponent,
-    UserSortPipe,
-    UserFilterPipe
+    /*UserSortPipe,
+    UserFilterPipe*/
   ],
   exports: [
     UserTableDeactivatedComponent,
