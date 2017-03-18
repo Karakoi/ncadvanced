@@ -14,7 +14,9 @@ declare var $: any;
 export class UserTableComponent implements OnInit {
   users: User[];
   pageNumber: number;
-  term: any;
+  orderType: boolean;
+  orderField: string;
+  searchTypes: any;
 
   @ViewChild(AddUserComponent)
   addUserComponent: AddUserComponent;
@@ -23,6 +25,14 @@ export class UserTableComponent implements OnInit {
   deleteUserComponent: DeleteUserComponent;
 
   constructor(private userService: UserService) {
+    this.orderType = true;
+    this.orderField = 'role';
+    this.searchTypes = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: ""
+    };
   }
 
   ngOnInit() {
@@ -30,6 +40,11 @@ export class UserTableComponent implements OnInit {
       this.users = users;
     });
     this.userService.getPageCount().subscribe((count) => this.pageNumber = count);
+  }
+
+  changeOrderParams(type, field) {
+    this.orderType = type;
+    this.orderField = field;
   }
 
   openAddUserModal(): void {

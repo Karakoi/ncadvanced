@@ -7,7 +7,8 @@ import {UserTableComponent} from "./user-table.component";
 import {DeleteUserComponent} from "./user-delete/delete-user.component";
 import {FormTemplateModule} from "../../shared/form-template/form-template.module";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
-import {UserFilterPipe} from "../pipes/user-filter.pipe";
+import {UserFilterPipe} from "../../pipes/user-filter.pipe";
+import {UserSortPipe} from "../../pipes/user-sort.pipe";
 
 const routes: Routes = [
   {path: '', component: UserTableComponent}
@@ -26,7 +27,8 @@ const routes: Routes = [
     UserTableComponent,
     AddUserComponent,
     DeleteUserComponent,
-    UserFilterPipe
+    UserFilterPipe,
+    UserSortPipe
   ],
   exports: [
     UserTableComponent,
