@@ -201,6 +201,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     Long countFree();
 
     /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @param assigneeId id of the {@link User}.
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countByAssignee(Long assigneeId);
+
+    /**
      * Returns a list of requests with Free progress status {@link ProgressStatus}.
      *
      * @return list of requests with Free progress status {@link ProgressStatus}.
@@ -210,7 +218,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
-     * @param statusIds list of progress status ids, must not be {@literal null}
+     * @param statusIds  list of progress status ids, must not be {@literal null}
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of requests
      */
@@ -226,7 +234,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Returns list to build pie chart.
      *
-     * @return list of statistic request. 
+     * @return list of statistic request.
      */
     List<Long> countRequestByProgressStatus();
 }

@@ -7,7 +7,15 @@ import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -42,7 +50,7 @@ public class RequestController {
     /**
      * Creates sub request of {@link Request} entity.
      *
-     * @param subRequest json object which represents {@link Request} entity.
+     * @param subRequest      json object which represents {@link Request} entity.
      * @param idParentRequest id of parent request.
      * @return json representation of created {@link Request} entity.
      */
@@ -204,7 +212,7 @@ public class RequestController {
      */
     @GetMapping("/getCountRequestsByStartDate")
     public ResponseEntity<List<Long>> getCountRequestsByStartDate(@RequestParam String beginDate,
-                                                                   @RequestParam int months) {
+                                                                  @RequestParam int months) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate start = LocalDate.parse(beginDate, formatter);
@@ -266,8 +274,9 @@ public class RequestController {
     /**
      * Creates {@link Request} entity of parent request and joins some another
      * requests to it.
+     *
      * @param request json object which represents {@link Request} entity.
-     * @param ids string representation if id`s array.
+     * @param ids     string representation if id`s array.
      * @return json representation of created {@link Request} entity.
      */
     @PostMapping("/join/{ids}")
@@ -309,6 +318,7 @@ public class RequestController {
 
     /**
      * Reopen array of requests.
+     *
      * @param requestsId array of request id's.
      * @return reopened requests.
      */
@@ -330,5 +340,24 @@ public class RequestController {
     public ResponseEntity<List<Long>> getQuantityRequest() {
         List<Long> quantity = requestService.quantity();
         return new ResponseEntity<>(quantity, HttpStatus.OK);
+    }
+
+    /**
+     * Returns number of pages.
+     *
+     * @return number of pages.
+     */
+    @GetMapping("/pageCountByAssignee")
+    public ResponseEntity<Long> getPagesCountByAssignee(@RequestParam Long assigneeId) {
+        Long pageCount = requestService.countRequestsByAssignee(assigneeId) / DEFAULT_PAGE_SIZE + 1;
+        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/fetchByAssignee")
+    public ResponseEntity<List<Request>> getRequestsByAssignee(@RequestParam Long assigneeId,
+                                                               @RequestParam int pageNumber) {
+        val list = this.requestService.findRequestsByAssignee(assigneeId, pageNumber);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

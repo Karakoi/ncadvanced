@@ -30,6 +30,11 @@ export class AssignRequestComponent {
   assignRequest() {
     this.authService.currentUser.subscribe((user:User) => {
       this.request.assignee = user;
+      this.request.progressStatus = {
+        id: 7,
+        name: "In progress",
+        value: 400
+      };
       if (this.request.parentId === 0) {
         this.request.parentId = null;
       }
