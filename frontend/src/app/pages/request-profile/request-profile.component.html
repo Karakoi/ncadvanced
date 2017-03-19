@@ -99,7 +99,7 @@
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <button class="btn btn-success btn-sm pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
+          <button *ngIf="showSubRequests" class="btn btn-success btn-sm pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
           <table class="table table-bordered">
             <tbody>
             <tr>
@@ -110,7 +110,7 @@
             <tr *ngFor="let subRequest of subRequests">
               <td *ngIf="showSubRequests">{{subRequest.title}}</td>
               <td *ngIf="showSubRequests">{{subRequest.description}}</td>
-              <td class="text-center delete-col">
+              <td *ngIf="showSubRequests" class="text-center delete-col">
                 <button [attr.value]="subRequest.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
                         (click)="openDeleteSubRequestModal(subRequest)"></button>
               </td>
@@ -136,26 +136,18 @@
             <tr>
               <td *ngIf="showJoinedRequests"><b>Title</b></td>
               <td *ngIf="showJoinedRequests"><b>Reporter</b></td>
-              <td *ngIf="showJoinedRequests"><b>Status</b></td>
               <td *ngIf="showJoinedRequests"><b>Priority</b></td>
+              <td *ngIf="showJoinedRequests"><b>Date of creation</b></td>
+              <td *ngIf="showJoinedRequests"><b>Details</b></td>
             </tr>
-            <tr>
-              <td *ngIf="showJoinedRequests">Implement this fixture</td>
-              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showJoinedRequests">In progress</td>
-              <td *ngIf="showJoinedRequests">High</td>
-            </tr>
-            <tr>
-              <td *ngIf="showJoinedRequests">Fix this wonderful bug</td>
-              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showJoinedRequests">In progress</td>
-              <td *ngIf="showJoinedRequests">Low</td>
-            </tr>
-            <tr>
-              <td *ngIf="showJoinedRequests">Realize that functional</td>
-              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showJoinedRequests">In progress</td>
-              <td *ngIf="showJoinedRequests">Medium</td>
+            <tr *ngFor="let joinedRequest of joinedRequests">
+              <td *ngIf="showJoinedRequests">{{joinedRequest.title}}</td>
+              <td *ngIf="showJoinedRequests">{{joinedRequest.reporter.firstName}} {{joinedRequest.reporter.lastName}}</td>
+              <td *ngIf="showJoinedRequests">{{joinedRequest.priorityStatus.name}}</td>
+              <td *ngIf="showJoinedRequests"><date-parse [date]="joinedRequest.dateOfCreation"></date-parse></td>
+              <td *ngIf="showJoinedRequests" class="details">
+                <button [routerLink]="['/request', joinedRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+              </td>
             </tr>
             <tr *ngIf="!showJoinedRequests">
               <td>Click arrow down to show full joined requests list</td>

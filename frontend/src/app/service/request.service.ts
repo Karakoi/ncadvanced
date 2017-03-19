@@ -119,4 +119,13 @@ export class RequestService {
         return Observable.throw(error);
       });
   }
+
+  getJoinedRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getJoinedGroupRequests/${id}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
 }

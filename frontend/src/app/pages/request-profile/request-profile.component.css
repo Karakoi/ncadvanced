@@ -47,3 +47,11 @@ td {
   margin-bottom: 10px;
   margin-top: 10px;
 }
+
+.details {
+  width: 30px;
+}
+
+.details-btn {
+  margin: 0 auto;
+}

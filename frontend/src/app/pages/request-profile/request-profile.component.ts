@@ -25,6 +25,7 @@ export class RequestProfileComponent implements OnInit {
   showJoinedRequests: boolean = true;
   historyRecords: History[];
   subRequests: Request[];
+  joinedRequests: Request[];
 
   @ViewChild(DeleteSubRequestComponent)
   deleteSubRequestComponent: DeleteSubRequestComponent;
@@ -56,6 +57,11 @@ export class RequestProfileComponent implements OnInit {
       this.requestService.getSubRequests(id).subscribe((subRequests: Request[]) => {
         this.subRequests = subRequests;
         console.log(subRequests)
+      });
+
+      this.requestService.getJoinedRequests(id).subscribe((joinedRequests: Request[]) => {
+        this.joinedRequests = joinedRequests;
+        console.log(joinedRequests)
       });
     });
     this.authService.currentUser.subscribe((user: User) => {
