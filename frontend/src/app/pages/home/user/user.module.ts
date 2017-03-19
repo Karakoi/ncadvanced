@@ -8,6 +8,8 @@ import {userRouts} from "./user.routes";
 import {ActiveRequest} from "./userRequests/active-request.component";
 import {ClosedRequest} from "./userClosedRequests/closed-request.component";
 import { ModalModule } from 'ng2-bootstrap';
+import {CreateEmployeeRequest} from "./userAddRequest/create-request.component";
+import {BasicRequestTableModule} from "../../../components/request-table/request-table.module";
 
 
 
@@ -18,15 +20,18 @@ import { ModalModule } from 'ng2-bootstrap';
     ReactiveFormsModule,
     Ng2SmartTableModule,
     FormsModule,
+    BasicRequestTableModule,
     PaginationModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
   ],
   declarations: [
     ActiveRequest,
     ClosedRequest,
+    CreateEmployeeRequest,
   ],
   exports: [
     ActiveRequest,
+    CreateEmployeeRequest,
     ClosedRequest
   ]
 })

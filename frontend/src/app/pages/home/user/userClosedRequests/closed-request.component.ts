@@ -18,7 +18,6 @@ import {Request} from "../../../../model/request.model";
   styleUrls: ['closed-request.component.css']
 })
 export class ClosedRequest implements OnInit {
-  @ViewChild('staticModal') public staticModal: ModalDirective;
   private selected: number[];
   private priorities: PriorityStatus[];
   private currentUser: User;
@@ -118,7 +117,6 @@ export class ClosedRequest implements OnInit {
     param.reporter = this.currentUser;
     this.employeeService.createEmployeeRequest(param).subscribe(
       (resp: Response) => {
-        this.staticModal.hide();
         this.toastr.success("Request have been added");
       },
       (err) => { // on error console.log(err);
@@ -157,6 +155,11 @@ export class ClosedRequest implements OnInit {
       "priority": request.priorityStatus.name,
       "progress": request.progressStatus.name,
     }
+  }
+
+  addToTable(request: Request){
+    this.data.unshift(request);
+    this.source.load((this.data));
   }
 
   validate(field: string): boolean {

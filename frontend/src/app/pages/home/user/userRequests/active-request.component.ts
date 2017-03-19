@@ -1,13 +1,9 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {LocalDataSource} from "ng2-smart-table";
 import {AuthService} from "../../../../service/auth.service";
 import {EmployeeService} from "../../../../service/employee.service";
-import {PriorityStatus} from "../../../../model/priority.model";
-import {UserService} from "../../../../service/user.service";
-import {FormGroup, Validators, FormBuilder} from "@angular/forms";
-import {Response} from "@angular/http";
+import {FormGroup } from "@angular/forms";
 import {User} from "../../../../model/user.model";
-import {ModalDirective} from "ng2-bootstrap";
 import {ToastsManager} from "ng2-toastr";
 import {Request} from "../../../../model/request.model";
 
@@ -19,19 +15,15 @@ import {Request} from "../../../../model/request.model";
 })
 export class ActiveRequest implements OnInit {
   private currentUser: User;
-  @ViewChild('staticModal') public staticModal:ModalDirective;
   private totalItems: number;
   private per: number = 20;
   private data: Array<any> = new Array();
   private source: LocalDataSource = new LocalDataSource();
-  private priorities: PriorityStatus[];
   private userFormGroup: FormGroup;
 
 
   constructor(private authService: AuthService,
               private employeeService: EmployeeService,
-              private formBuilder: FormBuilder,
-              private userService: UserService,
               private toastr: ToastsManager) {
   }
 
@@ -54,16 +46,6 @@ export class ActiveRequest implements OnInit {
   }
 
   ngOnInit() {
-    this.userFormGroup = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(45)]],
-      priorityStatus: [null, Validators.required],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
-    });
-
-    this.userService.getPriorityStatuses().subscribe(priorities => {
-      this.priorities = priorities;
-    });
-
     this.authService.currentUser.subscribe(u => {
       this.currentUser = u;
       this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
@@ -83,7 +65,6 @@ export class ActiveRequest implements OnInit {
   }
 
   settings = {
-    hideHeader: true,
     actions: {
       edit: false,
       delete: false,
@@ -112,21 +93,9 @@ export class ActiveRequest implements OnInit {
     },
   };
 
-  createNewSimpleRequest(param){
-    console.log("trying to send");
-    param.lastChanger = this.currentUser;
-    param.reporter = this.currentUser;
-    this.employeeService.createEmployeeRequest(param).subscribe(
-      (resp: Response) => {
-        this.data.unshift(this.mapRequestToReadable(<Request>resp.json()));
-        this.source.load(this.data);
-        this.staticModal.hide();
-        this.toastr.success("Request have been added");
-      },
-      (err) => { // on error console.log(err);
-        this.toastr.error("Something gone wrong");
-      }
-    );
+  addToTable(request: Request){
+    this.data.unshift(request);
+    this.source.load((this.data));
   }
 
   mapRequestToReadable(request: Request){

@@ -30,10 +30,10 @@ import {ErrorService} from "./service/error.service";
 import {RequestProfileModule} from "./pages/request-profile/request-profile.module";
 import {ReportModule} from "./pages/report/report.module";
 import {ChartsModule} from "ng2-charts";
-// import {ChartsModule} from 'ng2-charts/ng2-charts';
 import {TopicService} from "./service/topic.service";
 import {HistoryService} from "./service/history.service";
 import {Ng2GoogleChartsModule} from "ng2-google-charts";
+import {PipeModule} from "./pipes/pipe.module";
 
 @NgModule({
   declarations: [
@@ -42,7 +42,7 @@ import {Ng2GoogleChartsModule} from "ng2-google-charts";
     NavbarComponent,
     NoContentComponent,
     SideBarComponent,
-    SideBarDirective
+    SideBarDirective,
   ],
   imports: [
     ChartsModule,
@@ -56,7 +56,8 @@ import {Ng2GoogleChartsModule} from "ng2-google-charts";
     HttpModule,
     GravatarModule,
     ToastModule.forRoot(),
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    PipeModule.forRoot()
   ],
   providers: [
     ErrorService,
