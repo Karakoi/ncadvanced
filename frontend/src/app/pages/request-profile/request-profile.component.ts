@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {RequestService} from "../../service/request.service";
 import {Request} from "../../model/request.model";
 import {ActivatedRoute} from "@angular/router";
@@ -7,6 +7,7 @@ import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
 import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
+import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
 
 @Component({
   selector: 'request-profile',
@@ -22,6 +23,10 @@ export class RequestProfileComponent implements OnInit {
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
   historyRecords: History[];
+  subRequests: Request[];
+
+  @ViewChild(DeleteSubRequestComponent)
+  deleteSubRequestComponent: DeleteSubRequestComponent;
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
@@ -43,10 +48,24 @@ export class RequestProfileComponent implements OnInit {
         this.request = request;
         console.log(request)
       });
+
+      this.requestService.getSubRequests(id).subscribe((subRequests: Request[]) => {
+        this.subRequests = subRequests;
+        console.log(subRequests)
+      });
     });
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
     });
+  }
+
+  openDeleteSubRequestModal(subRequest: Request): void {
+    this.deleteSubRequestComponent.subRequest = subRequest;
+    this.deleteSubRequestComponent.modal.open();
+  }
+
+  updateSubRequests(subRequests: Request[]) {
+    this.subRequests = subRequests;
   }
 
   changeShowDescription() {

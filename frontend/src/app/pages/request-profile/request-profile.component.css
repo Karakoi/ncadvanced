@@ -34,3 +34,11 @@ a {
 td {
   text-align: left;
 }
+
+.delete-col {
+  width: 20px;
+}
+
+.glyphicon-trash {
+  margin: 0 auto;
+}

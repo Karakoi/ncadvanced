@@ -103,9 +103,17 @@ export class RequestService {
       });
   }
 
-
   join(request:Request, checked:number[]):Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getSubRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getSubRequests/${id}`)
+      .map(resp => resp.json())
       .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);

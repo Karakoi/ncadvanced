@@ -103,27 +103,16 @@
             <tbody>
             <tr>
               <td *ngIf="showSubRequests"><b>Title</b></td>
-              <td *ngIf="showSubRequests"><b>Reporter</b></td>
-              <td *ngIf="showSubRequests"><b>Status</b></td>
-              <td *ngIf="showSubRequests"><b>Priority</b></td>
+              <td *ngIf="showSubRequests"><b>Description</b></td>
+              <td *ngIf="showSubRequests"><b>Delete</b></td>
             </tr>
-            <tr>
-              <td *ngIf="showSubRequests">Implement this fixture</td>
-              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showSubRequests">In progress</td>
-              <td *ngIf="showSubRequests">High</td>
-            </tr>
-            <tr>
-              <td *ngIf="showSubRequests">Fix this wonderful bug</td>
-              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showSubRequests">In progress</td>
-              <td *ngIf="showSubRequests">Low</td>
-            </tr>
-            <tr>
-              <td *ngIf="showSubRequests">Realize that functional</td>
-              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showSubRequests">In progress</td>
-              <td *ngIf="showSubRequests">Medium</td>
+            <tr *ngFor="let subRequest of subRequests">
+              <td *ngIf="showSubRequests">{{subRequest.title}}</td>
+              <td *ngIf="showSubRequests">{{subRequest.description}}</td>
+              <td class="text-center delete-col">
+                <button [attr.value]="subRequest.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
+                        (click)="openDeleteSubRequestModal(subRequest)"></button>
+              </td>
             </tr>
             <tr>
               <td *ngIf="!showSubRequests">Click arrow down to show full sub requests list</td>
@@ -210,3 +199,4 @@
     </div>
   </div>
 </div>
+<delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
