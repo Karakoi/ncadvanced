@@ -40,4 +40,20 @@ public interface UserDao extends CrudDao<User, Long> {
      * @return list of employees.
      */
     List<User> findUsersByManager(Long managerId);
+
+    /**
+     * Returns a list of {@link User} entities who's deactivated.
+     *
+     * @param pageSize   number of entities on the page.
+     * @param pageNumber number of page.
+     * @return a list of {@link User} entities.
+     */
+    List<User> findAllDeactivated(int pageSize, int pageNumber);
+
+    /**
+     * Activates {@link User} entity with given id.
+     *
+     * @param id user's id, must not be {@literal null}.
+     */
+    void activate(Long id);
 }

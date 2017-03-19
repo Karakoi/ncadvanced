@@ -1,5 +1,7 @@
 <div class="well">
-  <div><label>From:</label>{{message.sender.firstName}} {{message.sender.lastName}}</div>
-  <div><label>Text:</label>{{message.text}}</div>
-  <div><label>At:</label>{{message.dateAndTime[0]}}-{{message.dateAndTime[1]}}-{{message.dateAndTime[2]}} {{message.dateAndTime[3]}}:{{message.dateAndTime[4]}}:{{message.dateAndTime[5]}} </div>
+  <div><label>From:</label> {{message.sender.firstName}} {{message.sender.lastName}}</div>
+  <div><label>Text:</label> {{message.text}}
+      <button type="button" class="btn btn-primary pull-right" (click)="answer(message.sender.id)">Answer</button>
+  </div>
+  <div><label>At:</label> {{message.dateAndTime[0]}}-{{message.dateAndTime[1]}}-{{message.dateAndTime[2]}} {{message.dateAndTime[3]}}:{{message.dateAndTime[4]}}:{{message.dateAndTime[5]}} </div>
 </div>

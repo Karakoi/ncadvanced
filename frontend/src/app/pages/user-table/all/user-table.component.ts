@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {UserService} from "../../service/user.service";
+import {UserService} from "../../../service/user.service";
 import {AddUserComponent} from "./user-add/add-user.component";
-import {User} from "../../model/user.model";
+import {User} from "../../../model/user.model";
 import {DeleteUserComponent} from "./user-delete/delete-user.component";
 declare var $: any;
 
@@ -14,6 +14,9 @@ declare var $: any;
 export class UserTableComponent implements OnInit {
   users: User[];
   pageNumber: number;
+  orderType: boolean;
+  orderField: string;
+  searchTypes: any;
 
   @ViewChild(AddUserComponent)
   addUserComponent: AddUserComponent;
@@ -22,6 +25,14 @@ export class UserTableComponent implements OnInit {
   deleteUserComponent: DeleteUserComponent;
 
   constructor(private userService: UserService) {
+    this.orderType = true;
+    this.orderField = 'role';
+    this.searchTypes = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: ""
+    };
   }
 
   ngOnInit() {
@@ -29,6 +40,11 @@ export class UserTableComponent implements OnInit {
       this.users = users;
     });
     this.userService.getPageCount().subscribe((count) => this.pageNumber = count);
+  }
+
+  changeOrderParams(type, field) {
+    this.orderType = type;
+    this.orderField = field;
   }
 
   openAddUserModal(): void {

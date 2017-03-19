@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
+// import * as FileSaver from "file-saver";
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 
 declare let $: any;
@@ -14,6 +15,10 @@ declare let $: any;
 export class RequestTableComponent implements OnInit {
   requests: Request[];
   pageCount: number;
+  term: any;
+  orderType: boolean;
+  orderField: string;
+  searchTypes: any;
 
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;
@@ -22,6 +27,21 @@ export class RequestTableComponent implements OnInit {
   deleteRequestComponent: DeleteRequestComponent;
 
   constructor(private requestService: RequestService) {
+    this.orderType = true;
+    this.orderField = 'title';
+    this.searchTypes = {
+      title: "",
+      priorityStatus: "",
+      progressStatus: "",
+      reporterName: "",
+      assigneeName: "",
+      date: ""
+    };
+  }
+
+  changeOrderParams(type, field) {
+    this.orderType = type;
+    this.orderField = field;
   }
 
   ngOnInit() {
@@ -34,10 +54,6 @@ export class RequestTableComponent implements OnInit {
   openDeleteRequestModal(request: Request): void {
     this.deleteRequestComponent.request = request;
     this.deleteRequestComponent.modal.open();
-  }
-
-  updateRequests(requests: Request[]) {
-    this.requests = requests;
   }
 
   get sorted(): Request[] {
@@ -63,11 +79,39 @@ export class RequestTableComponent implements OnInit {
     let page = data.target.text;
     $(data.target.parentElement).addClass('active');
     this.requestService.getAll(page).subscribe((requests: Request[]) => {
+      requests.forEach(e => {
+        if (e.priorityStatus.name == null) e.priorityStatus.name = "";
+        if (e.progressStatus.name == null) e.progressStatus.name = "";
+        if (e.assignee.firstName == null) e.assignee.firstName = "";
+        if (e.assignee.lastName == null) e.assignee.lastName = "";
+      });
       this.requests = requests;
     });
+  }
+
+  updateRequests(request: Request[]) {
+    this.requests = request;
   }
 
   openFormModal(): void {
     this.requestForm.modal.open();
   }
+
+  // getPDFReport() {
+  //   this.reportService.getPDFReport().subscribe(
+  //     data => {
+  //       console.log(data);
+  //       let blob = new Blob([data], {type: 'application/pdf'});
+  //       console.log(blob);
+  //       FileSaver.saveAs(blob, "report.pdf");
+  //       this.toastr.success("Report was created successfully", "Success!");
+  //     }, e => this.handleError(e));
+  // }
+
+  // private handleError(error) {
+  //   switch (error.status) {
+  //     case 500:
+  //       this.toastr.error("Can't create report", 'Error');
+  //   }
+  // }
 }

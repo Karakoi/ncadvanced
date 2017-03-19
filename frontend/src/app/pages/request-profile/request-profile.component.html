@@ -51,13 +51,13 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a href="#">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
               </td>
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a href="#">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>
@@ -194,8 +194,8 @@
                   <!--was changed from <span class="bold-text">{{getOldValue(history)}}</span>-->
                   was changed from <span class="bold-text">"{{history.oldValue}}"</span>
                   to <span class="bold-text">"{{history.newValue}}"</span>
-                  by <span class="bold-text"><a href="">"{{history.changer.firstName}} {{history.changer.lastName}}"</a></span>
-                  <span class="bold-text"><span class="badge pull-right">"2017-10-10"</span></span>
+                  by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
+                  <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
                 </span>
               </td>
             </tr>

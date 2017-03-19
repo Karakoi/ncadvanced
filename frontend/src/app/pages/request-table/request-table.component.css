@@ -1,16 +1,38 @@
 table {
-    background-color: white;
+  background-color: white;
 }
 
 .pagination {
-    margin-top: 0;
-    margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .paginate_button {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .delete-col {
   width: 20px;
+}
+
+.search {
+  padding-right: 0;
+}
+
+td {
+  text-align: left;
+}
+
+th:hover {
+  background-color: #337AB7;
+  color: white;
+  cursor: pointer;
+}
+
+.glyphicon-triangle-bottom:before, .glyphicon-triangle-top:before {
+  vertical-align: middle;
+}
+
+.td-center {
+  text-align: center;
 }

@@ -8,5 +8,7 @@ export interface User {
   password: string,
   dateOfBirth?: Date,
   phoneNumber?: string,
-  role: Role;
+  role: Role,
+  isDeactivated?:boolean,
+  dateOfDeactivation?: Date;
 }

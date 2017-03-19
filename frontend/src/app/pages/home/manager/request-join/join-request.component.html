@@ -1,0 +1,76 @@
+<modal [animation]="true" #joinRequestFormModal>
+  <modal-header [show-close]="true">
+    <b>Do you want to join this requests?</b>
+  </modal-header>
+  <modal-body>
+
+    <form [formGroup]="requestForm" autocomplete="off" novalidate>
+      <modal-body>
+        <!--REQUEST TITLE-->
+        <div class="form-group" [ngClass]="{'has-error': !validate('title')}">
+          <label for="title">Title:</label>
+          <input id="title" type="text" class="form-control" formControlName="title"/>
+          <div *ngIf="!validate('title')" class="help-block text-left">
+            <span *ngIf="requestForm.get('title').hasError('required')">Title required.</span>
+            <span *ngIf="requestForm.get('title').hasError('maxlength')">Must not be more then 100 characters.</span>
+          </div>
+        </div>
+        <!--REQUEST ESTIMATE TIME-->
+        <div class="form-group" [ngClass]="{'has-error': !validate('estimateTimeInDays')}">
+          <label for="estimateTimeInDays">Estimate time (in days):</label>
+          <input id="estimateTimeInDays" type="number" class="form-control" formControlName="estimateTimeInDays"/>
+          <div *ngIf="!validate('estimateTimeInDays')" class="help-block text-left">
+            <span
+              *ngIf="requestForm.get('estimateTimeInDays').hasError('min')">Time in days must be greater then 0.</span>
+            <span
+              *ngIf="requestForm.get('estimateTimeInDays').hasError('max')">Time in days must be less then 30.</span>
+          </div>
+        </div>
+        <!--REQUEST DESCRIPTION-->
+        <div class="form-group" [ngClass]="{'has-error': !validate('description')}">
+          <label for="description">Description:</label>
+          <textarea id="description" class="form-control" rows="5" formControlName="description"></textarea>
+          <div *ngIf="!validate('description')" class="help-block text-left">
+            <span *ngIf="requestForm.get('description').hasError('required')">Description required.</span>
+            <span
+              *ngIf="requestForm.get('description').hasError('maxlength')">Must not be more then 255 characters.</span>
+          </div>
+        </div>
+      </modal-body>
+    </form>
+
+    <div class="panel-body">
+      <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th>Creation Date</th>
+          <th>Priority</th>
+          <th>Reporter</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let req of getChecked()">
+          <td>{{ req.title }}</td>
+          <td>{{ req.dateOfCreation }}</td>
+          <td>{{ req.priorityStatus.name }}</td>
+          <td>{{ req.reporter.firstName }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </modal-body>
+  <modal-footer>
+    <div class="btn-toolbar col-md-12">
+      <div class="col-md-6">
+        <button type="submit" class="btn btn-primary col-md-12"
+                [disabled]="requestForm.invalid"
+                (click)="joinRequests(requestForm.value)">Join
+        </button>
+      </div>
+      <div class="col-md-6">
+        <button type="submit" class="btn btn-danger col-md-12" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </modal-footer>
+</modal>
