@@ -12,12 +12,8 @@ import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {Ng2GoogleChartsModule} from "ng2-google-charts";
 import {FormTemplateModule} from "../../shared/form-template/form-template.module";
-import {RequestTableComponent} from "../request-table/request-table.component";
-import {RequestFilterPipe} from "../../pipes/request-filter.pipe";
-import {RequestSortPipe} from "../../pipes/request-sort.pipe";
-import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
-import {DeleteRequestComponent} from "../request-table/request-delete/delete-request.component";
-
+import {RequestModule} from "../../shared/request/request.module";
+import {RequestFormComponent} from "./request-form/request-form.component";
 
 @NgModule({
   imports: [
@@ -29,24 +25,22 @@ import {DeleteRequestComponent} from "../request-table/request-delete/delete-req
     Ng2SmartTableModule,
     Ng2GoogleChartsModule,
     FormTemplateModule,
-    FormsModule
+    FormsModule,
+    RequestModule
   ],
   declarations: [
     AssignRequestComponent,
     JoinRequestComponent,
     AdminComponent,
     ManagerComponent,
-    RequestTableComponent,
-    RequestFilterPipe,
-    RequestSortPipe,
     RequestFormComponent,
-    DeleteRequestComponent
   ],
   exports: [
     AssignRequestComponent,
     JoinRequestComponent,
     AdminComponent,
     ManagerComponent,
+    RequestFormComponent,
   ]
 })
 export class HomeModule {

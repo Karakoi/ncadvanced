@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild,} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
 import {ToastsManager} from "ng2-toastr";
+import 'rxjs/Rx';
 
 declare let $: any;
 

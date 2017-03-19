@@ -114,4 +114,8 @@ export class RequestService {
         return Observable.throw(error);
       });
   }
+
+  test():Observable<number[]> {
+  return  this.authHttp.get(`${url}/test`).map(resp => resp.json());
+  }
 }

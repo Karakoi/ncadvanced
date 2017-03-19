@@ -5,6 +5,8 @@ import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {InlineEditorModule} from 'ng2-inline-editor';
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
+import {RequestSortPipe} from "../../pipes/request-sort.pipe";
+import {RequestFilterPipe} from "../../pipes/request-filter.pipe";
 
 @NgModule({
   imports: [
@@ -13,13 +15,17 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    Ng2Bs3ModalModule
+    Ng2Bs3ModalModule,
   ],
   declarations: [
-    RequestFormComponent
+    RequestFormComponent,
+    RequestSortPipe,
+    RequestFilterPipe
   ],
   exports: [
-    RequestFormComponent
+    RequestFormComponent,
+    RequestSortPipe,
+    RequestFilterPipe
   ],
   providers: [
     DatePipe
