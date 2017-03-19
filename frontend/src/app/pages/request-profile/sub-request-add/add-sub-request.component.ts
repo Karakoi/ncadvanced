@@ -19,7 +19,7 @@ export class AddSubRequestComponent implements OnInit {
   currentUser: User;
 
   @Input()
-  parentRequest: number;
+  parentId: number;
 
   @Input()
   subRequests: Request[];
@@ -53,7 +53,7 @@ export class AddSubRequestComponent implements OnInit {
     newSubRequest.priorityStatus = <PriorityStatus>{};
     newSubRequest.progressStatus = <ProgressStatus>{};
     newSubRequest.assignee = <User>{};
-    newSubRequest.parentId = 115;
+    newSubRequest.parentId = this.parentId;
     this.requestService.createSubRequest(newSubRequest).subscribe((resp: Response) => {
       this.updateArray(<Request> resp.json());
       this.modal.close();
@@ -77,7 +77,7 @@ export class AddSubRequestComponent implements OnInit {
   private handleErrorCreateUser(error) {
     switch (error.status) {
       case 500:
-        this.toastr.error("Can't create user", 'Error');
+        this.toastr.error("Can't create sub request", 'Error');
     }
   }
 }

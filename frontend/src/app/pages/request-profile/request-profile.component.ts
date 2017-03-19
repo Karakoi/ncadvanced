@@ -19,6 +19,7 @@ export class RequestProfileComponent implements OnInit {
 
   currentUser: User;
   request: Request;
+  type: string;
   showDescription: boolean = true;
   showHistory: boolean = true;
   showSubRequests: boolean = true;
@@ -51,6 +52,7 @@ export class RequestProfileComponent implements OnInit {
 
       this.requestService.get(id).subscribe((request: Request) => {
         this.request = request;
+        this.type = this.getRequestType(request);
         console.log(request)
       });
 
@@ -108,5 +110,15 @@ export class RequestProfileComponent implements OnInit {
       .subscribe(() => {
         this.toastr.success("Request updated", "Success")
       });
+  }
+
+  getRequestType(request): string  {
+    if (request.progressStatus.name == null && request.priorityStatus.name == null) {
+      return "Sub request"
+    } else if (request.progressStatus.name == 'Joined') {
+      return "Joined request";
+    } else {
+      return "Request"
+    }
   }
 }
