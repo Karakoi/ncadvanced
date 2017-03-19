@@ -178,9 +178,9 @@
       <div class="row">
         <div class="col-lg-12">
           <p><b>History:</b>
-            <span (click)="changeShowHistory()" *ngIf="showHistory == true && historyRecords.length > 0"
+            <span (click)="changeShowHistory()" *ngIf="showHistory == true && historyRecords !=false"
                   class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
-            <span (click)="changeShowHistory()" *ngIf="showHistory == false && historyRecords.length > 0"
+            <span (click)="changeShowHistory()" *ngIf="showHistory == false && historyRecords !=false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
           <table class="table table-bordered">
@@ -190,6 +190,8 @@
               <td *ngIf="showHistory">
                 <span>
                   Field <span class="bold-text">"{{history.columnName}}"</span>
+                  <!--was changed from <span class="bold-text">"{{oldValue}}"</span>-->
+                  <!--was changed from <span class="bold-text">{{getOldValue(history)}}</span>-->
                   was changed from <span class="bold-text">"{{history.oldValue}}"</span>
                   to <span class="bold-text">"{{history.newValue}}"</span>
                   by <span class="bold-text"><a href="">"{{history.changer.firstName}} {{history.changer.lastName}}"</a></span>
@@ -199,10 +201,10 @@
             </tr>
             </tbody>
           </table>
-          <div *ngIf="!showHistory && historyRecords.length > 0">
+          <div *ngIf="showHistory == false && historyRecords">
             Click arrow down to show full history
           </div>
-          <div *ngIf="historyRecords.length == 0">
+          <div *ngIf="showHistory == true && historyRecords == false">
             This object was not changed.
           </div>
         </div>
