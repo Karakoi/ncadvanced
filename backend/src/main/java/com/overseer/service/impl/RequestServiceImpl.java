@@ -216,13 +216,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Request saveSubRequest(Request subRequest, Long idParentRequest) {
+    public Request saveSubRequest(Request subRequest) {
         Assert.notNull(subRequest, "sub request must not be null");
-        Assert.notNull(idParentRequest, "id of parent request must not be null");
-        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
-        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
-        log.debug("Create sub request {} for parent request with id {}", subRequest, idParentRequest);
-        subRequest.setParentId(idParentRequest);
+//        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
+//        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
+        log.debug("Create sub request {} for parent request with id {}", subRequest, subRequest.getParentId());
         return requestDao.save(subRequest);
     }
 

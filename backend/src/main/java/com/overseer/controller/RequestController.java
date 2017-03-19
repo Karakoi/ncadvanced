@@ -43,13 +43,11 @@ public class RequestController {
      * Creates sub request of {@link Request} entity.
      *
      * @param subRequest json object which represents {@link Request} entity.
-     * @param idParentRequest id of parent request.
      * @return json representation of created {@link Request} entity.
      */
     @PostMapping("/createSubRequest")
-    public ResponseEntity<Request> createSubRequest(@RequestBody Request subRequest,
-                                                    @RequestParam Long idParentRequest) {
-        val createdRequest = requestService.saveSubRequest(subRequest, idParentRequest);
+    public ResponseEntity<Request> createSubRequest(@RequestBody Request subRequest) {
+        val createdRequest = requestService.saveSubRequest(subRequest);
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
 

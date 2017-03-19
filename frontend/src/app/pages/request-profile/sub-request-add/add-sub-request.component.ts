@@ -4,9 +4,10 @@ import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {ToastsManager} from "ng2-toastr";
 import {Response} from "@angular/http";
 import {RequestService} from "../../../service/request.service";
-import {Request} from "../../../model/request.model";
+import {Request, ProgressStatus} from "../../../model/request.model";
 import {User} from "../../../model/user.model";
 import {AuthService} from "../../../service/auth.service";
+import {PriorityStatus} from "../../../model/priority.model";
 
 @Component({
   selector: 'add-sub-request',
@@ -16,6 +17,9 @@ export class AddSubRequestComponent implements OnInit {
 
   addSubRequestForm: FormGroup;
   currentUser: User;
+
+  @Input()
+  parentRequest: number;
 
   @Input()
   subRequests: Request[];
@@ -46,7 +50,11 @@ export class AddSubRequestComponent implements OnInit {
     newSubRequest.dateOfCreation = new Date();
     newSubRequest.reporter = this.currentUser;
     newSubRequest.lastChanger = this.currentUser;
-    this.requestService.create(newSubRequest).subscribe((resp: Response) => {
+    newSubRequest.priorityStatus = <PriorityStatus>{};
+    newSubRequest.progressStatus = <ProgressStatus>{};
+    newSubRequest.assignee = <User>{};
+    newSubRequest.parentId = 115;
+    this.requestService.createSubRequest(newSubRequest).subscribe((resp: Response) => {
       this.updateArray(<Request> resp.json());
       this.modal.close();
       this.toastr.success("Sub request was created successfully", "Success!");

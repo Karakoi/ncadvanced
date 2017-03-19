@@ -105,11 +105,13 @@
             <tr>
               <td *ngIf="showSubRequests"><b>Title</b></td>
               <td *ngIf="showSubRequests"><b>Description</b></td>
+              <td *ngIf="showSubRequests"><b>Date of creation</b></td>
               <td *ngIf="showSubRequests"><b>Delete</b></td>
             </tr>
             <tr *ngFor="let subRequest of subRequests">
               <td *ngIf="showSubRequests">{{subRequest.title}}</td>
               <td *ngIf="showSubRequests">{{subRequest.description}}</td>
+              <td *ngIf="showSubRequests"><date-parse [date]="subRequest.dateOfCreation"></date-parse></td>
               <td *ngIf="showSubRequests" class="text-center delete-col">
                 <button [attr.value]="subRequest.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
                         (click)="openDeleteSubRequestModal(subRequest)"></button>

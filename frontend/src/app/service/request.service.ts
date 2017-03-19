@@ -22,6 +22,14 @@ export class RequestService {
       });
   }
 
+  createSubRequest(subRequest:Request):Observable<Response> {
+    return this.authHttp.post(`${url}/createSubRequest`, subRequest)
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
   update(request:Request):Observable<Response> {
     return this.authHttp.put(url, request)
       .map(resp => resp.json())
