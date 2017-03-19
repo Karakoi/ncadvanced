@@ -42,3 +42,8 @@ td {
 .glyphicon-trash {
   margin: 0 auto;
 }
+
+.add-sub-request {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}

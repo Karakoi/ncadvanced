@@ -99,6 +99,7 @@
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
+          <button class="btn btn-success btn-sm pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
           <table class="table table-bordered">
             <tbody>
             <tr>
@@ -199,4 +200,5 @@
     </div>
   </div>
 </div>
+<add-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></add-sub-request>
 <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>

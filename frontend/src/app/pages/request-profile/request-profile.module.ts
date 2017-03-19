@@ -8,6 +8,7 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
 import {FormTemplateModule} from "../../shared/form-template/form-template.module";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
+import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
 
 const routes: Routes = [
   {path: '', component: RequestProfileComponent},
@@ -25,11 +26,13 @@ const routes: Routes = [
   ],
   declarations: [
     RequestProfileComponent,
-    DeleteSubRequestComponent
+    DeleteSubRequestComponent,
+    AddSubRequestComponent
   ],
   exports: [
     RequestProfileComponent,
-    DeleteSubRequestComponent
+    DeleteSubRequestComponent,
+    AddSubRequestComponent
   ]
 })
 export class RequestProfileModule {

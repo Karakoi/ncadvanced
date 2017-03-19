@@ -8,6 +8,7 @@ import {User} from "../../model/user.model";
 import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
+import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
 
 @Component({
   selector: 'request-profile',
@@ -27,6 +28,9 @@ export class RequestProfileComponent implements OnInit {
 
   @ViewChild(DeleteSubRequestComponent)
   deleteSubRequestComponent: DeleteSubRequestComponent;
+
+  @ViewChild(AddSubRequestComponent)
+  addSubRequestComponent: AddSubRequestComponent;
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
@@ -57,6 +61,10 @@ export class RequestProfileComponent implements OnInit {
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
     });
+  }
+
+  openAddSubRequestModal(): void {
+    this.addSubRequestComponent.modal.open();
   }
 
   openDeleteSubRequestModal(subRequest: Request): void {
