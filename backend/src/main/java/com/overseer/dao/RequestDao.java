@@ -229,4 +229,11 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of statistic request. 
      */
     List<Long> countRequestByProgressStatus();
+
+    /**
+     * Returns list to build pie chart for user profile.
+     *
+     * @return list of statistic request for user profile.
+     */
+    List<Long> countRequestByProgressStatusForUser(Long userId);
 }

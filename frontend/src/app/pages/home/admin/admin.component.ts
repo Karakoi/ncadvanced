@@ -19,7 +19,7 @@ export class AdminComponent implements OnInit {
   orderField: string;
   searchTypes: any;
 
-  constructor(private requestService: RequestService, private toast: ToastsManager) {
+  constructor(private requestService: RequestService) {
       this.requestService.getQuantityRequest().subscribe((s => {
         this.progress = s;
       }));
@@ -49,8 +49,7 @@ export class AdminComponent implements OnInit {
       ],
       options: {
         title: 'Request statistic',
-        wight: 900,
-        height: 700
+        height: 550
       }
     };
   }
@@ -63,8 +62,7 @@ export class AdminComponent implements OnInit {
     ],
     options: {
       title: 'Request statistic',
-      wight: 900,
-      height: 700
+      height: 550
     }
   };
 

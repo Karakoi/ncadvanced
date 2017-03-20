@@ -164,7 +164,7 @@
                 <label class="control-label">Old Password</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                  <input id="old" formControlName="oldPassword" type="password" placeholder="Password"
+                  <input id="old" formControlName="oldPassword" type="password" placeholder="old password"
                          class="form-control" style="width: 450px" #oldPassword>
                   <span *ngIf="!validateField('oldPassword')"
                         class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -180,7 +180,7 @@
                 <label class="control-label">New Password</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                  <input id="new" formControlName="newPassword" type="password" placeholder="Password"
+                  <input id="new" formControlName="newPassword" type="password" placeholder="new password"
                          class="form-control" style="width: 450px" #newPassword>
                   <span *ngIf="!validateField('newPassword')"
                         class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -196,7 +196,7 @@
                 <label class="control-label">Confirm Password</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                  <input id="confirm" type="password" formControlName="confirmPassword" placeholder="Password"
+                  <input id="confirm" type="password" formControlName="confirmPassword" placeholder="confirm"
                          class="form-control" style="width: 450px" #confirmPassword>
                   <span *ngIf="!validateField('confirmPassword')"
                         class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -210,7 +210,9 @@
             </div>
           <div class="form-group col-lg-12 col-sm-12 btn-div">
           <button type="submit" class="btn btn-success col-lg-5 col-sm-5"
-                  (click)="updatePass(oldPassword.value, newPassword.value, confirmPassword.value)">Update</button>
+                  (click)="updatePass(oldPassword.value, newPassword.value, confirmPassword.value)"
+                  [disabled]="!validateField('newPassword') || !validateField('oldPassword') || !validateField('confirmPassword') ||
+                   newPassword.value=== '' || confirmPassword.value ===''">Update</button>
           <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5" data-dismiss="modal">Close</button>
           </div>
           </form>

@@ -115,7 +115,7 @@ export class RequestService {
       });
   }
 
-  test():Observable<number[]> {
-  return  this.authHttp.get(`${url}/test`).map(resp => resp.json());
+  getQuantityForUser(userId: number):Observable<number[]> {
+    return this.authHttp.get(`${url}/countRequestForUser?userId=` + userId).map(resp => resp.json())
   }
 }

@@ -331,4 +331,17 @@ public class RequestController {
         List<Long> quantity = requestService.quantity();
         return new ResponseEntity<>(quantity, HttpStatus.OK);
     }
+
+    /**
+     * Returns number of progress for user.
+     *
+     * @return number of progress for user.
+     */
+    @GetMapping("/countRequestForUser")
+    public ResponseEntity<List<Long>> getQuantityForUser(@RequestParam Long userId) {
+        System.out.println(userId);
+        final List<Long> quantityUser = requestService.quantityForUser(userId);
+        return new ResponseEntity<>(quantityUser, HttpStatus.OK);
+    }
 }
+

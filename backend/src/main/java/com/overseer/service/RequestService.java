@@ -193,4 +193,12 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return list of statistic request.
      */
     List<Long> quantity();
+
+    /**
+     * Returns list to build pie chart for user profile.
+     *
+     * @return list of statistic request for user profile.
+     */
+    List<Long> quantityForUser(Long userId);
+
 }

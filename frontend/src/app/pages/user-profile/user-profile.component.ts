@@ -25,15 +25,12 @@ export class UserProfileComponent implements OnInit {
     this.route.params.subscribe(params => {
       let id = +params['id'];
       this.userService.get(id).subscribe((user: User) => {
-        console.log(user)
         this.user = user;
+        this.requestService.getQuantityForUser(this.user.id).subscribe(s => {
+          this.requests = s;
+        });
       });
     });
-
-    this.requestService.getQuantityRequest().subscribe(s => {
-      this.requests = s;
-    });
-
   }
 
   setStatistic(){
