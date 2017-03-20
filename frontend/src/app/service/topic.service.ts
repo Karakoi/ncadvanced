@@ -45,4 +45,8 @@ export class TopicService {
   createMessage(message: Message): Observable<Response> {
     return this.authHttp.post(`${url}/message`, message);
   }
+
+  deleteMessage(id: number): Observable<Response> {
+    return this.authHttp.delete(`api/messages/${id}`);
+  }
 }

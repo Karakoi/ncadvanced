@@ -46,7 +46,9 @@ public class TopicDaoImpl extends SimpleEntityDaoImpl<Topic> implements TopicDao
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbc().update(this.queryService().getQuery("topic.saveTopicMessage"),
                 parameterSource,
-                keyHolder);
+                keyHolder, new String[]{"id"});
+        long generatedId = keyHolder.getKey().longValue();
+        message.setId(generatedId);
         return message;
     }
 

@@ -9,12 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,5 +52,11 @@ public class MessageController {
     public ResponseEntity<List<Message>> getMessagesByTopic(@RequestParam Long topicId) {
         val messages = messageService.findByTopic(topicId);
         return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+
+    @DeleteMapping("messages/{id}")
+    public ResponseEntity deleteMessage(@PathVariable Long id) {
+        messageService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

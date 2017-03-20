@@ -11,6 +11,7 @@ import {MessageItemComponent} from "./incoming-messages/incom-message/incoming-m
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {GravatarModule} from "../../shared/gravatar/gravatar.module";
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
+import {DeleteMessageComponent} from "./topic/message-delete/delete-mesage.component";
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
     MessageItemComponent,
     ChatComponent,
     MessageComponent,
-    TopicComponent
+    TopicComponent,
+    DeleteMessageComponent
   ],
   providers: [
     UserService,

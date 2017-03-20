@@ -82,7 +82,7 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
 
     @Override
     protected String getDeleteQuery() {
-        return null;
+        return queryService().getQuery("message.delete");
     }
 
     @Override
