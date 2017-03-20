@@ -49,7 +49,7 @@ public class ReportController {
     }
 
     /**
-     * Gets counts list of requests objects which created in the same period.
+     * Gets list of request transfer objects which created in the same period.
      *
      * @param beginDate date from
      * @param endDate   date to
