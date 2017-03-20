@@ -1,6 +1,5 @@
 package com.overseer.controller;
 
-import com.overseer.dto.RequestDTO;
 import com.overseer.model.Request;
 import com.overseer.service.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -176,24 +174,6 @@ public class RequestController {
         val requests = requestService.findRequestsByPeriod(beginDate, endDate, pageNumber);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
-
-    /**
-     * Gets count of requests objects which created in the same period.
-     *
-     * @param beginDate date from
-     * @param endDate   date to
-     * @return return count of requests from one period of time
-     */
-    @GetMapping("/getCountRequestsByPeriod")
-    public ResponseEntity<RequestDTO> getCountRequestsByPeriod(@RequestParam String beginDate,
-                                                               @RequestParam String endDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        val count = requestService.findCountRequestsByPeriod(start, end);
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
-
 
     /**
      * Gets all Requests objects created in the same day.

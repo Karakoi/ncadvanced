@@ -175,7 +175,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param end   period end.
      * @return list of request DTO created in provided period.
      */
-    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
 
     /**
      * Returns a request DTO created in provided period.
@@ -184,7 +184,16 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param end   period end.
      * @return request DTO created in provided period.
      */
-    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end);
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a list of best managers in provided period.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return list of best managers in provided period.
+     */
+    List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, String progressName);
 
     /**
      * Returns a list of requests created in provided date.

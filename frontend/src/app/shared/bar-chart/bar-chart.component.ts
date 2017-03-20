@@ -21,7 +21,7 @@ export class BarChartComponent implements OnInit {
   }
 
   public barChartOptions: any = {
-    scaleShowVerticalLines: true,
+    scaleShowVerticalLines: false,
     responsive: true
   };
   public barChartData: any[] = [{data: [], label: ''}];
@@ -44,18 +44,6 @@ export class BarChartComponent implements OnInit {
     console.log(e);
   }
 
-  // public countRequests: number;
-  // public barChartLabels2: string[] = [];
-  // public barChartData2: any[] = [{data: [5], label: 'Series 5'}];
-  // generate() {
-  //   this.requestService.getCountRequestsByPeriod(this.startDate, this.endDate)
-  //     .subscribe((count: number) => {
-  //       this.countRequests = count;
-  //     });
-  //   console.log(this.countRequests);
-  //   this.barChartData2 = [{data: [this.countRequests], label: 'Count Requests'}];
-  //   this.barChartLabels2.push("1 month");
-  // }
   clear() {
     this.barChartLabels.length = 0;
     this.barChartData = [{data: [], label: ''}];
@@ -64,18 +52,32 @@ export class BarChartComponent implements OnInit {
   public build() {
     let count: Array<any> = [];
     this.clear();
-    this.reportService.getListCountRequestsByPeriod(this.startDate, this.endDate)
+    this.reportService.getListOfBestManagersWithClosedStatusByPeriod(this.startDate, this.endDate)
       .subscribe((array: RequestDTO[]) => {
         console.log(array);
-        array.forEach(requestDTO => {
-          count.push(requestDTO.count);
-          let firstDate = requestDTO.startDateLimit[0] + "-" + requestDTO.startDateLimit[1] + "-" + requestDTO.startDateLimit[2]
-          let secondDate = requestDTO.endDateLimit[0] + "-" + requestDTO.endDateLimit[1] + "-" + requestDTO.endDateLimit[2]
-          this.barChartLabels.push(firstDate.concat(" : " + secondDate));
+        array.forEach(manager => {
+          count.push(manager.count);
+          let name = manager.managerFirstName + " " + manager.managerLastName;
+          this.barChartLabels.push(name);
         });
-        this.barChartData = [{data: count, label: 'Count created requests'}];
+        this.barChartData = [{data: count, label: 'Count of closed requests'}];
       });
   }
+
+  // public build2() {
+  //   let count: Array<any> = [];
+  //   this.clear();
+  //   this.reportService.getListOfBestManagersWithFreeStatusByPeriod(this.startDate, this.endDate)
+  //     .subscribe((array: RequestDTO[]) => {
+  //       console.log(array);
+  //       array.forEach(manager => {
+  //         count.push(manager.count);
+  //         let name = manager.managerFirstName + " " + manager.managerLastName;
+  //         this.barChartLabels.push(name);
+  //       });
+  //       this.barChartData = [{data: count, label: 'Count of free requests'}];
+  //     });
+  // }
 }
 
 

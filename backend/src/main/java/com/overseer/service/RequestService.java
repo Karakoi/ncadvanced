@@ -105,7 +105,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param end   period end.
      * @return request DTO created in provided period.
      */
-    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end);
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
 
     /**
      * Returns a list of requests DTO created in provided period.
@@ -114,7 +114,16 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param end   period end.
      * @return list of requests DTO created in provided period.
      */
-    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a list of best managers in provided period.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return list of best managers in provided period.
+     */
+    List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName);
 
     /**
      * Returns a list of requests created in provided date.

@@ -173,12 +173,13 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end) {
-        String findByPeriodQuery = this.queryService().getQuery("request.countByPeriod");
+    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        String findByPeriodQuery = this.queryService().getQuery("request.countByStatusAndPeriod");
         try {
             val parameterSource = new MapSqlParameterSource();
             parameterSource.addValue("begin", java.sql.Date.valueOf(start));
             parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_name", progressStatusName);
             return jdbc().queryForObject(findByPeriodQuery,
                     parameterSource, (resultSet, i) -> {
                         RequestDTO requestDTO = new RequestDTO();
@@ -193,14 +194,15 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end) {
-        String findByPeriodQuery = this.queryService().getQuery("request.countByPeriod2");
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        String findCountByPeriodsQuery = this.queryService().getQuery("request.countByStatusesAndPeriods");
         List<RequestDTO> list = new ArrayList<>();
         try {
             val parameterSource = new MapSqlParameterSource();
             parameterSource.addValue("begin", java.sql.Date.valueOf(start));
             parameterSource.addValue("end", java.sql.Date.valueOf(end));
-            return jdbc().query(findByPeriodQuery,
+            parameterSource.addValue("progress_status_name", progressStatusName);
+            return jdbc().query(findCountByPeriodsQuery,
                     parameterSource, resultSet -> {
                         while (resultSet.next()) {
                             RequestDTO requestDTO = new RequestDTO();
@@ -218,6 +220,32 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                             list.add(requestDTO);
                         }
                         return list;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, String progressName) {
+        String findBestManagersByPeriodQuery = this.queryService().getQuery("request.bestManagersByPeriod");
+        List<RequestDTO> bestManagers = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_name", progressName);
+            return jdbc().query(findBestManagersByPeriodQuery,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            RequestDTO manager = new RequestDTO();
+                            manager.setCount(resultSet.getLong("count"));
+                            manager.setManagerFirstName(resultSet.getString("first_name"));
+                            manager.setManagerLastName(resultSet.getString("last_name"));
+                            bestManagers.add(manager);
+                        }
+                        return bestManagers;
                     });
         } catch (DataAccessException e) {
             e.printStackTrace();

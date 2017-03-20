@@ -21,8 +21,35 @@ export class ReportService {
       .map((res: Response) => res.blob());
   }
 
-  getListCountRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getListCountRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getListCountCreatedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getListCountCreatedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getListCountClosedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getListCountClosedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getListOfBestManagersWithClosedStatusByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getBestManagersWithClosedStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getListOfBestManagersWithFreeStatusByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getBestManagersWithFreeStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);

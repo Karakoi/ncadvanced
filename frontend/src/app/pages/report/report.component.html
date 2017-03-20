@@ -1,39 +1,47 @@
 <div class="conteiner">
+
   <form [formGroup]="reportForm">
-    <div style="width: 200px;">
-      <div class="input-group">
-        <label>Begin date:</label>
-        <input required id="dateOfStart" formControlName="dateOfStart" type="date"
-               [ngModel]="dateOfStart | date:'yyyy-MMM-dd'" class="form-control"/>
-      </div>
-
-      <div class="input-group">
-        <label>End date:</label>
-        <input required id="dateOfEnd" formControlName="dateOfEnd" type="date"
-               [ngModel]="dateOfEnd | date:'yyyy-MMM-dd'" class="form-control"/>
-      </div>
-
+    <div>
       <div>
-        <button style="width: 200px;" type="submit" (click)="saveDates(reportForm.value)" [disabled]="reportForm.invalid"
-                class="btn btn-primary">Save
-        </button>
-      </div>
-      <div *ngIf="enddate" class="build-report-div">
-        <span>The report will be generated for the period from {{startdate}} to {{enddate}}</span>
-        <div>
-          <button style="width: 200px;" type="button" (click)="generateReport()" class="btn btn-primary">Build report</button>
+        <div style="width: 200px;">
+          <label>Begin date:</label>
+          <input required id="dateOfStart" formControlName="dateOfStart" type="date"
+                 [ngModel]="dateOfStart | date:'yyyy-MMM-dd'" class="form-control"/>
         </div>
+
+        <div style="width: 200px;">
+          <label>End date:</label>
+          <input required id="dateOfEnd" formControlName="dateOfEnd" type="date"
+                 [ngModel]="dateOfEnd | date:'yyyy-MMM-dd'" class="form-control"/>
+        </div>
+
+        <div>
+          <button style="width: 200px;" type="submit" (click)="saveDates(reportForm.value)"
+                  [disabled]="reportForm.invalid" class="btn btn-primary">Save
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="enddate" style="text-align: center;">
+        <br/>
+        <span><h2>The report will be generated for the period from {{startdate}} to {{enddate}}</h2></span>
+        <button style="width: 200px; height: 60px;" type="button" (click)="generateReport()" class="btn btn-primary">
+          Build report
+        </button>
       </div>
     </div>
   </form>
-  <div class="barChart">
-    <span style="text-align:  center;"><h3>Counts of created requests by period</h3></span>
+
+  <br/>
+  <div *ngIf="enddate" class="barChart">
+    <span style="text-align:  center;"><h3>Top 6 office managers for count of closed request</h3></span>
     <bar-chart [startDate]="startdate" [endDate]="enddate"></bar-chart>
   </div>
 
-  <div class="lineChart">
-    <span style="text-align:  center;"><h3>Charts which show ...</h3></span>
-    <line-chart></line-chart>
+  <br/>
+  <div *ngIf="enddate" class="lineChart">
+    <span style="text-align:  center;"><h3>General request statistics </h3></span>
+    <line-chart [startDate]="startdate" [endDate]="enddate"></line-chart>
   </div>
 
 </div>

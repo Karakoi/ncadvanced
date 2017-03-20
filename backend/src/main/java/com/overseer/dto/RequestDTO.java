@@ -15,4 +15,6 @@ public class RequestDTO {
     private Long count;
     private LocalDate startDateLimit;
     private LocalDate endDateLimit;
+    private String managerFirstName;
+    private String managerLastName;
 }

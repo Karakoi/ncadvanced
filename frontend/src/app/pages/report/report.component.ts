@@ -5,6 +5,7 @@ import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
 import {CustomValidators} from "ng2-validation";
 import {BarChartComponent} from "../../shared/bar-chart/bar-chart.component";
+import {LineChartComponent} from "../../shared/line-chart/line-chart.component";
 
 @Component({
   selector: 'report',
@@ -18,9 +19,14 @@ export class ReportComponent implements OnInit {
 
   @ViewChild(BarChartComponent)
   public barChart: BarChartComponent;
+
+  // @ViewChild(BarChartComponent)
+  // public barChart2: BarChartComponent;
+
+  @ViewChild(LineChartComponent)
+  public lineChart: LineChartComponent;
   private startdate: any;
   private enddate: any;
-  private countMonths: any;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -30,19 +36,7 @@ export class ReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    // this.barChartComponent.generate();
   }
-
-  // public barChartComponent: BarChartComponent;
-  // public reportForm: FormGroup;
-  // public startDate: Date;
-  // public endDate: Date;
-
-  // private initForm(): void {
-  //   this.reportForm = new FormGroup({
-  //     startDate: new FormControl()
-  //   });
-  // }
 
   validateField(field: string): boolean {
     return this.reportForm.get(field).valid || !this.reportForm.get(field).dirty;
@@ -68,6 +62,8 @@ export class ReportComponent implements OnInit {
 
   private generateReport() {
     this.barChart.build();
+    // this.barChart2.build2();
+    this.lineChart.build();
   }
 
 }

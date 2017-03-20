@@ -150,8 +150,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end) {
-        RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end);
+    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end, progressStatusName);
         log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
         return requestDTO;
     }
@@ -160,8 +160,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end) {
-        List<RequestDTO> list = this.requestDao.findListCountRequestsByPeriod(start, end);
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByPeriod(start, end, progressStatusName);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        List<RequestDTO> list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusName);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
         return list;
     }
