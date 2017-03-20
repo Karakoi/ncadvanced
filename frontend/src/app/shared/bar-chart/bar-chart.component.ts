@@ -1,6 +1,8 @@
 import {Component, OnInit, Injectable, Input, ViewChild} from "@angular/core";
-import {RequestService} from "../../../service/request.service";
 import {ToastsManager} from "ng2-toastr";
+import {RequestService} from "../../service/request.service";
+import {ReportService} from "../../service/report.service";
+import {RequestDTO} from "../../model/dto/requestDTO.model";
 
 @Component({
   selector: 'bar-chart',
@@ -14,6 +16,7 @@ export class BarChartComponent implements OnInit {
   }
 
   constructor(private requestService: RequestService,
+              private reportService: ReportService,
               private toastr: ToastsManager) {
   }
 
@@ -29,7 +32,8 @@ export class BarChartComponent implements OnInit {
 
   @ViewChild(Date)
   @Input('startDate') startDate: Date;
-  @Input('countMonths') countMonths: any;
+  @ViewChild(Date)
+  @Input('endDate') endDate: Date;
 
   // events
   public chartClicked(e: any): void {
@@ -39,7 +43,6 @@ export class BarChartComponent implements OnInit {
   public chartHovered(e: any): void {
     console.log(e);
   }
-
 
   // public countRequests: number;
   // public barChartLabels2: string[] = [];
@@ -58,18 +61,21 @@ export class BarChartComponent implements OnInit {
     this.barChartData = [{data: [], label: ''}];
   }
 
-  public buildBarChart() {
-    if (this.startDate) {
-      this.clear();
-      this.requestService.getCountRequestsByStartDate(this.startDate, this.countMonths)
-        .subscribe((array: number[]) => {
-          this.barChartData = [{data: array, label: 'Count created requests'}];
-          let i: number = 1;
-          array.forEach(s => {
-            this.barChartLabels.push(i + " months");
-            i++;
-          });
+  public build() {
+    let count: Array<any> = [];
+    this.clear();
+    this.reportService.getListCountRequestsByPeriod(this.startDate, this.endDate)
+      .subscribe((array: RequestDTO[]) => {
+        console.log(array);
+        array.forEach(requestDTO => {
+          count.push(requestDTO.count);
+          let firstDate = requestDTO.startDateLimit[0] + "-" + requestDTO.startDateLimit[1] + "-" + requestDTO.startDateLimit[2]
+          let secondDate = requestDTO.endDateLimit[0] + "-" + requestDTO.endDateLimit[1] + "-" + requestDTO.endDateLimit[2]
+          this.barChartLabels.push(firstDate.concat(" : " + secondDate));
         });
-    }
+        this.barChartData = [{data: count, label: 'Count created requests'}];
+      });
   }
 }
+
+

@@ -1,6 +1,7 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -29,6 +30,8 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     private static final int JOINED = 6;
     private static final int IN_PROGRESS = 7;
     private static final int REOPEN = 9;
+    private static final int DEFAULT_DAY_IN_MONTH = 1;
+    private static final Long DEFAULT_MONTHS_STEP = 1L;
 
     @Override
     public List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber) {
@@ -170,15 +173,54 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
+    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end) {
         String findByPeriodQuery = this.queryService().getQuery("request.countByPeriod");
         try {
             val parameterSource = new MapSqlParameterSource();
             parameterSource.addValue("begin", java.sql.Date.valueOf(start));
             parameterSource.addValue("end", java.sql.Date.valueOf(end));
             return jdbc().queryForObject(findByPeriodQuery,
-                    parameterSource, (resultSet, i) -> resultSet.getLong("count"));
+                    parameterSource, (resultSet, i) -> {
+                        RequestDTO requestDTO = new RequestDTO();
+                        requestDTO.setCount(resultSet.getLong("count"));
+                        requestDTO.setStartDateLimit(start);
+                        requestDTO.setEndDateLimit(end);
+                        return requestDTO;
+                    });
         } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end) {
+        String findByPeriodQuery = this.queryService().getQuery("request.countByPeriod2");
+        List<RequestDTO> list = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            return jdbc().query(findByPeriodQuery,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            RequestDTO requestDTO = new RequestDTO();
+
+                            int year = resultSet.getInt("year");
+                            int month = resultSet.getInt("month");
+                            LocalDate localStartDate = LocalDate.of(year, month, DEFAULT_DAY_IN_MONTH);
+                            requestDTO.setStartDateLimit(localStartDate);
+
+                            LocalDate localEndDate = LocalDate.of(year, month, DEFAULT_DAY_IN_MONTH);
+                            localEndDate = localEndDate.plusMonths(DEFAULT_MONTHS_STEP);
+                            requestDTO.setEndDateLimit(localEndDate);
+
+                            requestDTO.setCount(resultSet.getLong("count"));
+                            list.add(requestDTO);
+                        }
+                        return list;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
             return null;
         }
     }

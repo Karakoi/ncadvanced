@@ -1,5 +1,6 @@
 package com.overseer.dao;
 
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -167,15 +168,23 @@ public interface RequestDao extends CrudDao<Request, Long> {
      */
     List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageSize, int pageNumber);
 
-
     /**
-     * Returns a count of requests created in provided period.
+     * Returns a list of request DTO created in provided period.
      *
      * @param start period start.
      * @param end   period end.
-     * @return count of requests created in provided period.
+     * @return list of request DTO created in provided period.
      */
-    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end);
+
+    /**
+     * Returns a request DTO created in provided period.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end);
 
     /**
      * Returns a list of requests created in provided date.
@@ -229,4 +238,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of statistic request. 
      */
     List<Long> countRequestByProgressStatus();
+
+
 }

@@ -1,37 +1,34 @@
 <div class="conteiner">
   <form [formGroup]="reportForm">
-    <!--(ngSubmit)="go(reportForm.value)">-->
-    <!--type="date :'yyyy-MMM-dd'"-->
     <div style="width: 200px;">
-      <div class="input-group" >
+      <div class="input-group">
         <label>Begin date:</label>
-        <input required id="dateOfStart" formControlName="dateOfStart" type="date" [ngModel]="dateOfStart | date:'yyyy-MMM-dd'" class="form-control"/>
+        <input required id="dateOfStart" formControlName="dateOfStart" type="date"
+               [ngModel]="dateOfStart | date:'yyyy-MMM-dd'" class="form-control"/>
       </div>
 
-      <div class="form-group" [ngClass]="{'has-error': !validateField('countMonths')}">
-        <div class="input-group">
-          <label>Months count:</label>
-          <input id="countMonths" formControlName="countMonths" type="text" placeholder="Count of months"
-                 class="form-control"/>
-          <span *ngIf="!validateField('countMonths')"
-                class="glyphicon glyphicon-remove form-control-feedback"></span>
-        </div>
-        <div *ngIf="!validateField('countMonths')" class="help-block text-left">
-          <span *ngIf="reportForm.get('countMonths').hasError('phone')">Value must be number.</span>
-        </div>
+      <div class="input-group">
+        <label>End date:</label>
+        <input required id="dateOfEnd" formControlName="dateOfEnd" type="date"
+               [ngModel]="dateOfEnd | date:'yyyy-MMM-dd'" class="form-control"/>
       </div>
+
       <div>
-        <button style="width: 200px;" type="submit" (click)="go(reportForm.value)" [disabled]="reportForm.invalid" class="btn btn-primary">Save</button>
+        <button style="width: 200px;" type="submit" (click)="saveDates(reportForm.value)" [disabled]="reportForm.invalid"
+                class="btn btn-primary">Save
+        </button>
       </div>
-      <div>
-        <button style="width: 200px;" type="button" (click)="go2()" class="btn btn-primary">Build report</button>
+      <div *ngIf="enddate" class="build-report-div">
+        <span>The report will be generated for the period from {{startdate}} to {{enddate}}</span>
+        <div>
+          <button style="width: 200px;" type="button" (click)="generateReport()" class="btn btn-primary">Build report</button>
+        </div>
       </div>
     </div>
   </form>
   <div class="barChart">
     <span style="text-align:  center;"><h3>Counts of created requests by period</h3></span>
-    <bar-chart [startDate]="date" [countMonths]="countMonths"></bar-chart>
-    <!--<bar-chart></bar-chart>-->
+    <bar-chart [startDate]="startdate" [endDate]="enddate"></bar-chart>
   </div>
 
   <div class="lineChart">

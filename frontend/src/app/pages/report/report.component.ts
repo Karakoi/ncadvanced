@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
 import {CustomValidators} from "ng2-validation";
-import {BarChartComponent} from "./bar-chart/bar-chart.component";
+import {BarChartComponent} from "../../shared/bar-chart/bar-chart.component";
 
 @Component({
   selector: 'report',
@@ -18,7 +18,8 @@ export class ReportComponent implements OnInit {
 
   @ViewChild(BarChartComponent)
   public barChart: BarChartComponent;
-  private date: any;
+  private startdate: any;
+  private enddate: any;
   private countMonths: any;
 
   constructor(private formBuilder: FormBuilder,
@@ -43,10 +44,6 @@ export class ReportComponent implements OnInit {
   //   });
   // }
 
-  public generateReport() {
-    // this.barChartComponent.generate();
-  }
-
   validateField(field: string): boolean {
     return this.reportForm.get(field).valid || !this.reportForm.get(field).dirty;
   }
@@ -54,24 +51,23 @@ export class ReportComponent implements OnInit {
   private initForm(): void {
     this.reportForm = this.formBuilder.group({
       dateOfStart: ['', CustomValidators.dateISO],
-      countMonths: ['', [Validators.required, CustomValidators.number]]
+      dateOfEnd: ['', CustomValidators.dateISO],
     });
   }
 
-  private go(formData) {
-    this.date = formData.dateOfStart;
-    this.countMonths = formData.countMonths;
-    this.toastr.success("Data: ".concat(this.date.toString() + ", counts:" + formData.countMonths), "DATA:");
-  }
-
-  private go2() {
-    this.barChart.buildBarChart();
-  }
-
-  private handleError(error) {
-    switch (error.status) {
-      case 400:
-        this.toastr.error('Error', 'Error');
+  private saveDates(formData) {
+    if (formData.dateOfEnd > formData.dateOfStart) {
+      this.startdate = formData.dateOfStart;
+      this.enddate = formData.dateOfEnd;
+      this.toastr.success("Data START: ".concat(this.startdate.toString() + ", Data END:" + this.enddate.toString()), "DATA:");
+    }
+    else {
+      this.toastr.error("Error. Uncorrect dates: End date must be bigger than the start date");
     }
   }
+
+  private generateReport() {
+    this.barChart.build();
+  }
+
 }

@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -98,13 +99,22 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber);
 
     /**
-     * Returns a count of requests created in provided period.
+     * Returns a request DTO created in provided period.
      *
      * @param start period start.
      * @param end   period end.
-     * @return count of requests created in provided period.
+     * @return request DTO created in provided period.
      */
-    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end);
+
+    /**
+     * Returns a list of requests DTO created in provided period.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return list of requests DTO created in provided period.
+     */
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end);
 
     /**
      * Returns a list of requests created in provided date.
@@ -130,7 +140,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * and not null {@link Request#parentId}
      *
      * @param subRequest    specified sub request
-     * @param parentRequest specified parent request
+     * @param idParentRequest specified parent request
      * @return joined sub request
      */
     Request saveSubRequest(Request subRequest, Long idParentRequest);

@@ -2,6 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.RequestDTO;
 import com.overseer.exception.RmovingNotFreeRequestException;
 import com.overseer.exception.UnpropreateJoinRequest;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -149,10 +150,20 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
-        val count = this.requestDao.findCountsRequestsByPeriod(start, end);
-        log.debug("Fetched {} count of requests for period {} - {}", count, start, end);
-        return count;
+    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end) {
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByPeriod(start, end);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
     }
 
     /**
