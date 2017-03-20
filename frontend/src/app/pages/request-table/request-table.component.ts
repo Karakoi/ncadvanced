@@ -13,6 +13,7 @@ declare let $: any;
   styleUrls: ['request-table.component.css']
 })
 export class RequestTableComponent implements OnInit {
+
   requests: Request[];
   pageCount: number;
   term: any;
