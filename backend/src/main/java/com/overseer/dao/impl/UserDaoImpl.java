@@ -186,7 +186,6 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
 
     @Override
     public Long getCountAllDeactivated() {
-        String findCountQuery = getCountQuery();
         return this.jdbc().queryForObject(this.queryService().getQuery("user.deletedCount"), new MapSqlParameterSource(), Long.class);
     }
 }

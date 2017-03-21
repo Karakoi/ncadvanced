@@ -294,7 +294,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         log.debug("Delete request with id: {} ", idRequest);
         Request request = requestDao.findOne(idRequest);
         Long progressStatusId = request.getProgressStatus().getId();
-        if (progressStatusId == null || progressStatusId.equals(FREE_STATUS)) {
+        if (progressStatusId == 0 || progressStatusId.equals(FREE_STATUS)) {
             super.delete(idRequest);
         } else {
             throw new InappropriateProgressStatusException("Request with id: "

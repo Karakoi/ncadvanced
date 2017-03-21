@@ -312,23 +312,35 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             lastChanger.setFirstName(resultSet.getString("last_changer_first_name"));
             lastChanger.setLastName(resultSet.getString("last_changer_last_name"));
 
-            ProgressStatus progressStatus = null;
-            String progressStatusName = resultSet.getString("progress_name");
-            if (progressStatusName != null && !progressStatusName.isEmpty()) {
-                progressStatus = new ProgressStatus();
-                progressStatus.setName(progressStatusName);
-                progressStatus.setId(resultSet.getLong("progress_id"));
-                progressStatus.setValue(resultSet.getInt("progress_value"));
-            }
+            ProgressStatus progressStatus = new ProgressStatus();
+            progressStatus.setName(resultSet.getString("progress_name"));
+            progressStatus.setId(resultSet.getLong("progress_id"));
+            progressStatus.setValue(resultSet.getInt("progress_value"));
 
-            PriorityStatus priorityStatus = null;
-            String priorityStatusName = resultSet.getString("priority_name");
-            if (priorityStatusName != null && !priorityStatusName.isEmpty()) {
-                priorityStatus = new PriorityStatus();
-                priorityStatus.setName(priorityStatusName);
-                priorityStatus.setId(resultSet.getLong("priority_id"));
-                priorityStatus.setValue(resultSet.getInt("priority_value"));
-            }
+
+            PriorityStatus priorityStatus = new PriorityStatus();
+            priorityStatus.setName(resultSet.getString("priority_name"));
+            priorityStatus.setId(resultSet.getLong("priority_id"));
+            priorityStatus.setValue(resultSet.getInt("priority_value"));
+
+
+//            ProgressStatus progressStatus = null;
+//            String progressStatusName = resultSet.getString("progress_name");
+//            if (progressStatusName != null && !progressStatusName.isEmpty()) {
+//                progressStatus = new ProgressStatus();
+//                progressStatus.setName(progressStatusName);
+//                progressStatus.setId(resultSet.getLong("progress_id"));
+//                progressStatus.setValue(resultSet.getInt("progress_value"));
+//            }
+//
+//            PriorityStatus priorityStatus = null;
+//            String priorityStatusName = resultSet.getString("priority_name");
+//            if (priorityStatusName != null && !priorityStatusName.isEmpty()) {
+//                priorityStatus = new PriorityStatus();
+//                priorityStatus.setName(priorityStatusName);
+//                priorityStatus.setId(resultSet.getLong("priority_id"));
+//                priorityStatus.setValue(resultSet.getInt("priority_value"));
+//            }
 
             Long parentId = resultSet.getLong("parent_id");
             if (parentId == 0) {
