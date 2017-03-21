@@ -7,7 +7,7 @@ import {CustomValidators} from "ng2-validation";
 import {BarChartComponent} from "../../shared/bar-chart/bar-chart.component";
 import {LineChartComponent} from "../../shared/line-chart/line-chart.component";
 import {ReportService} from "../../service/report.service";
-import * as FileSaver from "file-saver";
+// import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'report',
@@ -68,25 +68,24 @@ export class ReportComponent implements OnInit {
     this.lineChart.build();
   }
 
-
-  private generatePDF() {
-    this.reportService.getPDFReport().subscribe(
-      data => {
-        console.log(data);
-        let blob = new Blob([data], {type: 'application/pdf'});
-        // console.log(blob);
-        console.log("ddddddd");
-        FileSaver.saveAs(blob, "report.pdf");
-        console.log("ddddddd22222");
-        this.toastr.success("Report was created successfully", "Success!");
-      }, e => this.handleError(e));
-  }
-
-  private handleError(error) {
-    switch (error.status) {
-      case 500:
-        this.toastr.error("Can't create report", 'Error');
-    }
-  }
+  // private generatePDF() {
+  //   this.reportService.getPDFReport().subscribe(
+  //     data => {
+  //       console.log(data);
+  //       let blob = new Blob([data], {type: 'application/pdf'});
+  //       // console.log(blob);
+  //       console.log("ddddddd");
+  //       FileSaver.saveAs(blob, "report.pdf");
+  //       console.log("ddddddd22222");
+  //       this.toastr.success("Report was created successfully", "Success!");
+  //     }, e => this.handleError(e));
+  // }
+  //
+  // private handleError(error) {
+  //   switch (error.status) {
+  //     case 500:
+  //       this.toastr.error("Can't create report", 'Error');
+  //   }
+  // }
 
 }
