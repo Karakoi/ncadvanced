@@ -33,7 +33,6 @@ import {ChartsModule} from "ng2-charts";
 import {TopicService} from "./service/topic.service";
 import {HistoryService} from "./service/history.service";
 import {Ng2GoogleChartsModule} from "ng2-google-charts";
-import {PipeModule} from "./pipes/pipe.module";
 
 @NgModule({
   declarations: [
@@ -57,7 +56,6 @@ import {PipeModule} from "./pipes/pipe.module";
     GravatarModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes),
-    PipeModule.forRoot()
   ],
   providers: [
     ErrorService,
