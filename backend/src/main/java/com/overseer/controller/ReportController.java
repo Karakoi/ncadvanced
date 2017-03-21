@@ -1,18 +1,21 @@
 package com.overseer.controller;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.overseer.dto.RequestDTO;
-import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -31,7 +34,6 @@ public class ReportController {
     private static final Long DEFAULT_MONTHS_STEP = 1L;
     private static final int COUNT_MONTHS_IN_YEAR = 12;
     private final RequestService requestService;
-    private final ReportService reportService;
 
 
     /**
@@ -40,16 +42,95 @@ public class ReportController {
      * @return {@link Document} doc with reporting data.
      */
 //    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(produces = "application/pdf")
-    public Document getPDF() {
-        Document document = null;
+//    @GetMapping(produces = MediaType.APPLICATION_PDF, path = "/pdf")
+    @RequestMapping(value = "/pdf", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> downloadStuff() throws IOException {
+        create();
+        File file = new File("itext-test.pdf");
+
+        HttpHeaders respHeaders = new HttpHeaders();
+        respHeaders.setContentType(MediaType.APPLICATION_PDF);
+//        respHeaders.setContentLength(545678);
+        respHeaders.setContentDispositionFormData("attachment", "report.pdf");
+        InputStreamResource isr = new InputStreamResource(new FileInputStream(file));
+        System.out.println("||||||||||||||||||");
+        return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
+    }
+
+//    public ResponseEntity<InputStreamResource> downloadPDFFile()
+//            throws IOException {
+////        create();
+//        Resource pdfFile = new ClassPathResource("itext-test.pdf");
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+//        headers.add("Pragma", "no-cache");
+//        headers.add("Expires", "0");
+//
+//        return ResponseEntity
+//                .ok()
+//                .headers(headers)
+//                .contentLength(pdfFile.contentLength())
+//                .contentType(MediaType.parseMediaType("application/octet-stream"))
+//                .body(new InputStreamResource(pdfFile.getInputStream()));
+//    }
+
+    /**
+     * Gets {@link Document} test pdf document.
+     *
+     * @return {@link Document} test pdf document.
+     */
+    private Document create() {
+        Document document = new Document();
         try {
-            document = reportService.generateAdminPDFReport();
-        } catch (IOException | DocumentException e) {
+            File file = new File("itext-test.pdf");
+            FileOutputStream fileout = new FileOutputStream(file);
+
+            PdfWriter.getInstance(document, fileout);
+            document.addAuthor("Me");
+            document.addTitle("My iText Test");
+            document.open();
+
+            Image img = Image.getInstance("logo.jpg");
+            document.add(img);
+            Paragraph p = new Paragraph("REPORT:");
+            p.setAlignment(Element.ALIGN_CENTER);
+            LineSeparator ls = new LineSeparator();
+            document.add(p);
+            document.add(new Chunk(ls));
+
+            document.close();
+        } catch (DocumentException | IOException e) {
             e.printStackTrace();
         }
+        System.out.println("+++++++++++++++++++++++++++++");
         return document;
     }
+
+
+//    public static final String IMG = "../resources/img/NetCracker_logo.jpg";
+//    public static void main(String[] args) {
+//        try {
+//            File file = new File("itext-test.pdf");
+//            FileOutputStream fileout = new FileOutputStream(file);
+//            Document document = new Document();
+//            PdfWriter.getInstance(document, fileout);
+//            document.addAuthor("Me");
+//            document.addTitle("My iText Test");
+//            document.open();
+//
+//            Image img = Image.getInstance("logo.jpg");
+//            document.add(img);
+//            Paragraph p = new Paragraph("REPORT:");
+//            p.setAlignment(Element.ALIGN_CENTER);
+//            LineSeparator ls = new LineSeparator();
+//            document.add(p);
+//            document.add(new Chunk(ls));
+//
+//            document.close();
+//        } catch (DocumentException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * Gets list of request transfer objects which created in the same period.
@@ -179,7 +260,7 @@ public class ReportController {
      */
     @GetMapping("/getBestManagersWithClosedStatusByPeriod")
     public ResponseEntity<List<RequestDTO>> getBestManagersWithClosedStatusByPeriod(@RequestParam String beginDate,
-                                                                    @RequestParam String endDate) {
+                                                                                    @RequestParam String endDate) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
         List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, "Closed");
@@ -195,7 +276,7 @@ public class ReportController {
      */
     @GetMapping("/getBestManagersWithFreeStatusByPeriod")
     public ResponseEntity<List<RequestDTO>> getBestManagersWithFreeStatusByPeriod(@RequestParam String beginDate,
-                                                                    @RequestParam String endDate) {
+                                                                                  @RequestParam String endDate) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
         List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, "Free");

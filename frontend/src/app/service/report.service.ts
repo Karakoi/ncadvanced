@@ -17,7 +17,7 @@ export class ReportService {
 
   getPDFReport(): Observable<any> {
     let headers = new Headers({'Accept': 'application/pdf'});
-    return this.authHttp.get(`${url}`, {headers: headers})
+    return this.authHttp.get(`${url}/pdf`, {headers: headers})
       .map((res: Response) => res.blob());
   }
 
