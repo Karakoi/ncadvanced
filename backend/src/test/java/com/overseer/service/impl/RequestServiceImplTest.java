@@ -7,6 +7,7 @@ import com.overseer.model.*;
 import com.overseer.service.RequestService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class RequestServiceImplTest {
         reporter.setPassword("gunner12");
         reporter.setEmail("dashok.smile@gmail.com");
         reporter.setRole(reporterRole);
+
         reporter = this.userDao.save(reporter);
 
 
@@ -101,6 +103,7 @@ public class RequestServiceImplTest {
     }
 
     @Test
+    @Ignore
     public void joinRequestsIntoParent() throws Exception {
         Request parent = requestService.joinRequestsIntoParent(requestsGroupIds, request);
 

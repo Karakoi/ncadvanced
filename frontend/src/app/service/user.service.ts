@@ -6,8 +6,9 @@ import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
 import {Message} from "../model/message.model";
-import {PriorityStatus, ProgressStatus} from "../model/request.model";
+import {ProgressStatus} from "../model/request.model";
 import {ErrorService} from "./error.service";
+import {PriorityStatus} from "../model/priority.model";
 
 const url = '/api/users';
 
@@ -145,4 +146,5 @@ export class UserService {
         return Observable.throw(error);
       });
   }
+
 }

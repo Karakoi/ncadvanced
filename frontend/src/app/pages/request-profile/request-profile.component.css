@@ -30,3 +30,36 @@ a {
 .bold-text {
   font-weight: bold;
 }
+
+td {
+  text-align: left;
+}
+
+.delete-col {
+  width: 20px;
+}
+
+.glyphicon-trash {
+  margin: 0 auto;
+}
+
+.add-sub-request {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.details {
+  width: 30px;
+}
+
+.details-btn {
+  margin: 0 auto;
+}
+
+.no-content-msg {
+  margin-top: 10px;
+}
+
+.label-info {
+  cursor: pointer;
+}

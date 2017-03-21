@@ -1,6 +1,8 @@
-import {Component} from "@angular/core";
+import {Component,ViewChild} from "@angular/core";
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
+import {AssignRequestComponent} from "../../../pages/home/manager/request-assign/assign-request.component"
+import {JoinRequestComponent} from "../../../pages/home/manager/request-join/join-request.component"
 
 declare let $: any;
 
@@ -14,15 +16,34 @@ export class ManagerComponent {
   checked: number[] = [];
   pageCount: number;
 
+  @ViewChild(AssignRequestComponent)
+  assignRequestComponent: AssignRequestComponent;
+  @ViewChild(JoinRequestComponent)
+  joinRequestComponent: JoinRequestComponent;
+
   constructor(private requestService: RequestService) {
   }
 
   ngOnInit() {
-    this.requestService.getAll(1).subscribe((requests: Request[]) => {
+    this.requestService.getFree(1).subscribe((requests: Request[]) => {
       this.requests = requests;
     });
-    this.requestService.getPageCount().subscribe((count) => this.pageCount = count);
+    this.requestService.getPageCountFree().subscribe((count) => this.pageCount = count);
 
+  }
+
+  assign(request:Request) {
+    request.estimateTimeInDays = 3;
+    this.assignRequestComponent.request = request;
+    this.assignRequestComponent.modal.open();
+  }
+
+  join() {
+    this.joinRequestComponent.modal.open();
+  }
+
+  updateRequests(requests: Request[]) {
+    this.requests = requests;
   }
 
   toggle(id) {
@@ -45,6 +66,14 @@ export class ManagerComponent {
     console.log(this.checked);
   }
 
+  isChecked(id) {
+    return this.checked.indexOf(id) > -1;
+  }
+
+  uncheckAll() {
+    this.checked = [];
+  }
+
   canUnite() {
     return this.checked.length > 1;
   }
@@ -53,7 +82,7 @@ export class ManagerComponent {
     $('.paginate_button').removeClass('active');
     let page = data.target.text;
     $(data.target.parentElement).addClass('active');
-    this.requestService.getAll(page).subscribe((requests: Request[]) => {
+    this.requestService.getFree(page).subscribe((requests: Request[]) => {
       this.requests = requests;
     });
   }

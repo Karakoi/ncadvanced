@@ -95,6 +95,30 @@ public interface RequestDao extends CrudDao<Request, Long> {
     }
 
     /**
+     * Returns number of requests for reporter.
+     *
+     * @param reporterId reporter id must be not null.
+     * @return number of requests for reporter.
+     */
+    Long countRequestsByReporter(Long reporterId);
+
+    /**
+     * Returns a list of closed requests which have provided {@link User} as reporter.
+     *
+     * @param reporterId id of the reporter, must not be {@literal null}.
+     * @return list of closed requests which have provided {@link User} as reporter.
+     */
+    List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber);
+
+    /**
+     * Returns number of closed requests for reporter.
+     *
+     * @param reporterId reporter id must be not null.
+     * @return number of requests for reporter.
+     */
+    Long countRequestsByReporterAndProgress(Long reporterId, String progress);
+
+    /**
      * Returns a list of requests with provided progress status {@link ProgressStatus}.
      *
      * @param statusId id of the progress status, must not be {@literal null}.
@@ -143,6 +167,16 @@ public interface RequestDao extends CrudDao<Request, Long> {
      */
     List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageSize, int pageNumber);
 
+
+    /**
+     * Returns a count of requests created in provided period.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return count of requests created in provided period.
+     */
+    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+
     /**
      * Returns a list of requests created in provided date.
      *
@@ -160,6 +194,20 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> findRequestsByIds(List<Long> ids);
 
     /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countFree();
+
+    /**
+     * Returns a list of requests with Free progress status {@link ProgressStatus}.
+     *
+     * @return list of requests with Free progress status {@link ProgressStatus}.
+     */
+    List<Request> findFreeRequests(int pageSize, int pageNumber);
+
+    /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
      * @param statusIds list of progress status ids, must not be {@literal null}
@@ -174,4 +222,11 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param parentId list of progress status ids, must not be {@literal null}
      */
     void deleteParentRequestIfItHasNoChildren(Long parentId);
+
+    /**
+     * Returns list to build pie chart.
+     *
+     * @return list of statistic request. 
+     */
+    List<Long> countRequestByProgressStatus();
 }

@@ -9,8 +9,10 @@ import {RequestService} from "../../../service/request.service";
   templateUrl: 'delete-request.component.html'
 })
 export class DeleteRequestComponent {
+
   @Input()
   requests: Request[];
+
   @Output()
   updated: EventEmitter<any> = new EventEmitter();
 

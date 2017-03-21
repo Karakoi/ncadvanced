@@ -42,6 +42,7 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
 
     @Override
     public T update(T entity) throws NoSuchEntityException {
+
         Assert.notNull(entity);
         if (entity.isNew()) {
             throw new NoSuchEntityException("Failed to perform update operation. Id was null: " + entity);

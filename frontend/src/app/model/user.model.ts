@@ -10,5 +10,5 @@ export interface User {
   phoneNumber?: string,
   role: Role,
   isDeactivated?:boolean,
-  dateOfDeactivation?: string;
+  dateOfDeactivation?: Date;
 }

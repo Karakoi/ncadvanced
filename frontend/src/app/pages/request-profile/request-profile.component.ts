@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {RequestService} from "../../service/request.service";
 import {Request} from "../../model/request.model";
 import {ActivatedRoute} from "@angular/router";
@@ -7,6 +7,8 @@ import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
 import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
+import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
+import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
 
 @Component({
   selector: 'request-profile',
@@ -17,11 +19,20 @@ export class RequestProfileComponent implements OnInit {
 
   currentUser: User;
   request: Request;
+  type: string;
   showDescription: boolean = true;
   showHistory: boolean = true;
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
   historyRecords: History[];
+  subRequests: Request[];
+  joinedRequests: Request[];
+
+  @ViewChild(DeleteSubRequestComponent)
+  deleteSubRequestComponent: DeleteSubRequestComponent;
+
+  @ViewChild(AddSubRequestComponent)
+  addSubRequestComponent: AddSubRequestComponent;
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
@@ -41,12 +52,36 @@ export class RequestProfileComponent implements OnInit {
 
       this.requestService.get(id).subscribe((request: Request) => {
         this.request = request;
+        this.type = this.getRequestType(request);
         console.log(request)
+      });
+
+      this.requestService.getSubRequests(id).subscribe((subRequests: Request[]) => {
+        this.subRequests = subRequests;
+        console.log(subRequests)
+      });
+
+      this.requestService.getJoinedRequests(id).subscribe((joinedRequests: Request[]) => {
+        this.joinedRequests = joinedRequests;
+        console.log(joinedRequests)
       });
     });
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
     });
+  }
+
+  openAddSubRequestModal(): void {
+    this.addSubRequestComponent.modal.open();
+  }
+
+  openDeleteSubRequestModal(subRequest: Request): void {
+    this.deleteSubRequestComponent.subRequest = subRequest;
+    this.deleteSubRequestComponent.modal.open();
+  }
+
+  updateSubRequests(subRequests: Request[]) {
+    this.subRequests = subRequests;
   }
 
   changeShowDescription() {
@@ -67,10 +102,23 @@ export class RequestProfileComponent implements OnInit {
 
   updateRequest() {
     this.request.parentId = null;
+    if (this.request.assignee.id === 0){
+      this.request.assignee = <User>{};
+    }
     this.request.lastChanger = this.currentUser;
     this.requestService.update(this.request)
       .subscribe(() => {
         this.toastr.success("Request updated", "Success")
       });
+  }
+
+  getRequestType(request): string  {
+    if (request.progressStatus.name == null && request.priorityStatus.name == null) {
+      return "Sub request"
+    } else if (request.progressStatus.name == 'Joined') {
+      return "Joined request";
+    } else {
+      return "Request"
+    }
   }
 }
