@@ -64,7 +64,7 @@ export class ClosedRequest implements OnInit {
 
   reopen() {
     let sel = Array.from(this.selected);
-    this.employeeService.reopenRequests(Array.from(this.selected)).subscribe(
+    this.employeeService.reopenRequests(sel).subscribe(
       (success) => {
         console.log("Size before",this.requests.length)
         console.log("selecterd= ", this.selected);
