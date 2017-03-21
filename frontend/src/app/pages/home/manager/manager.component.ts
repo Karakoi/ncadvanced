@@ -5,6 +5,7 @@ import {AssignRequestComponent} from "../../../pages/home/manager/request-assign
 import {JoinRequestComponent} from "../../../pages/home/manager/request-join/join-request.component";
 import {AuthService} from "../../../service/auth.service";
 import {User} from "../../../model/user.model";
+import {count} from "rxjs/operator/count";
 
 declare let $: any;
 
@@ -26,6 +27,7 @@ export class ManagerComponent {
   @ViewChild(JoinRequestComponent)
   joinRequestComponent: JoinRequestComponent;
 
+
   constructor(private requestService: RequestService,
               private authService: AuthService) {
   }
@@ -41,7 +43,50 @@ export class ManagerComponent {
     this.requestService.getAllByAssignee(this.user.id, page).subscribe((requests: Request[]) => {
       this.myRequests = requests;
     });
-    this.requestService.getPageCountByAssignee(this.user.id).subscribe((count) => this.myPageCount = count);
+    this.requestService.getRequestCountByAssignee(this.user.id).subscribe((count) => {this.myPageCount = count; console.log(count)});
+  }
+
+  pageChange(data){
+    this.requestService.getFree(data.page).subscribe(requests => {
+      this.requests = requests;
+    })
+  }
+
+  settings = {
+    delete: false,
+    add: false,
+    info: true,
+    multiSelect: true,
+    filterRow: true,
+    join: true,
+    assign: true,
+    columns: {
+      title: true,
+      estimate: false,
+      dateOfCreation: true,
+      priorityStatus: true,
+      progressStatus: true,
+      reporter: true,
+      assignee: false,
+    }
+  }
+
+  mySettings = {
+    delete: false,
+    add: false,
+    info: true,
+    multiSelect: false,
+    filterRow: true,
+    assign: false,
+    columns: {
+      title: true,
+      estimate: true,
+      dateOfCreation: true,
+      priorityStatus: true,
+      progressStatus: true,
+      reporter: true,
+      assignee: false,
+    }
   }
 
   assign(request: Request) {
@@ -66,14 +111,6 @@ export class ManagerComponent {
     }
   }
 
-  createRange(number) {
-    let items: number[] = [];
-    for (let i = 2; i <= number; i++) {
-      items.push(i);
-    }
-    return items;
-  }
-
   isChecked(id) {
     return this.checked.indexOf(id) > -1;
   }
@@ -84,22 +121,6 @@ export class ManagerComponent {
 
   canUnite() {
     return this.checked.length > 1;
-  }
-
-  load(data) {
-    let page = this.getCurrentPage(data);
-    this.fetchFreeRequests(page);
-  }
-
-  loadMyRequests(data) {
-    let page = this.getCurrentPage(data);
-    this.fetchMyRequests(page);
-  }
-
-  private getCurrentPage(data): number {
-    $('.paginate_button').removeClass('active');
-    $(data.target.parentElement).addClass('active');
-    return +data.target.text;
   }
 
   private fetchFreeRequests(page: number) {

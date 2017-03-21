@@ -335,8 +335,7 @@ public class RequestController {
      */
     @GetMapping("/pageCountByAssignee")
     public ResponseEntity<Long> getPagesCountByAssignee(@RequestParam Long assigneeId) {
-        Long pageCount = requestService.countRequestsByAssignee(assigneeId) / DEFAULT_PAGE_SIZE + 1;
-        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+        return new ResponseEntity<>(requestService.countRequestsByAssignee(assigneeId), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")

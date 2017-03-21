@@ -1,4 +1,4 @@
-<div *ngIf="true">
+<div *ngIf="requests.length > 0">
   <form-template>
     <div class="template-header">
       Requests
@@ -21,6 +21,12 @@
             <span *ngIf="orderType && orderField == 'dateOfCreation'"
                   class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
             <span *ngIf="!orderType && orderField == 'dateOfCreation'"
+                  class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
+          </th>
+          <th *ngIf="settings.columns.estimate" (click)="changeOrderParams(!orderType, 'estimateTimeInDays')">Estimate time
+            <span *ngIf="orderType && orderField == 'estimateTimeInDays'"
+                  class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
+            <span *ngIf="!orderType && orderField == 'estimateTimeInDays'"
                   class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
           </th>
           <th *ngIf="settings.columns.priorityStatus" (click)="changeOrderParams(!orderType, 'priorityStatus.name')"
@@ -50,6 +56,7 @@
                   class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
           </th>
           <th *ngIf="settings.delete">Delete</th>
+          <th *ngIf="settings.assign">Assign</th>
         </tr>
         </thead>
         <tbody>
@@ -60,6 +67,9 @@
           </td>
           <td *ngIf="settings.columns.dateOfCreation">
             <input type="date" [(ngModel)]="searchTypes.date" class="form-control"/>
+          </td>
+          <td *ngIf="settings.columns.estimate">
+            <input type="text" [(ngModel)]="searchTypes.estimateTime" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.priorityStatus">
             <select class="form-control" [(ngModel)]="searchTypes.priorityStatus">
@@ -85,6 +95,7 @@
             <input type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>
           </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
+          <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
@@ -95,6 +106,9 @@
           </td>
           <td *ngIf="settings.columns.dateOfCreation" [routerLink]="settings.info ? ['/request', request.id]: null">
             <date-parse [date]="request.dateOfCreation"></date-parse>
+          </td>
+          <td *ngIf="settings.columns.estimate" [routerLink]="settings.info ? ['/request', request.id]: null">
+            {{request.estimateTimeInDays}}
           </td>
           <td *ngIf="settings.columns.priorityStatus" [routerLink]="settings.info ? ['/request', request.id]: null">
             {{request.priorityStatus.name}}
@@ -111,8 +125,12 @@
             {{request.assignee.lastName}}
           </td>
           <td class="text-center delete-col" *ngIf="settings.delete">
-            <button [attr.value]="request.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
-                    (click)="openDeleteRequestModal(request)"></button>
+            <span [attr.value]="request.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
+                    (click)="openDeleteRequestModal(request)"></span>
+          </td>
+          <td class="text-center " *ngIf="settings.assign">
+            <span [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs"
+                    (click)="openAssignRequestModal(request)"></span>
           </td>
         </tr>
         </tbody>
@@ -133,5 +151,7 @@
   </form-template>
   <request-form *ngIf="settings.add" [requests]="requests" (updated)="updateRequests($event)"></request-form>
   <delete-request *ngIf="settings.delete" [requests]="requests" (updated)="updateRequests($event)"></delete-request>
+  <assign-request *ngIf="settings.assign" [requests]="requests" (updated)="updateRequests($event)"></assign-request>
+  <join-request  *ngIf="settings.join" [requests]="requests"></join-request>
 </div>
 

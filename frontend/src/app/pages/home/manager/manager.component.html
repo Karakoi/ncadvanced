@@ -30,7 +30,9 @@
         <div class="panel-body">
           <div class="tab-content">
             <div class="tab-pane fade in active" id="freeRequests" *ngIf="requests.length">
-              <table class="table table-bordered table-hover table-striped">
+              <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings"
+              (paginationChange)="pageChange($event)"></r-table>
+ <!--             <table class="table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
                   <th width="30px"></th>
@@ -65,40 +67,14 @@
                 <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
                 <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)">
                   <a>{{item}}</a></li>
-              </ul>
+              </ul> -->
             </div>
             <div class="tab-pane fade" id="myRequests">
               <div class="text-center" *ngIf="!myRequests.length">
                 <h2>No requests assigned yet</h2>
               </div>
               <div *ngIf="myRequests.length">
-                <table class="table table-bordered table-hover table-striped">
-                  <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Creation Date</th>
-                    <th>Priority</th>
-                    <th>Progress</th>
-                    <th>Reporter</th>
-                  </tr>
-                  </thead>
-                  <tbody id="my-list">
-                  <tr *ngFor="let req of myRequests">
-                    <td><a [routerLink]="['/request', req.id]">{{ req.title }}</a></td>
-                    <td>
-                      <date-parse [date]="req.dateOfCreation"></date-parse>
-                    </td>
-                    <td>{{ req.priorityStatus.name }}</td>
-                    <td>{{ req.progressStatus.name }}</td>
-                    <td><a [routerLink]="['/user', req.reporter.id]">{{ req.reporter.firstName }} {{ req.reporter.lastName}}</a></td>
-                  </tr>
-                  </tbody>
-                </table>
-                <ul class="pagination pull-right">
-                  <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
-                  <li class="paginate_button" (click)="loadMyRequests($event)" *ngFor="let item of createRange(myPageCount)">
-                    <a>{{item}}</a></li>
-                </ul>
+                <r-table [requests]="myRequests" [requestsCount]="myPageCount" [settings]="mySettings"></r-table>
               </div>
             </div>
           </div>

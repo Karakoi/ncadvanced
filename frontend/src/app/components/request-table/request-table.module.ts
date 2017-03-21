@@ -10,6 +10,8 @@ import {RequestTable} from "./request-table.component";
 import {RouterModule} from "@angular/router";
 import {PipeModule} from "../../pipes/pipe.module";
 import {PaginationModule} from "ng2-bootstrap";
+import {AssignRequestComponent} from "./request-assign/assign-request.component";
+import {JoinRequestComponent} from "./request-join/join-request.component";
 
 
 
@@ -28,11 +30,15 @@ import {PaginationModule} from "ng2-bootstrap";
   ],
   declarations: [
     RequestTable,
+    AssignRequestComponent,
     DeleteRequestComponent,
+    JoinRequestComponent
   ],
   exports: [
     RequestTable,
+    AssignRequestComponent,
     DeleteRequestComponent,
+    JoinRequestComponent
   ]
 })
 export class  BasicRequestTableModule {

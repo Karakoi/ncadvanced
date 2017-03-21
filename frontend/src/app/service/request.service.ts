@@ -111,7 +111,7 @@ export class RequestService {
       });
   }
 
-  getPageCountByAssignee(assigneeId: number): Observable<number> {
+  getRequestCountByAssignee(assigneeId: number): Observable<number> {
     return this.authHttp.get(`${url}/pageCountByAssignee?assigneeId=${assigneeId}`)
       .map(resp => resp.json())
       .catch((error:any) => {

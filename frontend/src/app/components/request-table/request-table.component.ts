@@ -3,7 +3,9 @@ import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
-import {number} from "ng2-validation/dist/number";
+import {AssignRequestComponent} from "./request-assign/assign-request.component";
+import {JoinRequestComponent} from "./request-join/join-request.component";
+
 
 
 declare let $: any;
@@ -13,7 +15,7 @@ declare let $: any;
   templateUrl: 'request-table.component.html',
   styleUrls: ['request-table.component.css']
 })
-export class RequestTable implements OnInit {
+export class RequestTable {
   selected: Set<number>;
 
   @Input() private requests: Request[];
@@ -32,8 +34,11 @@ export class RequestTable implements OnInit {
     info: true,
     multiSelect: false,
     filterRow: true,
+    assign: false,
+    join: false,
     columns: {
       title: true,
+      estimate: true,
       dateOfCreation: true,
       priorityStatus: true,
       progressStatus: true,
@@ -45,6 +50,12 @@ export class RequestTable implements OnInit {
 
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;
+
+  @ViewChild(AssignRequestComponent)
+  assignForm: AssignRequestComponent;
+
+  @ViewChild(JoinRequestComponent)
+  joinRequestComponent: JoinRequestComponent;
 
   @ViewChild(DeleteRequestComponent)
   deleteRequestComponent: DeleteRequestComponent;
@@ -58,13 +69,12 @@ export class RequestTable implements OnInit {
       progressStatus: "",
       reporterName: "",
       assigneeName: "",
+      estimateTime: "",
       date: ""
     };
     this.selected = new Set();
   }
 
-  ngOnInit() {
-  }
 
   changed(data){
     this.paginationChange.emit(data);
@@ -94,6 +104,12 @@ export class RequestTable implements OnInit {
     this.deleteRequestComponent.modal.open();
   }
 
+  openAssignRequestModal(request: Request) {
+    request.estimateTimeInDays = 3;
+    this.assignForm.request = request;
+    this.assignForm.modal.open();
+  }
+
   get sorted(): Request[] {
     return this.requests
       .map(request => request)
@@ -103,7 +119,6 @@ export class RequestTable implements OnInit {
         else return 0;
       });
   }
-
 
   updateRequests(request: Request[]) {
     this.requests = request;
