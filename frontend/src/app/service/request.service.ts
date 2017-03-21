@@ -22,6 +22,14 @@ export class RequestService {
       });
   }
 
+  createSubRequest(subRequest:Request):Observable<Response> {
+    return this.authHttp.post(`${url}/createSubRequest`, subRequest)
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
   update(request:Request):Observable<Response> {
     return this.authHttp.put(url, request)
       .map(resp => resp.json())
@@ -103,9 +111,26 @@ export class RequestService {
       });
   }
 
-
   join(request:Request, checked:number[]):Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getSubRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getSubRequests/${id}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getJoinedRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getJoinedGroupRequests/${id}`)
+      .map(resp => resp.json())
       .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);

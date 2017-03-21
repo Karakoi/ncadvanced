@@ -5,20 +5,20 @@ import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
 
 @Component({
-  selector: 'delete-request',
-  templateUrl: 'delete-request.component.html'
+  selector: 'delete-sub-request',
+  templateUrl: 'delete-sub-request.component.html'
 })
-export class DeleteRequestComponent {
+export class DeleteSubRequestComponent {
 
   @Input()
-  requests: Request[];
+  subRequests: Request[];
 
   @Output()
   updated: EventEmitter<any> = new EventEmitter();
 
-  public request: Request;
+  public subRequest: Request;
 
-  @ViewChild('deleteRequestFormModal')
+  @ViewChild('deleteSubRequestFormModal')
   modal: ModalComponent;
 
   constructor(private requestService: RequestService,
@@ -26,7 +26,7 @@ export class DeleteRequestComponent {
   }
 
   deleteRequest() {
-    this.requestService.delete(this.request.id).subscribe(() => {
+    this.requestService.delete(this.subRequest.id).subscribe(() => {
       this.updateArray();
       this.modal.close();
       this.toastr.success("Request was deleted successfully", "Success!");
@@ -34,7 +34,7 @@ export class DeleteRequestComponent {
   }
 
   private updateArray(): void {
-    this.updated.emit(this.requests.filter(r => r !== this.request));
+    this.updated.emit(this.subRequests.filter(r => r !== this.subRequest));
   }
 
   private handleErrorDeleteUser(error) {

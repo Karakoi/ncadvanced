@@ -37,4 +37,30 @@ export class RequestTableComponent implements OnInit {
       this.requests = requests;
     })
   }
+
+  updateRequests(request: Request[]) {
+    this.requests = request;
+  }
+
+  openFormModal(): void {
+    this.requestForm.modal.open();
+  }
+
+  // getPDFReport() {
+  //   this.reportService.getPDFReport().subscribe(
+  //     data => {
+  //       console.log(data);
+  //       let blob = new Blob([data], {type: 'application/pdf'});
+  //       console.log(blob);
+  //       FileSaver.saveAs(blob, "report.pdf");
+  //       this.toastr.success("Report was created successfully", "Success!");
+  //     }, e => this.handleError(e));
+  // }
+
+  // private handleError(error) {
+  //   switch (error.status) {
+  //     case 500:
+  //       this.toastr.error("Can't create report", 'Error');
+  //   }
+  // }
 }
