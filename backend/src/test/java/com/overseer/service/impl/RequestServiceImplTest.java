@@ -2,6 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
+import com.overseer.exception.InappropriateProgressStatusChange;
 import com.overseer.model.*;
 import com.overseer.service.RequestService;
 import org.junit.Assert;
@@ -17,6 +18,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
@@ -24,7 +28,6 @@ public class RequestServiceImplTest {
 
     @Autowired
     private UserDao userDao;
-
     @Autowired
     private RequestDao requestDao;
 
@@ -35,6 +38,8 @@ public class RequestServiceImplTest {
     private ProgressStatus progress;
     private PriorityStatus priority;
     private List<Long> requestsGroupIds;
+
+    private static final Long IN_PROGRESS_STATUS = 7L;
 
     @Autowired
     private RequestService requestService;
@@ -49,7 +54,7 @@ public class RequestServiceImplTest {
         reporter.setFirstName("Tom");
         reporter.setLastName("Hardy");
         reporter.setPassword("gunner12");
-        reporter.setEmail( "some@email.com");
+        reporter.setEmail("dashok.smile@gmail.com");
         reporter.setRole(reporterRole);
         reporter = this.userDao.save(reporter);
 
@@ -70,7 +75,7 @@ public class RequestServiceImplTest {
         assignee.setFirstName("Tom");
         assignee.setLastName("Cruz");
         assignee.setPassword("cruzXXX");
-        assignee.setEmail("cruzooo@email.com");
+        assignee.setEmail("blabla@3g.ua");
         assignee.setRole(assigneeRole);
         assignee = this.userDao.save(assignee);
 
@@ -109,5 +114,25 @@ public class RequestServiceImplTest {
 
         Request thirdChildRequest = requestService.findOne(requestsGroupIds.get(0));
         Assert.assertEquals(request.getId(), thirdChildRequest.getParentId());
+    }
+
+    @Test
+    public void shouldAssignFreeRequest() throws Exception {
+        // given
+
+        // when
+        Request assignRequest = requestService.assignRequest(request);
+        // then
+        assertThat(assignRequest.getProgressStatus().getId(), is(IN_PROGRESS_STATUS));
+    }
+
+    @Test(expected=InappropriateProgressStatusChange.class)
+    public void shouldNotCloseFreeRequest() {
+        // given
+
+        // when
+        requestService.closeRequest(request);
+
+        // then
     }
 }
