@@ -7,7 +7,9 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {RequestTable} from "./request-table.component";
+import {RouterModule} from "@angular/router";
 import {PipeModule} from "../../pipes/pipe.module";
+import {PaginationModule} from "ng2-bootstrap";
 
 
 
@@ -18,10 +20,11 @@ import {PipeModule} from "../../pipes/pipe.module";
     FormTemplateModule,
     RequestModule,
     ReactiveFormsModule,
+    RouterModule,
+    PaginationModule.forRoot(),
     PipeModule.forRoot(),
     Ng2Bs3ModalModule,
     FormsModule,
-
   ],
   declarations: [
     RequestTable,

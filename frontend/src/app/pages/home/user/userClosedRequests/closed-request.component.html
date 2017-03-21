@@ -6,15 +6,10 @@
         <ul class="nav nav-tabs">
           <li><a [routerLink]="['/home/user/active']">My active requests</a></li>
           <li class="active"><a [routerLink]="['/home/user/closed']">My completed request</a></li>
-
         </ul>
-        <create-user (requestAdd)="addToTable($event)"> </create-user>
-        <ng2-smart-table [settings]="settings"
-                          [source]="source"
-                         (userRowSelect)="onSelect($event)">
-        </ng2-smart-table>
+        <r-table *ngIf="loaded" [requestsCount]="totalItems" [requests]="requests" [settings]="settings"
+                 (paginationChange)="pageChange($event)" (selectedEvent)="select($event)"></r-table>
         <button class="btn btn-primary block glyphicon glyphicon-share" (click)="reopen()">Reopen</button>
-        <pagination [totalItems]="totalItems" [itemsPerPage]="per" (pageChanged)="changed($event)"></pagination>
       </div>
     </div>
   </div>

@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild, Input, Output, EventEmitter} from "@angular/core";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
+import {number} from "ng2-validation/dist/number";
 
 
 declare let $: any;
@@ -13,12 +14,34 @@ declare let $: any;
   styleUrls: ['request-table.component.css']
 })
 export class RequestTable implements OnInit {
-  requests: Request[];
-  pageCount: number;
+  selected: Set<number>;
+
+  @Input() private requests: Request[];
+  @Input() private requestsCount: number;
+  @Output() paginationChange = new EventEmitter();
+  @Output() selectedEvent: EventEmitter<any> = new EventEmitter();
+  private perPage: number = 20;
   term: any;
   orderType: boolean;
   orderField: string;
   searchTypes: any;
+
+  @Input() settings = {
+    delete: true,
+    add: true,
+    info: true,
+    multiSelect: false,
+    filterRow: true,
+    columns: {
+      title: true,
+      dateOfCreation: true,
+      priorityStatus: true,
+      progressStatus: true,
+      reporter: true,
+      assignee: true,
+    }
+  }
+
 
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;
@@ -37,6 +60,14 @@ export class RequestTable implements OnInit {
       assigneeName: "",
       date: ""
     };
+    this.selected = new Set();
+  }
+
+  ngOnInit() {
+  }
+
+  changed(data){
+    this.paginationChange.emit(data);
   }
 
   changeOrderParams(type, field) {
@@ -44,14 +75,21 @@ export class RequestTable implements OnInit {
     this.orderField = field;
   }
 
-  ngOnInit() {
-    this.requestService.getAll(1).subscribe((requests: Request[]) => {
-      this.requests = requests;
-    });
-    this.requestService.getPageCount().subscribe((count) => this.pageCount = count);
+  perPageChange(data){
+    this.perPage = data;
   }
 
-  openDeleteRequestModal(request: Request): void {
+  check(data){
+    data = +data;
+    if(!this.selected.has(data))
+      this.selected.add(data);
+    else {
+      this.selected.delete(data);
+    }
+    this.selectedEvent.emit(this.selected);
+  }
+
+  openDeleteRequestModal(request: Request,event): void {
     this.deleteRequestComponent.request = request;
     this.deleteRequestComponent.modal.open();
   }
@@ -66,28 +104,6 @@ export class RequestTable implements OnInit {
       });
   }
 
-  createRange(number) {
-    let items: number[] = [];
-    for (let i = 2; i <= number; i++) {
-      items.push(i);
-    }
-    return items;
-  }
-
-  load(data) {
-    $('.paginate_button').removeClass('active');
-    let page = data.target.text;
-    $(data.target.parentElement).addClass('active');
-    this.requestService.getAll(page).subscribe((requests: Request[]) => {
-      requests.forEach(e => {
-        if (e.priorityStatus.name == null) e.priorityStatus.name = "";
-        if (e.progressStatus.name == null) e.progressStatus.name = "";
-        if (e.assignee.firstName == null) e.assignee.firstName = "";
-        if (e.assignee.lastName == null) e.assignee.lastName = "";
-      });
-      this.requests = requests;
-    });
-  }
 
   updateRequests(request: Request[]) {
     this.requests = request;

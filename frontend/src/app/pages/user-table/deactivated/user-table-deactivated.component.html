@@ -60,7 +60,7 @@
           <td class="td-center"><span class="glyphicon glyphicon-info-sign"></span></td>
           <td class="td-center"><span class="glyphicon glyphicon-upload"></span></td>
         </tr>
-        <tr *ngFor="let user of sorted | filter: searchTypes | sort: {field: orderField, order: orderType}">
+        <tr *ngFor="let user of sorted | filterUser: searchTypes | sortUser: {field: orderField, order: orderType}">
           <td>{{user.firstName}}</td>
           <td>{{user.lastName}}</td>
           <td>{{user.email}}</td>

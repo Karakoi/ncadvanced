@@ -247,8 +247,7 @@ public class RequestController {
      */
     @GetMapping("/pageCountFree")
     public ResponseEntity<Long> getPagesCountFree() {
-        Long pageCount = requestService.countFreeRequests() / DEFAULT_PAGE_SIZE + 1;
-        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+        return new ResponseEntity<>(requestService.countFreeRequests(), HttpStatus.OK);
     }
 
     /**

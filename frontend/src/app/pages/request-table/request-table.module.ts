@@ -24,6 +24,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     Ng2Bs3ModalModule,
     FormsModule,
+    PipeModule.forRoot(),
   ],
   declarations: [
     RequestTableComponent,
