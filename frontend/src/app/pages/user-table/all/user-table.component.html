@@ -28,7 +28,6 @@
             <span *ngIf="orderType && orderField == 'role'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
             <span *ngIf="!orderType && orderField == 'role'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
           </th>
-          <th>Details</th>
           <th>Delete</th>
         </tr>
         </thead>
@@ -51,17 +50,13 @@
               <option>office manager</option>
             </select>
           </td>
-          <td class="td-center"><span class="glyphicon glyphicon-info-sign"></span></td>
           <td class="td-center"><span class="glyphicon glyphicon-trash"></span></td>
         </tr>
         <tr *ngFor="let user of sorted | filterUser: searchTypes | sortUser: {field: orderField, order: orderType}">
-          <td>{{user.firstName}}</td>
-          <td>{{user.lastName}}</td>
-          <td>{{user.email}}</td>
-          <td>{{user.role.name}}</td>
-          <td class="text-center delete-col">
-            <button [routerLink]="['/user', user.id]" class="glyphicon glyphicon-info-sign btn btn-primary btn-xs center-block"></button>
-          </td>
+          <td [routerLink]="['/user', user.id]">{{user.firstName}}</td>
+          <td [routerLink]="['/user', user.id]">{{user.lastName}}</td>
+          <td [routerLink]="['/user', user.id]">{{user.email}}</td>
+          <td [routerLink]="['/user', user.id]">{{user.role.name}}</td>
           <td class="text-center delete-col">
             <button [attr.value]="user.id" class="glyphicon glyphicon-trash btn btn-danger btn-xs center-block"
                     (click)="openDeleteUserModal(user)"></button>

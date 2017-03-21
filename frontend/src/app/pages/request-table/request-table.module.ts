@@ -9,6 +9,7 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {PipeModule} from "../../pipes/pipe.module";
+import {BasicRequestTableModule} from "../../components/request-table/request-table.module";
 
 const routes: Routes = [
   {path: '', component: RequestTableComponent}
@@ -24,15 +25,14 @@ const routes: Routes = [
     ReactiveFormsModule,
     Ng2Bs3ModalModule,
     FormsModule,
+    BasicRequestTableModule,
     PipeModule.forRoot(),
   ],
   declarations: [
-    RequestTableComponent,
-    DeleteRequestComponent,
+    RequestTableComponent
   ],
   exports: [
-    RequestTableComponent,
-    DeleteRequestComponent,
+    RequestTableComponent
   ]
 })
 export class RequestTableModule {

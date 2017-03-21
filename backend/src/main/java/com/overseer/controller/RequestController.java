@@ -236,8 +236,7 @@ public class RequestController {
      */
     @GetMapping("/pageCount")
     public ResponseEntity<Long> getPagesCount() {
-        Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
-        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+        return new ResponseEntity<>(requestService.getCount(), HttpStatus.OK);
     }
 
     /**

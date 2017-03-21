@@ -31,7 +31,6 @@
             <span *ngIf="orderType && orderField == 'dateOfDeactivation'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
             <span *ngIf="!orderType && orderField == 'dateOfDeactivation'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
           </th>
-          <th>Details</th>
           <th>Activate</th>
         </tr>
         </thead>
@@ -57,18 +56,14 @@
           <td>
             <input type="date" [(ngModel)]="searchTypes.dateOfDeactivation" class="form-control"/>
           </td>
-          <td class="td-center"><span class="glyphicon glyphicon-info-sign"></span></td>
           <td class="td-center"><span class="glyphicon glyphicon-upload"></span></td>
         </tr>
         <tr *ngFor="let user of sorted | filterUser: searchTypes | sortUser: {field: orderField, order: orderType}">
-          <td>{{user.firstName}}</td>
-          <td>{{user.lastName}}</td>
-          <td>{{user.email}}</td>
-          <td>{{user.role.name}}</td>
-          <td><date-parse [date]="user.dateOfDeactivation"></date-parse></td>
-          <td class="text-center delete-col">
-            <button [routerLink]="['/user', user.id]" class="glyphicon glyphicon-info-sign btn btn-primary btn-xs center-block"></button>
-          </td>
+          <td [routerLink]="['/user', user.id]">{{user.firstName}}</td>
+          <td [routerLink]="['/user', user.id]">{{user.lastName}}</td>
+          <td [routerLink]="['/user', user.id]">{{user.email}}</td>
+          <td [routerLink]="['/user', user.id]">{{user.role.name}}</td>
+          <td [routerLink]="['/user', user.id]"><date-parse [date]="user.dateOfDeactivation"></date-parse></td>
           <td>
             <button [attr.value]="user.id" class="glyphicon glyphicon-upload btn btn-success btn-xs center-block"
                     (click)="openActivateUserModal(user)"></button>
