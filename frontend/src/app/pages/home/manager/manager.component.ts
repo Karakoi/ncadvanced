@@ -1,8 +1,10 @@
-import {Component,ViewChild} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
-import {AssignRequestComponent} from "../../../pages/home/manager/request-assign/assign-request.component"
-import {JoinRequestComponent} from "../../../pages/home/manager/request-join/join-request.component"
+import {AssignRequestComponent} from "../../../pages/home/manager/request-assign/assign-request.component";
+import {JoinRequestComponent} from "../../../pages/home/manager/request-join/join-request.component";
+import {AuthService} from "../../../service/auth.service";
+import {User} from "../../../model/user.model";
 
 declare let $: any;
 
@@ -13,26 +15,36 @@ declare let $: any;
 })
 export class ManagerComponent {
   requests: Request[] = [];
+  myRequests: Request[] = [];
+  user: User;
   checked: number[] = [];
   pageCount: number;
+  myPageCount: number;
 
   @ViewChild(AssignRequestComponent)
   assignRequestComponent: AssignRequestComponent;
   @ViewChild(JoinRequestComponent)
   joinRequestComponent: JoinRequestComponent;
 
-  constructor(private requestService: RequestService) {
+  constructor(private requestService: RequestService,
+              private authService: AuthService) {
   }
 
   ngOnInit() {
-    this.requestService.getFree(1).subscribe((requests: Request[]) => {
-      this.requests = requests;
+    this.authService.currentUser.subscribe((user: User) => {
+      this.user = user;
     });
-    this.requestService.getPageCountFree().subscribe((count) => this.pageCount = count);
-
+    this.fetchFreeRequests(1);
   }
 
-  assign(request:Request) {
+  fetchMyRequests(page: number) {
+    this.requestService.getAllByAssignee(this.user.id, page).subscribe((requests: Request[]) => {
+      this.myRequests = requests;
+    });
+    this.requestService.getPageCountByAssignee(this.user.id).subscribe((count) => this.myPageCount = count);
+  }
+
+  assign(request: Request) {
     request.estimateTimeInDays = 3;
     this.assignRequestComponent.request = request;
     this.assignRequestComponent.modal.open();
@@ -62,10 +74,6 @@ export class ManagerComponent {
     return items;
   }
 
-  info() {
-    console.log(this.checked);
-  }
-
   isChecked(id) {
     return this.checked.indexOf(id) > -1;
   }
@@ -79,11 +87,25 @@ export class ManagerComponent {
   }
 
   load(data) {
+    let page = this.getCurrentPage(data);
+    this.fetchFreeRequests(page);
+  }
+
+  loadMyRequests(data) {
+    let page = this.getCurrentPage(data);
+    this.fetchMyRequests(page);
+  }
+
+  private getCurrentPage(data): number {
     $('.paginate_button').removeClass('active');
-    let page = data.target.text;
     $(data.target.parentElement).addClass('active');
+    return +data.target.text;
+  }
+
+  private fetchFreeRequests(page: number) {
     this.requestService.getFree(page).subscribe((requests: Request[]) => {
       this.requests = requests;
     });
+    this.requestService.getPageCountFree().subscribe((count) => this.pageCount = count);
   }
 }

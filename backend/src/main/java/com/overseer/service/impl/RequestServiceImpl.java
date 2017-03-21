@@ -227,8 +227,15 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public Long countFreeRequests() {
         val freeRequestsQuantity = requestDao.countFree();
-        log.debug("Counted requests with Free progress status: {}", freeRequestsQuantity);
+        log.debug("Counted {} requests with Free progress status", freeRequestsQuantity);
         return freeRequestsQuantity;
+    }
+
+    @Override
+    public Long countRequestsByAssignee(Long assigneeId) {
+        val requestsByAssignee = requestDao.countByAssignee(assigneeId);
+        log.debug("Counted {} requests for user with id: {}", requestsByAssignee, assigneeId);
+        return requestsByAssignee;
     }
 
     @Override
