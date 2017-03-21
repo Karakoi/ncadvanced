@@ -2,7 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
-import com.overseer.exception.InappropriateProgressStatusChange;
+import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.model.*;
 import com.overseer.service.RequestService;
 import org.junit.Assert;
@@ -129,7 +129,7 @@ public class RequestServiceImplTest {
         assertThat(assignRequest.getProgressStatus().getId(), is(IN_PROGRESS_STATUS));
     }
 
-    @Test(expected=InappropriateProgressStatusChange.class)
+    @Test(expected=InappropriateProgressStatusException.class)
     public void shouldNotCloseFreeRequest() {
         // given
 

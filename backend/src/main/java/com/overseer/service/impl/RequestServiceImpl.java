@@ -3,8 +3,7 @@ package com.overseer.service.impl;
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.event.ChangeProgressStatusEvent;
-import com.overseer.exception.RmovingNotFreeRequestException;
-import com.overseer.exception.InappropriateProgressStatusChange;
+import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +37,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     private RequestDao requestDao;
     private ProgressStatusDao progressStatusDao;
-
-    @Override
-    public Long countRequestByReporter(Long reporterId) {
-        return requestDao.countRequestsByReporter(reporterId);
-    }
     
     private ApplicationEventPublisher publisher;
 
@@ -144,7 +139,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      */
     @Override
     public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
-        val count = this.requestDao.findCountsRequestsByPeriod(start, end);
+        Long count = this.requestDao.findCountsRequestsByPeriod(start, end);
         log.debug("Fetched {} count of requests for period {} - {}", count, start, end);
         return count;
     }
@@ -155,7 +150,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findRequestsByDate(LocalDate date) {
         Assert.notNull(date, "date must not be null");
-        val list = this.requestDao.findRequestsByDate(date);
+        List<Request> list = this.requestDao.findRequestsByDate(date);
         log.debug("Fetched {} requests for date: {}", list.size(), date);
         return list;
     }
@@ -175,8 +170,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         //check if joinedRequests are appropriate
         joinedRequests.forEach(request -> {
             if (request.getProgressStatus().getId() != FREE_STATUS) {
-                throw new InappropriateProgressStatusChange("Can not join request with id: " + request.getId()
-                        + " because it has progress status not Free");
+                throw new InappropriateProgressStatusException("Can not join request with id: " + request.getId()
+                        + " because it has progress status that is not [Free]");
             }
         });
 
@@ -224,8 +219,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Request assignRequest(Request request) {
         Assert.notNull(request, "request must not be null");
         log.debug("Assign request with id: {} to office manager with id: {}", request.getId(), request.getAssignee().getId());
-        if(request.getProgressStatus().getId() != FREE_STATUS){
-            throw new InappropriateProgressStatusChange("Request with id: "
+        if (request.getProgressStatus().getId() != FREE_STATUS) {
+            throw new InappropriateProgressStatusException("Request with id: "
                     + request.getId() + " and ProgressStatus: "
                     + request.getProgressStatus().getName()
                     + " can not be assign");
@@ -245,8 +240,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         Assert.notNull(request, "request must not be null");
         log.debug("Close request with id: {} ", request.getId());
         Long progressStatusId = request.getProgressStatus().getId();
-        if(progressStatusId != IN_PROGRESS_STATUS && progressStatusId != JOINED_STATUS){
-            throw new InappropriateProgressStatusChange("Request with id: "
+        if (progressStatusId != IN_PROGRESS_STATUS && progressStatusId != JOINED_STATUS) {
+            throw new InappropriateProgressStatusException("Request with id: "
                     + request.getId() + " and ProgressStatus: "
                     + request.getProgressStatus().getName()
                     + " can not be closed");
@@ -267,8 +262,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         if (request == null) {
             throw new NoSuchEntityException("Request with given id: " + requestId + " is absent in DB");
         }
-        if(request.getProgressStatus().getId() != CLOSED_STATUS){
-            throw new InappropriateProgressStatusChange("Request with id: "
+        if (request.getProgressStatus().getId() != CLOSED_STATUS) {
+            throw new InappropriateProgressStatusException("Request with id: "
                     + request.getId() + " and ProgressStatus: "
                     + request.getProgressStatus().getName()
                     + " can not be reopen");
@@ -280,16 +275,32 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     }
 
     @Override
+    public Request update(Request request) throws NoSuchEntityException {
+        Assert.notNull(request, "request must not be null");
+        log.debug("Updating request with id: {} ", request.getId());
+        Long progressStatusId = request.getProgressStatus().getId();
+        if (!progressStatusId.equals(FREE_STATUS)) {
+            throw new InappropriateProgressStatusException("Request with id: "
+                    + request.getId() + " and ProgressStatus: "
+                    + request.getProgressStatus().getName()
+                    + " can not be updated");
+        }
+        return super.update(request);
+    }
+
+    @Override
     public void delete(Long idRequest) {
         Assert.notNull(idRequest, "id of request must not be null");
         log.debug("Delete request with id: {} ", idRequest);
         Request request = requestDao.findOne(idRequest);
         Long progressStatusId = request.getProgressStatus().getId();
-        if (progressStatusId == 0 || progressStatusId.equals(FREE_STATUS)) {
+        if (progressStatusId == null || progressStatusId.equals(FREE_STATUS)) {
             super.delete(idRequest);
         } else {
-            throw new RmovingNotFreeRequestException("Can not remove request with id: "
-                    + request.getId() + " and progress status " + request.getProgressStatus().getName());
+            throw new InappropriateProgressStatusException("Request with id: "
+                    + request.getId() + " and ProgressStatus: "
+                    + request.getProgressStatus().getName()
+                    + " can not be deleted");
         }
     }
 
@@ -305,6 +316,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         idsOfProgresStatuses.add(JOINED_STATUS);
         List<Request> requests = requestDao.findRequestsByProgressStatusesAndReporterId(idsOfProgresStatuses, reporterId);
         requests.forEach(this::closeRequest);
+    }
+
+    @Override
+    public Long countRequestByReporter(Long reporterId) {
+        return requestDao.countRequestsByReporter(reporterId);
     }
 
     @Override

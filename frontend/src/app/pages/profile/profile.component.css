@@ -7,9 +7,13 @@
 }
 
 .dummy_user {
-  width: 303px;
+  width: auto;
   height: auto;
   /*border: solid darkgray 3px;*/
   border-radius: 3%;
+}
+
+.container{
+  width: auto;
 }
 

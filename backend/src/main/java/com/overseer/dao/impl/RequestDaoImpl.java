@@ -314,7 +314,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
             ProgressStatus progressStatus = null;
             String progressStatusName = resultSet.getString("progress_name");
-            if(progressStatusName != null && !progressStatusName.isEmpty()){
+            if (progressStatusName != null && !progressStatusName.isEmpty()) {
                 progressStatus = new ProgressStatus();
                 progressStatus.setName(progressStatusName);
                 progressStatus.setId(resultSet.getLong("progress_id"));
@@ -323,7 +323,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
             PriorityStatus priorityStatus = null;
             String priorityStatusName = resultSet.getString("priority_name");
-            if(priorityStatusName != null && !priorityStatusName.isEmpty()){
+            if (priorityStatusName != null && !priorityStatusName.isEmpty()) {
                 priorityStatus = new PriorityStatus();
                 priorityStatus.setName(priorityStatusName);
                 priorityStatus.setId(resultSet.getLong("priority_id"));

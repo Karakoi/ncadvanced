@@ -183,4 +183,10 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
         Assert.notNull(id, "id must not be null");
         this.jdbc().update(this.queryService().getQuery("user.activate"), new MapSqlParameterSource("id", id));
     }
+
+    @Override
+    public Long getCountAllDeactivated() {
+        String findCountQuery = getCountQuery();
+        return this.jdbc().queryForObject(this.queryService().getQuery("user.deletedCount"), new MapSqlParameterSource(), Long.class);
+    }
 }
