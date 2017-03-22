@@ -1,20 +1,15 @@
 <script type="text/javascript" src="node_modules/chart.js/src/chart.js"></script>
-  <div>
-    <!--<form ([formGroup])="rForm">-->
-      <!--<input id="test" formControlName="test" type="date" class="form-control"/>-->
-      <!--<button type="submit" (click)="buildBarChart(rForm.value)">Update</button>-->
-    <!--</form>-->
-    <div class="...">
-      <canvas style="" baseChart
-              [datasets]="barChartData"
-              [labels]="barChartLabels"
-              [options]="barChartOptions"
-              [legend]="barChartLegend"
-              [chartType]="barChartType"
-              (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)">
-      </canvas>
-    </div>
-    <!--<button type="submit" (click)="clear()" class="btn btn-primary">Update</button>-->
+<div>
+  <div class="...">
+    <canvas style="" baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
+    </canvas>
   </div>
+</div>
 

@@ -1,7 +1,11 @@
 <div class="conteiner">
 
   <form [formGroup]="reportForm">
-    <button (click)="generatePDF()">generatePDF</button>
+    <div *ngIf="enddate" class="input-group" style="width: 200px">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-download-alt"></i></span>
+      <button *ngIf="isAdmin()" style="width: 100%" class="btn btn-primary" (click)="generateAdminPDF()">Report in PDF</button>
+      <button *ngIf="isManager()" style="width: 100%" class="btn btn-primary" (click)="generateManagerPDF()">Report in PDF</button>
+    </div>
     <div>
       <div>
         <div style="width: 200px;">
@@ -27,7 +31,12 @@
       <div *ngIf="enddate" style="text-align: center;">
         <br/>
         <span><h2>The report will be generated for the period from {{startdate}} to {{enddate}}</h2></span>
-        <button style="width: 200px; height: 60px;" type="button" (click)="generateReport()" class="btn btn-primary">
+        <button *ngIf="isAdmin()" style="width: 200px; height: 60px;" type="button" (click)="generateAdminReport()"
+                class="btn btn-primary">
+          Build report
+        </button>
+        <button *ngIf="isManager()" style="width: 200px; height: 60px;" type="button" (click)="generateManagerReport()"
+                class="btn btn-primary">
           Build report
         </button>
       </div>
@@ -36,15 +45,18 @@
 
   <br/>
   <div *ngIf="enddate" class="barChart">
-    <span style="text-align:  center;"><h3>Top 6 office managers for count of closed request</h3></span>
+    <span *ngIf="isAdmin()"
+          style="text-align: center;"><h3>Top 6 office managers for count of closed request</h3></span>
+    <span *ngIf="isManager()" style="text-align: center;"><h3>Yout requests statistics</h3></span>
     <bar-chart [startDate]="startdate" [endDate]="enddate"></bar-chart>
   </div>
 
   <br/>
-  <div *ngIf="enddate" class="lineChart">
-    <span style="text-align:  center;"><h3>General request statistics </h3></span>
-    <line-chart [startDate]="startdate" [endDate]="enddate"></line-chart>
+  <div *ngIf="isAdmin()">
+    <div *ngIf="enddate" class="lineChart">
+      <span style="text-align:  center;"><h3>General request statistics </h3></span>
+      <line-chart [startDate]="startdate" [endDate]="enddate"></line-chart>
+    </div>
   </div>
-
 </div>
 

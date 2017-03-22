@@ -170,6 +170,26 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
         List<RequestDTO> list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusName);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);

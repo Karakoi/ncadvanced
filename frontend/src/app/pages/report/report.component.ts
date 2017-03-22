@@ -2,11 +2,13 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {UserService} from "../../service/user.service";
-import {AuthService} from "../../service/auth.service";
+import {AuthService, AuthEvent} from "../../service/auth.service";
 import {CustomValidators} from "ng2-validation";
 import {BarChartComponent} from "../../shared/bar-chart/bar-chart.component";
 import {LineChartComponent} from "../../shared/line-chart/line-chart.component";
 import {ReportService} from "../../service/report.service";
+import {User} from "../../model/user.model";
+import {Subject} from "rxjs";
 // import * as FileSaver from "file-saver";
 
 @Component({
@@ -17,6 +19,8 @@ import {ReportService} from "../../service/report.service";
 
 export class ReportComponent implements OnInit {
 
+  private role: string;
+  private user: User;
   private reportForm: FormGroup;
 
   @ViewChild(BarChartComponent)
@@ -39,6 +43,16 @@ export class ReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+
+    this.authService.currentUser.subscribe((user: User) => {
+      this.user = user;
+    });
+    this.role = this.authService.role;
+    this.authService.events.subscribe((event: Subject<AuthEvent>) => {
+      if (event.constructor.name === 'DidLogin') {
+        this.role = this.authService.role;
+      }
+    });
   }
 
   validateField(field: string): boolean {
@@ -63,12 +77,16 @@ export class ReportComponent implements OnInit {
     }
   }
 
-  private generateReport() {
-    this.barChart.build();
-    this.lineChart.build();
+  private generateAdminReport() {
+    this.barChart.buildAdminChart();
+    this.lineChart.buildAdminChart();
   }
 
-  // private generatePDF() {
+  private generateManagerReport() {
+    this.barChart.buildManagerChart();
+  }
+
+  // private generateAdminPDF() {
   //   this.reportService.getPDFReport().subscribe(
   //     data => {
   //       console.log(data);
@@ -87,5 +105,13 @@ export class ReportComponent implements OnInit {
   //       this.toastr.error("Can't create report", 'Error');
   //   }
   // }
+
+  isAdmin(): boolean {
+    return this.role === 'admin';
+  }
+
+  isManager(): boolean {
+    return this.role === 'office manager'
+  }
 
 }

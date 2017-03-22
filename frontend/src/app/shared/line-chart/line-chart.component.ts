@@ -1,4 +1,4 @@
-import {Component, ViewChild, Input} from '@angular/core';
+import {Component, ViewChild, Input} from "@angular/core";
 import {ReportService} from "../../service/report.service";
 import {ToastsManager} from "ng2-toastr";
 import {RequestDTO} from "../../model/dto/requestDTO.model";
@@ -40,11 +40,11 @@ export class LineChartComponent {
   //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
   //   }
   // ];
-  public lineChartLegend:boolean = true;
-  public lineChartType:string = 'line';
-  public lineChartData: any[] = [{data: [], label: ''},{data: [], label: ''}];
+  public lineChartLegend: boolean = true;
+  public lineChartType: string = 'line';
+  public lineChartData: any[] = [{data: [], label: ''}, {data: [], label: ''}];
   public lineChartLabels: Array<string> = [];
-  public lineChartOptions:any = {
+  public lineChartOptions: any = {
     responsive: true
   };
   public list: Array<any> = [];
@@ -57,14 +57,14 @@ export class LineChartComponent {
 
   clear() {
     this.lineChartLabels.length = 0;
-    this.lineChartData = [{data: [], label: ''},{data: [], label: ''}];
+    this.lineChartData = [{data: [], label: ''}, {data: [], label: ''}];
   }
 
-  public build() {
+  public buildAdminChart() {
     let closedRequests: Array<any> = [];
     let createdRequests: Array<any> = [];
     this.clear();
-    this.reportService.getListCountClosedRequestsByPeriod(this.startDate, this.endDate)
+    this.reportService.getAllStaticticsOfClosedRequestsByPeriod(this.startDate, this.endDate)
       .subscribe((array: RequestDTO[]) => {
         console.log(array);
         array.forEach(requestDTO => {
@@ -74,25 +74,25 @@ export class LineChartComponent {
           this.lineChartLabels.push(firstDate.concat(" : " + secondDate));
         });
 
-        this.reportService.getListCountCreatedRequestsByPeriod(this.startDate, this.endDate)
+        this.reportService.getAllStaticticsOfCreatedRequestsByPeriod(this.startDate, this.endDate)
           .subscribe((array: RequestDTO[]) => {
             console.log(array);
             array.forEach(requestDTO => {
               createdRequests.push(requestDTO.count);
             });
 
-        this.lineChartData = [{data: closedRequests, label: 'Count closed requests'},
-          {data: createdRequests, label: 'Count created requests'}];
+            this.lineChartData = [{data: closedRequests, label: 'Count closed requests'},
+              {data: createdRequests, label: 'Count created requests'}];
           });
       });
   }
 
   // events
-  public chartClicked(e:any):void {
+  public chartClicked(e: any): void {
     console.log(e);
   }
 
-  public chartHovered(e:any):void {
+  public chartHovered(e: any): void {
     console.log(e);
   }
 }

@@ -21,8 +21,8 @@ export class ReportService {
       .map((res: Response) => res.blob());
   }
 
-  getListCountCreatedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getListCountCreatedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getAllStaticticsOfCreatedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getAllStaticticsOfCreatedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -30,8 +30,8 @@ export class ReportService {
       });
   }
 
-  getListCountClosedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getListCountClosedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getAllStaticticsOfClosedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getAllStaticticsOfClosedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -50,6 +50,15 @@ export class ReportService {
 
   getListOfBestManagersWithFreeStatusByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
     return this.authHttp.get(`${url}/getBestManagersWithFreeStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getManagerStatisticsOfClosedRequestsByPeriod(beginDate: Date, endDate: Date, id: number): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getManagerStatisticsOfClosedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}&id=${id}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
