@@ -168,6 +168,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      */
     List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageSize, int pageNumber);
 
+
     /**
      * Returns a list of request DTO created in provided period.
      *
@@ -244,6 +245,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     Long countFree();
 
     /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @param assigneeId id of the {@link User}.
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countByAssignee(Long assigneeId);
+
+    /**
      * Returns a list of requests with Free progress status {@link ProgressStatus}.
      *
      * @return list of requests with Free progress status {@link ProgressStatus}.
@@ -253,7 +262,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
-     * @param statusIds  list of progress status ids, must not be {@literal null}
+     * @param statusIds list of progress status ids, must not be {@literal null}
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of requests
      */
@@ -269,9 +278,32 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Returns list to build pie chart.
      *
-     * @return list of statistic request.
+     * @return list of statistic request by progress status. 
      */
     List<Long> countRequestByProgressStatus();
 
+    /**
+     * Returns list to build pie chart for user profile.
+     *
+     * @return list of statistic request for user profile.
+     */
+    List<Long> countRequestByProgressStatusForUser(Long userId);
+
+    /**
+     * Returns list to build pie chart.
+     *
+     * @return list of statistic request by priority status.
+     */
+    List<Long> countRequestByPriorityStatus();
+
+    /**
+     * @return list of statistic for six months by progress status.
+     */
+    List<Long> countRequestByProgressStatusForSixMonths();
+
+    /**
+     * @return list of statistic for six months by progress status for user.
+     */
+    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
 
 }

@@ -1,7 +1,7 @@
 -- ----------------------------
 -- Delete Sequence for main_id_seq
 -- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."main_id_seq";
+-- DROP SEQUENCE IF EXISTS "public"."main_id_seq";
 
 -- ----------------------------
 -- Delete Table for history

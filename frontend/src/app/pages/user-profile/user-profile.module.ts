@@ -5,6 +5,7 @@ import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {InlineEditorModule} from "ng2-inline-editor";
 import {UserProfileComponent} from "./user-profile.component";
 import {GravatarModule} from "../../shared/gravatar/gravatar.module";
+import {Ng2GoogleChartsModule} from "ng2-google-charts";
 
 const routes: Routes = [
   {path: '', component: UserProfileComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
-    InlineEditorModule
+    InlineEditorModule,
+    Ng2GoogleChartsModule
   ],
   declarations: [
     UserProfileComponent
