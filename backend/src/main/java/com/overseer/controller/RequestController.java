@@ -334,6 +334,7 @@ public class RequestController {
 
     /**
      * Returns list of progress for User.
+     *
      * @param userId value of User id in database.
      * @return list of progress for User.
      */
