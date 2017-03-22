@@ -190,8 +190,6 @@
               <td *ngIf="showHistory">
                 <span>
                   Field <span class="bold-text">"{{history.columnName}}"</span>
-                  <!--was changed from <span class="bold-text">"{{oldValue}}"</span>-->
-                  <!--was changed from <span class="bold-text">{{getOldValue(history)}}</span>-->
                   was changed from <span class="bold-text">"{{history.oldValue}}"</span>
                   to <span class="bold-text">"{{history.newValue}}"</span>
                   by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>

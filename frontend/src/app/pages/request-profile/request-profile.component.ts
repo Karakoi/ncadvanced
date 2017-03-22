@@ -18,18 +18,14 @@ import {Observable} from "rxjs";
 export class RequestProfileComponent implements OnInit {
 
   currentUser: User;
-  assigneUser: User;
   request: Request;
   showDescription: boolean = true;
   showHistory: boolean = true;
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
   historyRecords: History[];
-  oldValue: string;
-  oldValueAssigneeName: string;
 
   constructor(private requestService: RequestService,
-              private userService: UserService,
               private route: ActivatedRoute,
               private toastr: ToastsManager,
               private authService: AuthService,
@@ -53,55 +49,6 @@ export class RequestProfileComponent implements OnInit {
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
     });
-  }
-
-  getOldValue(history: History): void {
-    var result;
-
-    switch (history.columnName) {
-      case "priority_status_id":
-        result = "Ha-ha-ha";
-
-        this.oldValue = result;
-        //return result;
-        break;
-      case "progress_status_id":
-        result = "Ha-ha-ha";
-
-        this.oldValue = result;
-        //return result;
-        break;
-
-      case "assignee_id":
-      this.userService.get(+history.oldValue).subscribe((user: User) => {
-          result = user.firstName;
-          console.log("columnName: " + history.columnName);
-          console.log("Assignee id: " + +history.oldValue);
-          console.log(user);
-          console.log("result from case: " + result);
-
-        this.oldValue = result;
-        //return result;
-        });
-        //result = "WWWWWW";
-      break;
-
-      case "parent_id":
-        result = "Ha-ha-ha";
-
-        this.oldValue = result;
-        //return result;
-        break;
-      default:
-        result = history.oldValue;
-
-        this.oldValue = result;
-        //return result;
-    }
-
-    //result = "QQQQ";
-    /*console.log("return: " + result);
-    return result;*/
   }
 
   changeShowDescription() {

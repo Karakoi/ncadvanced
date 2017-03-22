@@ -535,10 +535,13 @@ insert into message (sender_id, recipient_id, topic_id, text, date_and_time) val
 insert into message (sender_id, recipient_id, topic_id, text, date_and_time) values (18, null, 327, 'lectus in est risus auctor sed tristique in', '2017-01-02 12:44:28');
 
 -- history data
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'First title', 'Second title', '2017/02/09', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'Second title', 'Third title', '2017/02/10', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'Third title', 'Fourth title', '2017/02/11', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('description', 'First description', 'Second description', '2017/02/12', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'Main title', 'sapien in sapien', '2017/02/09 01:01:01', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('description', 'First very-very-very-very-very-very looooooooooooooooooooooooong description', 'Second very-very-very-very-very-very looooooooooooooooooooooooong description', '2017/02/09 01:01:02', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('priority_status_id', '1', '2', '2017/02/09 01:01:03', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('assignee_id', 'null', '38', '2017/02/09 01:01:04', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('estimate_time_in_day', 'null', '5', '2017/02/09 01:01:05', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('parent_id', 'null', '5', '2017/02/09 01:01:06', 101, 113);
+insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('progress_status_id', '5', '6', '2017/02/09 01:01:07', 101, 113);
 
 insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'First title', 'Second title', '2017/02/11', 44, 313);
 insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'Second title', 'Third title', '2017/02/12', 44, 313);
@@ -597,3 +600,8 @@ insert into topic_to_role (topic_id, role_id) values (342,11);
 insert into topic_to_role (topic_id, role_id) values (342,12);
 insert into topic_to_role (topic_id, role_id) values (344,10);
 insert into topic_to_role (topic_id, role_id) values (344,11);
+
+-- Testing users
+insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxadmin', 'Maxadmin', 'Maxadmin', '$2a$10$5c.0Wc1.RaHNbQnRIysorOJr2URfrZ/6TPN8WySHQDhFT0weldB.2', 'maxadmin@gmail.com', '2010-10-10', '81-(368)868-2785', 10);
+insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxmanager', 'Maxmanager', 'Maxmanager', '$2a$10$OHLeC6WO0i6aPemAOQyQEuYvw1huXLpB2Zl2sS/oCE2MbMXMEJzEm', 'maxmanager@gmail.com', '2010-10-10', '81-(368)868-2785', 11);
+insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxempl', 'Maxempl', 'Maxempl', '$2a$10$UQTnkEfjD/GWPQeHgjibFeYpyLNMmz3IHe8bkmyCZ.kGw9ea2E1b6', 'maxempl@gmail.com', '2010-10-10', '81-(368)868-2785', 12);
