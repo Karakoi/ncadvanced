@@ -111,6 +111,25 @@ export class RequestService {
       });
   }
 
+  getRequestCountByAssignee(assigneeId: number): Observable<number> {
+    return this.authHttp.get(`${url}/pageCountByAssignee?assigneeId=${assigneeId}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getAllByAssignee(assigneeId: number, page: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/fetchByAssignee?assigneeId=${assigneeId}&pageNumber=${page}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+
   join(request:Request, checked:number[]):Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)
       .catch((error:any) => {

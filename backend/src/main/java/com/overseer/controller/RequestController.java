@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/requests")
 @RequiredArgsConstructor
 public class RequestController {
-    private static final Long DEFAULT_PAGE_SIZE = 20L;
+    //private static final Long DEFAULT_PAGE_SIZE = 20L;
     private static final Long DEFAULT_DATE_MOUNTS_STEP = 1L;
     private final RequestService requestService;
 
@@ -202,7 +202,7 @@ public class RequestController {
      */
     @GetMapping("/getCountRequestsByStartDate")
     public ResponseEntity<List<Long>> getCountRequestsByStartDate(@RequestParam String beginDate,
-                                                                   @RequestParam int months) {
+                                                                  @RequestParam int months) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate start = LocalDate.parse(beginDate, formatter);
@@ -234,8 +234,7 @@ public class RequestController {
      */
     @GetMapping("/pageCount")
     public ResponseEntity<Long> getPagesCount() {
-        Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
-        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+        return new ResponseEntity<>(requestService.getCount(), HttpStatus.OK);
     }
 
     /**
@@ -245,8 +244,7 @@ public class RequestController {
      */
     @GetMapping("/pageCountFree")
     public ResponseEntity<Long> getPagesCountFree() {
-        Long pageCount = requestService.countFreeRequests() / DEFAULT_PAGE_SIZE + 1;
-        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+        return new ResponseEntity<>(requestService.countFreeRequests(), HttpStatus.OK);
     }
 
     /**
@@ -265,7 +263,7 @@ public class RequestController {
      * Creates {@link Request} entity of parent request and joins some another
      * requests to it.
      * @param request json object which represents {@link Request} entity.
-     * @param ids string representation if id`s array.
+     * @param ids     string representation if id`s array.
      * @return json representation of created {@link Request} entity.
      */
     @PostMapping("/join/{ids}")
@@ -328,5 +326,23 @@ public class RequestController {
     public ResponseEntity<List<Long>> getQuantityRequest() {
         List<Long> quantity = requestService.quantity();
         return new ResponseEntity<>(quantity, HttpStatus.OK);
+    }
+
+    /**
+     * Returns number of pages.
+     *
+     * @return number of pages.
+     */
+    @GetMapping("/pageCountByAssignee")
+    public ResponseEntity<Long> getPagesCountByAssignee(@RequestParam Long assigneeId) {
+        return new ResponseEntity<>(requestService.countRequestsByAssignee(assigneeId), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/fetchByAssignee")
+    public ResponseEntity<List<Request>> getRequestsByAssignee(@RequestParam Long assigneeId,
+                                                               @RequestParam int pageNumber) {
+        val list = this.requestService.findRequestsByAssignee(assigneeId, pageNumber);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

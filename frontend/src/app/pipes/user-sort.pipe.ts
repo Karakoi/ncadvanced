@@ -2,7 +2,7 @@ import {Pipe} from "@angular/core";
 import {Request} from "../model/request.model";
 
 @Pipe({
-  name: "sort"
+  name: "sortUser"
 })
 export class UserSortPipe {
 
