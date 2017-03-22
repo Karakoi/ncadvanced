@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/requests")
 @RequiredArgsConstructor
 public class RequestController {
-    private static final Long DEFAULT_PAGE_SIZE = 20L;
     //private static final Long DEFAULT_PAGE_SIZE = 20L;
-    private static final Long DEFAULT_DATE_MOUNTS_STEP = 1L;
     private final RequestService requestService;
 
     /**
