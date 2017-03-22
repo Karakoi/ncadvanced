@@ -44,6 +44,7 @@ export class ManagerComponent {
 
   updateRequests(requests: Request[]) {
     this.requests = requests;
+    this.uncheckAll();
   }
 
   toggle(id) {
@@ -60,10 +61,6 @@ export class ManagerComponent {
       items.push(i);
     }
     return items;
-  }
-
-  info() {
-    console.log(this.checked);
   }
 
   isChecked(id) {

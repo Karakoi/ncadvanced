@@ -103,6 +103,41 @@ export class RequestService {
       });
   }
 
+  getInProgressAssigned(page:number, user_id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/inProgressRequestsByAssignee?page=` + page + `&manager=` + user_id)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getInProgressAssignedPageCount(managerId:number):Observable<number> {
+    return this.authHttp.get(`${url}/countInProgressRequestsByAssignee?manager=` + managerId)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  assign(request:Request):Observable<Response> {
+    return this.authHttp.put(url + '/assignRequest', request)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  close(request:Request):Observable<Request> {
+    return this.authHttp.put(`${url}/closeRequest`, request)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
 
   join(request:Request, checked:number[]):Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)

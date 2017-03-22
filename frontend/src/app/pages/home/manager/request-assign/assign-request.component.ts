@@ -30,15 +30,16 @@ export class AssignRequestComponent {
   assignRequest() {
     this.authService.currentUser.subscribe((user:User) => {
       this.request.assignee = user;
+      this.request.lastChanger = user;
       if (this.request.parentId === 0) {
         this.request.parentId = null;
       }
-      this.requestService.update(this.request).subscribe(() => {
+      this.request.estimateTimeInDays = this.request.estimateTimeInDays || 3;
+      this.requestService.assign(this.request).subscribe(() => {
         this.toastr.success("Request was assigned successfully", "Success!");
-        this.requests = this.requests.filter(item => item["id"] !== this.request.id);
-        this.updated.emit(this.requests);
+        this.updated.emit(this.requests.filter(item => item["id"] !== this.request.id));
         this.modal.close();
-      }, e => this.handleErrorAssignRequest(e));      
+      }, e => this.handleErrorAssignRequest(e));
     });
   }
 

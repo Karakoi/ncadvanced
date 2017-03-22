@@ -45,6 +45,16 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.countRequestsByReporter(reporterId);
     }
 
+    @Override
+    public Long countRequestByAssignee(Long managerId) {
+        return requestDao.countRequestsByAssignee(managerId) / DEFAULT_PAGE_SIZE + 1;
+    }
+
+    @Override
+    public Long countInProgressRequestByAssignee(Long managerId) {
+        return requestDao.countInProgressRequestByAssignee(managerId) / DEFAULT_PAGE_SIZE + 1;
+    }
+
     private EmailBuilder<Request> emailStrategyForAssignee;
     private EmailBuilder<Request> emailStrategyForReporter;
     private EmailService emailService;
@@ -92,6 +102,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public List<Request> findRequestsByAssignee(Long assigneeId, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
         val list = this.requestDao.findRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
+                list.size(), assigneeId, pageNumber);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber) {
+        Assert.notNull(assigneeId, "assignee must not be null");
+        val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
                 list.size(), assigneeId, pageNumber);
         return list;
@@ -263,28 +285,36 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      */
     @Override
     public Request closeRequest(Request request) {
+        System.out.println("Service, ID = " + request.getId());
         Assert.notNull(request, "request must not be null");
         log.debug("Close request with id: {} ", request.getId());
         // Define and set progress status
         val closedProgressStatus = progressStatusDao.findOne(CLOSED_STATUS);
         //Check if request is parent
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
-        if (joinedRequests == null) {
+        if (joinedRequests.isEmpty()) {
             request.setProgressStatus(closedProgressStatus);
             requestDao.save(request);
             sendMessageToReporter(request);
         } else {
+            System.out.println(joinedRequests);
+            System.out.println("Point 1");
             for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
                 joinedRequest.setProgressStatus(closedProgressStatus);
                 requestDao.save(joinedRequest);
+
                 sendMessageToReporter(joinedRequest);
             }
+            System.out.println("Point 2");
             List<Request> subRequests = requestDao.findSubRequests(request);
             for (Request subRequest : subRequests) {
                 requestDao.delete(subRequest);
             }
-            requestDao.deleteParentRequestIfItHasNoChildren(request.getParentId());
+            System.out.println("Point 3");
+            System.out.println(request.getParentId());
+            requestDao.deleteParentRequestIfItHasNoChildren(request.getId());
+            System.out.println("Point 4");
         }
         return request;
     }
