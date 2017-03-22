@@ -13,7 +13,7 @@ import {RequestService} from "../../service/request.service";
 export class UserProfileComponent implements OnInit {
 
   user: User;
-  requests: Array<number>;
+  requests: Array<number> = [1,1,1,1,1];
   sixMonthsStatistic: Array<number>;
 
   constructor(private userService: UserService,

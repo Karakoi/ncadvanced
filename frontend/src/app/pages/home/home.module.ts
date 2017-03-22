@@ -23,7 +23,7 @@ import {BasicRequestTableModule} from "../../components/request-table/request-ta
     Ng2GoogleChartsModule,
     FormTemplateModule,
     FormsModule,
-    RequestModule
+    RequestModule,
     BasicRequestTableModule,
     Ng2GoogleChartsModule
   ],

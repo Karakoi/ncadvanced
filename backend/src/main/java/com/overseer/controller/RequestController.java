@@ -357,14 +357,12 @@ public class RequestController {
         val list = this.requestService.findRequestsByAssignee(assigneeId, pageNumber);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-}
 
     /**
      * Returns list of progress for User.
      *
      * @return list of progress for User.
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/countRequestByPriorityStatus")
     public ResponseEntity<List<Long>> getQuantityForUserByPriorityStatus() {
         List<Long> quantity = requestService.quantityByPriorityStatus();
@@ -376,7 +374,6 @@ public class RequestController {
      *
      * @return list of statistic for six months.
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getStatisticForSixMonthsByProgressStatus")
     public ResponseEntity<List<Long>> getStatisticForSixMonthsByProgressStatus() {
         List<Long> statisticList = requestService.quantityByProgressStatusForSixMonths();
@@ -389,7 +386,6 @@ public class RequestController {
      * @param userId value of User id in database.
      * @return list of statistic for six months.
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("getStatisticForSixMonthsByProgressStatusForUser")
     public ResponseEntity<List<Long>> getStatisticForSixMonthsForUser(@RequestParam Long userId) {
         List<Long> statisticListForUser = requestService.quantityByProgressStatusForSixMonthsForUser(userId);
