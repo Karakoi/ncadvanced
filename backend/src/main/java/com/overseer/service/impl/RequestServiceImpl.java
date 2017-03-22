@@ -243,9 +243,44 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public List<Long> quantity() {
+    public List<Long> quantityByProgressStatus() {
         return requestDao.countRequestByProgressStatus();
+    }
+
+    /**
+     *{@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityForUser(Long userId) {
+        return requestDao.countRequestByProgressStatusForUser(userId);
+    }
+
+    /**
+     *{@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByPriorityStatus() {
+        return requestDao.countRequestByPriorityStatus();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByProgressStatusForSixMonths() {
+        return requestDao.countRequestByProgressStatusForSixMonths();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId) {
+        return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
     }
 
     /**
