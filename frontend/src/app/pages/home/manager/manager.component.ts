@@ -1,8 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
-import {AssignRequestComponent} from "../../../pages/home/manager/request-assign/assign-request.component";
-import {JoinRequestComponent} from "../../../pages/home/manager/request-join/join-request.component";
 import {AuthService} from "../../../service/auth.service";
 import {User} from "../../../model/user.model";
 
@@ -21,12 +19,6 @@ export class ManagerComponent {
   checked: number[] = [];
   pageCount: number;
   myPageCount: number;
-
-  @ViewChild(AssignRequestComponent)
-  assignRequestComponent: AssignRequestComponent;
-  @ViewChild(JoinRequestComponent)
-  joinRequestComponent: JoinRequestComponent;
-
 
   constructor(private requestService: RequestService,
               private authService: AuthService) {
@@ -89,33 +81,9 @@ export class ManagerComponent {
     }
   }
 
-
-  join() {
-    this.joinRequestComponent.modal.open();
-  }
-
-  updateRequests(requests: Request[]) {
-    this.requests = requests;
-  }
-
   select(data) {
     this.selected = Array.from(data);
     console.log(this.selected)
-  }
-
-
-  isChecked(id) {
-    return this.checked.indexOf(id) > -1;
-  }
-
-  uncheckAll() {
-    this.selected = [];
-    console.log(this.selected)
-    this.checked = [];
-  }
-
-  canUnite() {
-    return this.checked.length > 1;
   }
 
   private fetchFreeRequests(page: number) {

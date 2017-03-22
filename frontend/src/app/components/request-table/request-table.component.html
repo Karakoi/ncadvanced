@@ -153,8 +153,8 @@
 
   </form-template>
   <request-form *ngIf="settings.add " [requests]="requests" (updated)="updateRequests($event)"></request-form>
-  <delete-request *ngIf="settings.delete" [requests]="requests" ></delete-request>
-  <assign-request *ngIf="settings.assign" [requests]="requests" (updated)="updateRequests($event)"></assign-request>
-  <join-request  *ngIf="settings.join" [requests]="requests" [checked]="checked" (updated)="updateRequests($event)"></join-request>
+  <delete-request *ngIf="settings.delete" [requests]="requests"></delete-request>
+  <assign-request *ngIf="settings.assign" [requests]="requests"></assign-request>
+  <join-request  *ngIf="settings.join" [requests]="requests" [checked]="checked"></join-request>
 </div>
 
