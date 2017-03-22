@@ -1,5 +1,4 @@
 import {Component, OnInit, Input} from "@angular/core";
-import {Md5} from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'date-parse',
