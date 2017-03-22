@@ -334,17 +334,17 @@ insert into request (title, description, parent_id,reporter_id,date_of_creation,
 
 -- joined request
 
-insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (600,'Buy something', 'at dolor quis odio consequat', 44, 1, 6,'2017-02-8 18:28:04',13);
+insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (600,'Buy something', 'at dolor quis odio consequat', 44, 1, 7,'2017-02-8 18:28:04',13);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Buy something', 'at dolor quis odio consequat', 102, 1, 6,600,'2017-02-7 18:25:04',13);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Buy something', 'at dolor quis odio consequat', 103, 2, 6,600,'2017-02-6 13:28:04',13);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Buy something', 'at dolor quis odio consequat', 104, 3, 6,600,'2017-02-4 15:22:04',13);
 
-insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (650,'Do a barrel roll', 'nisl venenatis lacinia aenean sit', 48, 3, 6,'2017-05-8 18:28:04',14);
+insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (650,'Do a barrel roll', 'nisl venenatis lacinia aenean sit', 48, 3, 7,'2017-05-8 18:28:04',14);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Do a barrel roll', 'nisl venenatis lacinia aenean sit', 105, 3, 6,650,'2017-05-1 15:28:04',14);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Do a barrel roll', 'nisl venenatis lacinia aenean sit', 107, 3, 6,650,'2017-05-3 13:28:04',14);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Do a barrel roll', 'nisl venenatis lacinia aenean sit', 109, 3, 6,650,'2017-05-2 12:28:04',14);
 
-insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (700,'Build a great wall', 'consequat ut nulla sed', 46, 3, 6,'2017-01-8 18:28:04',15);
+insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (700,'Build a great wall', 'consequat ut nulla sed', 46, 3, 7,'2017-01-8 18:28:04',15);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Build a great wall', 'consequat ut nulla sed', 109, 1, 6,700,'2017-01-6 16:28:04',15);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Build a great wall', 'consequat ut nulla sed', 111, 1, 6,700,'2017-01-5 16:28:04',15);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Build a great wall', 'consequat ut nulla sed', 112, 1, 6,700,'2017-01-5 12:28:04',15);

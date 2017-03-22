@@ -130,10 +130,9 @@ public interface RequestService extends CrudService<Request, Long> {
      * and not null {@link Request#parentId}
      *
      * @param subRequest    specified sub request
-     * @param parentRequest specified parent request
      * @return joined sub request
      */
-    Request saveSubRequest(Request subRequest, Long idParentRequest);
+    Request saveSubRequest(Request subRequest);
 
     /**
      * Assigns request to specified office manager and changes it {@link Request#progressStatus}.
