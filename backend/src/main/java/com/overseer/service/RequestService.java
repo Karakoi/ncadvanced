@@ -130,10 +130,9 @@ public interface RequestService extends CrudService<Request, Long> {
      * and not null {@link Request#parentId}
      *
      * @param subRequest    specified sub request
-     * @param parentRequest specified parent request
      * @return joined sub request
      */
-    Request saveSubRequest(Request subRequest, Long idParentRequest);
+    Request saveSubRequest(Request subRequest);
 
     /**
      * Assigns request to specified office manager and changes it {@link Request#progressStatus}.
@@ -179,6 +178,14 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return number of entities of type <code>T</code>.
      */
     Long countFreeRequests();
+
+    /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @param id id of the {@link User}.
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countRequestsByAssignee(Long id);
 
     /**
      * Returns a list of requests with Free progress status {@link ProgressStatus}.

@@ -216,21 +216,26 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Request saveSubRequest(Request subRequest, Long idParentRequest) {
+    public Request saveSubRequest(Request subRequest) {
         Assert.notNull(subRequest, "sub request must not be null");
-        Assert.notNull(idParentRequest, "id of parent request must not be null");
-        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
-        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
-        log.debug("Create sub request {} for parent request with id {}", subRequest, idParentRequest);
-        subRequest.setParentId(idParentRequest);
+//        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
+//        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
+        log.debug("Create sub request {} for parent request with id {}", subRequest, subRequest.getParentId());
         return requestDao.save(subRequest);
     }
 
     @Override
     public Long countFreeRequests() {
         val freeRequestsQuantity = requestDao.countFree();
-        log.debug("Counted requests with Free progress status: {}", freeRequestsQuantity);
+        log.debug("Counted {} requests with Free progress status", freeRequestsQuantity);
         return freeRequestsQuantity;
+    }
+
+    @Override
+    public Long countRequestsByAssignee(Long assigneeId) {
+        val requestsByAssignee = requestDao.countByAssignee(assigneeId);
+        log.debug("Counted {} requests for user with id: {}", requestsByAssignee, assigneeId);
+        return requestsByAssignee;
     }
 
     @Override
@@ -317,7 +322,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         log.debug("Delete request with id: {} ", idRequest);
         Request request = requestDao.findOne(idRequest);
         Long progressStatusId = request.getProgressStatus().getId();
-        if (progressStatusId.equals(FREE_STATUS)) {
+        if (progressStatusId == 0 || progressStatusId.equals(FREE_STATUS)) {
             super.delete(idRequest);
         } else {
             throw new RmovingNotFreeRequestException("Can not remove request with id: "
