@@ -10,22 +10,30 @@ const url = '/api/requests';
 
 @Injectable()
 export class RequestService {
-  constructor(private authHttp: AuthHttp,
-              private errorService: ErrorService) {
+  constructor(private authHttp:AuthHttp,
+              private errorService:ErrorService) {
   }
 
-  create(request: Request): Observable<Response> {
+  create(request:Request):Observable<Response> {
     return this.authHttp.post(url, request)
-      .catch((error: any) => {
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
-  update(request: Request): Observable<Response> {
+  createSubRequest(subRequest:Request):Observable<Response> {
+    return this.authHttp.post(`${url}/createSubRequest`, subRequest)
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  update(request:Request):Observable<Response> {
     return this.authHttp.put(url, request)
       .map(resp => resp.json())
-      .catch((error: any) => {
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
@@ -42,7 +50,7 @@ export class RequestService {
   get(id: number): Observable<Request> {
     return this.authHttp.get(`${url}/${id}`)
       .map(resp => resp.json())
-      .catch((error: any) => {
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
@@ -67,28 +75,28 @@ export class RequestService {
   }
 
 
-  getAll(page: number): Observable<Request[]> {
+  getAll(page:number):Observable<Request[]> {
     return this.authHttp.get(`${url}/fetch?page=` + page)
       .map(resp => resp.json())
-      .catch((error: any) => {
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
-  getPageCount(): Observable<number> {
+  getPageCount():Observable<number> {
     return this.authHttp.get(`${url}/pageCount`)
       .map(resp => resp.json())
-      .catch((error: any) => {
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
-  getPageCountFree(): Observable<number> {
+  getPageCountFree():Observable<number> {
     return this.authHttp.get(`${url}/pageCountFree`)
       .map(resp => resp.json())
-      .catch((error: any) => {
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
@@ -101,16 +109,34 @@ export class RequestService {
   getFree(page: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/fetchFree?page=` + page)
       .map(resp => resp.json())
-      .catch((error: any) => {
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getRequestCountByAssignee(assigneeId: number): Observable<number> {
+    return this.authHttp.get(`${url}/pageCountByAssignee?assigneeId=${assigneeId}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getAllByAssignee(assigneeId: number, page: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/fetchByAssignee?assigneeId=${assigneeId}&pageNumber=${page}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
 
-  join(request: Request, checked: number[]): Observable<Request> {
+  join(request:Request, checked:number[]):Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)
-      .catch((error: any) => {
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
@@ -130,5 +156,23 @@ export class RequestService {
 
   getQuantityRequestByPriority(): Observable<number[]> {
     return this.authHttp.get(`${url}/countRequestByPriorityStatus`).map(resp => resp.json());
+  }
+
+  getSubRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getSubRequests/${id}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getJoinedRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getJoinedGroupRequests/${id}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
   }
 }

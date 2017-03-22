@@ -40,8 +40,10 @@ public class Request extends AbstractEntity {
     @NotNull
     private LocalDateTime dateOfCreation;
 
+    @JsonInclude(NON_NULL)
     private PriorityStatus priorityStatus;
 
+    @JsonInclude(NON_NULL)
     private ProgressStatus progressStatus;
 
     @NotNull

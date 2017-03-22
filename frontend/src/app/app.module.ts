@@ -41,7 +41,7 @@ import {Ng2GoogleChartsModule} from "ng2-google-charts";
     NavbarComponent,
     NoContentComponent,
     SideBarComponent,
-    SideBarDirective
+    SideBarDirective,
   ],
   imports: [
     ChartsModule,
@@ -55,7 +55,7 @@ import {Ng2GoogleChartsModule} from "ng2-google-charts";
     HttpModule,
     GravatarModule,
     ToastModule.forRoot(),
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
   ],
   providers: [
     ErrorService,

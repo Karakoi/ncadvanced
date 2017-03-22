@@ -50,9 +50,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let req of getChecked()">
+        <tr *ngFor="let req of getChecked">
           <td>{{ req.title }}</td>
-          <td>{{ req.dateOfCreation }}</td>
+          <td> <date-parse [date]="req.dateOfCreation"></date-parse></td>
           <td>{{ req.priorityStatus.name }}</td>
           <td>{{ req.reporter.firstName }}</td>
         </tr>

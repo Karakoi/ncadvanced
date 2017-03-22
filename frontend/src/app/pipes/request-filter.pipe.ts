@@ -19,6 +19,9 @@ export class RequestFilterPipe implements PipeTransform {
       if (searchTypes.progressStatus != '') {
         res = res && item.progressStatus.name.toLowerCase().includes(searchTypes.progressStatus.toLowerCase());
       }
+      if (searchTypes.estimateTime != '') {
+        res = res && item.estimateTimeInDays == searchTypes.estimateTime;
+      }
       if (searchTypes.reporterName != '') {
         res = res && item.reporter.firstName.toLowerCase().includes(searchTypes.reporterName.toLowerCase());
       }

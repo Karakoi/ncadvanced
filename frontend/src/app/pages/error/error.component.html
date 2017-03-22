@@ -1,15 +1,15 @@
 <div class="row">
-  <div class="col-lg-offset-3 col-lg-6" *ngIf="error">
+  <div class="col-lg-offset-3 col-lg-6 col-sm-offset-3 col-sm-6" *ngIf="error">
     <div class="panel">
       <div class="panel-heading">
         <b class="panel-title">Something goes wrong...</b>
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-lg-4">
-            <img src="http://www.itpark.com.ua/wp-content/uploads/2015/05/error.png" alt="error-img">
+          <div class="col-sm-12 col-lg-4">
+            <img class="center-block" src="http://www.itpark.com.ua/wp-content/uploads/2015/05/error.png" alt="error-img">
           </div>
-          <div class="col-lg-8 text-center">
+          <div class="col-sm-12 col-lg-offset-1 col-lg-7 text-center">
             <h2 class="err-msg">ERROR {{error.status}}</h2>
             <h5>{{error.message}}</h5>
             <a href="/home">

@@ -315,6 +315,12 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public Long countByAssignee(Long assigneeId) {
+        String findCountQuery = queryService().getQuery("request.countByAssignee");
+        return jdbc().queryForObject(findCountQuery, new MapSqlParameterSource("assigneeId", assigneeId), Long.class);
+    }
+
+    @Override
     public List<Request> findFreeRequests(int pageSize, int pageNumber) {
         String findByStatusQuery = this.queryService().getQuery("request.select")
                 .concat(queryService().getQuery("request.findFree"));
