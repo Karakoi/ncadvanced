@@ -1,9 +1,7 @@
-
-
 -- ----------------------------
 -- Sequence structure for main_id_seq
 -- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."main_id_seq";
+--DROP SEQUENCE IF EXISTS "public"."main_id_seq";
 CREATE SEQUENCE "public"."main_id_seq"
  INCREMENT 1
  MINVALUE 1
@@ -15,22 +13,24 @@ SELECT setval('"public"."main_id_seq"', 1, true);
 -- ----------------------------
 -- Table structure for history
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."history";
+--DROP TABLE IF EXISTS "public"."history";
 CREATE TABLE "public"."history" (
-"id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
-"column_name" varchar(45) COLLATE "default" NOT NULL,
-"old_value" varchar(200) COLLATE "default",
-"new_value" varchar(200) COLLATE "default",
-"date_of_change" TIMESTAMP NOT NULL,
-"changer_id" int4 NOT NULL,
-"record_id" int4 NOT NULL
+ "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
+ "column_name" varchar(45) COLLATE "default" NOT NULL,
+ "old_value" varchar(200) COLLATE "default",
+ "new_value" varchar(200) COLLATE "default",
+ "demonstration_of_old_value" varchar(200),
+ "demonstration_of_new_value" varchar(200),
+ "changer_id" int4 NOT NULL,
+ "record_id" int4 NOT NULL,
+ "date_of_change" TIMESTAMP NOT NULL
 )
 WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Table structure for message
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."message";
+--DROP TABLE IF EXISTS "public"."message";
 CREATE TABLE "public"."message" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "sender_id" int4 NOT NULL,
@@ -44,7 +44,7 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 -- Table structure for priority_status
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."priority_status";
+--DROP TABLE IF EXISTS "public"."priority_status";
 CREATE TABLE "public"."priority_status" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "name" varchar(45) COLLATE "default" NOT NULL,
@@ -55,7 +55,7 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 -- Table structure for progress_status
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."progress_status";
+--DROP TABLE IF EXISTS "public"."progress_status";
 CREATE TABLE "public"."progress_status" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "name" varchar(45) COLLATE "default" NOT NULL,
@@ -66,7 +66,7 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 -- Table structure for request
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."request";
+--DROP TABLE IF EXISTS "public"."request";
 CREATE TABLE "public"."request" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "title" varchar(45) COLLATE "default" NOT NULL,
@@ -85,7 +85,7 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 -- Table structure for role
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."role";
+--DROP TABLE IF EXISTS "public"."role";
 CREATE TABLE "public"."role" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "name" varchar(100) COLLATE "default"
@@ -95,7 +95,7 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 -- Table structure for topic
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."topic";
+--DROP TABLE IF EXISTS "public"."topic";
 CREATE TABLE "public"."topic" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "title" varchar(45) COLLATE "default" NOT NULL
@@ -105,7 +105,7 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 -- Table structure for topic_to_role
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."topic_to_role";
+--DROP TABLE IF EXISTS "public"."topic_to_role";
 CREATE TABLE "public"."topic_to_role" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "role_id" int4 NOT NULL,
@@ -116,7 +116,7 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."user";
+--DROP TABLE IF EXISTS "public"."user";
 CREATE TABLE "public"."user" (
 "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
 "first_name" varchar(45) COLLATE "default" NOT NULL,
