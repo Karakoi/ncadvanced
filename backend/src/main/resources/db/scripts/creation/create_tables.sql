@@ -1,5 +1,3 @@
-
-
 -- ----------------------------
 -- Sequence structure for main_id_seq
 -- ----------------------------
@@ -17,13 +15,15 @@ SELECT setval('"public"."main_id_seq"', 1, true);
 -- ----------------------------
 --DROP TABLE IF EXISTS "public"."history";
 CREATE TABLE "public"."history" (
-"id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
-"column_name" varchar(45) COLLATE "default" NOT NULL,
-"old_value" varchar(200) COLLATE "default",
-"new_value" varchar(200) COLLATE "default",
-"date_of_change" TIMESTAMP NOT NULL,
-"changer_id" int4 NOT NULL,
-"record_id" int4 NOT NULL
+ "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
+ "column_name" varchar(45) COLLATE "default" NOT NULL,
+ "old_value" varchar(200) COLLATE "default",
+ "new_value" varchar(200) COLLATE "default",
+ "demonstration_of_old_value" varchar(200),
+ "demonstration_of_new_value" varchar(200),
+ "changer_id" int4 NOT NULL,
+ "record_id" int4 NOT NULL,
+ "date_of_change" TIMESTAMP NOT NULL
 )
 WITH (OIDS=FALSE);
 

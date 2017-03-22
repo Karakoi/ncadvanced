@@ -128,7 +128,7 @@ insert into "user" (first_name, last_name, second_name, password, email, date_of
 
 -- Requests
 
-insert into request (title, description, priority_status_id, progress_status_id, reporter_id, assignee_id, estimate_time_in_days, date_of_creation, last_changer_id) values ('sapien in sapien', 'suspendisse ornare consequat lectus in est risus auctor', 1, 5, 101, 34, 2, '2017-02-08 21:04:00', 13);
+insert into request (title, description, priority_status_id, progress_status_id, reporter_id, estimate_time_in_days, date_of_creation, last_changer_id) values ('sapien in sapien', 'suspendisse ornare consequat lectus in est risus auctor', 1, 5, 101, 2, '2017-02-08 21:04:00', 13);
 insert into request (title, description, priority_status_id, progress_status_id, reporter_id, assignee_id, estimate_time_in_days, date_of_creation, last_changer_id) values ('id turpis integer', 'aliquam augue quam sollicitudin vitae consectetuer eget', 2, 8, 80, 37, 1, '2017-02-07 04:21:15', 13);
 insert into request (title, description, priority_status_id, progress_status_id, reporter_id, assignee_id, estimate_time_in_days, date_of_creation, last_changer_id) values ('porttitor lacus at', 'dapibus nulla suscipit ligula in lacus curabitur at ipsum ac', 1, 6, 103, 27, 3, '2017-02-04 14:16:19', 13);
 insert into request (title, description, priority_status_id, progress_status_id, reporter_id, assignee_id, estimate_time_in_days, date_of_creation, last_changer_id) values ('tellus semper interdum', 'morbi ut odio cras mi pede malesuada', 1, 7, 96, 20, 4, '2017-02-05 01:27:16', 13);
@@ -334,17 +334,17 @@ insert into request (title, description, parent_id,reporter_id,date_of_creation,
 
 -- joined request
 
-insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (600,'Buy something', 'at dolor quis odio consequat', 44, 1, 7,'2017-02-8 18:28:04',13);
+insert into request (id, title, description, reporter_id, priority_status_id, progress_status_id, date_of_creation, last_changer_id) values (600,'Buy something', 'at dolor quis odio consequat', 44, 1, 7,'2017-02-8 18:28:04',13);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Buy something', 'at dolor quis odio consequat', 102, 1, 6,600,'2017-02-7 18:25:04',13);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Buy something', 'at dolor quis odio consequat', 103, 2, 6,600,'2017-02-6 13:28:04',13);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Buy something', 'at dolor quis odio consequat', 104, 3, 6,600,'2017-02-4 15:22:04',13);
 
-insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (650,'Do a barrel roll', 'nisl venenatis lacinia aenean sit', 48, 3, 7,'2017-05-8 18:28:04',14);
+insert into request (id, title, description, reporter_id, priority_status_id, progress_status_id, date_of_creation, last_changer_id) values (650,'Do a barrel roll', 'nisl venenatis lacinia aenean sit', 48, 3, 7,'2017-05-8 18:28:04',14);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Do a barrel roll', 'nisl venenatis lacinia aenean sit', 105, 3, 6,650,'2017-05-1 15:28:04',14);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Do a barrel roll', 'nisl venenatis lacinia aenean sit', 107, 3, 6,650,'2017-05-3 13:28:04',14);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Do a barrel roll', 'nisl venenatis lacinia aenean sit', 109, 3, 6,650,'2017-05-2 12:28:04',14);
 
-insert into request (id,title, description, reporter_id, priority_status_id, progress_status_id,date_of_creation, last_changer_id) values (700,'Build a great wall', 'consequat ut nulla sed', 46, 3, 7,'2017-01-8 18:28:04',15);
+insert into request (id, title, description, reporter_id, priority_status_id, progress_status_id, date_of_creation, last_changer_id) values (700,'Build a great wall', 'consequat ut nulla sed', 46, 3, 7,'2017-01-8 18:28:04',15);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Build a great wall', 'consequat ut nulla sed', 109, 1, 6,700,'2017-01-6 16:28:04',15);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Build a great wall', 'consequat ut nulla sed', 111, 1, 6,700,'2017-01-5 16:28:04',15);
 insert into request (title, description, reporter_id, priority_status_id, progress_status_id,parent_id,date_of_creation, last_changer_id) values ('Build a great wall', 'consequat ut nulla sed', 112, 1, 6,700,'2017-01-5 12:28:04',15);
@@ -533,23 +533,6 @@ insert into message (sender_id, recipient_id, topic_id, text, date_and_time) val
 insert into message (sender_id, recipient_id, topic_id, text, date_and_time) values (18, null, 334, 'eleifend donec ut dolor morbi vel lectus in quam', '2017-01-12 21:20:30');
 insert into message (sender_id, recipient_id, topic_id, text, date_and_time) values (17, null, 328, 'eu felis fusce posuere felis sed lacus', '2017-01-17 00:43:28');
 insert into message (sender_id, recipient_id, topic_id, text, date_and_time) values (18, null, 327, 'lectus in est risus auctor sed tristique in', '2017-01-02 12:44:28');
-
--- history data
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'Main title', 'sapien in sapien', '2017/02/09 01:01:01', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('description', 'First very-very-very-very-very-very looooooooooooooooooooooooong description', 'Second very-very-very-very-very-very looooooooooooooooooooooooong description', '2017/02/09 01:01:02', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('priority_status_id', '1', '2', '2017/02/09 01:01:03', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('assignee_id', 'null', '38', '2017/02/09 01:01:04', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('estimate_time_in_day', 'null', '5', '2017/02/09 01:01:05', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('parent_id', 'null', '5', '2017/02/09 01:01:06', 101, 113);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('progress_status_id', '5', '6', '2017/02/09 01:01:07', 101, 113);
-
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'First title', 'Second title', '2017/02/11', 44, 313);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'Second title', 'Third title', '2017/02/12', 44, 313);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('description', 'First description', 'Second description', '2017/02/13', 44, 313);
-
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'First title', 'Second title', '2017/02/11', 101, 213);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('title', 'Second title', 'Third title', '2017/02/12', 101, 213);
-insert into history (column_name, old_value, new_value, date_of_change, changer_id, record_id) values ('description', 'First description', 'Second description', '2017/02/12', 101, 213);
 
 insert into topic_to_role (topic_id, role_id) values (326,10);
 insert into topic_to_role (topic_id, role_id) values (326,11);
