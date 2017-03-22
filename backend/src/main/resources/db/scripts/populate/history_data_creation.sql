@@ -1,7 +1,8 @@
 
 -- Using next script, you can update record to its original state.
 
-/*UPDATE request
+/*
+UPDATE request
 SET title = 'sapien in sapien',
   description = 'suspendisse ornare consequat lectus in est risus auctor',
   priority_status_id = 1,
@@ -11,7 +12,8 @@ SET title = 'sapien in sapien',
   estimate_time_in_days = 2,
   date_of_creation = '2017-02-08 21:04:00',
   last_changer_id = 13
-WHERE id = 113;*/
+WHERE id = 113;
+*/
 
 -- Using next scripts, you can update record.
 
