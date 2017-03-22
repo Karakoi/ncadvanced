@@ -5,7 +5,6 @@ import {AssignRequestComponent} from "../../../pages/home/manager/request-assign
 import {JoinRequestComponent} from "../../../pages/home/manager/request-join/join-request.component";
 import {AuthService} from "../../../service/auth.service";
 import {User} from "../../../model/user.model";
-import {count} from "rxjs/operator/count";
 
 declare let $: any;
 
@@ -15,6 +14,7 @@ declare let $: any;
   styleUrls: ['manager.component.css']
 })
 export class ManagerComponent {
+  selected;
   requests: Request[] = [];
   myRequests: Request[] = [];
   user: User;
@@ -89,11 +89,6 @@ export class ManagerComponent {
     }
   }
 
-  assign(request: Request) {
-    request.estimateTimeInDays = 3;
-    this.assignRequestComponent.request = request;
-    this.assignRequestComponent.modal.open();
-  }
 
   join() {
     this.joinRequestComponent.modal.open();
@@ -103,19 +98,19 @@ export class ManagerComponent {
     this.requests = requests;
   }
 
-  toggle(id) {
-    if (this.checked.indexOf(id) >= 0) {
-      this.checked.splice(this.checked.indexOf(id), 1);
-    } else {
-      this.checked.push(id);
-    }
+  select(data) {
+    this.selected = Array.from(data);
+    console.log(this.selected)
   }
+
 
   isChecked(id) {
     return this.checked.indexOf(id) > -1;
   }
 
   uncheckAll() {
+    this.selected = [];
+    console.log(this.selected)
     this.checked = [];
   }
 

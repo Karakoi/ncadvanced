@@ -66,13 +66,8 @@ export class ClosedRequest implements OnInit {
     let sel = Array.from(this.selected);
     this.employeeService.reopenRequests(sel).subscribe(
       (success) => {
-        console.log("Size before",this.requests.length)
-        console.log("selecterd= ", this.selected);
-        console.log("requests=", this.requests)
         this.requests = this.requests.map(r => r).filter(r => !this.selected.has(r.id))
-        console.log("Size after", this.requests.length)
         this.selected.clear();
-        console.log("Requests has been reopened");
     })
   }
 }

@@ -75,6 +75,10 @@ export class JoinRequestComponent implements OnInit {
 
   }
 
+  get getChecked(){
+    return this.requests.filter(request => this.checked.indexOf(request.id) > -1);
+  }
+
   validate(field: string): boolean {
     return this.requestForm.get(field).valid || !this.requestForm.get(field).dirty;
   }

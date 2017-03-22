@@ -6,8 +6,6 @@ import {DeleteRequestComponent} from "./request-delete/delete-request.component"
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
 
-
-
 declare let $: any;
 
 @Component({
@@ -17,6 +15,7 @@ declare let $: any;
 })
 export class RequestTable {
   selected: Set<number>;
+  checked: number[] = [];
 
   @Input() private requests: Request[];
   @Input() private requestsCount: number;
@@ -76,7 +75,7 @@ export class RequestTable {
   }
 
 
-  changed(data){
+  changed(data) {
     this.paginationChange.emit(data);
   }
 
@@ -85,21 +84,35 @@ export class RequestTable {
     this.orderField = field;
   }
 
-  perPageChange(data){
+  perPageChange(data) {
     this.perPage = data;
   }
 
-  check(data){
+  check(data) {
     data = +data;
-    if(!this.selected.has(data))
+    if (!this.selected.has(data))
       this.selected.add(data);
     else {
       this.selected.delete(data);
     }
     this.selectedEvent.emit(this.selected);
+    this.checked = Array.from(this.selected);
   }
 
-  openDeleteRequestModal(request: Request,event): void {
+  join() {
+    this.joinRequestComponent.modal.open();
+  }
+
+  isChecked(id) {
+    return this.selected.has(id);
+  }
+
+  uncheck() {
+    this.selected.clear();
+    this.checked = [];
+  }
+
+  openDeleteRequestModal(request: Request, event): void {
     this.deleteRequestComponent.request = request;
     this.deleteRequestComponent.modal.open();
   }
