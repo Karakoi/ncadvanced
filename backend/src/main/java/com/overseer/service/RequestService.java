@@ -180,6 +180,14 @@ public interface RequestService extends CrudService<Request, Long> {
     Long countFreeRequests();
 
     /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @param id id of the {@link User}.
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countRequestsByAssignee(Long id);
+
+    /**
      * Returns a list of requests with Free progress status {@link ProgressStatus}.
      *
      * @return list of requests with Free progress status {@link ProgressStatus}.
