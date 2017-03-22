@@ -28,7 +28,11 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     private static final int FREE = 5;
     private static final int JOINED = 6;
     private static final int IN_PROGRESS = 7;
+    private static final int CLOSED = 8;
     private static final int REOPEN = 9;
+    private static final int HIGH = 1;
+    private static final int NORMAL = 2;
+    private static final int LOW = 3;
 
     @Override
     public List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber) {
@@ -269,6 +273,39 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         progressListForUser.add(jdbc().queryForObject(quantityQueryForUser, parameterSourceForReopen, Long.class));
 
         return progressListForUser;
+    }
+
+    @Override
+    public List<Long> countRequestByPriorityStatus() {
+        String quantityQuery = queryService().getQuery("request.countByPriorityStatus");
+        List<Long> priorityList = new LinkedList<>();
+        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", HIGH), Long.class));
+        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", NORMAL), Long.class));
+        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", LOW), Long.class));
+        return priorityList;
+    }
+
+    @Override
+    public List<Long> countRequestByProgressStatusForSixMonths() {
+        String quantityQueryForSixMonths = queryService().getQuery("request.countStatisticForSixMonths");
+        String quantityQueryForSixMonthsClosed = queryService().getQuery("request.countStatisticForSixMonthsClosed");
+        List<Long> statisticList = new LinkedList<>();
+        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonthsClosed, new MapSqlParameterSource(), Long.class));
+        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonths, new MapSqlParameterSource("progress", CLOSED), Long.class));
+        return statisticList;
+    }
+
+    @Override
+    public List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId) {
+        String quantityQuery = queryService().getQuery("request.countStatisticForSixMonthsForUser");
+        List<Long> userStatistic = new LinkedList<>();
+        userStatistic.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("userId", userId), Long.class));
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        source.addValue("progress", CLOSED);
+        source.addValue("userId", userId);
+        String quantityQueryClosed = queryService().getQuery("request.countStatisticForSixMonthsForUserClosed");
+        userStatistic.add(jdbc().queryForObject(quantityQueryClosed, source, Long.class));
+        return userStatistic;
     }
 
     @Override

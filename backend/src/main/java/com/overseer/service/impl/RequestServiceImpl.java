@@ -242,10 +242,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Long> quantity() {
+    public List<Long> quantityByProgressStatus() {
         return requestDao.countRequestByProgressStatus();
     }
-
 
     /**
      *{@inheritDoc}.
@@ -253,6 +252,30 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Long> quantityForUser(Long userId) {
         return requestDao.countRequestByProgressStatusForUser(userId);
+    }
+
+    /**
+     *{@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByPriorityStatus() {
+        return requestDao.countRequestByPriorityStatus();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByProgressStatusForSixMonths() {
+        return requestDao.countRequestByProgressStatusForSixMonths();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId) {
+        return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
     }
 
     /**

@@ -14,11 +14,11 @@ export class UserProfileComponent implements OnInit {
 
   user: User;
   requests: Array<number>;
+  sixMonthsStatistic: Array<number>;
 
   constructor(private userService: UserService,
               private route: ActivatedRoute,
               private requestService: RequestService) {
-
   }
 
   ngOnInit(): void {
@@ -29,11 +29,14 @@ export class UserProfileComponent implements OnInit {
         this.requestService.getQuantityForUser(this.user.id).subscribe(s => {
           this.requests = s;
         });
+        this.requestService.getStatisticForSixMonthsForUser(this.user.id).subscribe(s => {
+          this.sixMonthsStatistic = s;
+        });
       });
     });
   }
 
-  setStatistic(){
+  setStatisticByProgressStatus(){
     this.pieChartRequest = {
       chartType: 'PieChart',
       dataTable: [
@@ -46,7 +49,10 @@ export class UserProfileComponent implements OnInit {
       ],
       options: {
         title: 'Your request statistic',
-        height: 550,
+        legend: { position: 'bottom'
+        },
+        is3D: true,
+        height: 400
       }
     };
   }
@@ -59,7 +65,48 @@ export class UserProfileComponent implements OnInit {
     ],
     options: {
       title: 'Your Request statistic',
-      height: 550
+      legend: { position: 'bottom'
+      },
+      is3D: true,
+      height: 400
     }
   };
+
+  setStatisticForSixMonths(){
+    this.pieChartRequestForSixMonths = {
+      chartType: 'Gauge',
+      dataTable: [
+        ['Open', 'Closed'],
+        ['Open', this.sixMonthsStatistic[0]],
+        ['Closed', this.sixMonthsStatistic[1]]],
+      options: {
+        title: 'Request statistic for six months',
+        width: 600, height: 400,
+        redFrom: 90, redTo: 100,
+        yellowFrom:75, yellowTo: 90,
+        minorTicks: 5
+      },
+    };
+  }
+
+  pieChartRequestForSixMonths = {
+    chartType: 'Gauge',
+    dataTable: [
+      ['Request', 'not closed'],
+      ['Click to see open',100],
+      ['Click to see closed',100],
+    ],
+    options: {
+      title: 'Request statistic for six months',
+      width: 600, height: 400,
+      redFrom: 90, redTo: 100,
+      yellowFrom:75, yellowTo: 90,
+      minorTicks: 5
+    }
+  };
+
+  setStatistic(): void {
+    this.setStatisticByProgressStatus();
+    this.setStatisticForSixMonths();
+  }
 }

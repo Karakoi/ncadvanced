@@ -10,22 +10,22 @@ const url = '/api/requests';
 
 @Injectable()
 export class RequestService {
-  constructor(private authHttp:AuthHttp,
-              private errorService:ErrorService) {
+  constructor(private authHttp: AuthHttp,
+              private errorService: ErrorService) {
   }
 
-  create(request:Request):Observable<Response> {
+  create(request: Request): Observable<Response> {
     return this.authHttp.post(url, request)
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
-  update(request:Request):Observable<Response> {
+  update(request: Request): Observable<Response> {
     return this.authHttp.put(url, request)
       .map(resp => resp.json())
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
@@ -42,7 +42,7 @@ export class RequestService {
   get(id: number): Observable<Request> {
     return this.authHttp.get(`${url}/${id}`)
       .map(resp => resp.json())
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
@@ -67,55 +67,68 @@ export class RequestService {
   }
 
 
-  getAll(page:number):Observable<Request[]> {
+  getAll(page: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/fetch?page=` + page)
       .map(resp => resp.json())
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
-  getPageCount():Observable<number> {
+  getPageCount(): Observable<number> {
     return this.authHttp.get(`${url}/pageCount`)
       .map(resp => resp.json())
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
-  getPageCountFree():Observable<number> {
+  getPageCountFree(): Observable<number> {
     return this.authHttp.get(`${url}/pageCountFree`)
       .map(resp => resp.json())
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
-  getQuantityRequest():Observable<number[]> {
-    return this.authHttp.get(`${url}/countRequest`).map(resp => resp.json());
+
+  getQuantityRequest(): Observable<number[]> {
+    return this.authHttp.get(`${url}/countRequestByProgressStatus`).map(resp => resp.json());
   }
 
-  getFree(page:number):Observable<Request[]> {
+  getFree(page: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/fetchFree?page=` + page)
       .map(resp => resp.json())
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
 
-  join(request:Request, checked:number[]):Observable<Request> {
+  join(request: Request, checked: number[]): Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)
-      .catch((error:any) => {
+      .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
 
-  getQuantityForUser(userId: number):Observable<number[]> {
+  getQuantityForUser(userId: number): Observable<number[]> {
     return this.authHttp.get(`${url}/countRequestForUser?userId=` + userId).map(resp => resp.json())
+  }
+
+  getStatisticForSixMonths(): Observable<number[]> {
+    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatus`).map(resp => resp.json());
+  }
+
+  getStatisticForSixMonthsForUser(userId: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatusForUser?userId=` + userId).map(resp => resp.json());
+  }
+
+  getQuantityRequestByPriority(): Observable<number[]> {
+    return this.authHttp.get(`${url}/countRequestByPriorityStatus`).map(resp => resp.json());
   }
 }

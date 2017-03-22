@@ -226,7 +226,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Returns list to build pie chart.
      *
-     * @return list of statistic request. 
+     * @return list of statistic request by progress status. 
      */
     List<Long> countRequestByProgressStatus();
 
@@ -236,4 +236,22 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of statistic request for user profile.
      */
     List<Long> countRequestByProgressStatusForUser(Long userId);
+
+    /**
+     * Returns list to build pie chart.
+     *
+     * @return list of statistic request by priority status.
+     */
+    List<Long> countRequestByPriorityStatus();
+
+    /**
+     * @return list of statistic for six months by progress status.
+     */
+    List<Long> countRequestByProgressStatusForSixMonths();
+
+    /**
+     * @return list of statistic for six months by progress status for user.
+     */
+    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
+
 }

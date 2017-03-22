@@ -321,27 +321,63 @@ public class RequestController {
     }
 
     /**
-     * Returns number of progress.
+     * Returns list of progress.
      *
-     * @return number of progress.
+     * @return list of progress.
      */
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("/countRequest")
-    public ResponseEntity<List<Long>> getQuantityRequest() {
-        List<Long> quantity = requestService.quantity();
+    @GetMapping("/countRequestByProgressStatus")
+    public ResponseEntity<List<Long>> getQuantityRequestByProgressStatus() {
+        List<Long> quantity = requestService.quantityByProgressStatus();
         return new ResponseEntity<>(quantity, HttpStatus.OK);
     }
 
     /**
-     * Returns number of progress for user.
-     *
-     * @return number of progress for user.
+     * Returns list of progress for User.
+     * @param userId value of User id in database.
+     * @return list of progress for User.
      */
     @GetMapping("/countRequestForUser")
     public ResponseEntity<List<Long>> getQuantityForUser(@RequestParam Long userId) {
-        System.out.println(userId);
         final List<Long> quantityUser = requestService.quantityForUser(userId);
         return new ResponseEntity<>(quantityUser, HttpStatus.OK);
+    }
+
+    /**
+     * Returns list of progress for User.
+     *
+     * @return list of progress for User.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/countRequestByPriorityStatus")
+    public ResponseEntity<List<Long>> getQuantityForUserByPriorityStatus() {
+        List<Long> quantity = requestService.quantityByPriorityStatus();
+        return new ResponseEntity<>(quantity, HttpStatus.OK);
+    }
+
+    /**
+     * Returns statistic for six months.
+     *
+     * @return list of statistic for six months.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getStatisticForSixMonthsByProgressStatus")
+    public ResponseEntity<List<Long>> getStatisticForSixMonthsByProgressStatus() {
+        List<Long> statisticList = requestService.quantityByProgressStatusForSixMonths();
+        return new ResponseEntity<>(statisticList, HttpStatus.OK);
+    }
+
+    /**
+     * Returns statistic for six months for User.
+     *
+     * @param userId value of User id in database.
+     * @return list of statistic for six months.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("getStatisticForSixMonthsByProgressStatusForUser")
+    public ResponseEntity<List<Long>> getStatisticForSixMonthsForUser(@RequestParam Long userId) {
+        List<Long> statisticListForUser = requestService.quantityByProgressStatusForSixMonthsForUser(userId);
+        return new ResponseEntity<>(statisticListForUser, HttpStatus.OK);
     }
 }
 

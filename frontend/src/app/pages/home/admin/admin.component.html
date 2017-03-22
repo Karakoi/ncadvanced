@@ -2,97 +2,12 @@
 <div class="container">
   <div class="header-content">
     <h1 align="center">Request Info</h1>
-    <google-chart (click)="setStatistic()" [data]="pieChartRequest"></google-chart>
+    <div class="row">
+      <google-chart (click)="setStatistic()" [data]="pieChartRequest"></google-chart>
+    </div>
+    <div class="row">
+      <google-chart (click)="setStatistic()" [data]="pieChartRequestPriority"></google-chart>
+      <google-chart (click)="setStatistic()" [data]="pieChartRequestForSixMonths"></google-chart>
+    </div>
   </div>
-</div>
-
-<div class="container" *ngIf="requests">
-  <form-template>
-    <div class="template-header">
-      Requests
-    </div>
-    <div class="template-body">
-      <table class="table table-bordered table-hover">
-        <thead>
-        <tr>
-          <th (click)="changeOrderParams(!orderType, 'title')">Title
-            <span *ngIf="orderType && orderField == 'title'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
-            <span *ngIf="!orderType && orderField == 'title'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
-          </th>
-          <th (click)="changeOrderParams(!orderType, 'dateOfCreation')">Date of creation
-            <span *ngIf="orderType && orderField == 'dateOfCreation'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
-            <span *ngIf="!orderType && orderField == 'dateOfCreation'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
-          </th>
-          <th (click)="changeOrderParams(!orderType, 'priorityStatus.name')" style="width: 150px">Priority
-            <span *ngIf="orderType && orderField == 'priorityStatus.name'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
-            <span *ngIf="!orderType && orderField == 'priorityStatus.name'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
-          </th>
-          <th (click)="changeOrderParams(!orderType, 'progressStatus.name')" style="width: 150px">Progress
-            <span *ngIf="orderType && orderField == 'progressStatus.name'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
-            <span *ngIf="!orderType && orderField == 'progressStatus.name'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
-          </th>
-          <th (click)="changeOrderParams(!orderType, 'reporter.firstName')">Reporter
-            <span *ngIf="orderType && orderField == 'reporter.firstName'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
-            <span *ngIf="!orderType && orderField == 'reporter.firstName'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
-          </th>
-          <th (click)="changeOrderParams(!orderType, 'assignee.firstName')">Assignee
-            <span *ngIf="orderType && orderField == 'assignee.firstName'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
-            <span *ngIf="!orderType && orderField == 'assignee.firstName'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
-          </th>
-          <th>Details</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>
-            <input type="text" [(ngModel)]="searchTypes.title" class="form-control"/>
-          </td>
-          <td>
-            <input type="date" [(ngModel)]="searchTypes.date" class="form-control"/>
-          </td>
-          <td>
-            <select class="form-control" [(ngModel)]="searchTypes.priorityStatus">
-              <option></option>
-              <option>High</option>
-              <option>Normal</option>
-              <option>Low</option>
-            </select>
-          </td>
-          <td>
-            <select class="form-control" [(ngModel)]="searchTypes.progressStatus">
-              <option></option>
-              <option>Free</option>
-              <option >In progress</option>
-              <option>Joined</option>
-              <option>Closed</option>
-            </select>
-          </td>
-          <td>
-            <input type="text" [(ngModel)]="searchTypes.reporterName" class="form-control"/>
-          </td>
-          <td>
-            <input type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>
-          </td>
-          <td class="td-center"><span class="glyphicon glyphicon-info-sign text-center"></span></td>
-        </tr>
-        <tr style="cursor: pointer;" *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType}" >
-          <td>{{request.title}}</td>
-          <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
-          <td>{{request.priorityStatus.name}}</td>
-          <td>{{request.progressStatus.name}}</td>
-          <td>{{request.reporter.firstName}}</td>
-          <td>{{request.assignee.firstName}}</td>
-          <td class="text-center">
-            <button [routerLink]="['/request', request.id]" class="glyphicon glyphicon-info-sign center-block btn btn-primary btn-xs"></button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <ul class="pagination pull-right">
-        <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
-        <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageCount)"><a>{{item}}</a>
-        </li>
-      </ul>
-    </div>
-  </form-template>
 </div>
