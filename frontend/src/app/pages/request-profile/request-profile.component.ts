@@ -53,22 +53,34 @@ export class RequestProfileComponent implements OnInit {
       this.requestService.get(id).subscribe((request: Request) => {
         this.request = request;
         this.type = this.getRequestType(request);
-        console.log(request)
+        /*console.log(request)*/
       });
 
       this.requestService.getSubRequests(id).subscribe((subRequests: Request[]) => {
         this.subRequests = subRequests;
-        console.log(subRequests)
+        /*console.log(subRequests)*/
       });
 
       this.requestService.getJoinedRequests(id).subscribe((joinedRequests: Request[]) => {
         this.joinedRequests = joinedRequests;
-        console.log(joinedRequests)
+        /*console.log(joinedRequests)*/
       });
     });
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
     });
+  }
+
+  showHistoryValue(generalValue: string, demonstrationValue: string){
+    if(demonstrationValue != null){
+      return demonstrationValue;
+    } else {
+      if(generalValue != null){
+        return generalValue;
+      } else {
+        return "empty value";
+      }
+    }
   }
 
   openAddSubRequestModal(): void {
