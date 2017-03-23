@@ -65,19 +65,18 @@ public class RequestReportPdfView extends AbstractPdfView {
 
         document.add(detailsTable);
 
-        if (subRequests != null) {
+        if (!subRequests.isEmpty()) {
             document.add(new Paragraph("\nSub requests:", font));
             PdfPTable subRequestsTable = generateSubRequestsTable(subRequests);
             document.add(subRequestsTable);
         }
 
-        if (joinedRequests != null) {
+        if (!joinedRequests.isEmpty()) {
             document.add(new Paragraph("\nJoined requests:", font));
             PdfPTable joinedRequestsTable = generateJoinedRequestsTable(joinedRequests);
             document.add(joinedRequestsTable);
         }
     }
-
 
     /**
      * Generates {@link PdfPTable} table for sub requests report section.
@@ -109,7 +108,7 @@ public class RequestReportPdfView extends AbstractPdfView {
      * @return joined requests table
      */
     private PdfPTable generateJoinedRequestsTable(List<Request> joinedRequests) {
-        final int joinedTableColumnNum = 3;
+        final int joinedTableColumnNum = 4;
         PdfPTable joinedRequestsTable = new PdfPTableBuilder(joinedTableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)
                 .addPdfPCells(BaseColor.LIGHT_GRAY, getFont(HELVETICA_BOLD),
                         "Title", "Reporter", "Priority", "Date of creation")

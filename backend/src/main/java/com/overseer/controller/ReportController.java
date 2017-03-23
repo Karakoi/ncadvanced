@@ -9,10 +9,6 @@ import com.overseer.service.RequestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.View;
 
@@ -32,6 +28,7 @@ import java.util.List;
 @RequestMapping("/api/reports")
 @AllArgsConstructor
 public class ReportController {
+
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Long DEFAULT_MONTHS_STEP = 1L;
     private static final int COUNT_MONTHS_IN_YEAR = 12;
@@ -39,13 +36,19 @@ public class ReportController {
     private final ReportService reportService;
 
     /**
+     * Handle request to download an Excel document.
+     */
+    @RequestMapping(value = "/request", method = RequestMethod.GET)
+    public View download(@RequestParam String id) {
+        Long requestId = Long.valueOf(id);
+        return reportService.generateRequestPDFReport(requestId);
+    }
+
+    /**
      * Gets {@link Document} pdf report.
      *
      * @return {@link Document} doc with reporting data.
      */
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping(produces = MediaType.APPLICATION_PDF, path = "/pdf")
-//    @RequestMapping(value = "/pdf", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
     @GetMapping("/adminPDFReport")
     public ResponseEntity<Long> getAdminPDFReport(@RequestParam String beginDate, @RequestParam String endDate) {
 
@@ -64,31 +67,6 @@ public class ReportController {
         return new ResponseEntity<Long>(new Long(1), HttpStatus.OK);
     }
 
-//    public static final String IMG = "../resources/img/NetCracker_logo.jpg";
-//    public static void main(String[] args) {
-//        try {
-//            File file = new File("itext-test.pdf");
-//            FileOutputStream fileout = new FileOutputStream(file);
-//            Document document = new Document();
-//            PdfWriter.getInstance(document, fileout);
-//            document.addAuthor("Me");
-//            document.addTitle("My iText Test");
-//            document.open();
-//
-//            Image img = Image.getInstance("logo.jpg");
-//            document.add(img);
-//            Paragraph p = new Paragraph("REPORT:");
-//            p.setAlignment(Element.ALIGN_CENTER);
-//            LineSeparator ls = new LineSeparator();
-//            document.add(p);
-//            document.add(new Chunk(ls));
-//
-//            document.close();
-//        } catch (DocumentException | IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     /**
      * Gets list of request transfer objects which created in the same period.
      *
@@ -97,7 +75,7 @@ public class ReportController {
      * @return return list of requestDTO from one period of time
      */
     @GetMapping("/getAllStaticticsOfCreatedRequestsByPeriod")
-    public ResponseEntity<List<RequestDTO>> getAllStaticticsOfCreatedRequestsByPeriod(@RequestParam String beginDate,
+    public ResponseEntity<List<RequestDTO>> getAllStatisticsOfCreatedRequestsByPeriod(@RequestParam String beginDate,
                                                                                       @RequestParam String endDate) {
 
         LocalDate start = LocalDate.parse(beginDate, formatter);
@@ -124,16 +102,6 @@ public class ReportController {
         }
         return new ResponseEntity<>(allRequests, HttpStatus.OK);
     }
-    /**
-     * Handle request to download an Excel document.
-     */
-    @RequestMapping(value = "/request", method = RequestMethod.GET)
-    public View download(@RequestParam String id) {
-        Long requestId = Long.valueOf(id);
-        return reportService.generateRequestPDFReport(requestId);
-    }
-
-}
 
     /**
      * Gets list of request transfer objects which created in the same period.
@@ -143,7 +111,7 @@ public class ReportController {
      * @return return list of requestDTO from one period of time
      */
     @GetMapping("/getAllStaticticsOfClosedRequestsByPeriod")
-    public ResponseEntity<List<RequestDTO>> getAllStaticticsOfClosedRequestsByPeriod(@RequestParam String beginDate,
+    public ResponseEntity<List<RequestDTO>> getAllStatisticsOfClosedRequestsByPeriod(@RequestParam String beginDate,
                                                                                      @RequestParam String endDate) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
