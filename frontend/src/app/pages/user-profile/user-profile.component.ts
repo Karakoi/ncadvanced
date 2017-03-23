@@ -149,7 +149,6 @@ export class UserProfileComponent implements OnInit {
     }
   };
 
-
   setStatistic(): void {
     this.setStatisticByProgressStatus();
     this.setStatisticForSixMonths();
