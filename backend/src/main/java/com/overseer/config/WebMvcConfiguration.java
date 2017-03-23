@@ -50,7 +50,6 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     /**
      * Configure View resolver to provide Pdf output using iText library to
      * generate pdf output for an object content.
-     *
      * @return pdf view resolver
      */
     @Bean
