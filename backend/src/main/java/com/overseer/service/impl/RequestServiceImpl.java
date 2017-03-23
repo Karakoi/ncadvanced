@@ -2,11 +2,9 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.RequestDTO;
 import com.overseer.event.ChangeProgressStatusEvent;
 import com.overseer.exception.InappropriateProgressStatusException;
-import com.overseer.dto.RequestDTO;
-import com.overseer.exception.RmovingNotFreeRequestException;
-import com.overseer.exception.UnpropreateJoinRequest;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -53,9 +51,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.countInProgressRequestByAssignee(managerId);
     }
 
-    private EmailBuilder<Request> emailStrategyForAssignee;
-    private EmailBuilder<Request> emailStrategyForReporter;
-    private EmailService emailService;
 
     public RequestServiceImpl(RequestDao requestDao,
                               ProgressStatusDao progressStatusDao) {
@@ -167,10 +162,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
-        Long count = this.requestDao.findCountsRequestsByPeriod(start, end);
-        log.debug("Fetched {} count of requests for period {} - {}", count, start, end);
-        return count;
     public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
         RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end, progressStatusName);
         log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
@@ -296,7 +287,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     }
 
     /**
-     *{@inheritDoc}.
+     * {@inheritDoc}.
      */
     @Override
     public List<Long> quantityForUser(Long userId) {
@@ -304,7 +295,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     }
 
     /**
-     *{@inheritDoc}.
+     * {@inheritDoc}.
      */
     @Override
     public List<Long> quantityByPriorityStatus() {
