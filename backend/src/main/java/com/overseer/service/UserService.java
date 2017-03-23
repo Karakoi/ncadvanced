@@ -62,4 +62,11 @@ public interface UserService extends CrudService<User, Long> {
      */
     void activate(Long id);
 
+    /**
+     * Returns a amount of {@link User} entities who's deactivated.
+     *
+     * @return a count of {@link User} entities.
+     */
+    Long getCountAllDeactivated();
+
 }

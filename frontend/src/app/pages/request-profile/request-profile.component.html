@@ -6,6 +6,7 @@
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
                        size="40"
+                       [disabled]="isFree(request)"
         >
         </inline-editor>
       </p>
@@ -98,6 +99,7 @@
                 <inline-editor type="textarea"
                                [(ngModel)]="request.description"
                                (onSave)="updateRequest($event)"
+                               [disabled]="isFree(request)"
                                cols="100"
                                rows="3">
                 </inline-editor>
@@ -117,7 +119,7 @@
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false && subRequests != false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <button *ngIf="showSubRequests && type == 'Request'" class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
+          <button *ngIf="showSubRequests && type == 'Request' && isInProgress(request)" class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
           <p class="no-content-msg">
             <i *ngIf="subRequests == false">There are no sub requests at that moment.</i>
           </p>

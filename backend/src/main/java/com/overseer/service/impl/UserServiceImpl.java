@@ -153,4 +153,10 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         log.debug("Activating entity with id: {}", id);
         userDao.activate(id);
     }
+
+    @Override
+    public Long getCountAllDeactivated() {
+        log.debug("Get count of all deactivated users");
+        return userDao.getCountAllDeactivated();
+    }
 }

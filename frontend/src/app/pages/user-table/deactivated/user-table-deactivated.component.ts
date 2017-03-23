@@ -36,7 +36,7 @@ export class UserTableDeactivatedComponent implements OnInit {
     this.userService.getAllDeactivated(1).subscribe((users: User[]) => {
       this.users = users;
     });
-    this.userService.getPageCount().subscribe((count) => this.pageNumber = count);
+    this.userService.getDeactivatedUsersPageCount().subscribe((count) => this.pageNumber = count);
   }
 
   changeOrderParams(type, field) {

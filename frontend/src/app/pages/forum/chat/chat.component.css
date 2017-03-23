@@ -38,3 +38,7 @@ img {
 .user-msg {
   background-color: #337AB7;
 }
+
+.container{
+  width: auto;
+}

@@ -56,4 +56,11 @@ public interface UserDao extends CrudDao<User, Long> {
      * @param id user's id, must not be {@literal null}.
      */
     void activate(Long id);
+
+    /**
+     * Returns a amount of {@link User} entities who's deactivated.
+     *
+     * @return a count of {@link User} entities.
+     */
+    Long getCountAllDeactivated();
 }
