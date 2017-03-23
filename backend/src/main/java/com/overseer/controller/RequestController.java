@@ -291,7 +291,7 @@ public class RequestController {
     }
 
     @GetMapping("/countInProgressRequestsByAssignee")
-    public ResponseEntity<Long> countInProgressRequestByAssignee(@RequestParam Long manager) {
+    public ResponseEntity<Long> countInProgressRequestByAssignee(@RequestParam long manager) {
         System.out.println("Manager id " + manager);
         return new ResponseEntity<>(requestService.countInProgressRequestByAssignee(manager), HttpStatus.OK);
     }
