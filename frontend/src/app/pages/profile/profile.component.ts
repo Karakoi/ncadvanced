@@ -67,10 +67,6 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  showPassword() {
-    this.showPass = !this.showPass;
-  }
-
   validateField(field: string): boolean {
     return this.profileForm.get(field).valid || !this.profileForm.get(field).dirty;
   }

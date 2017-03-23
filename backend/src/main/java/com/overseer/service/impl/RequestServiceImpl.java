@@ -4,6 +4,9 @@ import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.event.ChangeProgressStatusEvent;
 import com.overseer.exception.InappropriateProgressStatusException;
+import com.overseer.dto.RequestDTO;
+import com.overseer.exception.RmovingNotFreeRequestException;
+import com.overseer.exception.UnpropreateJoinRequest;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -37,8 +40,22 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     private RequestDao requestDao;
     private ProgressStatusDao progressStatusDao;
-    
+
     private ApplicationEventPublisher publisher;
+
+    @Override
+    public Long countRequestByAssignee(Long managerId) {
+        return requestDao.countRequestsByAssignee(managerId);
+    }
+
+    @Override
+    public Long countInProgressRequestByAssignee(Long managerId) {
+        return requestDao.countInProgressRequestByAssignee(managerId);
+    }
+
+    private EmailBuilder<Request> emailStrategyForAssignee;
+    private EmailBuilder<Request> emailStrategyForReporter;
+    private EmailService emailService;
 
     public RequestServiceImpl(RequestDao requestDao,
                               ProgressStatusDao progressStatusDao) {
@@ -81,6 +98,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public List<Request> findRequestsByAssignee(Long assigneeId, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
         val list = this.requestDao.findRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
+                list.size(), assigneeId, pageNumber);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber) {
+        Assert.notNull(assigneeId, "assignee must not be null");
+        val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
                 list.size(), assigneeId, pageNumber);
         return list;
@@ -142,6 +171,50 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         Long count = this.requestDao.findCountsRequestsByPeriod(start, end);
         log.debug("Fetched {} count of requests for period {} - {}", count, start, end);
         return count;
+    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end, progressStatusName);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByPeriod(start, end, progressStatusName);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        List<RequestDTO> list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusName);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
     }
 
     /**
@@ -150,7 +223,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findRequestsByDate(LocalDate date) {
         Assert.notNull(date, "date must not be null");
-        List<Request> list = this.requestDao.findRequestsByDate(date);
+        val list = this.requestDao.findRequestsByDate(date);
         log.debug("Fetched {} requests for date: {}", list.size(), date);
         return list;
     }

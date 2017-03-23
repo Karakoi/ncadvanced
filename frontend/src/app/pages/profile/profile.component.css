@@ -7,7 +7,7 @@
 }
 
 .dummy_user {
-  width: auto;
+  width: 303px;
   height: auto;
   /*border: solid darkgray 3px;*/
   border-radius: 3%;
@@ -17,3 +17,6 @@
   width: auto;
 }
 
+.profile-buttons {
+  margin-top: 10px;
+}

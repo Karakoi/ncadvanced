@@ -21,6 +21,9 @@
     <li>
       <a [routerLink]="['/forum/inbox']">Inbox</a>
     </li>
+    <li>
+      <a [routerLink]="['/reports']">Reports</a>
+    </li>
     <!--Show this div, if user's role is Admin -->
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">All users</a>
@@ -30,6 +33,10 @@
     </li>
     <li>
       <a [routerLink]="['/reports']" *ngIf="isAdmin()">Reports</a>
+    </li>
+    <!--Show this div, if user's role is Manager -->
+    <li>
+      <a [routerLink]="['/assigned']" *ngIf="isManager()">Assigned</a>
     </li>
   </ul>
 </div>

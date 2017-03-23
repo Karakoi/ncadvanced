@@ -6,12 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RequestController {
     //private static final Long DEFAULT_PAGE_SIZE = 20L;
-    private static final Long DEFAULT_DATE_MOUNTS_STEP = 1L;
     private final RequestService requestService;
 
     /**
@@ -33,6 +31,7 @@ public class RequestController {
      * @param id request identifier.
      * @return {@link Request} entity with http status 200 OK.
      */
+    @PostAuthorize("hasAnyRole('ADMIN', 'MANAGER') || returnObject.getBody().reporter.email == authentication.name")
     @GetMapping("/{id}")
     public ResponseEntity<Request> fetchRequest(@PathVariable Long id) {
         val request = requestService.findOne(id);
@@ -107,7 +106,10 @@ public class RequestController {
      */
     @PutMapping("/closeRequest")
     public ResponseEntity closeRequest(@RequestBody Request request) {
+        System.out.println("Request before - " + request);
+        System.out.println("Request.id before - " + request.getId());
         val closedRequest = requestService.closeRequest(request);
+        System.out.println("Request after - " + closedRequest);
         return new ResponseEntity<>(closedRequest, HttpStatus.OK);
     }
 
@@ -177,45 +179,6 @@ public class RequestController {
     }
 
     /**
-     * Gets count of requests objects which created in the same period.
-     *
-     * @param beginDate date from
-     * @param endDate   date to
-     * @return return count of requests from one period of time
-     */
-    @GetMapping("/getCountRequestsByPeriod")
-    public ResponseEntity<Long> getCountRequestsByPeriod(@RequestParam String beginDate,
-                                                         @RequestParam String endDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        val count = requestService.findCountsRequestsByPeriod(start, end);
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
-
-    /**
-     * Gets counts list of requests objects which created in the same period.
-     *
-     * @param beginDate date from
-     * @param months    show mounts from begin date
-     * @return return counts list of requests from one period of time
-     */
-    @GetMapping("/getCountRequestsByStartDate")
-    public ResponseEntity<List<Long>> getCountRequestsByStartDate(@RequestParam String beginDate,
-                                                                  @RequestParam int months) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        List<Long> list = new ArrayList<>();
-        for (int i = 0; i < months; i++) {
-            LocalDate end = start.plusMonths(DEFAULT_DATE_MOUNTS_STEP);
-            list.add(requestService.findCountsRequestsByPeriod(start, end));
-            start = end;
-        }
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-    /**
      * Gets all Requests objects created in the same day.
      *
      * @param date request's property which represents belonging to a group, must not be {@literal null}.
@@ -278,6 +241,19 @@ public class RequestController {
     public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
         System.out.println("userId:" + userId + " pageNumber " + pageNumber);
         val requests = requestService.findRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/countInProgressRequestsByAssignee")
+    public ResponseEntity<Long> countInProgressRequestByAssignee(@RequestParam long manager) {
+        System.out.println("Manager id " + manager);
+        return new ResponseEntity<>(requestService.countInProgressRequestByAssignee(manager), HttpStatus.OK);
+    }
+
+    @GetMapping("/inProgressRequestsByAssignee")
+    public ResponseEntity<List<Request>> getInProgressRequestsByAssignee(@RequestParam int page,
+                                                                         @RequestParam long manager) {
+        val requests = requestService.findInProgressRequestsByAssignee(manager, page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 

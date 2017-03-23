@@ -1,5 +1,6 @@
 package com.overseer.dao;
 
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -75,6 +76,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     }
 
     /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
+
+    /**
      * Returns a list of requests which have provided {@link User} as reporter.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
@@ -101,6 +110,22 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return number of requests for reporter.
      */
     Long countRequestsByReporter(Long reporterId);
+
+    /**
+     * Returns number of requests for assignee.
+     *
+     * @param managerId assignee id must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countRequestsByAssignee(Long managerId);
+
+    /**
+     * Returns number of requests for assignee.
+     *
+     * @param managerId assignee id must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countInProgressRequestByAssignee(Long managerId);
 
     /**
      * Returns a list of closed requests which have provided {@link User} as reporter.
@@ -169,13 +194,56 @@ public interface RequestDao extends CrudDao<Request, Long> {
 
 
     /**
-     * Returns a count of requests created in provided period.
+     * Returns a list of request DTO created in provided period.
      *
-     * @param start period start.
-     * @param end   period end.
-     * @return count of requests created in provided period.
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return list of request DTO created in provided period.
      */
-    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a list of request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return list of request DTO created in provided period.
+     */
+    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a list of best managers in provided period.
+     *
+     * @param start        period start.
+     * @param end          period end.
+     * @param progressName progress status name.
+     * @return list of best managers in provided period.
+     */
+    List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, String progressName);
 
     /**
      * Returns a list of requests created in provided date.
@@ -218,7 +286,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
-     * @param statusIds  list of progress status ids, must not be {@literal null}
+     * @param statusIds list of progress status ids, must not be {@literal null}
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of requests
      */

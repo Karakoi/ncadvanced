@@ -1,0 +1,15 @@
+<script type="text/javascript" src="node_modules/chart.js/src/chart.js"></script>
+<div>
+  <div class="...">
+    <canvas style="" baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
+    </canvas>
+  </div>
+</div>
+
