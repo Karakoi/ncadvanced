@@ -2,25 +2,24 @@ package com.overseer.service.impl;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.overseer.dao.RequestDao;
+import com.overseer.model.Request;
 import com.overseer.service.ReportBuilder;
 import com.overseer.service.ReportService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.overseer.service.impl.report.view.RequestReportPdfView;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.View;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Implementation of {@link ReportService} interface.
  */
 @Service
-@Transactional
-@Slf4j
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
     @Qualifier("adminReportBuilderImpl")
@@ -32,7 +31,7 @@ public class ReportServiceImpl implements ReportService {
     @Qualifier("employeeReportBuilderImpl")
     private ReportBuilder employeeBuilder;
 
-
+    private final RequestDao requestDao;
 
     /**
      * {@inheritDoc}.
@@ -77,5 +76,13 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public void generateEmployeeExcelReport() {
+    }
+
+    @Override
+    public View generateRequestPDFReport(Long requestId) {
+        Request request = requestDao.findOne(requestId);
+        List<Request> subRequests = requestDao.findSubRequests(requestId);
+        List<Request> joinedRequests = requestDao.findJoinedRequests(requestId);
+        return new RequestReportPdfView(request, subRequests, joinedRequests);
     }
 }

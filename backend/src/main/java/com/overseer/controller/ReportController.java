@@ -4,9 +4,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.overseer.service.ReportService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.View;
 
 import java.io.IOException;
 
@@ -35,6 +34,15 @@ public class ReportController {
             e.printStackTrace();
         }
         return document;
+    }
+
+    /**
+     * Handle request to download an Excel document.
+     */
+    @RequestMapping(value = "/request", method = RequestMethod.GET)
+    public View download(@RequestParam String id) {
+        Long requestId = Long.valueOf(id);
+        return reportService.generateRequestPDFReport(requestId);
     }
 
 }

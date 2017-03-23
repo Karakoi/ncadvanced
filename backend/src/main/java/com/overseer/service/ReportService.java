@@ -2,6 +2,7 @@ package com.overseer.service;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import org.springframework.web.servlet.View;
 
 import java.io.IOException;
 
@@ -40,5 +41,8 @@ public interface ReportService {
      */
     void generateEmployeeExcelReport();
 
-
+    /**
+     * Method generate PDF report for user role Admin.
+     */
+    View generateRequestPDFReport(Long requestId);
 }
