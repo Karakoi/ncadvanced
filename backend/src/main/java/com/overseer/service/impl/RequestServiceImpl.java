@@ -48,12 +48,12 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     @Override
     public Long countRequestByAssignee(Long managerId) {
-        return requestDao.countRequestsByAssignee(managerId) / DEFAULT_PAGE_SIZE + 1;
+        return requestDao.countRequestsByAssignee(managerId);
     }
 
     @Override
     public Long countInProgressRequestByAssignee(Long managerId) {
-        return requestDao.countInProgressRequestByAssignee(managerId) / DEFAULT_PAGE_SIZE + 1;
+        return requestDao.countInProgressRequestByAssignee(managerId);
     }
 
     private EmailBuilder<Request> emailStrategyForAssignee;

@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
