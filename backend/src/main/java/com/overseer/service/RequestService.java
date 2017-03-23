@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -23,12 +24,14 @@ public interface RequestService extends CrudService<Request, Long> {
 
     /**
      * Returns number of closed requests for reporter.
+     *
      * @param reporterId reporter id must be not null.
      * @return number of requests for reporter.
      */
     Long countClosedRequestsByReporter(Long reporterId);
 
     Long countRequestByReporter(Long reporterId);
+
     /**
      * Returns a list of sub requests for the given request {@link Request}.
      *
@@ -98,13 +101,55 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber);
 
     /**
-     * Returns a count of requests created in provided period.
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a list of requests DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return list of requests DTO created in provided period.
+     */
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a list of requests DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return list of requests DTO created in provided period.
+     */
+    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a list of best managers in provided period.
      *
      * @param start period start.
      * @param end   period end.
-     * @return count of requests created in provided period.
+     * @return list of best managers in provided period.
      */
-    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName);
 
     /**
      * Returns a list of requests created in provided date.
@@ -129,7 +174,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * Sub request will have null {@link Request#progressStatus}, {@link Request#priorityStatus}
      * and not null {@link Request#parentId}
      *
-     * @param subRequest    specified sub request
+     * @param subRequest specified sub request
      * @return joined sub request
      */
     Request saveSubRequest(Request subRequest);
@@ -167,6 +212,7 @@ public interface RequestService extends CrudService<Request, Long> {
 
     /**
      * Save plain request from employee.
+     *
      * @param request specified  request.
      * @return saved request
      */

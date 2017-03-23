@@ -6,12 +6,17 @@ import com.overseer.dao.RequestDao;
 import com.overseer.model.Request;
 import com.overseer.service.ReportBuilder;
 import com.overseer.service.ReportService;
+import com.overseer.service.impl.report.AdminReportBuilderImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.overseer.service.impl.report.view.RequestReportPdfView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.View;
 
+import java.time.LocalDate;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,17 +24,21 @@ import java.util.List;
  * Implementation of {@link ReportService} interface.
  */
 @Service
+@Transactional
+@Slf4j
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
+    //    @Qualifier("adminReportBuilderImpl")
+    @Autowired
     @Qualifier("adminReportBuilderImpl")
-    private ReportBuilder adminBuilder;
+    private final AdminReportBuilderImpl adminBuilder;
 
-    @Qualifier("managerReportBuilderImpl")
-    private ReportBuilder managerBuilder;
-
-    @Qualifier("employeeReportBuilderImpl")
-    private ReportBuilder employeeBuilder;
+//    @Qualifier("managerReportBuilderImpl")
+//    private ReportBuilderImpl managerBuilder;
+//
+//    @Qualifier("employeeReportBuilderImpl")
+//    private ReportBuilderImpl employeeBuilder;
 
     private final RequestDao requestDao;
 
@@ -37,17 +46,10 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public Document generateAdminPDFReport() throws IOException, DocumentException {
-        return adminBuilder.generatePDFReport();
+    public Document generateAdminPDFReport(Document document, LocalDate start, LocalDate end) {
+        return adminBuilder.generateReport(document, start, end);
     }
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public Document generateManagerPDFReport() throws IOException, DocumentException {
-        return managerBuilder.generatePDFReport();
-    }
 
     /**
      * {@inheritDoc}.
