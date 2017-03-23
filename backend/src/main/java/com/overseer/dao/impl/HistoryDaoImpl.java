@@ -54,6 +54,8 @@ public class HistoryDaoImpl implements HistoryDAO{
             history.setColumnName(resultSet.getString("column_name"));
             history.setOldValue(resultSet.getString("old_value"));
             history.setNewValue(resultSet.getString("new_value"));
+            history.setDemonstrationOfOldValue(resultSet.getString("demonstration_of_old_value"));
+            history.setDemonstrationOfNewValue(resultSet.getString("demonstration_of_new_value"));
             history.setDateOfChange(resultSet.getTimestamp("date_of_change").toLocalDateTime());
             history.setChanger(changer);
             history.setRecordId(resultSet.getLong("record_id"));

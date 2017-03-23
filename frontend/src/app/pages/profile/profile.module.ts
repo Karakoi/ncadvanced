@@ -15,7 +15,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    GravatarModule
+    GravatarModule,
   ],
   declarations: [
     ProfileComponent

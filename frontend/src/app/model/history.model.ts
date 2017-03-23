@@ -5,6 +5,8 @@ export interface History {
   columnName: string,
   oldValue: string,
   newValue: string,
+  demonstrationOfOldValue: string,
+  demonstrationOfNewValue: string,
   dateOfChanges: Date,
   changer: User,
   recordId: number

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/requests")
 @RequiredArgsConstructor
 public class RequestController {
-    private static final Long DEFAULT_PAGE_SIZE = 20L;
+    //private static final Long DEFAULT_PAGE_SIZE = 20L;
     private static final Long DEFAULT_DATE_MOUNTS_STEP = 1L;
     private final RequestService requestService;
 
@@ -202,7 +202,7 @@ public class RequestController {
      */
     @GetMapping("/getCountRequestsByStartDate")
     public ResponseEntity<List<Long>> getCountRequestsByStartDate(@RequestParam String beginDate,
-                                                                   @RequestParam int months) {
+                                                                  @RequestParam int months) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate start = LocalDate.parse(beginDate, formatter);
@@ -234,8 +234,7 @@ public class RequestController {
      */
     @GetMapping("/pageCount")
     public ResponseEntity<Long> getPagesCount() {
-        Long pageCount = requestService.getCount() / DEFAULT_PAGE_SIZE + 1;
-        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+        return new ResponseEntity<>(requestService.getCount(), HttpStatus.OK);
     }
 
     /**
@@ -245,8 +244,7 @@ public class RequestController {
      */
     @GetMapping("/pageCountFree")
     public ResponseEntity<Long> getPagesCountFree() {
-        Long pageCount = requestService.countFreeRequests() / DEFAULT_PAGE_SIZE + 1;
-        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+        return new ResponseEntity<>(requestService.countFreeRequests(), HttpStatus.OK);
     }
 
     /**
@@ -265,7 +263,7 @@ public class RequestController {
      * Creates {@link Request} entity of parent request and joins some another
      * requests to it.
      * @param request json object which represents {@link Request} entity.
-     * @param ids string representation if id`s array.
+     * @param ids     string representation if id`s array.
      * @return json representation of created {@link Request} entity.
      */
     @PostMapping("/join/{ids}")
@@ -319,14 +317,79 @@ public class RequestController {
     }
 
     /**
-     * Returns number of progress.
+     * Returns list of progress.
      *
-     * @return number of progress.
+     * @return list of progress.
      */
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("/countRequest")
-    public ResponseEntity<List<Long>> getQuantityRequest() {
-        List<Long> quantity = requestService.quantity();
+    @GetMapping("/countRequestByProgressStatus")
+    public ResponseEntity<List<Long>> getQuantityRequestByProgressStatus() {
+        List<Long> quantity = requestService.quantityByProgressStatus();
         return new ResponseEntity<>(quantity, HttpStatus.OK);
     }
+
+    /**
+     * Returns list of progress for User.
+     *
+     * @param userId value of User id in database.
+     * @return list of progress for User.
+     */
+    @GetMapping("/countRequestForUser")
+    public ResponseEntity<List<Long>> getQuantityForUser(@RequestParam Long userId) {
+        final List<Long> quantityUser = requestService.quantityForUser(userId);
+        return new ResponseEntity<>(quantityUser, HttpStatus.OK);
+    }
+
+    /**
+     * Returns number of pages.
+     *
+     * @return number of pages.
+     */
+    @GetMapping("/pageCountByAssignee")
+    public ResponseEntity<Long> getPagesCountByAssignee(@RequestParam Long assigneeId) {
+        return new ResponseEntity<>(requestService.countRequestsByAssignee(assigneeId), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/fetchByAssignee")
+    public ResponseEntity<List<Request>> getRequestsByAssignee(@RequestParam Long assigneeId,
+                                                               @RequestParam int pageNumber) {
+        val list = this.requestService.findRequestsByAssignee(assigneeId, pageNumber);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    /**
+     * Returns list of progress for User.
+     *
+     * @return list of progress for User.
+     */
+    @GetMapping("/countRequestByPriorityStatus")
+    public ResponseEntity<List<Long>> getQuantityForUserByPriorityStatus() {
+        List<Long> quantity = requestService.quantityByPriorityStatus();
+        return new ResponseEntity<>(quantity, HttpStatus.OK);
+    }
+
+    /**
+     * Returns statistic for six months.
+     *
+     * @return list of statistic for six months.
+     */
+    @GetMapping("/getStatisticForSixMonthsByProgressStatus")
+    public ResponseEntity<List<Long>> getStatisticForSixMonthsByProgressStatus() {
+        List<Long> statisticList = requestService.quantityByProgressStatusForSixMonths();
+        return new ResponseEntity<>(statisticList, HttpStatus.OK);
+    }
+
+    /**
+     * Returns statistic for six months for User.
+     *
+     * @param userId value of User id in database.
+     * @return list of statistic for six months.
+     */
+    @GetMapping("getStatisticForSixMonthsByProgressStatusForUser")
+    public ResponseEntity<List<Long>> getStatisticForSixMonthsForUser(@RequestParam Long userId) {
+        List<Long> statisticListForUser = requestService.quantityByProgressStatusForSixMonthsForUser(userId);
+        return new ResponseEntity<>(statisticListForUser, HttpStatus.OK);
+    }
 }
+

@@ -4,7 +4,7 @@
       <span class="panel-title"><b>Your Profile</b></span>
     </div>
     <div class="panel-body">
-      <form [formGroup]="profileForm"  autocomplete="on">
+      <form [formGroup]="profileForm" autocomplete="on">
 
         <div class="row">
           <div id="data" class="col-md-8 col-md-offset-0">
@@ -14,8 +14,8 @@
                   <label class="control-label">First Name</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="firstName" [(ngModel)]="user.firstName" type="text" placeholder="First Name"
-                           class="form-control" [ngModelOptions]="{standalone: true}" required>
+                    <input id="firstName" formControlName="firstName" [(ngModel)]="user.firstName" type="text" placeholder="First Name"
+                           class="form-control" required>
                     <span *ngIf="!validateField('firstName')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -30,8 +30,8 @@
                   <label class="control-label">Last Name</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="lastName" [(ngModel)]="user.lastName" type="text" placeholder="Last Name"
-                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <input id="lastName" formControlName="lastName" [(ngModel)]="user.lastName" type="text" placeholder="Last Name"
+                           class="form-control">
                     <span *ngIf="!validateField('lastName')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -49,8 +49,8 @@
                   <label class="control-label">Second Name</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="secondName" [(ngModel)]="user.secondName" type="text" placeholder="Second Name"
-                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <input id="secondName" formControlName="secondName" [(ngModel)]="user.secondName" type="text" placeholder="Second Name"
+                           class="form-control">
                     <span *ngIf="!validateField('secondName')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -64,8 +64,8 @@
                   <label class="control-label">Date of birth</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                    <input id="dateOfBirth" [(ngModel)]="user.dateOfBirth" type="date" placeholder="Date of birth"
-                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <input id="dateOfBirth" formControlName="dateOfBirth" [(ngModel)]="user.dateOfBirth" type="date" placeholder="Date of birth"
+                           class="form-control">
                     <span *ngIf="!validateField('dateOfBirth')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -73,15 +73,15 @@
                     <span *ngIf="profileForm.get('dateOfBirth').hasError('dateISO')">Invalid date.</span>
                   </div>
                 </div>
-
               </div>
+
               <div class="col-md-5 ">
                 <div class="form-group" [ngClass]="{'has-error': !validateField('phoneNumber')}">
                   <label class="control-label">Phone</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                    <input id="phoneNumber" [(ngModel)]="user.phoneNumber" type="number" placeholder="Phone Number"
-                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <input id="phoneNumber" formControlName="phoneNumber" [(ngModel)]="user.phoneNumber" type="number" placeholder="Phone Number"
+                           class="form-control">
                     <span *ngIf="!validateField('phoneNumber')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -91,23 +91,16 @@
                   </div>
                 </div>
               </div>
-
             </div>
 
             <div class="row">
               <div class="col-md-5 col-md-offset-1">
-                <div class="form-group" [ngClass]="{'has-error': !validateField('email')}">
+                <div class="form-group">
                   <label class="control-label">Email</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <input id="email" [(ngModel)]="user.email" type="text" placeholder="Email"
-                           class="form-control" [ngModelOptions]="{standalone: true}" disabled>
-                    <span *ngIf="!validateField('email')"
-                          class="glyphicon glyphicon-remove form-control-feedback"></span>
-                  </div>
-                  <div *ngIf="!validateField('email')" class="help-block text-left">
-                    <span *ngIf="profileForm.get('email').hasError('required')">Email address required.</span>
-                    <span *ngIf="profileForm.get('email').hasError('email')">Invalid email address.</span>
+                    <input id="email" formControlName="email" [(ngModel)]="user.email" type="text" placeholder="Email"
+                           class="form-control" disabled>
                   </div>
                 </div>
               </div>
@@ -117,8 +110,8 @@
                   <label class="control-label">Password</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <input id="password" [(ngModel)]="user.password" type="{{showPass ? 'text' : 'password'}}" placeholder="Password"
-                           class="form-control" [ngModelOptions]="{standalone: true}">
+                    <input id="password" formControlName="password" [(ngModel)]="user.password" type="{{showPass ? 'text' : 'password'}}" placeholder="Password"
+                           class="form-control">
                     <span *ngIf="!validateField('password')"
                           class="glyphicon glyphicon-remove form-control-feedback"></span>
                   </div>
@@ -128,7 +121,7 @@
                 Password invalid. Password must be at least six characters long.</span>
                   </div>
                 </div>
-                <button class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#changePassword">Change password</button>
+                <button class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target="#changePassword">Change password</button>
                 <a (click)="showPassword()">show pass</a>
               </div>
             </div>
@@ -158,36 +151,72 @@
       </form>
     </div>
   </div>
+</div>
 
   <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header form-title">
-          <p class="modal-title"><b>Change Password</b></p>
-        </div>
         <div class="modal-header">
-          <form autocomplete="off" novalidate>
-            <div class="form-group col-lg-12 col-sm-12">
-              <label>Old Password:</label>
-              <input id="oldPass" type="password" class="form-control" #oldPass required/>
+          <form [formGroup]="profileForm" autocomplete="off" novalidate>
+            <div class="col-md-5 ">
+              <div class="form-group" [ngClass]="{'has-error': !validateField('oldPassword')}">
+                <label class="control-label">Old Password</label>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                  <input id="old" formControlName="oldPassword" type="password" placeholder="old password"
+                         class="form-control" style="width: 450px" #oldPassword>
+                  <span *ngIf="!validateField('oldPassword')"
+                        class="glyphicon glyphicon-remove form-control-feedback"></span>
+                </div>
+                <div *ngIf="!validateField('oldPassword')" class="help-block text-left">
+                  <span *ngIf="profileForm.get('oldPassword').hasError('required')">Password required.</span>
+                  <span *ngIf="profileForm.get('oldPassword').hasError('minlength')">
+                    at least six characters.</span>
+                </div>
+              </div>
+
+              <div class="form-group" [ngClass]="{'has-error': !validateField('newPassword')}">
+                <label class="control-label">New Password</label>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                  <input id="new" formControlName="newPassword" type="password" placeholder="new password"
+                         class="form-control" style="width: 450px" #newPassword>
+                  <span *ngIf="!validateField('newPassword')"
+                        class="glyphicon glyphicon-remove form-control-feedback"></span>
+                </div>
+                <div *ngIf="!validateField('newPassword')" class="help-block text-left">
+                  <span *ngIf="profileForm.get('newPassword').hasError('required')">Password required.</span>
+                  <span *ngIf="profileForm.get('newPassword').hasError('minlength')">
+                    at least six characters.</span>
+                </div>
+              </div>
+
+              <div class="form-group" [ngClass]="{'has-error': !validateField('confirmPassword')}">
+                <label class="control-label">Confirm Password</label>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                  <input id="confirm" type="password" formControlName="confirmPassword" placeholder="confirm"
+                         class="form-control" style="width: 450px" #confirmPassword>
+                  <span *ngIf="!validateField('confirmPassword')"
+                        class="glyphicon glyphicon-remove form-control-feedback"></span>
+                </div>
+                <div *ngIf="!validateField('confirmPassword')" class="help-block text-left">
+                  <span *ngIf="profileForm.get('confirmPassword').hasError('required')">Password required.</span>
+                  <span *ngIf="profileForm.get('confirmPassword').hasError('minlength')">
+                    at least six characters.</span>
+                </div>
+              </div>
             </div>
-            <div class="form-group col-lg-12 col-sm-12">
-              <label>New Password:</label>
-              <input id="newPass" type="password" class="form-control" #newPass required/>
-            </div>
-            <div class="form-group col-lg-12 col-sm-12">
-              <label>Confirm Password:</label>
-              <input id="confirmPass" type="password" class="form-control" #confirmPass required/>
-            </div>
-            <div class="form-group col-lg-12 col-sm-12 btn-div">
-              <button type="submit" class="btn btn-success col-lg-5 col-sm-5" (click)="updatePass(oldPass.value,newPass.value,confirmPass.value)">Update</button>
-              <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5" data-dismiss="modal">Close</button>
-            </div>
+          <div class="form-group col-lg-12 col-sm-12 btn-div">
+          <button type="submit" class="btn btn-success col-lg-5 col-sm-5"
+                  (click)="updatePass(oldPassword.value, newPassword.value, confirmPassword.value)"
+                  [disabled]="!validateField('newPassword') || !validateField('oldPassword') || !validateField('confirmPassword') ||
+                   newPassword.value=== '' || confirmPassword.value ===''">Update</button>
+          <button type="submit" class="btn btn-danger col-lg-offset-2 col-sm-offset-2 col-lg-5 col-sm-5" data-dismiss="modal">Close</button>
+          </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-</div>
-

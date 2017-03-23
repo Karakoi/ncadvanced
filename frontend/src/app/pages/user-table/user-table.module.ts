@@ -13,6 +13,7 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {UserTableDeactivatedComponent} from "./deactivated/user-table-deactivated.component";
 import {ActivateUserComponent} from "./deactivated/user-activate/activate-user.component";
 import {usersTableRoutes} from "./user-table.routes";
+import {PipeModule} from "../../pipes/pipe.module";
 
 
 const routes: Routes = [
@@ -26,6 +27,7 @@ const routes: Routes = [
     FormTemplateModule,
     Ng2Bs3ModalModule,
     ReactiveFormsModule,
+    PipeModule.forRoot(),
     FormsModule,
     DateParseModule
   ],
@@ -33,8 +35,6 @@ const routes: Routes = [
     UserTableComponent,
     AddUserComponent,
     DeleteUserComponent,
-    UserFilterPipe,
-    UserSortPipe,
     UserTableDeactivatedComponent,
     ActivateUserComponent
   ],

@@ -180,6 +180,14 @@ public interface RequestService extends CrudService<Request, Long> {
     Long countFreeRequests();
 
     /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @param id id of the {@link User}.
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countRequestsByAssignee(Long id);
+
+    /**
      * Returns a list of requests with Free progress status {@link ProgressStatus}.
      *
      * @return list of requests with Free progress status {@link ProgressStatus}.
@@ -189,7 +197,32 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Returns list to build pie chart.
      *
-     * @return list of statistic request.
+     * @return list of statistic request by progress status.
      */
-    List<Long> quantity();
+    List<Long> quantityByProgressStatus();
+
+    /**
+     * Returns list to build pie chart for user profile.
+     *
+     * @return list of statistic request for user profile.
+     */
+    List<Long> quantityForUser(Long userId);
+
+    /**
+     * Returns Returns list to build pie chart.
+     *
+     * @return list of statistic request by priority status.
+     */
+    List<Long> quantityByPriorityStatus();
+
+    /**
+     * @return list of statistic request by progress status.
+     */
+    List<Long> quantityByProgressStatusForSixMonths();
+
+    /**
+     * @return list of statistic request by progress status for user.
+     */
+    List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId);
+
 }
