@@ -103,6 +103,15 @@ export class UserService {
         });
   }
 
+  getDeactivatedUsersPageCount(): Observable<number> {
+    return this.authHttp.get(`${url}/pageDeactivatedUsersCount`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
   getPageCount(): Observable<number> {
     return this.authHttp.get(`${url}/pageCount`)
       .map(resp => resp.json())

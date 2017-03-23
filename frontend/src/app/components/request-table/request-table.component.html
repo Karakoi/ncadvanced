@@ -1,11 +1,17 @@
 <div *ngIf="requests.length > 0">
+
   <form-template>
-    <div class="template-header">
-      Requests
-      <button *ngIf="settings.add" class="btn btn-primary btn-xs pull-right" (click)="openFormModal()">New request
-      </button>
-    </div>
     <div class="template-body">
+      <div class="space">
+        <button ngClass="removSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">New request</button>
+        <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger" (click)="uncheck()">Uncheck
+          all
+        </button>
+        <button *ngIf="settings.join && checked.length > 1" class="btn btn-primary" (click)="join()">Join</button>
+        <button *ngIf="settings.reopen && checked.length > 1" class="btn btn-primary block"
+                (click)="reopen()">Reopen
+        </button>
+      </div>
       <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -23,7 +29,8 @@
             <span *ngIf="!orderType && orderField == 'dateOfCreation'"
                   class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
           </th>
-          <th *ngIf="settings.columns.estimate" (click)="changeOrderParams(!orderType, 'estimateTimeInDays')">Estimate time
+          <th *ngIf="settings.columns.estimate" (click)="changeOrderParams(!orderType, 'estimateTimeInDays')">Estimate
+            time
             <span *ngIf="orderType && orderField == 'estimateTimeInDays'"
                   class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
             <span *ngIf="!orderType && orderField == 'estimateTimeInDays'"
@@ -57,6 +64,7 @@
           </th>
           <th *ngIf="settings.delete">Delete</th>
           <th *ngIf="settings.assign">Assign</th>
+          <th *ngIf="settings.close">Close</th>
         </tr>
         </thead>
         <tbody>
@@ -96,10 +104,12 @@
           </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
           <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
+          <td class="td-center" *ngIf="settings.close"><span class="center-block btn btn-success">Close</span></td>
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
-          <td *ngIf="settings.multiSelect"><input [attr.value]="request.id" class="check-box" [checked]="isChecked(request.id)"
+          <td *ngIf="settings.multiSelect"><input [attr.value]="request.id" class="check-box"
+                                                  [checked]="isChecked(request.id)"
                                                   type="checkbox" #that (click)="check(that.value)"></td>
           <td *ngIf="settings.columns.title" [routerLink]="settings.info ? ['/request', request.id]: null">
             {{request.title}}
@@ -126,11 +136,14 @@
           </td>
           <td class="text-center delete-col" *ngIf="settings.delete">
             <span [attr.value]="request.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
-                    (click)="openDeleteRequestModal(request)"></span>
+                  (click)="openDeleteRequestModal(request)"></span>
           </td>
           <td class="text-center " *ngIf="settings.assign">
             <span [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs"
-                    (click)="openAssignRequestModal(request)"></span>
+                  (click)="openAssignRequestModal(request)"></span>
+          </td>
+          <td class="text-center" *ngIf="settings.close">
+            <button class="center-block btn btn-success" (click)="close(request)">Close</button>
           </td>
         </tr>
         </tbody>
@@ -147,14 +160,15 @@
                     [itemsPerPage]="perPage" (pageChanged)="changed($event)">
         </pagination>
       </div>
-      <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger" (click)="uncheck()">Uncheck all</button>
-      <button *ngIf="settings.join && checked.length > 1" class="btn btn-primary" (click)="join()">Join</button>
+
     </div>
 
   </form-template>
   <request-form *ngIf="settings.add " [requests]="requests" (updated)="updateRequests($event)"></request-form>
-  <delete-request *ngIf="settings.delete" [requests]="requests"></delete-request>
-  <assign-request *ngIf="settings.assign" [requests]="requests"></assign-request>
-  <join-request  *ngIf="settings.join" [requests]="requests" [checked]="checked"></join-request>
+  <delete-request *ngIf="settings.delete" [requests]="requests" (updated)="updateRequests($event)"></delete-request>
+  <assign-request *ngIf="settings.assign" [requests]="requests" (updated)="updateRequests($event)"></assign-request>
+  <join-request *ngIf="settings.join" [requests]="requests" [checked]="checked"
+                (updated)="updateRequests($event)"></join-request>
+  <close-request *ngIf="settings.close" [requests]="requests" (updated)="updateRequests($event)"></close-request>
 </div>
 

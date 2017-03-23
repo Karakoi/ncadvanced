@@ -128,6 +128,13 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/pageDeactivatedUsersCount")
+    public ResponseEntity<Long> getPageDeactivatedUsersCount() {
+        long pageCount = userService.getCountAllDeactivated() / DEFAULT_PAGE_SIZE + 1;
+        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/pageCount")
     public ResponseEntity<Long> getPageCount() {

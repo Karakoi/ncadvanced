@@ -5,6 +5,7 @@ import {RequestFormComponent} from "../../shared/request/request-form/request-fo
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
+import {CloseRequestComponent} from "./request-close/close-request.component";
 
 declare let $: any;
 
@@ -21,11 +22,16 @@ export class RequestTable {
   @Input() private requestsCount: number;
   @Output() paginationChange = new EventEmitter();
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter();
+  @Output() reopenEvent = new EventEmitter();
   private perPage: number = 20;
   term: any;
   orderType: boolean;
   orderField: string;
   searchTypes: any;
+
+  reopen(){
+    this.reopenEvent.emit();
+  }
 
   @Input() settings = {
     delete: true,
@@ -35,6 +41,8 @@ export class RequestTable {
     filterRow: true,
     assign: false,
     join: false,
+    reopen: false,
+    close: false,
     columns: {
       title: true,
       estimate: true,
@@ -55,6 +63,9 @@ export class RequestTable {
 
   @ViewChild(JoinRequestComponent)
   joinRequestComponent: JoinRequestComponent;
+
+  @ViewChild(CloseRequestComponent)
+  closeRequestComponent:CloseRequestComponent;
 
   @ViewChild(DeleteRequestComponent)
   deleteRequestComponent: DeleteRequestComponent;
@@ -101,6 +112,11 @@ export class RequestTable {
 
   join() {
     this.joinRequestComponent.modal.open();
+  }
+
+  close(request:Request) {
+    this.closeRequestComponent.request = request;
+    this.closeRequestComponent.modal.open();
   }
 
   isChecked(id) {

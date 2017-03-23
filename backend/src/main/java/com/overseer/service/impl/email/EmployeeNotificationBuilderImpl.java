@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EmployeeNotificationBuilderImpl extends EmailBuilderImpl<Request> {
-    private static final String MESSAGE_SUBJECT = "Request progress status changed 1 ";
+    private static final String MESSAGE_SUBJECT = "Request progress status changed ";
 
     @Override
     String getMessageRecipient(Request request) {

@@ -35,6 +35,7 @@ public class ProgressStatusDaoImplTest {
     public void setUp() throws Exception {
         savedProgressStatus = new ProgressStatus();
         savedProgressStatus.setName(TEST_NAME);
+        savedProgressStatus.setValue(700);
         progressStatusDao.save(savedProgressStatus);
     }
 

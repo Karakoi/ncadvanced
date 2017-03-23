@@ -133,4 +133,20 @@ export class RequestProfileComponent implements OnInit {
       return "Request"
     }
   }
+
+  isFree(request):boolean {
+    if (request.progressStatus.name == 'Free') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  isInProgress(request):boolean {
+    if (request.progressStatus.name == 'In progress') {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

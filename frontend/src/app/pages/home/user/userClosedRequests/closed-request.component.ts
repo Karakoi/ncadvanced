@@ -28,15 +28,20 @@ export class ClosedRequest implements OnInit {
     info: true,
     multiSelect: true,
     filterRow: true,
+    assign: false,
+    join: false,
+    reopen: true,
+    close: false,
     columns: {
       title: true,
+      estimate: true,
       dateOfCreation: true,
       priorityStatus: true,
       progressStatus: true,
-      reporter: false,
+      reporter: true,
       assignee: true,
     }
-  }
+}
 
 
   ngOnInit() {
@@ -64,6 +69,7 @@ export class ClosedRequest implements OnInit {
 
   reopen() {
     let sel = Array.from(this.selected);
+    console.log("trying reopen")
     this.employeeService.reopenRequests(sel).subscribe(
       (success) => {
         this.requests = this.requests.map(r => r).filter(r => !this.selected.has(r.id))

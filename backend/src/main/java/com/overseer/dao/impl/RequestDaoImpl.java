@@ -71,6 +71,18 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public Long countRequestsByAssignee(Long managerId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countByAssignee"),
+                new MapSqlParameterSource("assigneeId", managerId), Long.class);
+    }
+
+    @Override
+    public Long countInProgressRequestByAssignee(Long managerId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countInProgressByAssignee"),
+                new MapSqlParameterSource("assigneeId", managerId), Long.class);
+    }
+
+    @Override
     public List<Request> findSubRequests(Long id) {
         Assert.notNull(id, "id must not be null");
         String subRequestsQuery = this.queryService().getQuery("request.select")
@@ -103,6 +115,24 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                     parameterSource,
                     this.getMapper());
         } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber) {
+        Assert.notNull(assigneeId, "id must not be null");
+        String findByAssigneeQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findInProgressByAssignee"));
+        try {
+            val parameterSource = new MapSqlParameterSource("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+            parameterSource.addValue("assigneeId", assigneeId);
+            return jdbc().query(findByAssigneeQuery,
+                    parameterSource,
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -520,10 +550,30 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             progressStatus.setId(resultSet.getLong("progress_id"));
             progressStatus.setValue(resultSet.getInt("progress_value"));
 
+
             PriorityStatus priorityStatus = new PriorityStatus();
             priorityStatus.setName(resultSet.getString("priority_name"));
             priorityStatus.setId(resultSet.getLong("priority_id"));
             priorityStatus.setValue(resultSet.getInt("priority_value"));
+
+
+//            ProgressStatus progressStatus = null;
+//            String progressStatusName = resultSet.getString("progress_name");
+//            if (progressStatusName != null && !progressStatusName.isEmpty()) {
+//                progressStatus = new ProgressStatus();
+//                progressStatus.setName(progressStatusName);
+//                progressStatus.setId(resultSet.getLong("progress_id"));
+//                progressStatus.setValue(resultSet.getInt("progress_value"));
+//            }
+//
+//            PriorityStatus priorityStatus = null;
+//            String priorityStatusName = resultSet.getString("priority_name");
+//            if (priorityStatusName != null && !priorityStatusName.isEmpty()) {
+//                priorityStatus = new PriorityStatus();
+//                priorityStatus.setName(priorityStatusName);
+//                priorityStatus.setId(resultSet.getLong("priority_id"));
+//                priorityStatus.setValue(resultSet.getInt("priority_value"));
+//            }
 
             Long parentId = resultSet.getLong("parent_id");
             if (parentId == 0) {
