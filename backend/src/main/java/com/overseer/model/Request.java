@@ -21,7 +21,6 @@ import javax.validation.constraints.Size;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@JsonInclude(NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Request extends AbstractEntity {
@@ -41,8 +40,10 @@ public class Request extends AbstractEntity {
     @NotNull
     private LocalDateTime dateOfCreation;
 
+    @JsonInclude(NON_NULL)
     private PriorityStatus priorityStatus;
 
+    @JsonInclude(NON_NULL)
     private ProgressStatus progressStatus;
 
     @NotNull

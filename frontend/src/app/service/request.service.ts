@@ -22,6 +22,14 @@ export class RequestService {
       });
   }
 
+  createSubRequest(subRequest:Request):Observable<Response> {
+    return this.authHttp.post(`${url}/createSubRequest`, subRequest)
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
   update(request:Request):Observable<Response> {
     return this.authHttp.put(url, request)
       .map(resp => resp.json())
@@ -94,8 +102,30 @@ export class RequestService {
       });
   }
 
-  getFree(page:number):Observable<Request[]> {
+  getQuantityRequest(): Observable<number[]> {
+    return this.authHttp.get(`${url}/countRequestByProgressStatus`).map(resp => resp.json());
+  }
+
+  getFree(page: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/fetchFree?page=` + page)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getRequestCountByAssignee(assigneeId: number): Observable<number> {
+    return this.authHttp.get(`${url}/pageCountByAssignee?assigneeId=${assigneeId}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getAllByAssignee(assigneeId: number, page: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/fetchByAssignee?assigneeId=${assigneeId}&pageNumber=${page}`)
       .map(resp => resp.json())
       .catch((error:any) => {
         this.errorService.processError(error);
@@ -106,6 +136,40 @@ export class RequestService {
 
   join(request:Request, checked:number[]):Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getQuantityForUser(userId: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/countRequestForUser?userId=` + userId).map(resp => resp.json())
+  }
+
+  getStatisticForSixMonths(): Observable<number[]> {
+    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatus`).map(resp => resp.json());
+  }
+
+  getStatisticForSixMonthsForUser(userId: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatusForUser?userId=` + userId).map(resp => resp.json());
+  }
+
+  getQuantityRequestByPriority(): Observable<number[]> {
+    return this.authHttp.get(`${url}/countRequestByPriorityStatus`).map(resp => resp.json());
+  }
+
+  getSubRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getSubRequests/${id}`)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getJoinedRequests(id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/getJoinedGroupRequests/${id}`)
+      .map(resp => resp.json())
       .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);

@@ -1,6 +1,9 @@
-import {Component, OnInit,} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
+import 'rxjs/Rx';
+
+declare let $: any;
 
 @Component({
 
@@ -8,79 +11,178 @@ import {RequestService} from "../../../service/request.service";
   templateUrl: 'admin.component.html',
 })
 export class AdminComponent implements OnInit {
-
-  request: Request[];
-  progress: number[];
-  testTable: Array<any> = [];
+  requests: Request[];
+  progress: Array<number>;
+  priority: Array<number>;
+  sixMonthsStatistic: Array<number>;
 
   constructor(private requestService: RequestService) {
-    //   this.requestService.getStatisticRequest().subscribe((s => {
-    //     this.progress = s;
-    //   }));
   }
 
   ngOnInit(): void {
-    this.requestService.getAll(1).subscribe((requests: Request[]) => {
-      this.request = requests;
-      this.getRequest();
-    });
+    this.requestService.getQuantityRequest().subscribe((s => {
+      this.progress = s;
+    }));
+
+    this.requestService.getQuantityRequestByPriority().subscribe((s => {
+      this.priority = s;
+    }));
+
+    this.requestService.getStatisticForSixMonths().subscribe(s => {
+      this.sixMonthsStatistic = s;
+    })
+  }
+
+  setStatisticByProgress() {
+   this.pieChartRequest = {
+      chartType: 'PieChart',
+      dataTable: [
+        ['Request', 'Info'],
+        ['In progress: '+ this.progress[3], this.progress[3]],
+        ['Free: ' + this.progress[1],this.progress[1]],
+        ['Registered: ' + this.progress[0], this.progress[0]],
+        ['Reopen: ' + this.progress[4], this.progress[4]],
+        ['Joined: ' + this.progress[2],this.progress[2]],
+      ],
+      options: {
+        title: 'Request statistic by progress status',
+        legend: { position: 'bottom'
+        },
+        is3D: true,
+        height: 550
+      },
+    };
   }
 
   pieChartRequest = {
     chartType: 'PieChart',
     dataTable: [
       ['Request', 'Info'],
-      ['In progress', 16],
-      ['Free', 22],
-      ['Registered', 37],
-      ['Reopen', 28],
-      ['Joined', 10]
+      ['Click to see statistic',100],
     ],
     options: {
-      title: 'Request statistic',
-      wight: 900,
-      height: 700
+      title: 'Request statistic by progress status',
+      legend: { position: 'bottom'
+      },
+      is3D: true,
+      height: 550
     }
   };
 
-  getRequest(): void {
-    this.request.forEach(s => {
-      this.testTable.push({
-        name: s.title,
-        data: s.dateOfCreation,
-        priority_status: s.progressStatus.name,
-        progress_status: s.progressStatus.name,
-        reporter: s.reporter.firstName,
-        assignee: s.assignee.firstName
-      });
-    });
+  setStatisticByPriority(){
+   this.pieChartRequestPriority = {
+      chartType: 'PieChart',
+      dataTable: [
+        ['Request', 'Info'],
+        ['High: '+ this.priority[0], this.priority[0]],
+        ['Normal: ' + this.priority[1],this.priority[1]],
+        ['Low: ' + this.priority[2], this.priority[2]],
+      ],
+      options: {
+        title: 'Request statistic by priority status',
+        legend: { position: 'bottom'
+        },
+        is3D: true,
+        height: 550
+      },
+    };
   }
 
-  settings = {
-    columns: {
-      name: {
-        title: 'Title'
+  pieChartRequestPriority = {
+    chartType: 'PieChart',
+    dataTable: [
+      ['Request', 'Info'],
+      ['Click to see statistic',100],
+    ],
+    options: {
+      title: 'Request statistic by priority status',
+      legend: { position: 'bottom'
       },
-      data: {
-        title: 'Data of creation'
-      },
-      priority_status: {
-        title: 'Priority status'
-      },
-      progress_status: {
-        title: 'Progress status'
-      },
-      reporter: {
-        title: 'Reporter'
-      },
-      assignee: {
-        title: 'Assignee'
-      },
-    },
-    actions: {
-      add: false,
-      delete: false,
-      edit:false
+      is3D: true,
+      height: 550
     }
   };
+
+  setStatisticForSixMonths(){
+   this.pieChartRequestForSixMonths = {
+      chartType: 'Gauge',
+      dataTable: [
+        ['Open', ''],
+        ['Open', this.sixMonthsStatistic[0]],
+        ['Closed', this.sixMonthsStatistic[1]]],
+      options: {
+        hAxis: {
+          title: 'Request statistic for six month',
+          minValue: 0,
+          textStyle: {
+            bold: true,
+            fontSize: 12,
+            color: '#4d4d4d'
+          },
+          titleTextStyle: {
+            bold: true,
+            fontSize: 18,
+            color: '#4d4d4d'
+          }
+        },
+        vAxis: {
+          title: 'Requests',
+          textStyle: {
+            fontSize: 14,
+            bold: true,
+            color: '#848484'
+          },
+          titleTextStyle: {
+            fontSize: 14,
+            bold: true,
+            color: '#848484'
+          }
+        }
+      }
+    };
+  }
+
+  pieChartRequestForSixMonths = {
+    chartType: 'BarChart',
+    dataTable: [
+      ['Request', ''],
+      ['Click to see open',100],
+      ['Click to see closed',100],
+    ],
+    options: {
+      hAxis: {
+        title: 'Click to see statistic',
+        minValue: 0,
+        textStyle: {
+          bold: true,
+          fontSize: 12,
+          color: '#4d4d4d'
+        },
+        titleTextStyle: {
+          bold: true,
+          fontSize: 18,
+          color: '#4d4d4d'
+        }
+      },
+      vAxis: {
+        title: 'Requests',
+        textStyle: {
+          fontSize: 14,
+          bold: true,
+          color: '#848484'
+        },
+        titleTextStyle: {
+          fontSize: 14,
+          bold: true,
+          color: '#848484'
+        }
+      }
+    }
+  };
+
+  setStatistic(): void {
+    this.setStatisticForSixMonths();
+    this.setStatisticByPriority();
+    this.setStatisticByProgress();
+  }
 }

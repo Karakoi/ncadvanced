@@ -25,7 +25,7 @@ public class HistoryServiceImpl implements HistoryService{
      */
     @Override
     public List<History> findHistory(Long entityId) {
-        Assert.notNull(entityId, "parent request must not be null");
+        Assert.notNull(entityId, "id of entity must not be null");
         List<History> histories = historyDAO.findAllForEntity(entityId);
         log.debug("Fetched {} history records for entity with id: {}", histories.size(), entityId);
         return histories;

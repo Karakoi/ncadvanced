@@ -1,0 +1,29 @@
+How to start use new request table component.
+1. Import BasicRequestTableModule into your module.
+2. Add <r-table></r-table> to component.html
+3. Set <r-table [request]="your request array" and [requestsCount]="total count of request. It's need for pagination"
+4. add to <r-table  (paginationChange)="your method($event)" for getting events from pagination part.
+
+ (paginationChange) output has page number and page elements count. You may access to it via '.';
+
+If you need specify which show to user or not add to <r-table [settings]="settings" and setup it in your component
+
+settings = {
+    delete: true,             -> Show/hide possibility to delete request
+    add: true,                -> Show/hide possibility to add request
+    info: true,               -> Show/hide possibility to get request details
+    multiSelect: false,       -> Show/hide possibility to multi select requests
+    filterRow: true,          -> Show/hide possibility row for filtering
+    columns: {                -> Show/hide column of the table
+      title: true,
+      dateOfCreation: true,
+      priorityStatus: true,
+      progressStatus: true,
+      reporter: true,
+      assignee: true,
+    }
+  }
+
+If you enable multiselect you can get selecting event which returns array of selected request's id.
+
+output (selectedEvent)="yourMethod($event)"

@@ -19,15 +19,15 @@
             <tbody>
             <tr>
               <td><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Type:</td>
-              <td>Request</td>
+              <td>{{type}}</td>
             </tr>
-            <tr>
+            <tr *ngIf="type != 'Sub request'">
               <td><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Progress status:</td>
               <td>
                 <span class="label label-success">{{request.progressStatus.name}}</span>
               </td>
             </tr>
-            <tr>
+            <tr *ngIf="type != 'Sub request'">
               <td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Priority status:</td>
               <td>
                 <span class="label label-primary">{{request.priorityStatus.name}}</span>
@@ -37,9 +37,13 @@
               <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
               <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
             </tr>
-            <tr>
+            <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
               <td>{{request.estimateTimeInDays}}</td>
+            </tr>
+            <tr *ngIf="type != 'Request'">
+              <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Parent request:</td>
+              <td><span class="label label-info" [routerLink]="['/request', request.parentId]">Details</span></td>
             </tr>
             </tbody>
           </table>
@@ -54,10 +58,24 @@
                 <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
               </td>
             </tr>
-            <tr>
+            <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
                 <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <p><b>Export:</b></p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> PDF:</td>
+              <td>
+                <a href="/api/reports/request?id={{request.id}}" class="btn btn-danger">
+                  <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+                  <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                </a>
               </td>
             </tr>
             </tbody>
@@ -91,84 +109,78 @@
         </div>
       </div>
       <!-- SUB REQUESTS -->
-      <div class="row">
+      <div class="row" *ngIf="type == 'Request'">
         <div class="col-lg-12">
           <p><b>Sub requests:</b>
-            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == true"
+            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == true && subRequests != false"
                   class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
-            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false"
+            <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false && subRequests != false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <button *ngIf="showSubRequests && type == 'Request'" class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
+          <p class="no-content-msg">
+            <i *ngIf="subRequests == false">There are no sub requests at that moment.</i>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="!showSubRequests">Click arrow down to show full sub requests list.</i>
           </p>
           <table class="table table-bordered">
             <tbody>
-            <tr>
+            <tr *ngIf="subRequests != false">
               <td *ngIf="showSubRequests"><b>Title</b></td>
-              <td *ngIf="showSubRequests"><b>Reporter</b></td>
-              <td *ngIf="showSubRequests"><b>Status</b></td>
-              <td *ngIf="showSubRequests"><b>Priority</b></td>
+              <td *ngIf="showSubRequests"><b>Description</b></td>
+              <td *ngIf="showSubRequests"><b>Date of creation</b></td>
+              <td *ngIf="showSubRequests"><b>Details</b></td>
+              <td *ngIf="showSubRequests"><b>Delete</b></td>
             </tr>
-            <tr>
-              <td *ngIf="showSubRequests">Implement this fixture</td>
-              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showSubRequests">In progress</td>
-              <td *ngIf="showSubRequests">High</td>
-            </tr>
-            <tr>
-              <td *ngIf="showSubRequests">Fix this wonderful bug</td>
-              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showSubRequests">In progress</td>
-              <td *ngIf="showSubRequests">Low</td>
-            </tr>
-            <tr>
-              <td *ngIf="showSubRequests">Realize that functional</td>
-              <td *ngIf="showSubRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showSubRequests">In progress</td>
-              <td *ngIf="showSubRequests">Medium</td>
-            </tr>
-            <tr>
-              <td *ngIf="!showSubRequests">Click arrow down to show full sub requests list</td>
+            <tr *ngFor="let subRequest of subRequests">
+              <td *ngIf="showSubRequests">{{subRequest.title}}</td>
+              <td *ngIf="showSubRequests">{{subRequest.description}}</td>
+              <td *ngIf="showSubRequests"><date-parse [date]="subRequest.dateOfCreation"></date-parse></td>
+              <td *ngIf="showSubRequests" class="details">
+                <button [routerLink]="['/request', subRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+              </td>
+              <td *ngIf="showSubRequests" class="text-center delete-col">
+                <button [attr.value]="subRequest.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
+                        (click)="openDeleteSubRequestModal(subRequest)"></button>
+              </td>
             </tr>
             </tbody>
           </table>
         </div>
       </div>
       <!-- JOINED REQUESTS -->
-      <div class="row">
+      <div class="row" *ngIf="type == 'Request'">
         <div class="col-lg-12">
           <p><b>Joined requests:</b>
-            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == true"
+            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == true && joinedRequests != false"
                   class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
-            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == false"
+            <span (click)="changeShowJoinedRequests()" *ngIf="showJoinedRequests == false && joinedRequests != false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="joinedRequests == false">There are no joined requests at that moment.</i>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="!showJoinedRequests">Click arrow down to show full joined requests list</i>
           </p>
           <table class="table table-bordered">
             <tbody>
-            <tr>
+            <tr *ngIf="joinedRequests != false">
               <td *ngIf="showJoinedRequests"><b>Title</b></td>
               <td *ngIf="showJoinedRequests"><b>Reporter</b></td>
-              <td *ngIf="showJoinedRequests"><b>Status</b></td>
               <td *ngIf="showJoinedRequests"><b>Priority</b></td>
+              <td *ngIf="showJoinedRequests"><b>Date of creation</b></td>
+              <td *ngIf="showJoinedRequests"><b>Details</b></td>
             </tr>
-            <tr>
-              <td *ngIf="showJoinedRequests">Implement this fixture</td>
-              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showJoinedRequests">In progress</td>
-              <td *ngIf="showJoinedRequests">High</td>
-            </tr>
-            <tr>
-              <td *ngIf="showJoinedRequests">Fix this wonderful bug</td>
-              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showJoinedRequests">In progress</td>
-              <td *ngIf="showJoinedRequests">Low</td>
-            </tr>
-            <tr>
-              <td *ngIf="showJoinedRequests">Realize that functional</td>
-              <td *ngIf="showJoinedRequests">Evgeniy Deyneka</td>
-              <td *ngIf="showJoinedRequests">In progress</td>
-              <td *ngIf="showJoinedRequests">Medium</td>
-            </tr>
-            <tr *ngIf="!showJoinedRequests">
-              <td>Click arrow down to show full joined requests list</td>
+            <tr *ngFor="let joinedRequest of joinedRequests">
+              <td *ngIf="showJoinedRequests">{{joinedRequest.title}}</td>
+              <td *ngIf="showJoinedRequests">{{joinedRequest.reporter.firstName}} {{joinedRequest.reporter.lastName}}</td>
+              <td *ngIf="showJoinedRequests">{{joinedRequest.priorityStatus.name}}</td>
+              <td *ngIf="showJoinedRequests"><date-parse [date]="joinedRequest.dateOfCreation"></date-parse></td>
+              <td *ngIf="showJoinedRequests" class="details">
+                <button [routerLink]="['/request', joinedRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+              </td>
             </tr>
             </tbody>
           </table>
@@ -183,30 +195,34 @@
             <span (click)="changeShowHistory()" *ngIf="showHistory == false && historyRecords !=false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
+          <p class="no-content-msg">
+            <i *ngIf="showHistory == false && historyRecords">Click arrow down to show full history.</i>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showHistory == true && historyRecords == false">This object was not changed.</i>
+          </p>
           <table class="table table-bordered">
             <tbody>
-
             <tr *ngFor="let history of historyRecords">
               <td *ngIf="showHistory">
                 <span>
                   Field <span class="bold-text">"{{history.columnName}}"</span>
-                  was changed from <span class="bold-text">"{{history.oldValue}}"</span>
-                  to <span class="bold-text">"{{history.newValue}}"</span>
+                  was changed from <span class="bold-text">"{{showHistoryValue(history.oldValue, history.demonstrationOfOldValue)}}"</span>
+                  to <span class="bold-text">"{{showHistoryValue(history.newValue, history.demonstrationOfNewValue)}}"</span>
+
                   by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
-                  <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
                 </span>
+              </td>
+              <td>
+                <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
               </td>
             </tr>
             </tbody>
           </table>
-          <div *ngIf="showHistory == false && historyRecords">
-            Click arrow down to show full history
-          </div>
-          <div *ngIf="showHistory == true && historyRecords == false">
-            This object was not changed.
-          </div>
         </div>
       </div>
     </div>
   </div>
+  <add-sub-request [subRequests]="subRequests" [parentId]="request.id" (updated)="updateSubRequests($event)"></add-sub-request>
+  <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
 </div>

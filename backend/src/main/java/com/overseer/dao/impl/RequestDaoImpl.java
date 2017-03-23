@@ -1,6 +1,7 @@
 package com.overseer.dao.impl;
 
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -14,6 +15,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -28,7 +30,13 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     private static final int FREE = 5;
     private static final int JOINED = 6;
     private static final int IN_PROGRESS = 7;
+    private static final int CLOSED = 8;
     private static final int REOPEN = 9;
+    private static final int HIGH = 1;
+    private static final int NORMAL = 2;
+    private static final int LOW = 3;
+    private static final int DEFAULT_DAY_IN_MONTH = 1;
+    private static final Long DEFAULT_MONTHS_STEP = 1L;
 
     @Override
     public List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber) {
@@ -170,15 +178,138 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
-        String findByPeriodQuery = this.queryService().getQuery("request.countByPeriod");
+    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        String findByPeriodQuery = this.queryService().getQuery("request.countByStatusAndPeriod");
         try {
             val parameterSource = new MapSqlParameterSource();
             parameterSource.addValue("begin", java.sql.Date.valueOf(start));
             parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_name", progressStatusName);
             return jdbc().queryForObject(findByPeriodQuery,
-                    parameterSource, (resultSet, i) -> resultSet.getLong("count"));
+                    parameterSource, (resultSet, i) -> {
+                        RequestDTO requestDTO = new RequestDTO();
+                        requestDTO.setCount(resultSet.getLong("count"));
+                        requestDTO.setStartDateLimit(start);
+                        requestDTO.setEndDateLimit(end);
+                        return requestDTO;
+                    });
         } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        String findCountByPeriodsQuery = this.queryService().getQuery("request.countByStatusesAndPeriods");
+        List<RequestDTO> list = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_name", progressStatusName);
+            return jdbc().query(findCountByPeriodsQuery,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            RequestDTO requestDTO = new RequestDTO();
+
+                            int year = resultSet.getInt("year");
+                            int month = resultSet.getInt("month");
+                            LocalDate localStartDate = LocalDate.of(year, month, DEFAULT_DAY_IN_MONTH);
+                            requestDTO.setStartDateLimit(localStartDate);
+
+                            LocalDate localEndDate = LocalDate.of(year, month, DEFAULT_DAY_IN_MONTH);
+                            localEndDate = localEndDate.plusMonths(DEFAULT_MONTHS_STEP);
+                            requestDTO.setEndDateLimit(localEndDate);
+
+                            requestDTO.setCount(resultSet.getLong("count"));
+                            list.add(requestDTO);
+                        }
+                        return list;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        String findCountByManagerAndPeriodQuery = this.queryService().getQuery("request.countByManagerAndPeriod");
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_name", progressStatusName);
+            parameterSource.addValue("assignee_id", id);
+            return jdbc().queryForObject(findCountByManagerAndPeriodQuery,
+                    parameterSource, (resultSet, i) -> {
+                        RequestDTO request = new RequestDTO();
+                        request.setStartDateLimit(start);
+                        request.setEndDateLimit(end);
+                        request.setCount(resultSet.getLong("count"));
+                        return request;
+                    });
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        String findCountByManagerAndPeriodsQuery = this.queryService().getQuery("request.countByManagerAndPeriods");
+        List<RequestDTO> data = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_name", progressStatusName);
+            parameterSource.addValue("assignee_id", id);
+            return jdbc().query(findCountByManagerAndPeriodsQuery,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            RequestDTO request = new RequestDTO();
+                            int year = resultSet.getInt("year");
+                            int month = resultSet.getInt("month");
+                            request.setCount(resultSet.getLong("count"));
+                            LocalDate localStartDate = LocalDate.of(year, month, DEFAULT_DAY_IN_MONTH);
+                            request.setStartDateLimit(localStartDate);
+
+                            LocalDate localEndDate = LocalDate.of(year, month, DEFAULT_DAY_IN_MONTH);
+                            localEndDate = localEndDate.plusMonths(DEFAULT_MONTHS_STEP);
+                            request.setEndDateLimit(localEndDate);
+                            System.out.println("request" + request);
+                            data.add(request);
+                        }
+                        return data;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, String progressName) {
+        String findBestManagersByPeriodQuery = this.queryService().getQuery("request.bestManagersByPeriod");
+        List<RequestDTO> bestManagers = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_name", progressName);
+            return jdbc().query(findBestManagersByPeriodQuery,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            RequestDTO manager = new RequestDTO();
+                            manager.setCount(resultSet.getLong("count"));
+                            manager.setManagerFirstName(resultSet.getString("first_name"));
+                            manager.setManagerLastName(resultSet.getString("last_name"));
+                            bestManagers.add(manager);
+                        }
+                        return bestManagers;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -229,19 +360,91 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     @Override
     public List<Long> countRequestByProgressStatus() {
         String quantityQuery = queryService().getQuery("request.countByProgressStatus");
-        List<Long> list = new ArrayList<>();
-        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", REGISTERED), Long.class));
-        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", FREE), Long.class));
-        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", JOINED), Long.class));
-        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", IN_PROGRESS), Long.class));
-        list.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", REOPEN), Long.class));
-        return list;
+        List<Long> progressList = new LinkedList<>();
+        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", REGISTERED), Long.class));
+        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", FREE), Long.class));
+        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", JOINED), Long.class));
+        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", IN_PROGRESS), Long.class));
+        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", REOPEN), Long.class));
+        return progressList;
+    }
+
+    @Override
+    public List<Long> countRequestByProgressStatusForUser(Long userId) {
+        String quantityQueryForUser = queryService().getQuery("request.countByProgressStatusForUser");
+        List<Long> progressListForUser = new LinkedList<>();
+
+        val parameterSourceForRegistered = new MapSqlParameterSource();
+        parameterSourceForRegistered.addValue("userId", userId);
+        parameterSourceForRegistered.addValue("progress", REGISTERED);
+        progressListForUser.add(jdbc().queryForObject(quantityQueryForUser, parameterSourceForRegistered, Long.class));
+
+        val parameterSourceForFree = new MapSqlParameterSource();
+        parameterSourceForFree.addValue("userId", userId);
+        parameterSourceForFree.addValue("progress", FREE);
+        progressListForUser.add(jdbc().queryForObject(quantityQueryForUser, parameterSourceForFree, Long.class));
+
+        val parameterSourceForJoined = new MapSqlParameterSource();
+        parameterSourceForJoined.addValue("userId", userId);
+        parameterSourceForJoined.addValue("progress", JOINED);
+        progressListForUser.add(jdbc().queryForObject(quantityQueryForUser, parameterSourceForJoined, Long.class));
+
+        val parameterSourceForInProgress = new MapSqlParameterSource();
+        parameterSourceForInProgress.addValue("userId", userId);
+        parameterSourceForInProgress.addValue("progress", IN_PROGRESS);
+        progressListForUser.add(jdbc().queryForObject(quantityQueryForUser, parameterSourceForInProgress, Long.class));
+
+        val parameterSourceForReopen = new MapSqlParameterSource();
+        parameterSourceForReopen.addValue("userId", userId);
+        parameterSourceForReopen.addValue("progress", REOPEN);
+        progressListForUser.add(jdbc().queryForObject(quantityQueryForUser, parameterSourceForReopen, Long.class));
+
+        return progressListForUser;
+    }
+
+    @Override
+    public List<Long> countRequestByPriorityStatus() {
+        String quantityQuery = queryService().getQuery("request.countByPriorityStatus");
+        List<Long> priorityList = new LinkedList<>();
+        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", HIGH), Long.class));
+        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", NORMAL), Long.class));
+        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", LOW), Long.class));
+        return priorityList;
+    }
+
+    @Override
+    public List<Long> countRequestByProgressStatusForSixMonths() {
+        String quantityQueryForSixMonths = queryService().getQuery("request.countStatisticForSixMonths");
+        String quantityQueryForSixMonthsClosed = queryService().getQuery("request.countStatisticForSixMonthsClosed");
+        List<Long> statisticList = new LinkedList<>();
+        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonthsClosed, new MapSqlParameterSource(), Long.class));
+        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonths, new MapSqlParameterSource("progress", CLOSED), Long.class));
+        return statisticList;
+    }
+
+    @Override
+    public List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId) {
+        String quantityQuery = queryService().getQuery("request.countStatisticForSixMonthsForUser");
+        List<Long> userStatistic = new LinkedList<>();
+        userStatistic.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("userId", userId), Long.class));
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        source.addValue("progress", CLOSED);
+        source.addValue("userId", userId);
+        String quantityQueryClosed = queryService().getQuery("request.countStatisticForSixMonthsForUserClosed");
+        userStatistic.add(jdbc().queryForObject(quantityQueryClosed, source, Long.class));
+        return userStatistic;
     }
 
     @Override
     public Long countFree() {
         String findCountQuery = queryService().getQuery("request.countFree");
         return jdbc().queryForObject(findCountQuery, new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public Long countByAssignee(Long assigneeId) {
+        String findCountQuery = queryService().getQuery("request.countByAssignee");
+        return jdbc().queryForObject(findCountQuery, new MapSqlParameterSource("assigneeId", assigneeId), Long.class);
     }
 
     @Override

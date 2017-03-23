@@ -2,6 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.RequestDTO;
 import com.overseer.exception.RmovingNotFreeRequestException;
 import com.overseer.exception.UnpropreateJoinRequest;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -149,10 +150,50 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Long findCountsRequestsByPeriod(LocalDate start, LocalDate end) {
-        val count = this.requestDao.findCountsRequestsByPeriod(start, end);
-        log.debug("Fetched {} count of requests for period {} - {}", count, start, end);
-        return count;
+    public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end, progressStatusName);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByPeriod(start, end, progressStatusName);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
+        List<RequestDTO> list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusName);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+        return list;
     }
 
     /**
@@ -216,21 +257,26 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Request saveSubRequest(Request subRequest, Long idParentRequest) {
+    public Request saveSubRequest(Request subRequest) {
         Assert.notNull(subRequest, "sub request must not be null");
-        Assert.notNull(idParentRequest, "id of parent request must not be null");
-        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
-        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
-        log.debug("Create sub request {} for parent request with id {}", subRequest, idParentRequest);
-        subRequest.setParentId(idParentRequest);
+//        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
+//        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
+        log.debug("Create sub request {} for parent request with id {}", subRequest, subRequest.getParentId());
         return requestDao.save(subRequest);
     }
 
     @Override
     public Long countFreeRequests() {
         val freeRequestsQuantity = requestDao.countFree();
-        log.debug("Counted requests with Free progress status: {}", freeRequestsQuantity);
+        log.debug("Counted {} requests with Free progress status", freeRequestsQuantity);
         return freeRequestsQuantity;
+    }
+
+    @Override
+    public Long countRequestsByAssignee(Long assigneeId) {
+        val requestsByAssignee = requestDao.countByAssignee(assigneeId);
+        log.debug("Counted {} requests for user with id: {}", requestsByAssignee, assigneeId);
+        return requestsByAssignee;
     }
 
     @Override
@@ -238,9 +284,44 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public List<Long> quantity() {
+    public List<Long> quantityByProgressStatus() {
         return requestDao.countRequestByProgressStatus();
+    }
+
+    /**
+     *{@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityForUser(Long userId) {
+        return requestDao.countRequestByProgressStatusForUser(userId);
+    }
+
+    /**
+     *{@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByPriorityStatus() {
+        return requestDao.countRequestByPriorityStatus();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByProgressStatusForSixMonths() {
+        return requestDao.countRequestByProgressStatusForSixMonths();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId) {
+        return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
     }
 
     /**
@@ -317,7 +398,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         log.debug("Delete request with id: {} ", idRequest);
         Request request = requestDao.findOne(idRequest);
         Long progressStatusId = request.getProgressStatus().getId();
-        if (progressStatusId.equals(FREE_STATUS)) {
+        if (progressStatusId == 0 || progressStatusId.equals(FREE_STATUS)) {
             super.delete(idRequest);
         } else {
             throw new RmovingNotFreeRequestException("Can not remove request with id: "

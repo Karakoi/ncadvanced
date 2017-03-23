@@ -1,9 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
-import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
-// import * as FileSaver from "file-saver";
-import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 
 declare let $: any;
 
@@ -13,82 +10,29 @@ declare let $: any;
   styleUrls: ['request-table.component.css']
 })
 export class RequestTableComponent implements OnInit {
+  loaded: boolean = false;
   requests: Request[];
   pageCount: number;
-  term: any;
 
-  @ViewChild(RequestFormComponent)
-  requestForm: RequestFormComponent;
-
-  @ViewChild(DeleteRequestComponent)
-  deleteRequestComponent: DeleteRequestComponent;
 
   constructor(private requestService: RequestService) {
   }
 
   ngOnInit() {
     this.requestService.getAll(1).subscribe((requests: Request[]) => {
-      this.requests = requests;
-    });
-    this.requestService.getPageCount().subscribe((count) => this.pageCount = count);
-  }
-
-  openDeleteRequestModal(request: Request): void {
-    this.deleteRequestComponent.request = request;
-    this.deleteRequestComponent.modal.open();
-  }
-
-
-  get sorted(): Request[] {
-    return this.requests
-      .map(request => request)
-      .sort((a, b) => {
-        if (a.dateOfCreation > b.dateOfCreation) return 1;
-        else if (a.dateOfCreation < b.dateOfCreation) return -1;
-        else return 0;
+      this.requestService.getPageCount().subscribe((count) => {
+        this.pageCount = count;
+        console.log(this.pageCount);
       });
-  }
-
-  createRange(number) {
-    let items: number[] = [];
-    for (let i = 2; i <= number; i++) {
-      items.push(i);
-    }
-    return items;
-  }
-
-  load(data) {
-    $('.paginate_button').removeClass('active');
-    let page = data.target.text;
-    $(data.target.parentElement).addClass('active');
-    this.requestService.getAll(page).subscribe((requests: Request[]) => {
       this.requests = requests;
+      this.loaded = true
     });
   }
 
-  updateRequests(request: Request[]) {
-    this.requests = request;
+  pageChange(data){
+    this.requestService.getAll(data.page).subscribe(requests => {
+      this.requests = requests;
+    })
   }
 
-  openFormModal(): void {
-    this.requestForm.modal.open();
-  }
-
-  // getPDFReport() {
-  //   this.reportService.getPDFReport().subscribe(
-  //     data => {
-  //       console.log(data);
-  //       let blob = new Blob([data], {type: 'application/pdf'});
-  //       console.log(blob);
-  //       FileSaver.saveAs(blob, "report.pdf");
-  //       this.toastr.success("Report was created successfully", "Success!");
-  //     }, e => this.handleError(e));
-  // }
-
-  // private handleError(error) {
-  //   switch (error.status) {
-  //     case 500:
-  //       this.toastr.error("Can't create report", 'Error');
-  //   }
-  // }
 }
