@@ -65,5 +65,4 @@ export class ReportService {
         return Observable.throw(error);
       });
   }
-
 }
