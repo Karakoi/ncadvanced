@@ -1,15 +1,24 @@
-<div class="container" *ngIf="user">
+<div class="col-lg-12" *ngIf="user">
   <div class="panel panel-default">
     <div class="panel-heading">
       <span class="panel-title"><b>Your Profile</b></span>
     </div>
     <div class="panel-body">
       <form [formGroup]="profileForm" autocomplete="on">
-
         <div class="row">
-          <div id="data" class="col-md-8 col-md-offset-0">
+          <div id="foto" class="col-md-3 col-md-offset-1">
+            <div class="dummy_user center-block">
+              <gravatar [email]="user.email" [size]="300"></gravatar>
+              <div class="form-group profile-buttons">
+                <button class="btn btn-primary" style="width: 49%" data-toggle="modal" data-target="#changePassword">Change password</button>
+                <button class="btn btn-success" style="width: 49%" type="submit"  (click)="hasUpdate()">Update profile</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="data" class="col-md-6 col-md-offset-1">
             <div class="row">
-              <div class="col-md-5 col-md-offset-1">
+              <div class="col-md-6 ">
                 <div class="form-group" [ngClass]="{'has-error': !validateField('firstName')}">
                   <label class="control-label">First Name</label>
                   <div class="input-group">
@@ -25,7 +34,7 @@
                 </div>
               </div>
 
-              <div class="col-md-5">
+              <div class="col-md-6">
                 <div class="form-group" [ngClass]="{'has-error': !validateField('lastName')}">
                   <label class="control-label">Last Name</label>
                   <div class="input-group">
@@ -44,7 +53,7 @@
             </div>
 
             <div class="row">
-              <div class="col-md-10 col-md-offset-1">
+              <div class="col-md-12">
                 <div class="form-group" [ngClass]="{'has-error': !validateField('secondName')}">
                   <label class="control-label">Second Name</label>
                   <div class="input-group">
@@ -59,7 +68,7 @@
             </div>
 
             <div class="row">
-              <div class="col-md-5 col-md-offset-1">
+              <div class="col-md-6">
                 <div class="form-group" [ngClass]="{'has-error': !validateField('dateOfBirth')}">
                   <label class="control-label">Date of birth</label>
                   <div class="input-group">
@@ -75,7 +84,7 @@
                 </div>
               </div>
 
-              <div class="col-md-5 ">
+              <div class="col-md-6">
                 <div class="form-group" [ngClass]="{'has-error': !validateField('phoneNumber')}">
                   <label class="control-label">Phone</label>
                   <div class="input-group">
@@ -94,7 +103,7 @@
             </div>
 
             <div class="row">
-              <div class="col-md-5 col-md-offset-1">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label">Email</label>
                   <div class="input-group">
@@ -105,7 +114,7 @@
                 </div>
               </div>
 
-              <div class="col-md-5 ">
+              <div class="col-md-6">
                 <div class="form-group" [ngClass]="{'has-error': !validateField('password')}">
                   <label class="control-label">Password</label>
                   <div class="input-group">
@@ -121,31 +130,9 @@
                 Password invalid. Password must be at least six characters long.</span>
                   </div>
                 </div>
-                <button class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target="#changePassword">Change password</button>
-                <a (click)="showPassword()">show pass</a>
               </div>
             </div>
             <br/>
-          </div>
-
-          <div id="foto" class="col-md-4">
-            <div class="dummy_user">
-              <gravatar [email]="user.email" [size]="300"></gravatar>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-2 col-md-offset-1">
-            <button type="submit" class="btn btn-success" (click)="hasUpdate()" style="width: 150px;">
-              Update
-            </button>
-          </div>
-          <div class="col-md-2">
-            <button type="button" class="btn btn-success" (click)="cancel()"
-                    style="width: 150px; margin-left: 100px;">
-              Cancel
-            </button>
           </div>
         </div>
       </form>
