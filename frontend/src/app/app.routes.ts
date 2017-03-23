@@ -3,6 +3,7 @@ import {NoContentComponent} from "./components/barrel";
 import {PublicPageGuard} from "./service/guard/public-page.guard";
 import {PrivatePageGuard} from "./service/guard/private-page.guard";
 import {AdminPageGuard} from "./service/guard/admin-page.guard";
+import {ManagerPageGuard} from "./service/guard/manager-page.guard";
 
 export const appRoutes: Routes = [
   {
@@ -47,6 +48,12 @@ export const appRoutes: Routes = [
     path: 'reports',
     loadChildren: './pages/report/report.module#ReportModule',
     canActivate: [PrivatePageGuard, AdminPageGuard]
+  },
+  // Available for manager
+  {
+    path: 'assigned',
+    loadChildren: './pages/assigned/assigned.module#AssignedModule',
+    canActivate: [PrivatePageGuard, ManagerPageGuard]
   },
   {
     path: 'error',

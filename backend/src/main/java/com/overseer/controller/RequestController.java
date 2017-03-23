@@ -106,7 +106,10 @@ public class RequestController {
      */
     @PutMapping("/closeRequest")
     public ResponseEntity closeRequest(@RequestBody Request request) {
+        System.out.println("Request before - " + request);
+        System.out.println("Request.id before - " + request.getId());
         val closedRequest = requestService.closeRequest(request);
+        System.out.println("Request after - " + closedRequest);
         return new ResponseEntity<>(closedRequest, HttpStatus.OK);
     }
 
@@ -238,6 +241,19 @@ public class RequestController {
     public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
         System.out.println("userId:" + userId + " pageNumber " + pageNumber);
         val requests = requestService.findRequestsByReporter(userId, pageNumber);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/countInProgressRequestsByAssignee")
+    public ResponseEntity<Long> countInProgressRequestByAssignee(@RequestParam long manager) {
+        System.out.println("Manager id " + manager);
+        return new ResponseEntity<>(requestService.countInProgressRequestByAssignee(manager), HttpStatus.OK);
+    }
+
+    @GetMapping("/inProgressRequestsByAssignee")
+    public ResponseEntity<List<Request>> getInProgressRequestsByAssignee(@RequestParam int page,
+                                                                         @RequestParam long manager) {
+        val requests = requestService.findInProgressRequestsByAssignee(manager, page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 

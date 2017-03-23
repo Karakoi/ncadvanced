@@ -76,6 +76,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     }
 
     /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
+
+    /**
      * Returns a list of requests which have provided {@link User} as reporter.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
@@ -102,6 +110,22 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return number of requests for reporter.
      */
     Long countRequestsByReporter(Long reporterId);
+
+    /**
+     * Returns number of requests for assignee.
+     *
+     * @param managerId assignee id must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countRequestsByAssignee(Long managerId);
+
+    /**
+     * Returns number of requests for assignee.
+     *
+     * @param managerId assignee id must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countInProgressRequestByAssignee(Long managerId);
 
     /**
      * Returns a list of closed requests which have provided {@link User} as reporter.

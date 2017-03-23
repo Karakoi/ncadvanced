@@ -52,6 +52,7 @@ export class ManagerComponent {
     filterRow: true,
     join: true,
     assign: true,
+    close: false,
     columns: {
       title: true,
       estimate: false,
@@ -70,6 +71,7 @@ export class ManagerComponent {
     multiSelect: false,
     filterRow: true,
     assign: false,
+    close: false,
     columns: {
       title: true,
       estimate: true,
