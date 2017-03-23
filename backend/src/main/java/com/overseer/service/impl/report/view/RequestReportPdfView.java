@@ -10,6 +10,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.overseer.model.Request;
 import com.overseer.model.User;
+import com.overseer.service.impl.report.builder.PdfPTableBuilder;
+import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -39,43 +41,45 @@ public class RequestReportPdfView extends AbstractPdfView {
         // change the file name
         String requestTitle = request.getTitle();
 
+        Font font = getFont(HELVETICA_BOLD);
+
         String filename = requestTitle.replaceAll(" ", "-").concat(".pdf");
         resp.setHeader("Content-Disposition", "attachment; filename=" + filename);
 
-        Image logo = Image.getInstance("backend\\src\\main\\resources\\img\\overseer_logo.jpg");
-        logo.setAlignment(Image.RIGHT);
-        document.add(logo);
-
-        Font font = getFont(HELVETICA_BOLD);
-
-        document.add(new Paragraph("Details:", font));
-
         final int detailsTableColumnNum = 2;
-        PdfPTable detailsTable = new PdfPTableBuilder(detailsTableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)
-                .addPdfPCells(BaseColor.LIGHT_GRAY, font, "Column", "Value")
-                    .addDoubleCell("Title:",            request.getTitle())
-                    .addDoubleCell("Reporter:",         getUserFullName(request.getReporter()))
-                    .addDoubleCell("Assignee:",         getUserFullName(request.getAssignee()))
-                    .addDoubleCell("Progress:",         request.getProgressStatus().getName())
-                    .addDoubleCell("Priority:",         request.getPriorityStatus().getName())
-                    .addDoubleCell("Date of creation:", getFormattedDate(request.getDateOfCreation()))
-                    .addDoubleCell("Estimate time:",    valueOf(request.getEstimateTimeInDays()))
-                    .addDoubleCell("Description:",      request.getDescription())
-                .build();
 
-        document.add(detailsTable);
+        String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
+        new ReportDocumentBuilder(document)
+                .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
+                .addParagraph(new Paragraph("Details:", font), Paragraph.ALIGN_LEFT)
+                .addTable(new PdfPTableBuilder(detailsTableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)
+                        .addPdfPCells(BaseColor.LIGHT_GRAY, font, "Column", "Value")
+                        .addDoubleCell("Title:",            request.getTitle())
+                        .addDoubleCell("Reporter:",         getUserFullName(request.getReporter()))
+                        .addDoubleCell("Assignee:",         getUserFullName(request.getAssignee()))
+                        .addDoubleCell("Progress:",         request.getProgressStatus().getName())
+                        .addDoubleCell("Priority:",         request.getPriorityStatus().getName())
+                        .addDoubleCell("Date of creation:", getFormattedDate(request.getDateOfCreation()))
+                        .addDoubleCell("Estimate time:",    valueOf(request.getEstimateTimeInDays()))
+                        .addDoubleCell("Description:",      request.getDescription())
+                        .build())
+                .addParagraph(!subRequests.isEmpty() ? new Paragraph("\nSub requests:", font) : null, 0)
+                .addTable(!subRequests.isEmpty() ? generateSubRequestsTable(subRequests) : null)
+                .addParagraph(!joinedRequests.isEmpty() ? new Paragraph("\nJoined requests:", font) : null, 0)
+                .addTable(!joinedRequests.isEmpty() ? generateJoinedRequestsTable(joinedRequests) : null)
+        .buildDocument();
 
-        if (!subRequests.isEmpty()) {
+        /*if () {
             document.add(new Paragraph("\nSub requests:", font));
-            PdfPTable subRequestsTable = generateSubRequestsTable(subRequests);
+            PdfPTable subRequestsTable = ;
             document.add(subRequestsTable);
-        }
+        }*/
 
-        if (!joinedRequests.isEmpty()) {
+        /*if (!joinedRequests.isEmpty()) {
             document.add(new Paragraph("\nJoined requests:", font));
             PdfPTable joinedRequestsTable = generateJoinedRequestsTable(joinedRequests);
             document.add(joinedRequestsTable);
-        }
+        }*/
     }
 
     /**

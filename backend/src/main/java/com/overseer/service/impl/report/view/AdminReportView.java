@@ -1,70 +1,45 @@
-package com.overseer.service.impl.report;
+package com.overseer.service.impl.report.view;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.overseer.dto.RequestDTO;
 import com.overseer.service.RequestService;
+import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-//import java.util.List;
-
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Implementation of <code>ReportBuilderImpl</code> interface, that specifies how
+ * Implementation of <code>ReportDocumentBuilder</code> interface, that specifies how
  * to generate reports for Administrator.
  */
 @Service
 @RequiredArgsConstructor
-public class AdminReportBuilderImpl extends ReportBuilderImpl {
+public class AdminReportView extends AbstractPdfView {
 
+    private LocalDate start;
+    private LocalDate end;
+
+    private static final float TABLE_SPACING = 10f;
+    private static final float COLOMN_WIDTH = 2f;
+    private static final float CELL_PADDING = 10;
+    private static final int TABLE_WIDTH_PERCENTAGE = 100;
     private static final int TABLE_SIZE = 3;
-    @Autowired
-    private RequestService requestService;
 
+    private final RequestService requestService;
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public Document generateReport(Document document, LocalDate start, LocalDate end) {
-        try {
-            return createPDF(document)
-//                    .buildImage(getImageForAdmin())
-                    .buildParagraph(new Paragraph("ADMIN REPORTS"), Element.ALIGN_TOP)
-                    .buildLineSeparator(new LineSeparator())
-                    .buildLineSeparator(new LineSeparator())
-                    .buildParagraph(new Paragraph("Count created requests in period from "
-                            + start.toString() + " to " + end.toString()), Element.ALIGN_CENTER)
-                    .buildTable(getTableWithCountRequestsByPeriod(start, end))
-                    .buildLineSeparator(new LineSeparator())
-                    .buildParagraph(new Paragraph("Best managers: "), Element.ALIGN_CENTER)
-                    .buildList(getListWithBestManagers(start, end))
-                    .getDocument();
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void setDatePeriod(LocalDate start, LocalDate end) {
+        this.start = start;
+        this.end = end;
     }
-
-//    /**
-//     * Add image to document.
-//     *
-//     * @return image.
-//     */
-//    private Image getImageForAdmin() {
-//        try {
-//            return Image.getInstance("../../main/resources/img/NetCracker_logo.jpg");
-//        } catch (BadElementException | IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 
     /**
      * Gets period and load PdfPTable with data for adding in report.
@@ -128,4 +103,20 @@ public class AdminReportBuilderImpl extends ReportBuilderImpl {
         return list;
     }
 
+    @Override
+    protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
+        new ReportDocumentBuilder(document)
+                .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
+                .addParagraph(new Paragraph("ADMIN REPORTS"), Element.ALIGN_TOP)
+                .addLineSeparator(new LineSeparator())
+                .addLineSeparator(new LineSeparator())
+                .addParagraph(new Paragraph("Count created requests in period from "
+                        + start.toString() + " to " + end.toString()), Element.ALIGN_CENTER)
+                .addTable(getTableWithCountRequestsByPeriod(start, end))
+                .addLineSeparator(new LineSeparator())
+                .addParagraph(new Paragraph("Best managers: "), Element.ALIGN_CENTER)
+                .addList(getListWithBestManagers(start, end))
+                .buildDocument();
+    }
 }

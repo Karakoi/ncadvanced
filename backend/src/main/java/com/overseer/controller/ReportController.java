@@ -1,8 +1,5 @@
 package com.overseer.controller;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.overseer.dto.RequestDTO;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
@@ -12,9 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.View;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -45,26 +39,17 @@ public class ReportController {
     }
 
     /**
-     * Gets {@link Document} pdf report.
+     * Gets Document pdf report.
      *
-     * @return {@link Document} doc with reporting data.
+     * @return Document doc with reporting data.
      */
     @GetMapping("/adminPDFReport")
-    public ResponseEntity<Long> getAdminPDFReport(@RequestParam String beginDate, @RequestParam String endDate) {
+    public View getAdminPDFReport(@RequestParam String beginDate, @RequestParam String endDate) {
 
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-        try {
-            File file = new File("test.pdf");
-            FileOutputStream fileout = new FileOutputStream(file);
-            Document report = new Document();
-            PdfWriter.getInstance(report, fileout);
-            reportService.generateAdminPDFReport(report, start, end);
-        } catch (IOException | DocumentException e) {
-            e.printStackTrace();
-        }
 
-        return new ResponseEntity<Long>(new Long(1), HttpStatus.OK);
+        return reportService.generateAdminPDFReport(start, end);
     }
 
     /**
