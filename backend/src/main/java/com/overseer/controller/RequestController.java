@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class RequestController {
      * @param id request identifier.
      * @return {@link Request} entity with http status 200 OK.
      */
+    @PostAuthorize("hasAnyRole('ADMIN', 'MANAGER') || returnObject.getBody().reporter.email == authentication.name")
     @GetMapping("/{id}")
     public ResponseEntity<Request> fetchRequest(@PathVariable Long id) {
         val request = requestService.findOne(id);
