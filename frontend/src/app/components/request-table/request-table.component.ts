@@ -22,11 +22,16 @@ export class RequestTable {
   @Input() private requestsCount: number;
   @Output() paginationChange = new EventEmitter();
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter();
+  @Output() reopenEvent = new EventEmitter();
   private perPage: number = 20;
   term: any;
   orderType: boolean;
   orderField: string;
   searchTypes: any;
+
+  reopen(){
+    this.reopenEvent.emit();
+  }
 
   @Input() settings = {
     delete: true,
@@ -36,6 +41,7 @@ export class RequestTable {
     filterRow: true,
     assign: false,
     join: false,
+    reopen: false,
     close: false,
     columns: {
       title: true,

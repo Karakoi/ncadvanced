@@ -1,15 +1,14 @@
 <div class="container">
   <div class="row">
     <div class="header-content">
-      <div class="header-content-inner text-center">
+      <div class="header-content-inner">
         <h1>User dashboard</h1>
         <ul class="nav nav-tabs">
           <li><a [routerLink]="['/home/user/active']">My active requests</a></li>
           <li class="active"><a [routerLink]="['/home/user/closed']">My completed request</a></li>
         </ul>
         <r-table *ngIf="loaded" [requestsCount]="totalItems" [requests]="requests" [settings]="settings"
-                 (paginationChange)="pageChange($event)" (selectedEvent)="select($event)"></r-table>
-        <button class="btn btn-primary block glyphicon glyphicon-share" (click)="reopen()">Reopen</button>
+                 (paginationChange)="pageChange($event)" (selectedEvent)="select($event)" (reopenEvent)="reopen()"></r-table>
       </div>
     </div>
   </div>
