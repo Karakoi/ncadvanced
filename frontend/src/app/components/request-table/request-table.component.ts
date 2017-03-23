@@ -5,6 +5,7 @@ import {RequestFormComponent} from "../../shared/request/request-form/request-fo
 import {DeleteRequestComponent} from "./request-delete/delete-request.component";
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
+import {CloseRequestComponent} from "./request-close/close-request.component";
 
 declare let $: any;
 
@@ -35,6 +36,7 @@ export class RequestTable {
     filterRow: true,
     assign: false,
     join: false,
+    close: false,
     columns: {
       title: true,
       estimate: true,
@@ -55,6 +57,9 @@ export class RequestTable {
 
   @ViewChild(JoinRequestComponent)
   joinRequestComponent: JoinRequestComponent;
+
+  @ViewChild(CloseRequestComponent)
+  closeRequestComponent:CloseRequestComponent;
 
   @ViewChild(DeleteRequestComponent)
   deleteRequestComponent: DeleteRequestComponent;
@@ -101,6 +106,11 @@ export class RequestTable {
 
   join() {
     this.joinRequestComponent.modal.open();
+  }
+
+  close(request:Request) {
+    this.closeRequestComponent.request = request;
+    this.closeRequestComponent.modal.open();
   }
 
   isChecked(id) {

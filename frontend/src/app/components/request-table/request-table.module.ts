@@ -12,6 +12,7 @@ import {PipeModule} from "../../pipes/pipe.module";
 import {PaginationModule} from "ng2-bootstrap";
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
+import {CloseRequestComponent} from "./request-close/close-request.component";
 
 
 
@@ -33,11 +34,13 @@ import {JoinRequestComponent} from "./request-join/join-request.component";
     RequestTable,
     AssignRequestComponent,
     DeleteRequestComponent,
+    CloseRequestComponent,
     JoinRequestComponent
   ],
   exports: [
     RequestTable,
     AssignRequestComponent,
+    CloseRequestComponent,
     DeleteRequestComponent,
     JoinRequestComponent
   ]

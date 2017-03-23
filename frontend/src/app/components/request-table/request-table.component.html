@@ -57,6 +57,7 @@
           </th>
           <th *ngIf="settings.delete">Delete</th>
           <th *ngIf="settings.assign">Assign</th>
+          <th *ngIf="settings.close">Close</th>
         </tr>
         </thead>
         <tbody>
@@ -96,6 +97,7 @@
           </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
           <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
+          <td class="td-center" *ngIf="settings.close"><span class="center-block btn btn-success">Close</span></td>
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
@@ -132,6 +134,9 @@
             <span [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs"
                     (click)="openAssignRequestModal(request)"></span>
           </td>
+          <td class="text-center" *ngIf="settings.close">
+            <button class="center-block btn btn-success" (click)="close(request)">Close</button>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -153,8 +158,9 @@
 
   </form-template>
   <request-form *ngIf="settings.add " [requests]="requests" (updated)="updateRequests($event)"></request-form>
-  <delete-request *ngIf="settings.delete" [requests]="requests"></delete-request>
-  <assign-request *ngIf="settings.assign" [requests]="requests"></assign-request>
-  <join-request  *ngIf="settings.join" [requests]="requests" [checked]="checked"></join-request>
+  <delete-request *ngIf="settings.delete" [requests]="requests" (updated)="updateRequests($event)"></delete-request>
+  <assign-request *ngIf="settings.assign" [requests]="requests" (updated)="updateRequests($event)"></assign-request>
+  <join-request  *ngIf="settings.join" [requests]="requests" [checked]="checked" (updated)="updateRequests($event)"></join-request>
+  <close-request *ngIf="settings.close" [requests]="requests" (updated)="updateRequests($event)"></close-request>
 </div>
 

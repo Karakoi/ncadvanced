@@ -8,7 +8,6 @@ import {RequestService} from "../../../service/request.service";
 import {AuthService} from "../../../service/auth.service";
 import {User} from "../../../model/user.model";
 
-//TODO Implement new joining request mechanism
 
 @Component({
   selector: 'join-request',
@@ -36,8 +35,8 @@ export class JoinRequestComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.minLength(10),Validators.maxLength(255)]],
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.required, Validators.maxLength(255)]],
       estimateTimeInDays: ['', [Validators.required, CustomValidators.min(0), CustomValidators.max(30)]]
     });
 
@@ -64,9 +63,6 @@ export class JoinRequestComponent implements OnInit {
       this.request.lastChanger = user;
       this.request.title = params.title;
       this.request.description = params.description;
-      this.request.estimateTimeInDays = params.estimateTimeInDays;
-      this.requests = this.requests.filter(item => this.checked.indexOf(item["id"]) < 0);
-      this.requestService.join(this.request, this.checked).subscribe((request) => {
       this.request.estimateTimeInDays = params.estimateTimeInDays || 3;
       this.requests = this.requests.filter(item => this.checked.indexOf(item["id"]) < 0);
       this.requestService.join(this.request, this.checked).subscribe((request) => {
