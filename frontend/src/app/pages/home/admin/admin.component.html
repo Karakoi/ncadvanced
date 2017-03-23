@@ -2,11 +2,12 @@
 <div class="container">
   <div class="header-content">
     <h1 align="center">Request Info</h1>
-    <google-chart [data]="pieChartRequest"></google-chart>
-  </div>
-
-  <br>
-  <div>
-  <!--<ng2-smart-table [settings]="settings" [source]="testTable"></ng2-smart-table> -->
+    <div class="row">
+      <google-chart (click)="setStatistic()" [data]="pieChartRequest"></google-chart>
+    </div>
+    <div class="row">
+      <google-chart (click)="setStatistic()" [data]="pieChartRequestPriority"></google-chart>
+      <google-chart (click)="setStatistic()" [data]="pieChartRequestForSixMonths"></google-chart>
+    </div>
   </div>
 </div>

@@ -13,13 +13,13 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    Ng2Bs3ModalModule
+    Ng2Bs3ModalModule,
   ],
   declarations: [
-    RequestFormComponent
+    RequestFormComponent,
   ],
   exports: [
-    RequestFormComponent
+    RequestFormComponent,
   ],
   providers: [
     DatePipe
