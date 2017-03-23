@@ -76,34 +76,79 @@ export class UserProfileComponent implements OnInit {
     this.pieChartRequestForSixMonths = {
       chartType: 'Gauge',
       dataTable: [
-        ['Open', 'Closed'],
+        ['Open', ''],
         ['Open', this.sixMonthsStatistic[0]],
         ['Closed', this.sixMonthsStatistic[1]]],
       options: {
-        title: 'Request statistic for six months',
-        width: 600, height: 400,
-        redFrom: 90, redTo: 100,
-        yellowFrom:75, yellowTo: 90,
-        minorTicks: 5
-      },
+        hAxis: {
+          title: 'Request statistic for six month',
+          minValue: 0,
+          textStyle: {
+            bold: true,
+            fontSize: 12,
+            color: '#4d4d4d'
+          },
+          titleTextStyle: {
+            bold: true,
+            fontSize: 18,
+            color: '#4d4d4d'
+          }
+        },
+        vAxis: {
+          title: 'Requests',
+          textStyle: {
+            fontSize: 14,
+            bold: true,
+            color: '#848484'
+          },
+          titleTextStyle: {
+            fontSize: 14,
+            bold: true,
+            color: '#848484'
+          }
+        }
+      }
     };
   }
 
   pieChartRequestForSixMonths = {
-    chartType: 'Gauge',
+    chartType: 'BarChart',
     dataTable: [
-      ['Request', 'not closed'],
+      ['Request', ''],
       ['Click to see open',100],
       ['Click to see closed',100],
     ],
     options: {
-      title: 'Request statistic for six months',
-      width: 600, height: 400,
-      redFrom: 90, redTo: 100,
-      yellowFrom:75, yellowTo: 90,
-      minorTicks: 5
+      hAxis: {
+        title: 'Click to see statistic',
+        minValue: 0,
+        textStyle: {
+          bold: true,
+          fontSize: 12,
+          color: '#4d4d4d'
+        },
+        titleTextStyle: {
+          bold: true,
+          fontSize: 18,
+          color: '#4d4d4d'
+        }
+      },
+      vAxis: {
+        title: 'Requests',
+        textStyle: {
+          fontSize: 14,
+          bold: true,
+          color: '#848484'
+        },
+        titleTextStyle: {
+          fontSize: 14,
+          bold: true,
+          color: '#848484'
+        }
+      }
     }
   };
+
 
   setStatistic(): void {
     this.setStatisticByProgressStatus();
