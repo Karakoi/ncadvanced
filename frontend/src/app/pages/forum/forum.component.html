@@ -3,6 +3,7 @@
   <form-template>
     <div class="template-header">
       Forum
+      <!--<div *ngIf="currentUser.role == 'admin'">ADMIN</div>-->
       <button class="btn btn-primary btn-xs pull-right" (click)="topicModal.open()">New topic
       </button>
     </div>
@@ -21,7 +22,7 @@
             {{topic.title}}
           </td>
           <td>
-            <!--{{topic.role.name}}-->
+            <!--{{topic.role.name}}--> {{topic.role.name}}
           </td>
         </tr>
         </tbody>

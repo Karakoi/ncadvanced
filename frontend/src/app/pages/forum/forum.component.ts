@@ -5,6 +5,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToastsManager} from "ng2-toastr";
 import {Response} from "@angular/http";
 import {ModalComponent} from "ng2-bs3-modal/components/modal";
+import {User} from "../../model/user.model";
+import {AuthService} from "../../service/auth.service";
 
 declare let $: any;
 
@@ -21,6 +23,7 @@ export class ForumComponent implements OnInit {
   updated: EventEmitter<any> = new EventEmitter();
   topic: Topic;
   pageCount: number;
+  currentUser: User;
 
   @ViewChild('topicModal')
   modal: ModalComponent;
@@ -38,11 +41,17 @@ export class ForumComponent implements OnInit {
       console.log(topics)
     });
     this.topicService.getPageCount().subscribe((count) => this.pageCount = count);
+
+
   }
 
   constructor(private topicService: TopicService,
               private formBuilder: FormBuilder,
-              private toastr: ToastsManager) {
+              private toastr: ToastsManager,
+              private authService: AuthService) {
+    this.authService.currentUser.subscribe((user: User) => {
+      this.currentUser = user;
+    });
   }
 
   validate(field: string): boolean {

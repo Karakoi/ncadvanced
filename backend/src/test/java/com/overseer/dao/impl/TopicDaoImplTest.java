@@ -29,7 +29,7 @@ public class TopicDaoImplTest {
 
     private Role role;
 
-    @Before
+    /*@Before
     public void setUp() throws Exception {
         role = new Role("admin");
         testTopic = new Topic("Some topic", role);
@@ -55,5 +55,5 @@ public class TopicDaoImplTest {
     public void exists() throws Exception {
         final boolean actual = topicDao.exists(testTopicId);
         Assert.assertTrue(actual);
-    }
+    }*/
 }
