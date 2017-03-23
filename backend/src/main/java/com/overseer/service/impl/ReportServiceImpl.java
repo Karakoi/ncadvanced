@@ -1,81 +1,48 @@
 package com.overseer.service.impl;
 
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.overseer.service.ReportBuilder;
+import com.overseer.dao.RequestDao;
+import com.overseer.model.Request;
 import com.overseer.service.ReportService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.overseer.service.impl.report.AdminReportBuilderImpl;
+import com.overseer.service.impl.report.view.RequestReportPdfView;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.View;
 
-import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Implementation of {@link ReportService} interface.
  */
 @Service
-@Transactional
 @Slf4j
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
+    @Autowired
     @Qualifier("adminReportBuilderImpl")
-    private ReportBuilder adminBuilder;
+    private final AdminReportBuilderImpl adminBuilder;
 
-    @Qualifier("managerReportBuilderImpl")
-    private ReportBuilder managerBuilder;
-
-    @Qualifier("employeeReportBuilderImpl")
-    private ReportBuilder employeeBuilder;
-
-
+    private final RequestDao requestDao;
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public Document generateAdminPDFReport() throws IOException, DocumentException {
-        return adminBuilder.generatePDFReport();
+    public Document generateAdminPDFReport(Document document, LocalDate start, LocalDate end) {
+        return adminBuilder.generateReport(document, start, end);
     }
 
-    /**
-     * {@inheritDoc}.
-     */
     @Override
-    public Document generateManagerPDFReport() throws IOException, DocumentException {
-        return managerBuilder.generatePDFReport();
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public Document generateEmployeePDFReport() throws IOException, DocumentException {
-        return employeeBuilder.generatePDFReport();
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public void generateAdminExcelReport() {
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public void generateManagerExcelReport() {
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public void generateEmployeeExcelReport() {
+    public View generateRequestPDFReport(Long requestId) {
+        Request request = requestDao.findOne(requestId);
+        List<Request> subRequests = requestDao.findSubRequests(requestId);
+        List<Request> joinedRequests = requestDao.findJoinedRequests(requestId);
+        return new RequestReportPdfView(request, subRequests, joinedRequests);
     }
 }

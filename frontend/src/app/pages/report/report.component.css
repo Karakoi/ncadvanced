@@ -1,15 +1,22 @@
 .conteiner{
   width: 100%;
   height: auto;
+  /*float: left;*/
 }
 
 .barChart{
-  width: 1400px;
+  width: 1100px;
   height: auto;
+  margin: 0 auto;
 }
 
-.lineChart{
-  width: 1600px;
+.lineChart {
+  width: 1100px;
   height: auto;
-
+  margin: 0 auto;
 }
+
+.input-form{
+  width: 100%;
+}
+

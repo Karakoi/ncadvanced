@@ -7,6 +7,7 @@ import {UserService} from "../../service/user.service";
 import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
 import {CacheService} from "ionic-cache";
+import {RequestService} from "../../service/request.service";
 
 @Component({
   selector: 'overseer-profile',
@@ -21,6 +22,7 @@ export class ProfileComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private authService: AuthService,
+              private requestService: RequestService,
               private router: Router,
               private cach: CacheService,
               private toastr: ToastsManager) {
@@ -41,16 +43,16 @@ export class ProfileComponent implements OnInit {
 
   update(): void {
 
-    this.userService.update(this.user).subscribe( () => {
+    this.userService.update(this.user).subscribe(() => {
         this.toastr.success('Your profile has been updated');
         this.cach.clearAll();
-      }, e => this.toastr.error(" Can't update",'Wrong')
+      }, e => this.toastr.error(" Can't update", 'Wrong')
     );
   }
 
-  updatePass(oldPass,newPass, confirmPass): void {
+  updatePass(oldPass, newPass, confirmPass): void {
 
-    if (newPass!=confirmPass) {
+    if (newPass != confirmPass) {
       this.toastr.error('Passwords do not match');
       return;
     }
@@ -58,15 +60,11 @@ export class ProfileComponent implements OnInit {
     this.authService.login(this.user.email, oldPass).subscribe(() => {
       this.user.password = newPass;
       this.update();
-    }, e => this.toastr.warning('old password is incorrect','Wrong'));
+    }, e => this.toastr.warning('old password is incorrect', 'Wrong'));
   }
 
   cancel(): void {
     this.router.navigate(['/home']);
-  }
-
-  showPassword(){
-    this.showPass = !this.showPass;
   }
 
   validateField(field: string): boolean {
@@ -81,14 +79,10 @@ export class ProfileComponent implements OnInit {
       email: ['', [Validators.required, CustomValidators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       dateOfBirth: ['', CustomValidators.dateISO],
-      phoneNumber: ['', CustomValidators.phone()]
+      phoneNumber: ['',],
+      oldPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
     });
-  }
-
-  private handleError(error) {
-    switch (error.status) {
-      case 400:
-        this.toastr.error('This email is already taken.', 'Error.');
-    }
   }
 }

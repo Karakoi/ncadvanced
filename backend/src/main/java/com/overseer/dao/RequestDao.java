@@ -1,5 +1,6 @@
 package com.overseer.dao;
 
+import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -193,13 +194,56 @@ public interface RequestDao extends CrudDao<Request, Long> {
 
 
     /**
-     * Returns a count of requests created in provided period.
+     * Returns a list of request DTO created in provided period.
      *
-     * @param start period start.
-     * @param end   period end.
-     * @return count of requests created in provided period.
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return list of request DTO created in provided period.
      */
-    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a list of request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return list of request DTO created in provided period.
+     */
+    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a list of best managers in provided period.
+     *
+     * @param start        period start.
+     * @param end          period end.
+     * @param progressName progress status name.
+     * @return list of best managers in provided period.
+     */
+    List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, String progressName);
 
     /**
      * Returns a list of requests created in provided date.
@@ -223,6 +267,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return number of entities of type <code>T</code>.
      */
     Long countFree();
+
+    /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @param assigneeId id of the {@link User}.
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countByAssignee(Long assigneeId);
 
     /**
      * Returns a list of requests with Free progress status {@link ProgressStatus}.
@@ -250,7 +302,32 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Returns list to build pie chart.
      *
-     * @return list of statistic request. 
+     * @return list of statistic request by progress status. 
      */
     List<Long> countRequestByProgressStatus();
+
+    /**
+     * Returns list to build pie chart for user profile.
+     *
+     * @return list of statistic request for user profile.
+     */
+    List<Long> countRequestByProgressStatusForUser(Long userId);
+
+    /**
+     * Returns list to build pie chart.
+     *
+     * @return list of statistic request by priority status.
+     */
+    List<Long> countRequestByPriorityStatus();
+
+    /**
+     * @return list of statistic for six months by progress status.
+     */
+    List<Long> countRequestByProgressStatusForSixMonths();
+
+    /**
+     * @return list of statistic for six months by progress status for user.
+     */
+    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
+
 }

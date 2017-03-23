@@ -4,39 +4,43 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
-import lombok.AllArgsConstructor;
+import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.overseer.service.RequestService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.time.LocalDate;
+
 
 /**
  * Implementation of <code>ReportBuilderImpl</code> interface, that specifies how
  * to generate reports for Office Manager.
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class ManagerReportBuilderImpl extends ReportBuilderImpl {
 
-    @Override
-    public Paragraph createParagraph(String title) {
-        Paragraph paragraph = super.createParagraph(title);
-        paragraph.setAlignment(Element.ALIGN_CENTER);
-        return paragraph;
-    }
+    @Autowired
+    private RequestService requestService;
 
-
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public Document generatePDFReport() throws IOException, DocumentException {
-        Document document = buildPDFTemplate();
-        document.add(createParagraph("List of own closed requests"));
-//        List<Request> requestsByProgress = requestDao.findRequestsByProgress(6, 20, 1);
-//        document.add(createTable(requestsByProgress));
-        return document;
-    }
-
-    @Override
-    public void generateExcelReport() {
-        buildExcelTemplate();
+    public Document generateReport(Document document, LocalDate start, LocalDate end) {
+        try {
+            return createPDF(document)
+                    .buildParagraph(new Paragraph("OFFICE MANAGER REPORTS"), Element.ALIGN_TOP)
+                    .buildLineSeparator(new LineSeparator())
+                    .buildLineSeparator(new LineSeparator())
+//                     Implements manager report in pdf
+                    .getDocument();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

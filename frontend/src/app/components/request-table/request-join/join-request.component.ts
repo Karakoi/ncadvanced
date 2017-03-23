@@ -1,18 +1,19 @@
 import {Component, OnInit, ViewChild, Input, Output, EventEmitter} from "@angular/core";
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
-import {RequestService} from "../../../../service/request.service";
 import {ToastsManager} from "ng2-toastr";
 import {CustomValidators} from "ng2-validation";
 import {ModalComponent} from "ng2-bs3-modal/components/modal";
-import {Request} from "../../../../model/request.model";
-import {User} from "../../../../model/user.model";
-import {AuthService} from "../../../../service/auth.service";
+import {Request} from "../../../model/request.model";
+import {RequestService} from "../../../service/request.service";
+import {AuthService} from "../../../service/auth.service";
+import {User} from "../../../model/user.model";
+
+//TODO Implement new joining request mechanism
 
 @Component({
   selector: 'join-request',
   templateUrl: 'join-request.component.html'
 })
-
 export class JoinRequestComponent implements OnInit {
   requestForm: FormGroup;
   @Input()
@@ -63,9 +64,12 @@ export class JoinRequestComponent implements OnInit {
       this.request.lastChanger = user;
       this.request.title = params.title;
       this.request.description = params.description;
+      this.request.estimateTimeInDays = params.estimateTimeInDays;
+      this.requests = this.requests.filter(item => this.checked.indexOf(item["id"]) < 0);
+      this.requestService.join(this.request, this.checked).subscribe((request) => {
       this.request.estimateTimeInDays = params.estimateTimeInDays || 3;
-      this.requests = this.requests.filter(item => this.checked.indexOf(item["id"]) < 0);      
-      this.requestService.join(this.request, this.checked).subscribe((request) => {        
+      this.requests = this.requests.filter(item => this.checked.indexOf(item["id"]) < 0);
+      this.requestService.join(this.request, this.checked).subscribe((request) => {
         this.toastr.success("Requests was joined successfully", "Success!");
         this.modal.close();
         this.updated.emit(this.requests);
@@ -74,7 +78,7 @@ export class JoinRequestComponent implements OnInit {
 
   }
 
-  getChecked(){
+  get getChecked(){
     return this.requests.filter(request => this.checked.indexOf(request.id) > -1);
   }
 
