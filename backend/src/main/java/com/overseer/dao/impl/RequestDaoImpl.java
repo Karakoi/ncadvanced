@@ -493,6 +493,16 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public List<Request> searchRequests(String searchQuery) {
+        String findByStatusQuery = this.queryService().getQuery("request.select").concat(searchQuery);
+        try {
+            return jdbc().query(findByStatusQuery, this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     protected String getInsertQuery() {
         return queryService().getQuery("request.insert");
     }

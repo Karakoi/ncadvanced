@@ -284,6 +284,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> findFreeRequests(int pageSize, int pageNumber);
 
     /**
+     * Returns list of filtered requests by specified searchRequests query.
+     *
+     * @param searchQuery searchRequests params sql query
+     * @return list of requests with Free progress status {@link ProgressStatus}.
+     */
+    List<Request> searchRequests(String searchQuery);
+
+    /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
      * @param statusIds list of progress status ids, must not be {@literal null}
