@@ -71,16 +71,16 @@
         <tr *ngIf="settings.filterRow">
           <td *ngIf="settings.multiSelect"></td>
           <td *ngIf="settings.columns.title">
-            <input type="text" [(ngModel)]="searchTypes.title" class="form-control"/>
+            <input type="text" [ngModel]="searchDTO.title" (ngModelChange)="setTitleSearch('title', $event)" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.dateOfCreation">
-            <input type="date" [(ngModel)]="searchTypes.date" class="form-control"/>
+            <input type="date" [ngModel]="searchDTO.dateOfCreation" (ngModelChange)="setTitleSearch('dateOfCreation', $event)" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.estimate">
-            <input type="text" [(ngModel)]="searchTypes.estimateTime" class="form-control"/>
+            <input type="text" [ngModel]="searchDTO.estimate" (ngModelChange)="setTitleSearch('estimate', $event)" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.priorityStatus">
-            <select class="form-control" [(ngModel)]="searchTypes.priorityStatus">
+            <select class="form-control" [ngModel]="searchDTO.priority" (ngModelChange)="setTitleSearch('priority', $event)">
               <option></option>
               <option>High</option>
               <option>Normal</option>
@@ -88,7 +88,7 @@
             </select>
           </td>
           <td *ngIf="settings.columns.progressStatus">
-            <select class="form-control" [(ngModel)]="searchTypes.progressStatus">
+            <select class="form-control" [ngModel]="searchDTO.progress" (ngModelChange)="setTitleSearch('progress', $event)">
               <option></option>
               <option>Free</option>
               <option>In progress</option>
@@ -97,10 +97,10 @@
             </select>
           </td>
           <td *ngIf="settings.columns.reporter">
-            <input type="text" [(ngModel)]="searchTypes.reporterName" class="form-control"/>
+            <input type="text" [ngModel]="searchDTO.reporterName" (ngModelChange)="setTitleSearch('reporterName', $event)" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.assignee">
-            <input type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>
+            <input type="text" [ngModel]="searchDTO.assigneeName" (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
           </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
           <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
