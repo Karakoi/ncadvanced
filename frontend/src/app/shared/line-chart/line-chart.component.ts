@@ -64,7 +64,7 @@ export class LineChartComponent {
     let closedRequests: Array<any> = [];
     let createdRequests: Array<any> = [];
     this.clear();
-    this.reportService.getAllStaticticsOfClosedRequestsByPeriod(this.startDate, this.endDate)
+    this.reportService.getAllStatisticsOfClosedRequestsByPeriod(this.startDate, this.endDate)
       .subscribe((array: RequestDTO[]) => {
         console.log(array);
         array.forEach(requestDTO => {
@@ -74,7 +74,7 @@ export class LineChartComponent {
           this.lineChartLabels.push(firstDate.concat(" : " + secondDate));
         });
 
-        this.reportService.getAllStaticticsOfCreatedRequestsByPeriod(this.startDate, this.endDate)
+        this.reportService.getAllStatisticsOfCreatedRequestsByPeriod(this.startDate, this.endDate)
           .subscribe((array: RequestDTO[]) => {
             console.log(array);
             array.forEach(requestDTO => {
