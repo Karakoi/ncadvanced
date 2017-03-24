@@ -1,6 +1,7 @@
 package com.overseer.service;
 
 import com.overseer.dto.RequestDTO;
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -252,6 +253,14 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return list of requests with Free progress status {@link ProgressStatus}.
      */
     List<Request> findFreeRequests(int pageNumber);
+
+    /**
+     * Returns list of filtered requests by specified searchRequests params in {@link RequestSearchDTO} object.
+     *
+     * @param searchDTO searchRequests params dto object
+     * @return filtered requests list
+     */
+    List<Request> searchRequests(RequestSearchDTO searchDTO);
 
     /**
      * Returns list to build pie chart.

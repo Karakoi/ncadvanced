@@ -1,9 +1,15 @@
-<div *ngIf="requests.length > 0">
-
+<div *ngIf="requests">
   <form-template>
     <div class="template-body">
       <div class="space">
-        <button ngClass="removSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">New request</button>
+        <select #perPageSelect class="form-control pull-left" style="width: 90px;"
+                (change)="perPageChange(perPageSelect.value)" ngClass="removeSpace">
+          <option>10</option>
+          <option selected>20</option>
+          <option>50</option>
+          <option>100</option>
+        </select>
+        <button ngClass="removeSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">New request</button>
         <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger" (click)="uncheck()">Uncheck
           all
         </button>
@@ -146,19 +152,15 @@
             <button class="center-block btn btn-success" (click)="close(request)">Close</button>
           </td>
         </tr>
+        <tr *ngIf="requests.length == 0">
+          <td class="no-requests" colspan="8">Nothing was found on the specified search parameters...</td>
+        </tr>
         </tbody>
       </table>
-      <select #perPageSelect class="form-control pull-left" style="width: 90px;"
-              (change)="perPageChange(perPageSelect.value)">
-        <option>10</option>
-        <option selected>20</option>
-        <option>50</option>
-        <option>100</option>
-      </select>
-      <div class="text-center">
+      <div class="text-center" *ngIf="!searchDTO.title && !searchDTO.dateOfCreation && !searchDTO.priority && !searchDTO.estimate && !searchDTO.progress && !searchDTO.reporterName && !searchDTO.assigneeName">
         <pagination [totalItems]="requestsCount"
-                    [itemsPerPage]="perPage" (pageChanged)="changed($event)">
-        </pagination>
+                    [itemsPerPage]="perPage" (pageChanged)="changed($event)"
+        ></pagination>
       </div>
 
     </div>

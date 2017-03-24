@@ -75,8 +75,8 @@ export class RequestTable {
   constructor(private requestService: RequestService) {
     this.searchDTO = {
       title: "",
-      dateOfCreation: null,
-      estimate: null,
+      dateOfCreation: "",
+      estimate: "",
       priority: "",
       progress: "",
       reporterName: "",
@@ -204,6 +204,7 @@ export class RequestTable {
 
   getSearchData(searchDTO){
     this.requestService.searchAll(searchDTO).subscribe(requests => {
+      console.log(requests);
       this.requests = requests;
     })
   }

@@ -16,7 +16,7 @@ import lombok.Data;
 public class RequestSearchDTO {
     private String title;
     private String dateOfCreation;
-    private int estimate;
+    private String estimate;
     private String priority;
     private String progress;
     private String reporterName;

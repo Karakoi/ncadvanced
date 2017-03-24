@@ -3,6 +3,7 @@ package com.overseer.service.impl;
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.event.ChangeProgressStatusEvent;
 import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -276,6 +277,46 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findFreeRequests(int pageNumber) {
         return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
+    }
+
+    @Override
+    public List<Request> searchRequests(RequestSearchDTO searchDTO) {
+        StringBuilder paramsBuilder = new StringBuilder(" WHERE r.parent_id IS NULL");
+        if (!searchDTO.getTitle().isEmpty()) {
+            String title = searchDTO.getTitle();
+            paramsBuilder.append(" AND r.title LIKE '%").append(title).append("%'");
+        }
+        if (!searchDTO.getReporterName().isEmpty()) {
+            String reporterName = searchDTO.getReporterName();
+            paramsBuilder.append(" AND (lower(reporter.first_name) LIKE lower('%").append(reporterName).append("%') OR ");
+            paramsBuilder.append("lower(reporter.last_name) LIKE lower('%").append(reporterName).append("%') OR ");
+            paramsBuilder.append("lower(reporter.second_name) LIKE lower('%").append(reporterName).append("%'))");
+        }
+        if (!searchDTO.getAssigneeName().isEmpty()) {
+            String assigneeName = searchDTO.getAssigneeName();
+            paramsBuilder.append(" AND (assignee.first_name LIKE '%").append(assigneeName).append("%' OR ");
+            paramsBuilder.append("assignee.last_name LIKE '%").append(assigneeName).append("%' OR ");
+            paramsBuilder.append("assignee.second_name LIKE '%").append(assigneeName).append("%')");
+        }
+        if (!searchDTO.getEstimate().isEmpty()) {
+            int estimate = Integer.parseInt(searchDTO.getEstimate());
+            paramsBuilder.append(" AND r.estimate_time_in_days = ").append(estimate);
+        }
+        if (!searchDTO.getPriority().isEmpty()) {
+            String priority = searchDTO.getPriority();
+            paramsBuilder.append(" AND priority.name = '").append(priority).append("'");
+        }
+        if (!searchDTO.getProgress().isEmpty()) {
+            String progress = searchDTO.getProgress();
+            paramsBuilder.append(" AND progress.name = '").append(progress).append("'");
+        }
+        if (!searchDTO.getDateOfCreation().isEmpty()) {
+            String date = searchDTO.getDateOfCreation();
+            paramsBuilder.append(" AND date_of_creation::timestamp::date = '").append(date).append("'");
+        }
+        paramsBuilder.append(" LIMIT ").append(searchDTO.getLimit());
+        String query = paramsBuilder.toString();
+        return requestDao.searchRequests(query);
     }
 
     /**

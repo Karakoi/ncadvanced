@@ -1,7 +1,7 @@
 export interface RequestSearchDTO {
   title: string,
-  dateOfCreation: Date,
-  estimate: number,
+  dateOfCreation: string,
+  estimate: string,
   priority: string,
   progress: string,
   reporterName: string,
