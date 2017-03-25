@@ -6,6 +6,7 @@ import {DeleteRequestComponent} from "./request-delete/delete-request.component"
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
 import {CloseRequestComponent} from "./request-close/close-request.component";
+import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
 
 declare let $: any;
 
@@ -52,7 +53,7 @@ export class RequestTable {
       reporter: true,
       assignee: true,
     }
-  }
+  };
 
 
   @ViewChild(RequestFormComponent)
@@ -70,6 +71,9 @@ export class RequestTable {
   @ViewChild(DeleteRequestComponent)
   deleteRequestComponent: DeleteRequestComponent;
 
+  @ViewChild(ReopenRequestComponent)
+  reopenRequestComponent: ReopenRequestComponent;
+  
   constructor(private requestService: RequestService) {
     this.orderType = true;
     this.orderField = 'title';
@@ -119,6 +123,11 @@ export class RequestTable {
     this.closeRequestComponent.modal.open();
   }
 
+  reOpen(request:Request) {
+    this.reopenRequestComponent.request = request;
+    this.reopenRequestComponent.modal.open();
+  }
+  
   isChecked(id) {
     return this.selected.has(id);
   }

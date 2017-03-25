@@ -45,6 +45,7 @@ public abstract class CrudDaoImpl<T extends AbstractEntity> implements CrudDao<T
             long generatedId = keyHolder.getKey().longValue();
             entity.setId(generatedId);
         } else {
+            System.out.println("Request before saving : " + entity);
             this.jdbc.update(insertQuery, sqlParameterSource);
         }
         return entity;

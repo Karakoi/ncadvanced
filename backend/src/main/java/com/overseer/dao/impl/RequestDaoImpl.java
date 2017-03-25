@@ -83,6 +83,12 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public Long countClosedRequestByAssignee(Long managerId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countClosedByAssignee"),
+                new MapSqlParameterSource("assigneeId", managerId), Long.class);
+    }
+
+    @Override
     public List<Request> findSubRequests(Long id) {
         Assert.notNull(id, "id must not be null");
         String subRequestsQuery = this.queryService().getQuery("request.select")
@@ -133,6 +139,22 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                     this.getMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber) {
+        Assert.notNull(assigneeId, "id must not be null");
+        String findByAssigneeQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findClosedByAssignee"));
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+            parameterSource.addValue("assigneeId", assigneeId);
+            return jdbc().query(findByAssigneeQuery, parameterSource, this.getMapper());
+        } catch (DataAccessException e) {
             return null;
         }
     }

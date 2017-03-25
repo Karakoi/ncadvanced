@@ -13,6 +13,7 @@ import {PaginationModule} from "ng2-bootstrap";
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
 import {CloseRequestComponent} from "./request-close/close-request.component";
+import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
 
 
 
@@ -35,14 +36,16 @@ import {CloseRequestComponent} from "./request-close/close-request.component";
     AssignRequestComponent,
     DeleteRequestComponent,
     CloseRequestComponent,
-    JoinRequestComponent
+    JoinRequestComponent,
+    ReopenRequestComponent
   ],
   exports: [
     RequestTable,
     AssignRequestComponent,
     CloseRequestComponent,
     DeleteRequestComponent,
-    JoinRequestComponent
+    JoinRequestComponent,
+    ReopenRequestComponent
   ]
 })
 export class  BasicRequestTableModule {

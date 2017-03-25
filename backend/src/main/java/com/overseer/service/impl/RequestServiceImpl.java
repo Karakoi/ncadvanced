@@ -51,6 +51,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.countInProgressRequestByAssignee(managerId);
     }
 
+    @Override
+    public Long countClosedRequestByAssignee(Long managerId) {
+        return requestDao.countClosedRequestByAssignee(managerId);
+    }
 
     public RequestServiceImpl(RequestDao requestDao,
                               ProgressStatusDao progressStatusDao) {
@@ -105,6 +109,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
         val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
+                list.size(), assigneeId, pageNumber);
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber) {
+        Assert.notNull(assigneeId, "assignee must not be null");
+        val list = this.requestDao.findClosedRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
                 list.size(), assigneeId, pageNumber);
         return list;
@@ -324,6 +340,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public Request assignRequest(Request request) {
         Assert.notNull(request, "request must not be null");
+        System.out.println("In the assign Service method");
+        System.out.println("Request: " + request);
+        System.out.println("Progress: " + request.getProgressStatus().getId());
         log.debug("Assign request with id: {} to office manager with id: {}", request.getId(), request.getAssignee().getId());
         if (request.getProgressStatus().getId() != FREE_STATUS) {
             throw new InappropriateProgressStatusException("Request with id: "
@@ -362,7 +381,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public Request reopenRequest(Long requestId) {
         Assert.notNull(requestId, "id of request must not be null");
-        log.debug("Close request with id: {} ", requestId);
+        log.debug("Reopen request with id: {} ", requestId);
 
         Request request = requestDao.findOne(requestId);
         if (request == null) {

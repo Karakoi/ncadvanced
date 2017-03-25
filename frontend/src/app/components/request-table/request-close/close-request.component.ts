@@ -26,11 +26,13 @@ export class CloseRequestComponent {
   }
 
   closeRequest() {
-    this.requestService.close(this.request).subscribe((item: Request) => {
+    this.request.lastChanger = this.request.assignee;
+    this.requestService.close(this.request).subscribe((item:Request) => {
       this.toastr.success("Request was closed successfully", "Success!");
       this.updated.emit(this.requests.filter((request) => request.id !== item.id));
       this.modal.close();
     }, e => this.handleErrorCloseRequest(e));
+
   }
 
 

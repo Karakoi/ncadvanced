@@ -106,10 +106,7 @@ public class RequestController {
      */
     @PutMapping("/closeRequest")
     public ResponseEntity closeRequest(@RequestBody Request request) {
-        System.out.println("Request before - " + request);
-        System.out.println("Request.id before - " + request.getId());
         val closedRequest = requestService.closeRequest(request);
-        System.out.println("Request after - " + closedRequest);
         return new ResponseEntity<>(closedRequest, HttpStatus.OK);
     }
 
@@ -121,8 +118,8 @@ public class RequestController {
      */
     @PutMapping("/reopenRequest")
     public ResponseEntity reopenRequest(@RequestBody Request request) {
-        val reopendRequest = requestService.reopenRequest(request.getId());
-        return new ResponseEntity<>(reopendRequest, HttpStatus.OK);
+        val reopenedRequest = requestService.reopenRequest(request.getId());
+        return new ResponseEntity<>(reopenedRequest, HttpStatus.OK);
     }
 
     /**
@@ -225,6 +222,7 @@ public class RequestController {
     /**
      * Creates {@link Request} entity of parent request and joins some another
      * requests to it.
+     *
      * @param request json object which represents {@link Request} entity.
      * @param ids     string representation if id`s array.
      * @return json representation of created {@link Request} entity.
@@ -239,14 +237,12 @@ public class RequestController {
 
     @GetMapping("/requestsByReporter")
     public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
-        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
         val requests = requestService.findRequestsByReporter(userId, pageNumber);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     @GetMapping("/countInProgressRequestsByAssignee")
     public ResponseEntity<Long> countInProgressRequestByAssignee(@RequestParam long manager) {
-        System.out.println("Manager id " + manager);
         return new ResponseEntity<>(requestService.countInProgressRequestByAssignee(manager), HttpStatus.OK);
     }
 
@@ -257,9 +253,20 @@ public class RequestController {
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
+    @GetMapping("/countClosedRequestsByAssignee")
+    public ResponseEntity<Long> countClosedRequestByAssignee(@RequestParam long manager) {
+        return new ResponseEntity<>(requestService.countClosedRequestByAssignee(manager), HttpStatus.OK);
+    }
+
+    @GetMapping("/closedRequestsByAssignee")
+    public ResponseEntity<List<Request>> getClosedRequestsByAssignee(@RequestParam int page,
+                                                                     @RequestParam long manager) {
+        val requests = requestService.findClosedRequestsByAssignee(manager, page);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
     @GetMapping("/closedRequestsByReporter")
     public ResponseEntity<List<Request>> getClosedRequestsByReporter(@RequestParam long userId, int pageNumber) {
-        System.out.println("userId:" + userId + " pageNumber " + pageNumber);
         val requests = requestService.findClosedRequestsByReporter(userId, pageNumber);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
@@ -281,6 +288,7 @@ public class RequestController {
 
     /**
      * Reopen array of requests.
+     *
      * @param requestsId array of request id's.
      * @return reopened requests.
      */
