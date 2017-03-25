@@ -7,6 +7,7 @@ import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
 import com.overseer.service.impl.report.view.AdminReportView;
+import com.overseer.service.impl.report.view.ManagerReportView;
 import com.overseer.service.impl.report.view.RequestReportPdfView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class ReportServiceImpl implements ReportService {
     private final RequestService requestService;
     private final RequestDao requestDao;
     private final AdminReportView adminReportView;
+    private final ManagerReportView managerReportView;
 
     /**
      * {@inheritDoc}.
@@ -39,6 +41,15 @@ public class ReportServiceImpl implements ReportService {
     public View generateAdminPDFReport(LocalDate start, LocalDate end) {
         adminReportView.setDatePeriod(start, end);
         return adminReportView;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public View generateManagerPDFReport(LocalDate start, LocalDate end) {
+        managerReportView.setDatePeriod(start, end);
+        return managerReportView;
     }
 
     /**

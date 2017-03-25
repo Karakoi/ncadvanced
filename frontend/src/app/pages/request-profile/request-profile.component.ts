@@ -9,6 +9,8 @@ import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
 import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
+import {ReportService} from "../../service/report.service";
+import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'request-profile',
@@ -36,6 +38,7 @@ export class RequestProfileComponent implements OnInit {
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
+              private reportService: ReportService,
               private toastr: ToastsManager,
               private authService: AuthService,
               private historyService: HistoryService) {
@@ -71,11 +74,11 @@ export class RequestProfileComponent implements OnInit {
     });
   }
 
-  showHistoryValue(generalValue: string, demonstrationValue: string){
-    if(demonstrationValue != null){
+  showHistoryValue(generalValue: string, demonstrationValue: string) {
+    if (demonstrationValue != null) {
       return demonstrationValue;
     } else {
-      if(generalValue != null){
+      if (generalValue != null) {
         return generalValue;
       } else {
         return "empty value";
@@ -114,7 +117,7 @@ export class RequestProfileComponent implements OnInit {
 
   updateRequest() {
     this.request.parentId = null;
-    if (this.request.assignee.id === 0){
+    if (this.request.assignee.id === 0) {
       this.request.assignee = <User>{};
     }
     this.request.lastChanger = this.currentUser;
@@ -124,7 +127,7 @@ export class RequestProfileComponent implements OnInit {
       });
   }
 
-  getRequestType(request): string  {
+  getRequestType(request): string {
     if (request.progressStatus.name == null && request.priorityStatus.name == null) {
       return "Sub request"
     } else if (request.progressStatus.name == 'Joined') {
@@ -134,7 +137,7 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
-  isFree(request):boolean {
+  isFree(request): boolean {
     if (request.progressStatus.name == 'Free') {
       return false;
     } else {
@@ -142,11 +145,21 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
-  isInProgress(request):boolean {
+  isInProgress(request): boolean {
     if (request.progressStatus.name == 'In progress') {
       return true;
     } else {
       return false;
     }
+  }
+
+  getPDF() {
+    this.reportService.getPDFRequest(this.request.id).subscribe(
+      (res: any) => {
+        let blob = res.blob();
+        let filename = 'request_' + this.request.id + '.pdf';
+        FileSaver.saveAs(blob, filename);
+      }
+    );
   }
 }
