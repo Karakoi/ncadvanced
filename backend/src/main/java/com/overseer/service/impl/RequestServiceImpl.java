@@ -12,6 +12,7 @@ import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.service.RequestService;
+import com.overseer.service.impl.builder.SqlQueryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
@@ -281,41 +282,45 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     @Override
     public List<Request> searchRequests(RequestSearchDTO searchDTO) {
-        StringBuilder paramsBuilder = new StringBuilder(" WHERE r.parent_id IS NULL");
-        if (!searchDTO.getTitle().isEmpty()) {
-            String title = searchDTO.getTitle();
-            paramsBuilder.append(" AND r.title LIKE '%").append(title).append("%'");
+
+        String title = searchDTO.getTitle();
+        String reporterName = searchDTO.getReporterName();
+        String assigneeName = searchDTO.getAssigneeName();
+        String estimate = searchDTO.getEstimate();
+        String progress = searchDTO.getProgress();
+        String priority = searchDTO.getPriority();
+        String dateOfCreation = searchDTO.getDateOfCreation();
+        int limit = searchDTO.getLimit();
+
+        SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
+
+        sqlQueryBuilder.where().isNull("r.parent_id");
+
+        if (!title.isEmpty()) {
+            sqlQueryBuilder.and().like("title", title);
         }
-        if (!searchDTO.getReporterName().isEmpty()) {
-            String reporterName = searchDTO.getReporterName();
-            paramsBuilder.append(" AND (lower(reporter.first_name) LIKE lower('%").append(reporterName).append("%') OR ");
-            paramsBuilder.append("lower(reporter.last_name) LIKE lower('%").append(reporterName).append("%') OR ");
-            paramsBuilder.append("lower(reporter.second_name) LIKE lower('%").append(reporterName).append("%'))");
+        if (!reporterName.isEmpty()) {
+            sqlQueryBuilder.and().like(new String[]{"reporter.first_name", "reporter.last_name", "reporter.second_name"}, reporterName);
         }
-        if (!searchDTO.getAssigneeName().isEmpty()) {
-            String assigneeName = searchDTO.getAssigneeName();
-            paramsBuilder.append(" AND (assignee.first_name LIKE '%").append(assigneeName).append("%' OR ");
-            paramsBuilder.append("assignee.last_name LIKE '%").append(assigneeName).append("%' OR ");
-            paramsBuilder.append("assignee.second_name LIKE '%").append(assigneeName).append("%')");
+        if (!assigneeName.isEmpty()) {
+            sqlQueryBuilder.and().like(new String[]{"assignee.first_name", "assignee.last_name", "assignee.second_name"}, assigneeName);
         }
-        if (!searchDTO.getEstimate().isEmpty()) {
-            int estimate = Integer.parseInt(searchDTO.getEstimate());
-            paramsBuilder.append(" AND r.estimate_time_in_days = ").append(estimate);
+        if (!estimate.isEmpty()) {
+            sqlQueryBuilder.and().equal("r.estimate_time_in_days", estimate);
         }
-        if (!searchDTO.getPriority().isEmpty()) {
-            String priority = searchDTO.getPriority();
-            paramsBuilder.append(" AND priority.name = '").append(priority).append("'");
+        if (!progress.isEmpty()) {
+            sqlQueryBuilder.and().equal("progress.name", progress);
         }
-        if (!searchDTO.getProgress().isEmpty()) {
-            String progress = searchDTO.getProgress();
-            paramsBuilder.append(" AND progress.name = '").append(progress).append("'");
+        if (!priority.isEmpty()) {
+            sqlQueryBuilder.and().equal("priority.name", priority);
         }
-        if (!searchDTO.getDateOfCreation().isEmpty()) {
-            String date = searchDTO.getDateOfCreation();
-            paramsBuilder.append(" AND date_of_creation::timestamp::date = '").append(date).append("'");
+        if (!dateOfCreation.isEmpty()) {
+            sqlQueryBuilder.and().equalDate("date_of_creation", dateOfCreation);
         }
-        paramsBuilder.append(" LIMIT ").append(searchDTO.getLimit());
-        String query = paramsBuilder.toString();
+        sqlQueryBuilder.limit(limit);
+
+        String query = sqlQueryBuilder.build();
+
         return requestDao.searchRequests(query);
     }
 
