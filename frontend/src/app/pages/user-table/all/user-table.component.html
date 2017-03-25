@@ -34,16 +34,25 @@
         <tbody>
         <tr>
           <td>
-            <input type="text" [(ngModel)]="searchTypes.firstName" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.firstName" class="form-control"/>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.firstName" (ngModelChange)="setTitleSearch('firstName', $event)" class="form-control"/>
           </td>
           <td>
-            <input type="text" [(ngModel)]="searchTypes.lastName" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.lastName" class="form-control"/>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.lastName" (ngModelChange)="setTitleSearch('lastName', $event)" class="form-control"/>
           </td>
           <td>
-            <input type="text" [(ngModel)]="searchTypes.email" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.email" class="form-control"/>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.email" (ngModelChange)="setTitleSearch('email', $event)" class="form-control"/>
           </td>
           <td>
-            <select class="form-control" [(ngModel)]="searchTypes.role">
+            <select *ngIf="!settings.ajax" class="form-control" [(ngModel)]="searchTypes.role">
+              <option></option>
+              <option>admin</option>
+              <option>employee</option>
+              <option>office manager</option>
+            </select>
+            <select *ngIf="settings.ajax" class="form-control" [(ngModel)]="searchDTO.role" (ngModelChange)="setTitleSearch('role', $event)">
               <option></option>
               <option>admin</option>
               <option>employee</option>
