@@ -1,14 +1,12 @@
 package com.overseer.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.overseer.controller.RequestController;
-import com.overseer.service.RequestService;
 import lombok.Data;
 
 /**
  * DTO class for request filtering params on client side data table representing.
- * The {@link RequestController#searchRequests} takes an object with the searchRequests parameters and delegates it
- * to the {@link RequestService#searchRequests(RequestSearchDTO)} for building the sql 'WHERE' conditions.
+ * The RequestController#searchRequests takes an object with the searchRequests parameters and delegates it
+ * to the RequestService#searchRequests() for building the sql 'WHERE' conditions.
  */
 @Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)

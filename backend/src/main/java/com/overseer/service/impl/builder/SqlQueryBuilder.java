@@ -1,10 +1,15 @@
 package com.overseer.service.impl.builder;
 
+import static java.lang.String.format;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
-
+/**
+ * Implementation of builder pattern, which provides methods to build a sql query and avoid multiple string concat repeating.
+ * In our case, is used for search by the administrator required users or requests in data table by ajax for the specified
+ *  search parameters.
+ */
 public class SqlQueryBuilder {
 
     private final StringBuilder builder;

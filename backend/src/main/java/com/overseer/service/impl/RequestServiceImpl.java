@@ -298,41 +298,46 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     @Override
     public List<Request> searchRequests(RequestSearchDTO searchDTO) {
-
-        String title = searchDTO.getTitle();
-        String reporterName = searchDTO.getReporterName();
-        String assigneeName = searchDTO.getAssigneeName();
-        String estimate = searchDTO.getEstimate();
-        String progress = searchDTO.getProgress();
-        String priority = searchDTO.getPriority();
-        String dateOfCreation = searchDTO.getDateOfCreation();
-        int limit = searchDTO.getLimit();
-
         SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
 
         sqlQueryBuilder.where().isNull("r.parent_id");
 
+        String title = searchDTO.getTitle();
         if (!title.isEmpty()) {
             sqlQueryBuilder.and().like("title", title);
         }
+
+        String reporterName = searchDTO.getReporterName();
         if (!reporterName.isEmpty()) {
             sqlQueryBuilder.and().like(new String[]{"reporter.first_name", "reporter.last_name", "reporter.second_name"}, reporterName);
         }
+
+        String assigneeName = searchDTO.getAssigneeName();
         if (!assigneeName.isEmpty()) {
             sqlQueryBuilder.and().like(new String[]{"assignee.first_name", "assignee.last_name", "assignee.second_name"}, assigneeName);
         }
+
+        String estimate = searchDTO.getEstimate();
         if (!estimate.isEmpty()) {
             sqlQueryBuilder.and().equal("r.estimate_time_in_days", estimate);
         }
+
+        String progress = searchDTO.getProgress();
         if (!progress.isEmpty()) {
             sqlQueryBuilder.and().equal("progress.name", progress);
         }
+
+        String priority = searchDTO.getPriority();
         if (!priority.isEmpty()) {
             sqlQueryBuilder.and().equal("priority.name", priority);
         }
+
+        String dateOfCreation = searchDTO.getDateOfCreation();
         if (!dateOfCreation.isEmpty()) {
             sqlQueryBuilder.and().equalDate("date_of_creation", dateOfCreation);
         }
+
+        int limit = searchDTO.getLimit();
         sqlQueryBuilder.limit(limit);
 
         String query = sqlQueryBuilder.build();

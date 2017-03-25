@@ -45,6 +45,7 @@ export class RequestTable {
     join: false,
     reopen: false,
     close: false,
+    ajax: true,
     columns: {
       title: true,
       estimate: true,

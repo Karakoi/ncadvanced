@@ -78,16 +78,23 @@
         <tr *ngIf="settings.filterRow">
           <td *ngIf="settings.multiSelect"></td>
           <td *ngIf="settings.columns.title">
-            <input type="text" [ngModel]="searchDTO.title" (ngModelChange)="setTitleSearch('title', $event)" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.title" (ngModelChange)="setTitleSearch('title', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.title" class="form-control"/>          </td>
           <td *ngIf="settings.columns.dateOfCreation">
-            <input type="date" [ngModel]="searchDTO.dateOfCreation" (ngModelChange)="setTitleSearch('dateOfCreation', $event)" class="form-control"/>
+            <input *ngIf="settings.ajax" type="date" [ngModel]="searchDTO.dateOfCreation" (ngModelChange)="setTitleSearch('dateOfCreation', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="date" [(ngModel)]="searchTypes.date" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.estimate">
-            <input type="text" [ngModel]="searchDTO.estimate" (ngModelChange)="setTitleSearch('estimate', $event)" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.estimate" (ngModelChange)="setTitleSearch('estimate', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.estimate" class="form-control"/>          </td>
           <td *ngIf="settings.columns.priorityStatus">
-            <select class="form-control" [ngModel]="searchDTO.priority" (ngModelChange)="setTitleSearch('priority', $event)">
+            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.priority" (ngModelChange)="setTitleSearch('priority', $event)">
+              <option></option>
+              <option>High</option>
+              <option>Normal</option>
+              <option>Low</option>
+            </select>
+            <select *ngIf="!settings.ajax" class="form-control" [(ngModel)]="searchTypes.priorityStatus">
               <option></option>
               <option>High</option>
               <option>Normal</option>
@@ -95,7 +102,14 @@
             </select>
           </td>
           <td *ngIf="settings.columns.progressStatus">
-            <select class="form-control" [ngModel]="searchDTO.progress" (ngModelChange)="setTitleSearch('progress', $event)">
+            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.progress" (ngModelChange)="setTitleSearch('progress', $event)">
+              <option></option>
+              <option>Free</option>
+              <option>In progress</option>
+              <option>Joined</option>
+              <option>Closed</option>
+            </select>
+            <select *ngIf="!settings.ajax" class="form-control" [(ngModel)]="searchTypes.progressStatus">
               <option></option>
               <option>Free</option>
               <option>In progress</option>
@@ -104,13 +118,13 @@
             </select>
           </td>
           <td *ngIf="settings.columns.reporter">
-            <input type="text" [ngModel]="searchDTO.reporterName" (ngModelChange)="setTitleSearch('reporterName', $event)" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.reporterName" (ngModelChange)="setTitleSearch('reporterName', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.reporterName" class="form-control"/>          </td>
           <td *ngIf="settings.columns.assignee">
-            <input type="text" [ngModel]="searchDTO.assigneeName" (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.assigneeName" (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>          </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
-          <td></td>
+          <td class="td-center" *ngIf="settings.reopen"><span class="glyphicon glyphicon-repeat text-center"></span></td>
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
@@ -153,12 +167,12 @@
                   (click)="close(request)"></span>
           </td>
           <td class="text-center" *ngIf="settings.reopen">
-            <span [attr.value]="request.id" class="glyphicon glyphicon-repeat center-block btn btn-xs"
+            <span [attr.value]="request.id" class="glyphicon glyphicon-repeat center-block btn btn-success btn-xs"
                   (click)="reOpen(request)"></span>
           </td>
         </tr>
         <tr *ngIf="requests.length == 0">
-          <td class="no-requests" colspan="8">Nothing was found on the specified search parameters...</td>
+          <td class="no-requests" colspan="1000">Requests for this type or the specified search parameters was not found.</td>
         </tr>
         </tbody>
       </table>

@@ -24,6 +24,7 @@ export class ActiveRequest implements OnInit {
     info: true,
     multiSelect: false,
     filterRow: true,
+    ajax: false,
     columns: {
       title: true,
       dateOfCreation: true,
@@ -49,7 +50,7 @@ export class ActiveRequest implements OnInit {
     this.authService.currentUser.subscribe(u => {
       this.currentUser = u;
       this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
-        this.requests = requests.filter(r => r.progressStatus.name != "Closed");
+        this.requests = requests.filter(r => r.progressStatus.name != "Closed" && r.progressStatus.name != null);
         this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
           this.totalItems = count;
           this.loaded = true;

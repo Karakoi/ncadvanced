@@ -46,7 +46,7 @@ th:hover {
   margin-top: -8px;
 }
 
-.glyphicon-trash {
+.glyphicon-trash, .glyphicon-repeat {
   width: 30px;
 }
 
