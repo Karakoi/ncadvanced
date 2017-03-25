@@ -1,7 +1,7 @@
 package com.overseer.controller;
 
-import com.overseer.model.ProgressStatus;
-import com.overseer.service.ProgressStatusService;
+import com.overseer.model.ProgressStatusView;
+import com.overseer.service.impl.ProgressStatusUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -20,16 +20,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProgressStatusController {
 
-    private final ProgressStatusService progressStatusService;
+    private final ProgressStatusUtil progressStatusUtil;
 
     /**
-     * Returns all {@link ProgressStatus} entities.
+     * Returns all {@link ProgressStatusView} entities.
      *
-     * @return all {@link ProgressStatus} entities.
+     * @return all {@link ProgressStatusView} entities.
      */
     @GetMapping
-    public ResponseEntity<List<ProgressStatus>> getAllProgressStatuses() {
-        val progressStatuses = progressStatusService.findAllProgressStatuses();
+    public ResponseEntity<List<ProgressStatusView>> getAllProgressStatusViews() {
+        val progressStatuses = progressStatusUtil.getAllProgressStatusViews();
         return new ResponseEntity<>(progressStatuses, HttpStatus.OK);
     }
 }

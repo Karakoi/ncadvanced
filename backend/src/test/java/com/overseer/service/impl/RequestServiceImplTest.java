@@ -4,6 +4,7 @@ import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
 import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.model.*;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,7 +41,7 @@ public class RequestServiceImplTest {
     private PriorityStatus priority;
     private List<Long> requestsGroupIds;
 
-    private static final Long IN_PROGRESS_STATUS = 7L;
+//    private static final Long IN_PROGRESS_STATUS = 7L;
 
     @Autowired
     private RequestService requestService;
@@ -84,8 +85,7 @@ public class RequestServiceImplTest {
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
 
-        progress = new ProgressStatus("Free", 200);
-        progress.setId(5L);
+        progress = ProgressStatus.FREE;
 
         request = new Request();
         request.setTitle("Do something");
@@ -100,6 +100,7 @@ public class RequestServiceImplTest {
         request.setProgressStatus(progress);
 
         this.requestDao.save(request);
+
     }
 
     @Test
@@ -126,7 +127,7 @@ public class RequestServiceImplTest {
         // when
         Request assignRequest = requestService.assignRequest(request);
         // then
-        assertThat(assignRequest.getProgressStatus().getId(), is(IN_PROGRESS_STATUS));
+        assertThat(assignRequest.getProgressStatus().getId(), is(ProgressStatus.IN_PROGRESS.getId()));
     }
 
     @Test(expected=InappropriateProgressStatusException.class)

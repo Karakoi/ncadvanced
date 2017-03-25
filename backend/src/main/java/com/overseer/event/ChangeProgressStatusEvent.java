@@ -1,7 +1,7 @@
 package com.overseer.event;
 
-import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
+import com.overseer.model.enums.ProgressStatus;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.List;

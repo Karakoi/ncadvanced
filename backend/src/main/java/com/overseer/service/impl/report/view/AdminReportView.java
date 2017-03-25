@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.overseer.dto.RequestDTO;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
 import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +57,7 @@ public class AdminReportView extends AbstractPdfView {
         table.setSpacingAfter(TABLE_SPACING);
         float[] columnWidths = {COLOMN_WIDTH, COLOMN_WIDTH, COLOMN_WIDTH};
         table.setWidths(columnWidths);
-        val collection = requestService.findListCountRequestsByPeriod(start, end, "Free");
+        val collection = requestService.findListCountRequestsByPeriod(start, end, ProgressStatus.FREE.getId());
         for (RequestDTO r : collection) {
 
             PdfPCell firstCell = new PdfPCell(new Paragraph("Count: " + r.getCount()));
@@ -93,7 +94,7 @@ public class AdminReportView extends AbstractPdfView {
      */
     private List getListWithBestManagers(LocalDate start, LocalDate end) {
         List list = new List();
-        val collection = requestService.findBestManagersByPeriod(start, end, "Closed");
+        val collection = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId());
 
         System.out.println(collection);
         for (int i = 0; i < collection.size(); i++) {

@@ -2,9 +2,9 @@ package com.overseer.dao;
 
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
-import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
+import com.overseer.model.enums.ProgressStatus;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -198,52 +198,52 @@ public interface RequestDao extends CrudDao<Request, Long> {
      *
      * @param start              period start.
      * @param end                period end.
-     * @param progressStatusName progress status name.
+     * @param progressStatusId progress status id.
      * @return list of request DTO created in provided period.
      */
-    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
 
     /**
      * Returns a request DTO created in provided period.
      *
      * @param start              period start.
      * @param end                period end.
-     * @param progressStatusName progress status name.
+     * @param progressStatusId progress status id.
      * @return request DTO created in provided period.
      */
-    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
 
     /**
      * Returns a list of request DTO created in provided period.
      *
      * @param start              period start.
      * @param end                period end.
-     * @param progressStatusName progress status name.
+     * @param progressStatusId progress status id.
      * @param id                 manager id.
      * @return list of request DTO created in provided period.
      */
-    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
 
     /**
      * Returns a request DTO created in provided period.
      *
      * @param start              period start.
      * @param end                period end.
-     * @param progressStatusName progress status name.
+     * @param progressStatusId progress status id.
      * @param id                 manager id.
      * @return request DTO created in provided period.
      */
-    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
 
     /**
      * Returns a list of best managers in provided period.
      *
      * @param start        period start.
      * @param end          period end.
-     * @param progressName progress status name.
+     * @param progressStatusId progress status id.
      * @return list of best managers in provided period.
      */
-    List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, String progressName);
+    List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
 
     /**
      * Returns a list of requests created in provided date.
@@ -286,7 +286,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
-     * @param statusIds list of progress status ids, must not be {@literal null}
+     * @param statusIds  list of progress status ids, must not be {@literal null}
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of requests
      */
@@ -302,7 +302,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Returns list to build pie chart.
      *
-     * @return list of statistic request by progress status. 
+     * @return list of statistic request by progress status.
      */
     List<Long> countRequestByProgressStatus();
 

@@ -31,15 +31,11 @@ export class AssignRequestComponent {
   assignRequest() {
     this.authService.currentUser.subscribe((user:User) => {
       this.request.assignee = user;
-      this.request.progressStatus = {
-        id: 7,
-        name: "In progress",
-        value: 400
-      };
+
       if (this.request.parentId === 0) {
         this.request.parentId = null;
       }
-      this.requestService.update(this.request).subscribe(() => {
+      this.requestService.assign(this.request).subscribe(() => {
         this.toastr.success("Request was assigned successfully", "Success!");
         this.requests = this.requests.filter(item => item["id"] !== this.request.id);
         this.updated.emit(this.requests);

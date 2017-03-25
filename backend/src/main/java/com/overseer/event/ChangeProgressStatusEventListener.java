@@ -2,8 +2,8 @@ package com.overseer.event;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
-import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,7 +41,7 @@ public class ChangeProgressStatusEventListener {
      *
      * @param changeProgressStatusEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'In progress'")
+    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'IN_PROGRESS'")
     public void assignRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
         Request request = changeProgressStatusEvent.getRequest();
         ProgressStatus progressStatus = changeProgressStatusEvent.getNewProgressStatus();
@@ -53,7 +53,7 @@ public class ChangeProgressStatusEventListener {
      *
      * @param changeProgressStatusEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'Closed'")
+    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'CLOSED'")
     public void closeRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
         Request request = changeProgressStatusEvent.getRequest();
         ProgressStatus closedProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
@@ -67,7 +67,7 @@ public class ChangeProgressStatusEventListener {
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
-            for (Request joinedRequest: joinedRequests) {
+            for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
                 changeStatusAndSave(joinedRequest, closedProgressStatus);
             }
@@ -82,7 +82,7 @@ public class ChangeProgressStatusEventListener {
      *
      * @param changeProgressStatusEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'Free'")
+    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'FREE'")
     public void reopenRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
         Request request = changeProgressStatusEvent.getRequest();
         ProgressStatus freeProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
@@ -103,7 +103,7 @@ public class ChangeProgressStatusEventListener {
      *
      * @param changeProgressStatusEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'Joined'")
+    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'JOINED'")
     public void joinRequestsIntoParent(ChangeProgressStatusEvent changeProgressStatusEvent) {
         Request parentRequest = changeProgressStatusEvent.getRequest();
         ProgressStatus joinedProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
@@ -131,7 +131,7 @@ public class ChangeProgressStatusEventListener {
     /**
      * Changes progress status, save request and send message to Reporter.
      *
-     * @param request specified request
+     * @param request        specified request
      * @param progressStatus specified progressStatus
      */
     private void changeStatusAndSave(Request request, ProgressStatus progressStatus) {
