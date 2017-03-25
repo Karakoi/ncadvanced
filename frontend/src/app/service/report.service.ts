@@ -21,8 +21,8 @@ export class ReportService {
       .map((res: Response) => res.blob());
   }
 
-  getAllStaticticsOfCreatedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getAllStaticticsOfCreatedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getAllStatisticsOfCreatedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getAllStatisticsOfCreatedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -30,8 +30,8 @@ export class ReportService {
       });
   }
 
-  getAllStaticticsOfClosedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getAllStaticticsOfClosedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getAllStatisticsOfClosedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getAllStatisticsOfClosedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
