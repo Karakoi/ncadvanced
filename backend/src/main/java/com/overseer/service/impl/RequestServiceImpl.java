@@ -1,9 +1,14 @@
 package com.overseer.service.impl;
 
+import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
+import com.overseer.event.AssignRequestEvent;
 import com.overseer.event.ChangeProgressStatusEvent;
+import com.overseer.event.CloseRequestEvent;
+import com.overseer.event.JoinRequestEvent;
+import com.overseer.event.ReopenRequestEvent;
 import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.PriorityStatus;
@@ -31,38 +36,64 @@ import java.util.List;
 public class RequestServiceImpl extends CrudServiceImpl<Request> implements RequestService, ApplicationEventPublisherAware {
     private static final short DEFAULT_PAGE_SIZE = 20;
 
-    private static final Long FREE_STATUS = 5L;
-    private static final Long JOINED_STATUS = 6L;
-    private static final Long IN_PROGRESS_STATUS = 7L;
-    private static final Long CLOSED_STATUS = 8L;
-
     private RequestDao requestDao;
-    private ProgressStatusDao progressStatusDao;
+
+    private SecurityContextService securityContextService;
 
     private ApplicationEventPublisher publisher;
 
-    @Override
-    public Long countRequestByAssignee(Long managerId) {
-        return requestDao.countRequestsByAssignee(managerId);
-    }
-
-    @Override
-    public Long countInProgressRequestByAssignee(Long managerId) {
-        return requestDao.countInProgressRequestByAssignee(managerId);
-    }
-
-
     public RequestServiceImpl(RequestDao requestDao,
-                              ProgressStatusDao progressStatusDao) {
+                              SecurityContextService securityContextService) {
         super(requestDao);
         this.requestDao = requestDao;
-        this.progressStatusDao = progressStatusDao;
+        this.securityContextService = securityContextService;
     }
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
     }
+
+    //-----------------------CRUD---------------------------
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Request update(Request request) throws NoSuchEntityException {
+        Assert.notNull(request, "request must not be null");
+        log.debug("Updating request with id: {} ", request.getId());
+        Long progressStatusId = request.getProgressStatus().getId();
+        if (!progressStatusId.equals(FREE_STATUS)) {
+            throw new InappropriateProgressStatusException("Request with id: "
+                    + request.getId() + " and ProgressStatus: "
+                    + request.getProgressStatus().getName()
+                    + " can not be updated");
+        }
+        return super.update(request);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void delete(Long idRequest) {
+        Assert.notNull(idRequest, "id of request must not be null");
+        log.debug("Delete request with id: {} ", idRequest);
+        Request request = requestDao.findOne(idRequest);
+        Long progressStatusId = request.getProgressStatus().getId();
+        if (progressStatusId == 0 || progressStatusId.equals(FREE_STATUS)) {
+            super.delete(idRequest);
+        } else {
+            throw new InappropriateProgressStatusException("Request with id: "
+                    + request.getId() + " and ProgressStatus: "
+                    + request.getProgressStatus().getName()
+                    + " can not be deleted");
+        }
+    }
+
+
+    //-----------------------FIND---------------------------
 
     /**
      * {@inheritDoc}.
@@ -126,12 +157,31 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber) {
+        Assert.notNull(reporterId, "Reporter id must be not null");
+        Assert.notNull(pageNumber, "Page number must be not null");
+        return requestDao.findRequestsByReporterAndProgress(reporterId, "Closed",
+                DEFAULT_PAGE_SIZE, pageNumber);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageNumber) {
         Assert.notNull(progressStatus, "progress status must not be null");
         val list = this.requestDao.findRequestsByProgress(progressStatus, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} requests with progress status: {} for page number: {}",
                 list.size(), progressStatus.getName(), pageNumber);
         return list;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Request> findFreeRequests(int pageNumber) {
+        return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
     }
 
     /**
@@ -162,6 +212,19 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public List<Request> findRequestsByDate(LocalDate date) {
+        Assert.notNull(date, "date must not be null");
+        val list = this.requestDao.findRequestsByDate(date);
+        log.debug("Fetched {} requests for date: {}", list.size(), date);
+        return list;
+    }
+
+    //-----------------------REPORT---------------------------
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
         RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end, progressStatusName);
         log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
@@ -182,16 +245,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
-        RequestDTO requestDTO = this.requestDao.findCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
-        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
-        return requestDTO;
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
     public List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
         List<RequestDTO> list = this.requestDao.findListCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
@@ -202,81 +255,22 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id) {
+        RequestDTO requestDTO = this.requestDao.findCountRequestsByManagerAndPeriod(start, end, progressStatusName, id);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName) {
         List<RequestDTO> list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusName);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
         return list;
     }
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public List<Request> findRequestsByDate(LocalDate date) {
-        Assert.notNull(date, "date must not be null");
-        val list = this.requestDao.findRequestsByDate(date);
-        log.debug("Fetched {} requests for date: {}", list.size(), date);
-        return list;
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public Request joinRequestsIntoParent(List<Long> ids, Request parentRequest) {
-        Assert.notNull(ids, "ids must not be null");
-        Assert.notNull(parentRequest, "parent request must not be null");
-        log.debug("Joining requests with ids {} into parent request {}", ids, parentRequest);
-
-        // Retrieve specified requests for joining from database
-        List<Request> joinedRequests = requestDao.findRequestsByIds(ids);
-
-        //check if joinedRequests are appropriate
-        joinedRequests.forEach(request -> {
-            if (request.getProgressStatus().getId() != FREE_STATUS) {
-                throw new InappropriateProgressStatusException("Can not join request with id: " + request.getId()
-                        + " because it has progress status that is not [Free]");
-            }
-        });
-
-        // Define progress status with 'Joined' value for child requests
-        ProgressStatus joinedProgressStatus = progressStatusDao.findOne(JOINED_STATUS);
-        ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, joinedProgressStatus, parentRequest, joinedRequests);
-        publisher.publishEvent(event);
-
-        return parentRequest;
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public Request saveSubRequest(Request subRequest) {
-        Assert.notNull(subRequest, "sub request must not be null");
-//        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
-//        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
-        log.debug("Create sub request {} for parent request with id {}", subRequest, subRequest.getParentId());
-        return requestDao.save(subRequest);
-    }
-
-    @Override
-    public Long countFreeRequests() {
-        val freeRequestsQuantity = requestDao.countFree();
-        log.debug("Counted {} requests with Free progress status", freeRequestsQuantity);
-        return freeRequestsQuantity;
-    }
-
-    @Override
-    public Long countRequestsByAssignee(Long assigneeId) {
-        val requestsByAssignee = requestDao.countByAssignee(assigneeId);
-        log.debug("Counted {} requests for user with id: {}", requestsByAssignee, assigneeId);
-        return requestsByAssignee;
-    }
-
-    @Override
-    public List<Request> findFreeRequests(int pageNumber) {
-        return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
-    }
+    //-----------------------QUANTITY---------------------------
 
     /**
      * {@inheritDoc}.
@@ -318,6 +312,46 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
     }
 
+    //-----------------------LIFECYCLE---------------------------
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Request saveSubRequest(Request subRequest) {
+        Assert.notNull(subRequest, "sub request must not be null");
+//        Assert.isNull(subRequest.getPriorityStatus(), "sub request priority status must be null");
+//        Assert.isNull(subRequest.getProgressStatus(), "sub request progress status must be null");
+        log.debug("Create sub request {} for parent request with id {}", subRequest, subRequest.getParentId());
+        return requestDao.save(subRequest);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Request joinRequestsIntoParent(List<Long> ids, Request parentRequest) {
+        Assert.notNull(ids, "ids must not be null");
+        Assert.notNull(parentRequest, "parent request must not be null");
+        log.debug("Joining requests with ids {} into parent request {}", ids, parentRequest);
+
+        // Retrieve specified requests for joining from database
+        List<Request> joinedRequests = requestDao.findRequestsByIds(ids);
+
+        //check if joinedRequests are appropriate
+        joinedRequests.forEach(request -> {
+            if (request.getProgressStatus().getId() != FREE_STATUS) {
+                throw new InappropriateProgressStatusException("Can not join request with id: " + request.getId()
+                        + " because it has progress status that is not [Free]");
+            }
+        });
+
+        JoinRequestEvent event = new JoinRequestEvent(this, parentRequest, joinedRequests);
+        publisher.publishEvent(event);
+
+        return parentRequest;
+    }
+
     /**
      * {@inheritDoc}.
      */
@@ -331,9 +365,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                     + request.getProgressStatus().getName()
                     + " can not be assign");
         }
-        // Define and set progress status
-        ProgressStatus progressStatus = progressStatusDao.findOne(IN_PROGRESS_STATUS);
-        ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, progressStatus, request);
+
+        AssignRequestEvent event = new AssignRequestEvent(this, request);
         publisher.publishEvent(event);
         return request;
     }
@@ -352,9 +385,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                     + request.getProgressStatus().getName()
                     + " can not be closed");
         }
-        // Define and set progress status
-        ProgressStatus closedProgressStatus = progressStatusDao.findOne(CLOSED_STATUS);
-        ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, closedProgressStatus, request);
+
+        CloseRequestEvent event = new CloseRequestEvent(this, request);
         publisher.publishEvent(event);
         return request;
     }
@@ -374,40 +406,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                     + request.getProgressStatus().getName()
                     + " can not be reopen");
         }
-        ProgressStatus freeProgressStatus = progressStatusDao.findOne(FREE_STATUS);
-        ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, freeProgressStatus, request);
+
+        ReopenRequestEvent event = new ReopenRequestEvent(this, request);
         publisher.publishEvent(event);
         return request;
-    }
-
-    @Override
-    public Request update(Request request) throws NoSuchEntityException {
-        Assert.notNull(request, "request must not be null");
-        log.debug("Updating request with id: {} ", request.getId());
-        Long progressStatusId = request.getProgressStatus().getId();
-        if (!progressStatusId.equals(FREE_STATUS)) {
-            throw new InappropriateProgressStatusException("Request with id: "
-                    + request.getId() + " and ProgressStatus: "
-                    + request.getProgressStatus().getName()
-                    + " can not be updated");
-        }
-        return super.update(request);
-    }
-
-    @Override
-    public void delete(Long idRequest) {
-        Assert.notNull(idRequest, "id of request must not be null");
-        log.debug("Delete request with id: {} ", idRequest);
-        Request request = requestDao.findOne(idRequest);
-        Long progressStatusId = request.getProgressStatus().getId();
-        if (progressStatusId == 0 || progressStatusId.equals(FREE_STATUS)) {
-            super.delete(idRequest);
-        } else {
-            throw new InappropriateProgressStatusException("Request with id: "
-                    + request.getId() + " and ProgressStatus: "
-                    + request.getProgressStatus().getName()
-                    + " can not be deleted");
-        }
     }
 
     /**
@@ -424,23 +426,41 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         requests.forEach(this::closeRequest);
     }
 
+    //-----------------------COUNT---------------------------
+
     @Override
     public Long countRequestByReporter(Long reporterId) {
         return requestDao.countRequestsByReporter(reporterId);
     }
 
     @Override
-    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber) {
-        Assert.notNull(reporterId, "Reporter id must be not null");
-        Assert.notNull(pageNumber, "Page number must be not null");
-        return requestDao.findRequestsByReporterAndProgress(reporterId, "Closed",
-                DEFAULT_PAGE_SIZE, pageNumber);
-    }
-
-    @Override
     public Long countClosedRequestsByReporter(Long reporterId) {
         Assert.notNull(reporterId, "Reporter id must be not null");
         return requestDao.countRequestsByReporterAndProgress(reporterId, "Closed");
+    }
+
+    @Override
+    public Long countRequestByAssignee(Long managerId) {
+        return requestDao.countRequestsByAssignee(managerId);
+    }
+
+    @Override
+    public Long countInProgressRequestByAssignee(Long managerId) {
+        return requestDao.countInProgressRequestByAssignee(managerId);
+    }
+
+    @Override
+    public Long countFreeRequests() {
+        val freeRequestsQuantity = requestDao.countFree();
+        log.debug("Counted {} requests with Free progress status", freeRequestsQuantity);
+        return freeRequestsQuantity;
+    }
+
+    @Override
+    public Long countRequestsByAssignee(Long assigneeId) {
+        val requestsByAssignee = requestDao.countByAssignee(assigneeId);
+        log.debug("Counted {} requests for user with id: {}", requestsByAssignee, assigneeId);
+        return requestsByAssignee;
     }
 
     @Override
