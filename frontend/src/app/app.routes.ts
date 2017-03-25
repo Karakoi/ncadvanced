@@ -51,8 +51,13 @@ export const appRoutes: Routes = [
   },
   // Available for manager
   {
-    path: 'assigned',
+    path: 'assigned/inProgress',
     loadChildren: './pages/assigned/assigned.module#AssignedModule',
+    canActivate: [PrivatePageGuard, ManagerPageGuard]
+  },
+  {
+    path: 'assigned/closed',
+    loadChildren: './pages/closed/closed.module#ClosedModule',
     canActivate: [PrivatePageGuard, ManagerPageGuard]
   },
   {

@@ -1,5 +1,6 @@
 package com.overseer.event;
 
+import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -25,15 +26,18 @@ public class ChangeProgressStatusEventListener {
     private EmailBuilder<Request> emailStrategyForAssignee;
     private EmailBuilder<Request> emailStrategyForReporter;
     private EmailService emailService;
+    private SecurityContextService securityContextService;
 
     public ChangeProgressStatusEventListener(RequestDao requestDao,
                                              @Qualifier("officeManagerNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForAssignee,
                                              @Qualifier("employeeNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForReporter,
-                                             EmailService emailService) {
+                                             EmailService emailService,
+                                             SecurityContextService securityContextService) {
         this.requestDao = requestDao;
         this.emailStrategyForAssignee = emailStrategyForAssignee;
         this.emailStrategyForReporter = emailStrategyForReporter;
         this.emailService = emailService;
+        this.securityContextService = securityContextService;
     }
 
     /**
@@ -92,7 +96,9 @@ public class ChangeProgressStatusEventListener {
         changeStatusAndSave(request, freeProgressStatus);
 
         sendMessageToAssignee(request);
-        request.setAssignee(null);
+
+        request.setLastChanger(this.securityContextService.currentUser());
+        request.getAssignee().setId(null);
         requestDao.save(request);
     }
 

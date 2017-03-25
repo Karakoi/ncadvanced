@@ -36,6 +36,8 @@ public interface RequestService extends CrudService<Request, Long> {
 
     Long countRequestByAssignee(Long managerId);
 
+    Long countClosedRequestByAssignee(Long managerId);
+
     Long countInProgressRequestByAssignee(Long managerId);
     /**
      * Returns a list of sub requests for the given request {@link Request}.
@@ -68,6 +70,14 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return list of requests which have provided {@link User} as assignee.
      */
     List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber);
+
+    /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId requests assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.

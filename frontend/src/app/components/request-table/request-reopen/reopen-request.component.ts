@@ -5,12 +5,12 @@ import {ModalComponent} from "ng2-bs3-modal/components/modal";
 import {Request} from "../../../model/request.model";
 
 @Component({
-  selector: 'close-request',
-  templateUrl: 'close-request.component.html',
-  styleUrls: ['close-request.component.css']
+  selector: 'reopen-request',
+  templateUrl: 'reopen-request.component.html',
+  styleUrls: ['reopen-request.component.css']
 })
 
-export class CloseRequestComponent {
+export class ReopenRequestComponent {
   @Input()
   requests:Request[];
   @Output()
@@ -18,28 +18,28 @@ export class CloseRequestComponent {
 
   public request:Request;
 
-  @ViewChild('closeRequestFormModal')
+  @ViewChild('reopenRequestFormModal')
   modal:ModalComponent;
 
   constructor(private requestService:RequestService,
               private toastr:ToastsManager) {
   }
 
-  closeRequest() {
+  reopenRequest() {
     this.request.lastChanger = this.request.assignee;
-    this.requestService.close(this.request).subscribe((item:Request) => {
-      this.toastr.success("Request was closed successfully", "Success!");
+    console.log(this.request);
+    this.requestService.reopen(this.request).subscribe((item:Request) => {
+      this.toastr.success("Request was reopened successfully", "Success!");
       this.updated.emit(this.requests.filter((request) => request.id !== item.id));
       this.modal.close();
-    }, e => this.handleErrorCloseRequest(e));
-
+    }, e => this.handleErrorReopenRequest(e));
   }
 
 
-  private handleErrorCloseRequest(error) {
+  private handleErrorReopenRequest(error) {
     switch (error.status) {
       case 500:
-        this.toastr.error("Can't close this request", 'Error');
+        this.toastr.error("Can't reopen this request", 'Error');
     }
   }
 }

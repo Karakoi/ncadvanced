@@ -1,5 +1,4 @@
 import {Component, ViewChild, Input, Output, EventEmitter} from "@angular/core";
-
 import {ToastsManager} from "ng2-toastr";
 import {ModalComponent} from "ng2-bs3-modal/components/modal";
 import {Request} from "../../../model/request.model";
@@ -31,15 +30,9 @@ export class AssignRequestComponent {
   assignRequest() {
     this.authService.currentUser.subscribe((user:User) => {
       this.request.assignee = user;
-      this.request.progressStatus = {
-        id: 7,
-        name: "In progress",
-        value: 400
-      };
-      if (this.request.parentId === 0) {
-        this.request.parentId = null;
-      }
-      this.requestService.update(this.request).subscribe(() => {
+      this.request.parentId = null;
+
+      this.requestService.assign(this.request).subscribe(() => {
         this.toastr.success("Request was assigned successfully", "Success!");
         this.requests = this.requests.filter(item => item["id"] !== this.request.id);
         this.updated.emit(this.requests);

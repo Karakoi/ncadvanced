@@ -35,7 +35,9 @@ export class ManagerComponent {
     this.requestService.getAllByAssignee(this.user.id, page).subscribe((requests: Request[]) => {
       this.myRequests = requests;
     });
-    this.requestService.getRequestCountByAssignee(this.user.id).subscribe((count) => {this.myPageCount = count; console.log(count)});
+    this.requestService.getRequestCountByAssignee(this.user.id).subscribe((count) => {
+      this.myPageCount = count; 
+    });
   }
 
   pageChange(data){
@@ -62,7 +64,7 @@ export class ManagerComponent {
       reporter: true,
       assignee: false,
     }
-  }
+  };
 
   mySettings = {
     delete: false,
@@ -81,11 +83,10 @@ export class ManagerComponent {
       reporter: true,
       assignee: false,
     }
-  }
+  };
 
   select(data) {
     this.selected = Array.from(data);
-    console.log(this.selected)
   }
 
   private fetchFreeRequests(page: number) {

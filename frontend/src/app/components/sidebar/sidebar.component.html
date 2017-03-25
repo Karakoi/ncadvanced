@@ -2,9 +2,13 @@
 <div id="sidebar-wrapper">
 
   <ul class="sidebar-nav">
+    <br/>
     <li class="logo" *ngIf="user">
-      <gravatar [email]="user.email" [size]="80"></gravatar>
+      <a [routerLink]="['/profile']">
+        <gravatar [email]="user.email" [size]="80"></gravatar>
+      </a>
     </li>
+    <br/>
     <!--This div will be visible regardless of role-->
     <li>
       <a [routerLink]="['/profile']">Profile</a>
@@ -36,7 +40,7 @@
     </li>
     <!--Show this div, if user's role is Manager -->
     <li>
-      <a [routerLink]="['/assigned']" *ngIf="isManager()">Assigned</a>
+      <a [routerLink]="['/assigned/inProgress']" *ngIf="isManager()">Assigned</a>
     </li>
   </ul>
 </div>

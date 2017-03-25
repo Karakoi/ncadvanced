@@ -6,6 +6,7 @@ import {DeleteRequestComponent} from "./request-delete/delete-request.component"
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
 import {CloseRequestComponent} from "./request-close/close-request.component";
+import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
 import {RequestSearchDTO} from "../../model/dto/request-seaarch-dto.model";
 
 declare let $: any;
@@ -53,7 +54,7 @@ export class RequestTable {
       reporter: true,
       assignee: true,
     }
-  };
+  }
 
   searchDTO : RequestSearchDTO;
 
@@ -71,6 +72,9 @@ export class RequestTable {
 
   @ViewChild(DeleteRequestComponent)
   deleteRequestComponent: DeleteRequestComponent;
+
+  @ViewChild(ReopenRequestComponent)
+  reopenRequestComponent: ReopenRequestComponent;
 
   constructor(private requestService: RequestService) {
     this.searchDTO = {
@@ -131,6 +135,11 @@ export class RequestTable {
   close(request:Request) {
     this.closeRequestComponent.request = request;
     this.closeRequestComponent.modal.open();
+  }
+
+  reOpen(request:Request) {
+    this.reopenRequestComponent.request = request;
+    this.reopenRequestComponent.modal.open();
   }
 
   isChecked(id) {

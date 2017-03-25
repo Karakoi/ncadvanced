@@ -71,6 +71,7 @@
           <th *ngIf="settings.delete">Delete</th>
           <th *ngIf="settings.assign">Assign</th>
           <th *ngIf="settings.close">Close</th>
+          <th *ngIf="settings.reopen">Reopen</th>
         </tr>
         </thead>
         <tbody>
@@ -109,8 +110,7 @@
             <input type="text" [ngModel]="searchDTO.assigneeName" (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
           </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
-          <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
-          <td class="td-center" *ngIf="settings.close"><span class="center-block btn btn-success">Close</span></td>
+          <td></td>
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
@@ -149,7 +149,12 @@
                   (click)="openAssignRequestModal(request)"></span>
           </td>
           <td class="text-center" *ngIf="settings.close">
-            <button class="center-block btn btn-success" (click)="close(request)">Close</button>
+            <span [attr.value]="request.id" class="glyphicon glyphicon-ok-sign center-block btn btn-xs"
+                  (click)="close(request)"></span>
+          </td>
+          <td class="text-center" *ngIf="settings.reopen">
+            <span [attr.value]="request.id" class="glyphicon glyphicon-repeat center-block btn btn-xs"
+                  (click)="reOpen(request)"></span>
           </td>
         </tr>
         <tr *ngIf="requests.length == 0">
@@ -172,5 +177,6 @@
   <join-request *ngIf="settings.join" [requests]="requests" [checked]="checked"
                 (updated)="updateRequests($event)"></join-request>
   <close-request *ngIf="settings.close" [requests]="requests" (updated)="updateRequests($event)"></close-request>
+  <reopen-request *ngIf="settings.reopen" [requests]="requests" (updated)="updateRequests($event)"></reopen-request>
 </div>
 

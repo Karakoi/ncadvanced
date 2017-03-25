@@ -172,7 +172,26 @@ export class RequestService {
       });
   }
 
-  assign(request: Request): Observable<Response> {
+
+  getClosedAssigned(page:number, user_id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/closedRequestsByAssignee?page=` + page + `&manager=` + user_id)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getClosedAssignedPageCount(managerId:number):Observable<number> {
+    return this.authHttp.get(`${url}/countClosedRequestsByAssignee?manager=` + managerId)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  assign(request:Request):Observable<Response> {
     return this.authHttp.put(url + '/assignRequest', request)
       .map(resp => resp.json())
       .catch((error: any) => {
@@ -190,7 +209,16 @@ export class RequestService {
       });
   }
 
-  join(request: Request, checked: number[]): Observable<Request> {
+  reopen(request:Request):Observable<Request> {
+    return this.authHttp.put(`${url}/reopenRequest`, request)
+      .map(resp => resp.json())
+      .catch((error:any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  join(request:Request, checked:number[]):Observable<Request> {
     return this.authHttp.post(`${url}/join/${checked.join()}`, request)
       .catch((error: any) => {
         this.errorService.processError(error);
