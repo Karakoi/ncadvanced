@@ -71,6 +71,47 @@ export class RequestProfileComponent implements OnInit {
     });
   }
 
+  showHistoryMessage(history: History): string{
+    let text: string;
+    switch (history.columnName){
+      case "title":
+        text = "Title " +
+          " was changed from \"" + this.showHistoryValue(history.oldValue, history.demonstrationOfOldValue)
+          + "\" to \"" + this.showHistoryValue(history.newValue, history.demonstrationOfNewValue) + "\"";
+        break;
+      case "description":
+        text = "Description " +
+          " was changed from \"" + this.showHistoryValue(history.oldValue, history.demonstrationOfOldValue)
+          + "\" to \"" + this.showHistoryValue(history.newValue, history.demonstrationOfNewValue) + "\"";
+        break;
+      case "priority_status_id":
+        text = "Priority " +
+          " was changed from \"" + this.showHistoryValue(history.oldValue, history.demonstrationOfOldValue)
+          + "\" to \"" + this.showHistoryValue(history.newValue, history.demonstrationOfNewValue) + "\"";
+        break;
+      case "progress_status_id":
+        text = "Progress status " +
+          " was changed from \"" + this.showHistoryValue(history.oldValue, history.demonstrationOfOldValue)
+          + "\" to \"" + this.showHistoryValue(history.newValue, history.demonstrationOfNewValue) + "\"";
+        break;
+      case "assignee_id":
+        text = "This request was assigned by ";
+        break;
+      case "estimate_time_in_date":
+        text = "Estimate time (in date) " +
+          " was changed from \"" + this.showHistoryValue(history.oldValue, history.demonstrationOfOldValue)
+          + "\" to \"" + this.showHistoryValue(history.newValue, history.demonstrationOfNewValue) + "\"";
+        break;
+      case "parent_id":
+        text = "This request was joined " +
+          " was changed from \"" + this.showHistoryValue(history.oldValue, history.demonstrationOfOldValue)
+          + "\" to \"" + this.showHistoryValue(history.newValue, history.demonstrationOfNewValue) + "\"";
+        break;
+    }
+
+    return text;
+  }
+
   showHistoryValue(generalValue: string, demonstrationValue: string){
     if(demonstrationValue != null){
       return demonstrationValue;
