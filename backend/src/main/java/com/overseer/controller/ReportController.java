@@ -36,7 +36,6 @@ public class ReportController {
     }
 
     //<editor-fold defaultstate="collapsed" desc="methods for manager reports">
-
     /**
      * Method gets pdf report for office manager.
      *
