@@ -76,7 +76,7 @@ public class RequestServiceImplTest {
         reporter.setFirstName("Tom");
         reporter.setLastName("Hardy");
         reporter.setPassword("gunner12");
-        reporter.setEmail("dashok.smile@gmail.com");
+        reporter.setEmail("tomy@gmail.com");
         reporter.setRole(reporterRole);
 
         reporter = this.userDao.save(reporter);
@@ -123,7 +123,6 @@ public class RequestServiceImplTest {
         request.setLastChanger(lastChanger);
         request.setPriorityStatus(priority);
         request.setProgressStatus(progress);
-
 
 
         this.requestDao.save(request);

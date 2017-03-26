@@ -400,7 +400,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
             throw new NoSuchEntityException("Request with given id: " + requestId + " is absent in DB");
         }
         User reporter = userDao.findOne(request.getReporter().getId());
-        if(reporter == null){
+        if (reporter == null) {
             throw new NoSuchEntityException("Reporter of request with id: " + requestId + " is absent in DB");
         }
         if (!ProgressStatus.CLOSED.getId().equals(request.getProgressStatus().getId())) {

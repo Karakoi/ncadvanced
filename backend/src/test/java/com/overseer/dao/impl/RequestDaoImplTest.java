@@ -4,12 +4,17 @@ import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
 import com.overseer.model.*;
 import com.overseer.model.enums.ProgressStatus;
+import lombok.Value;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +43,19 @@ public class RequestDaoImplTest {
     private ProgressStatus progress;
     private PriorityStatus priority;
     private List<Long> requestsGroupIds;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Value
+    private static final class AuthParams {
+        private final String email;
+        private final String password;
+
+        UsernamePasswordAuthenticationToken toAuthenticationToken() {
+            return new UsernamePasswordAuthenticationToken(email, password);
+        }
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -73,11 +91,14 @@ public class RequestDaoImplTest {
         lastChanger.setRole(changerRole);
         lastChanger = this.userDao.save(lastChanger);
 
+        AuthParams params = new AuthParams(lastChanger.getEmail(), "qwerty123");
+        UsernamePasswordAuthenticationToken loginToken = params.toAuthenticationToken();
+        Authentication authentication = authenticationManager.authenticate(loginToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
 
-//        progress = new ProgressStatusView(ProgressStatus.FREE.name(), ProgressStatus.FREE.getValue());
-//        progress.setId(5L);
         progress = ProgressStatus.FREE;
 
         request = new Request();
@@ -113,10 +134,7 @@ public class RequestDaoImplTest {
         high.setId(1L);
         request.setPriorityStatus(high);
 
-//        ProgressStatusView inProgress = new ProgressStatusView("In progress", 400);
-//        inProgress.setId(7L);
-        ProgressStatus inProgress = ProgressStatus.IN_PROGRESS;
-        request.setProgressStatus(inProgress);
+        request.setProgressStatus(ProgressStatus.IN_PROGRESS);
 
         // when
         Request savedRequest = requestDao.save(request);
@@ -124,7 +142,7 @@ public class RequestDaoImplTest {
         // then
         assertThat(savedRequest, is(notNullValue()));
         assertThat(savedRequest.getPriorityStatus(), is(high));
-        assertThat(savedRequest.getProgressStatus(), is(inProgress));
+        assertThat(savedRequest.getProgressStatus(), is(ProgressStatus.IN_PROGRESS));
     }
 
     @Test
