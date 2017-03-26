@@ -4,13 +4,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.overseer.model.enums.ProgressStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-
 
 /**
  * The <code>Request</code> class represents requests of users {@link User}.
@@ -42,6 +41,9 @@ public class Request extends AbstractEntity {
 
     @JsonInclude(NON_NULL)
     private PriorityStatus priorityStatus;
+
+//    @JsonInclude(NON_NULL)
+//    private ProgressStatusView progressStatusView;
 
     @JsonInclude(NON_NULL)
     private ProgressStatus progressStatus;

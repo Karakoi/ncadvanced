@@ -3,6 +3,7 @@ package com.overseer.dao.impl;
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
 import com.overseer.model.*;
+import com.overseer.model.enums.ProgressStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,8 +76,9 @@ public class RequestDaoImplTest {
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
 
-        progress = new ProgressStatus("Free", 200);
-        progress.setId(5L);
+//        progress = new ProgressStatusView(ProgressStatus.FREE.name(), ProgressStatus.FREE.getValue());
+//        progress.setId(5L);
+        progress = ProgressStatus.FREE;
 
         request = new Request();
         request.setTitle("Repair washing machine");
@@ -111,8 +113,9 @@ public class RequestDaoImplTest {
         high.setId(1L);
         request.setPriorityStatus(high);
 
-        ProgressStatus inProgress = new ProgressStatus("In progress", 400);
-        inProgress.setId(7L);
+//        ProgressStatusView inProgress = new ProgressStatusView("In progress", 400);
+//        inProgress.setId(7L);
+        ProgressStatus inProgress = ProgressStatus.IN_PROGRESS;
         request.setProgressStatus(inProgress);
 
         // when

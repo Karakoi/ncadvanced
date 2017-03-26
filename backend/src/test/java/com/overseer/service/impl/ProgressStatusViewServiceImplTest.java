@@ -1,7 +1,7 @@
 package com.overseer.service.impl;
 
-import com.overseer.model.ProgressStatus;
-import com.overseer.service.ProgressStatusService;
+import com.overseer.model.ProgressStatusView;
+import com.overseer.util.ProgressStatusUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,16 +15,16 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class ProgressStatusServiceImplTest {
+public class ProgressStatusViewServiceImplTest {
 
     @Autowired
-    private ProgressStatusService progressStatusService;
+    private ProgressStatusUtil progressStatusUtil;
 
     @Test
     public void findAllPriorityStatuses() throws Exception {
-        List<ProgressStatus> allProgressStatuses = progressStatusService.findAllProgressStatuses();
-        final int expectedStatusesSize = 6;
-        Assert.assertNotNull(allProgressStatuses);
-        Assert.assertEquals(expectedStatusesSize, allProgressStatuses.size());
+        List<ProgressStatusView> allProgressStatusViews = progressStatusUtil.getAllProgressStatusViews();
+        final int expectedStatusesSize = 4;
+        Assert.assertNotNull(allProgressStatusViews);
+        Assert.assertEquals(expectedStatusesSize, allProgressStatusViews.size());
     }
 }

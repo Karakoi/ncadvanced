@@ -2,9 +2,8 @@ package com.overseer.event;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
-import com.overseer.model.Progress;
-import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,7 +66,7 @@ public class ChangeProgressStatusEventListener {
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
-            for (Request joinedRequest: joinedRequests) {
+            for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
                 changeStatusAndSave(joinedRequest, CloseRequestEvent.PROGRESS_STATUS);
             }
@@ -111,7 +110,7 @@ public class ChangeProgressStatusEventListener {
         PriorityStatus maxPriorityStatus = getMaxPriorityStatus(joinedRequests);
         parentRequest.setPriorityStatus(maxPriorityStatus);
         // Set progress status
-        parentRequest.setProgressStatus(Progress.IN_PROGRESS);
+        parentRequest.setProgressStatus(ProgressStatus.IN_PROGRESS);
         parentRequest.setDateOfCreation(LocalDateTime.now());
         // Save parent request to database
         Request parent = requestDao.save(parentRequest);
@@ -123,7 +122,6 @@ public class ChangeProgressStatusEventListener {
             request.setParentId(parentId);
             request.setAssignee(parentRequest.getAssignee());
             request.setEstimateTimeInDays(parentRequest.getEstimateTimeInDays());
-            request.setLastChanger(parentRequest.getAssignee());
             changeStatusAndSave(request, JoinRequestEvent.PROGRESS_STATUS);
         });
     }
@@ -131,10 +129,10 @@ public class ChangeProgressStatusEventListener {
     /**
      * Changes progress status, save request and send message to Reporter.
      *
-     * @param request specified request
+     * @param request        specified request
      * @param progressStatus specified progressStatus
      */
-    private void changeStatusAndSave(Request request, Progress progressStatus) {
+    private void changeStatusAndSave(Request request, ProgressStatus progressStatus) {
         request.setProgressStatus(progressStatus);
         requestDao.save(request);
         sendMessageToReporter(request);

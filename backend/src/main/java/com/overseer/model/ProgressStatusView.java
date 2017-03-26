@@ -16,11 +16,11 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = false)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class ProgressStatus extends AbstractEntity {
+public class ProgressStatusView extends AbstractEntity {
 
     @NotNull(message = "ProgressStatus has to have name")
     private String name;
 
     @NotNull(message = "ProgressStatus has to have name")
-    private int value;
+    private Long value;
 }

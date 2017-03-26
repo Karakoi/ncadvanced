@@ -1,6 +1,7 @@
 package com.overseer.controller;
 
 import com.overseer.dto.RequestDTO;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
 import lombok.AllArgsConstructor;
@@ -91,7 +92,7 @@ public class ReportController {
                                                                                     @RequestParam String endDate) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, "Closed");
+        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId());
         return new ResponseEntity<>(topManagers, HttpStatus.OK);
     }
 
@@ -107,7 +108,7 @@ public class ReportController {
                                                                                   @RequestParam String endDate) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, "Free");
+        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, ProgressStatus.FREE.getId());
         return new ResponseEntity<>(topManagers, HttpStatus.OK);
     }
 

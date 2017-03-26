@@ -4,6 +4,7 @@ import com.overseer.dao.HistoryDAO;
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
 import com.overseer.model.*;
+import com.overseer.model.enums.ProgressStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -98,8 +99,9 @@ public class HistoryDaoImplTest {
         PriorityStatus priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
 
-        ProgressStatus progress = new ProgressStatus("Free", 200);
-        progress.setId(5L);
+//        ProgressStatusView progress = new ProgressStatusView("Free", 200);
+//        progress.setId(5L);
+        ProgressStatus progress = ProgressStatus.FREE;
 
         request = new Request();
         request.setTitle(TEST_TITLE_1);

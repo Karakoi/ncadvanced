@@ -1,7 +1,7 @@
 package com.overseer.event;
 
-import com.overseer.model.Progress;
 import com.overseer.model.Request;
+import com.overseer.model.enums.ProgressStatus;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class JoinRequestEvent extends ApplicationEvent {
     private Request parentRequest;
     private List<Request> joinedRequests;
-    public static final Progress PROGRESS_STATUS = Progress.JOINED;
+    public static final ProgressStatus PROGRESS_STATUS = ProgressStatus.JOINED;
 
     public JoinRequestEvent(Object source, Request parentRequest, List<Request> joinedRequests) {
         super(source);

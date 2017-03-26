@@ -32,7 +32,7 @@ public class OfficeManagerNotificationBuilderImpl extends EmailBuilderImpl<Reque
                 + "] was altered."
                 + "\n"
                 + "Request progress status was changed to: "
-                + request.getProgressStatus();
+                + request.getProgressStatus().getName();
     }
 
     @Override

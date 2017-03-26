@@ -1,7 +1,7 @@
 package com.overseer.event;
 
-import com.overseer.model.Progress;
 import com.overseer.model.Request;
+import com.overseer.model.enums.ProgressStatus;
 import org.springframework.context.ApplicationEvent;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationEvent;
  */
 public class AssignRequestEvent extends ApplicationEvent {
     private Request request;
-    public static final Progress PROGRESS_STATUS = Progress.IN_PROGRESS;
+    public static final ProgressStatus PROGRESS_STATUS = ProgressStatus.IN_PROGRESS;
 
     public AssignRequestEvent(Object source, Request request) {
         super(source);
