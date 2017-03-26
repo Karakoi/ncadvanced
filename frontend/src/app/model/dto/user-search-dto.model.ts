@@ -3,6 +3,6 @@ export interface UserSearchDTO {
   lastName: string,
   email: string,
   role: string,
-  date: string,
+  dateOfDeactivation: string,
   limit: number
 }

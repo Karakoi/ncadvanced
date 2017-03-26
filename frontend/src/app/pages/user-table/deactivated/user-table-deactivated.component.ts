@@ -19,7 +19,7 @@ export class UserTableDeactivatedComponent implements OnInit {
   searchTypes: any;
   searchDTO : UserSearchDTO;
   settings = {
-    ajax: true
+    ajax: false
   };
 
   @ViewChild(ActivateUserComponent)
@@ -40,7 +40,7 @@ export class UserTableDeactivatedComponent implements OnInit {
       lastName: "",
       email: "",
       role: "",
-      date: "",
+      dateOfDeactivation: "",
       limit: 20
     };
   }
@@ -48,6 +48,7 @@ export class UserTableDeactivatedComponent implements OnInit {
   ngOnInit() {
     this.userService.getAllDeactivated(1).subscribe((users: User[]) => {
       this.users = users;
+      console.log(users)
     });
     this.userService.getDeactivatedUsersPageCount().subscribe((count) => this.pageNumber = count);
   }
@@ -108,7 +109,7 @@ export class UserTableDeactivatedComponent implements OnInit {
         this.searchDTO.role = value;
         break;
       case 'date':
-        this.searchDTO.date = value;
+        this.searchDTO.dateOfDeactivation = value;
         break;
       case 'limit':
         this.searchDTO.limit = value;
@@ -119,9 +120,9 @@ export class UserTableDeactivatedComponent implements OnInit {
   }
 
   getSearchData(searchDTO){
-    /*this.userService.searchAll(searchDTO).subscribe(users => {
+    this.userService.searchAll(searchDTO).subscribe(users => {
       console.log(users);
       this.users = users;
-    })*/
+    })
   }
 }

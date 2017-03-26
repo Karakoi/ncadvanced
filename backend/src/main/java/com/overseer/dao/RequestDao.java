@@ -300,10 +300,10 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> findFreeRequests(int pageSize, int pageNumber);
 
     /**
-     * Returns list of filtered requests by specified searchRequests query.
+     * Returns list of filtered requests by specified search query.
      *
-     * @param searchQuery searchRequests params sql query
-     * @return list of requests with Free progress status {@link ProgressStatus}.
+     * @param searchQuery search params sql query
+     * @return list of filtered requests
      */
     List<Request> searchRequests(String searchQuery);
 

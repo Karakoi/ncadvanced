@@ -34,7 +34,12 @@ public class SqlQueryBuilder {
     }
 
     public SqlQueryBuilder isNull(String field) {
-        builder.append(field).append(" IS NULL ");
+        builder.append(format(" %s IS NULL ", field));
+        return this;
+    }
+
+    public SqlQueryBuilder notNull(String field) {
+        builder.append(format(" %s IS NOT NULL ", field));
         return this;
     }
 

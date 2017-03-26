@@ -2,6 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.UserDao;
+import com.overseer.dto.UserSearchDTO;
 import com.overseer.exception.RemovingYourselfException;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -11,6 +12,7 @@ import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import com.overseer.service.RequestService;
 import com.overseer.service.UserService;
+import com.overseer.service.impl.builder.SqlQueryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -158,5 +160,44 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     public Long getCountAllDeactivated() {
         log.debug("Get count of all deactivated users");
         return userDao.getCountAllDeactivated();
+    }
+
+    @Override
+    public List<User> searchUsers(UserSearchDTO searchDTO) {
+        SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
+
+        sqlQueryBuilder.where().notNull("u.role");
+
+        String firstName = searchDTO.getFirstName();
+        if (!firstName.isEmpty()) {
+            sqlQueryBuilder.and().like("u.first_name", firstName);
+        }
+
+        String lastName = searchDTO.getLastName();
+        if (!lastName.isEmpty()) {
+            sqlQueryBuilder.and().like("u.last_name", lastName);
+        }
+
+        String email = searchDTO.getEmail();
+        if (!email.isEmpty()) {
+            sqlQueryBuilder.and().like("u.email", email);
+        }
+
+        String role = searchDTO.getRole();
+        if (!role.isEmpty()) {
+            sqlQueryBuilder.and().like("r.name", role);
+        }
+
+        String dateOfDeactivation = searchDTO.getDateOfDeactivation();
+        if (!dateOfDeactivation.isEmpty()) {
+            sqlQueryBuilder.and().equalDate("u.date_of_deactivation", dateOfDeactivation);
+        }
+
+        int limit = searchDTO.getLimit();
+        sqlQueryBuilder.limit(limit);
+
+        String query = sqlQueryBuilder.build();
+
+        return userDao.searchRequests(query);
     }
 }

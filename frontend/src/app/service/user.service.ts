@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {User} from "../model/user.model";
 import {Observable} from "rxjs";
-import {Http, Response} from "@angular/http";
+import {Http, Response, URLSearchParams} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {CacheService} from "ionic-cache/ionic-cache";
@@ -9,6 +9,7 @@ import {Message} from "../model/message.model";
 import {ProgressStatus} from "../model/request.model";
 import {ErrorService} from "./error.service";
 import {PriorityStatus} from "../model/priority.model";
+import {UserSearchDTO} from "../model/dto/user-search-dto.model";
 
 const url = '/api/users';
 
@@ -156,4 +157,23 @@ export class UserService {
       });
   }
 
+  searchAll(dto: UserSearchDTO): Observable<User[]> {
+    let params: URLSearchParams = this.objToSearchParams(dto);
+    return this.authHttp.get(`${url}/search`, {
+      search: params
+    }).map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  objToSearchParams(obj): URLSearchParams {
+    let params: URLSearchParams = new URLSearchParams();
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key))
+        params.set(key, obj[key]);
+    }
+    return params;
+  }
 }

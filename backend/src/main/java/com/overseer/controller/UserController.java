@@ -1,5 +1,8 @@
 package com.overseer.controller;
 
+import com.overseer.dto.RequestSearchDTO;
+import com.overseer.dto.UserSearchDTO;
+import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -148,5 +151,17 @@ public class UserController {
     @Value
     private static final class RecoverInfo {
         private final String email;
+    }
+
+    /**
+     * Returns list of filtered users by specified search params in {@link UserSearchDTO} object.
+     *
+     * @param searchDTO search params dto object
+     * @return {@link User} list with http status 200 OK..
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchRequests(UserSearchDTO searchDTO) {
+        List<User> users = userService.searchUsers(searchDTO);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

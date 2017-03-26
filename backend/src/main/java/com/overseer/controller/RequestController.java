@@ -136,9 +136,9 @@ public class RequestController {
     }
 
     /**
-     * Returns list of filtered requests by specified searchRequests params in {@link RequestSearchDTO} object.
+     * Returns list of filtered requests by specified search params in {@link RequestSearchDTO} object.
      *
-     * @param searchDTO searchRequests params dto object
+     * @param searchDTO search params dto object
      * @return {@link Request} list with http status 200 OK..
      */
     @GetMapping("/search")

@@ -43,7 +43,7 @@ export class UserTableComponent implements OnInit {
       lastName: "",
       email: "",
       role: "",
-      date: "",
+      dateOfDeactivation: "",
       limit: 20
     };
   }
@@ -123,9 +123,9 @@ export class UserTableComponent implements OnInit {
   }
 
   getSearchData(searchDTO){
-    /*this.userService.searchAll(searchDTO).subscribe(users => {
+    this.userService.searchAll(searchDTO).subscribe(users => {
      console.log(users);
      this.users = users;
-     })*/
+     })
   }
 }
