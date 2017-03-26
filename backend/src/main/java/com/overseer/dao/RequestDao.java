@@ -84,6 +84,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
 
     /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
+
+    /**
      * Returns a list of requests which have provided {@link User} as reporter.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
@@ -128,12 +136,20 @@ public interface RequestDao extends CrudDao<Request, Long> {
     Long countInProgressRequestByAssignee(Long managerId);
 
     /**
+     * Returns number of requests for assignee.
+     *
+     * @param managerId assignee id must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countClosedRequestByAssignee(Long managerId);
+
+    /**
      * Returns a list of closed requests which have provided {@link User} as reporter.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of closed requests which have provided {@link User} as reporter.
      */
-    List<Request> findRequestsByReporterAndProgress(Long reporterId, String progress, int pageSize, int pageNumber);
+    List<Request> findRequestsByReporterAndProgress(Long reporterId, ProgressStatus progress, int pageSize, int pageNumber);
 
     /**
      * Returns number of closed requests for reporter.
@@ -267,14 +283,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return number of entities of type <code>T</code>.
      */
     Long countFree();
-
-    /**
-     * Returns number of entities of type <code>T</code>.
-     *
-     * @param assigneeId id of the {@link User}.
-     * @return number of entities of type <code>T</code>.
-     */
-    Long countByAssignee(Long assigneeId);
 
     /**
      * Returns a list of requests with Free progress status {@link ProgressStatus}.

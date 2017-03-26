@@ -129,32 +129,44 @@ export class RequestProfileComponent implements OnInit {
   getRequestType(request): string {
     if (request.progressStatus.name == null && request.priorityStatus.name == null) {
       return "Sub request"
-    } else if (request.progressStatus.name == 'Joined') {
+    } else if (request.progressStatus.name == 'JOINED') {
       return "Joined request";
     } else {
       return "Request"
     }
   }
 
-  isFree(request): boolean {
-    if (request.progressStatus.name == 'Free') {
+  isFree(request):boolean {
+    if (request.progressStatus.name == 'FREE') {
       return false;
     } else {
       return true;
     }
   }
 
-  isInProgress(request): boolean {
-    if (request.progressStatus.name == 'In progress') {
+  isInProgress(request):boolean {
+    if (request.progressStatus.name == 'IN_PROGRESS') {
       return true;
     } else {
       return false;
     }
+  }
+
+  isClosed(request):boolean {
+    if (request.progressStatus.name == 'CLOSED') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isNotEmployee(): boolean {
+    return this.currentUser.role.name !== 'employee';
   }
 
   getPDF() {
     this.reportService.getPDFRequest(this.request.id).subscribe(
-      (res: any) => {
+      (res:any) => {
         let blob = res.blob();
         let filename = 'request_' + this.request.id + '.pdf';
         FileSaver.saveAs(blob, filename);

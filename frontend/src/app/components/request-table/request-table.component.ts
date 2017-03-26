@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild, Input, Output, EventEmitter} from "@angular/core";
+import {ToastsManager} from "ng2-toastr";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
@@ -6,6 +7,7 @@ import {DeleteRequestComponent} from "./request-delete/delete-request.component"
 import {AssignRequestComponent} from "./request-assign/assign-request.component";
 import {JoinRequestComponent} from "./request-join/join-request.component";
 import {CloseRequestComponent} from "./request-close/close-request.component";
+import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
 
 declare let $: any;
 
@@ -52,7 +54,7 @@ export class RequestTable {
       reporter: true,
       assignee: true,
     }
-  }
+  };
 
 
   @ViewChild(RequestFormComponent)
@@ -70,7 +72,11 @@ export class RequestTable {
   @ViewChild(DeleteRequestComponent)
   deleteRequestComponent: DeleteRequestComponent;
 
-  constructor(private requestService: RequestService) {
+  @ViewChild(ReopenRequestComponent)
+  reopenRequestComponent: ReopenRequestComponent;
+
+  constructor(private requestService: RequestService,
+              private toastr: ToastsManager) {
     this.orderType = true;
     this.orderField = 'title';
     this.searchTypes = {
@@ -119,6 +125,11 @@ export class RequestTable {
     this.closeRequestComponent.modal.open();
   }
 
+  reOpen(request:Request) {
+    this.reopenRequestComponent.request = request;
+    this.reopenRequestComponent.modal.open();
+  }
+
   isChecked(id) {
     return this.selected.has(id);
   }
@@ -129,8 +140,12 @@ export class RequestTable {
   }
 
   openDeleteRequestModal(request: Request, event): void {
-    this.deleteRequestComponent.request = request;
-    this.deleteRequestComponent.modal.open();
+    if(request.progressStatus.name === 'FREE'){
+      this.deleteRequestComponent.request = request;
+      this.deleteRequestComponent.modal.open();
+    } else {
+      this.toastr.error('Can not delete not [FREE] request', "Error!");
+    }
   }
 
   openAssignRequestModal(request: Request) {

@@ -2,6 +2,7 @@ package com.overseer.event;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
+
 import com.overseer.model.Request;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
@@ -39,37 +40,35 @@ public class ChangeProgressStatusEventListener {
     /**
      * Assigns request to specified office manager and changes it {@link Request#progressStatus}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param assignRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'IN_PROGRESS'")
-    public void assignRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request request = changeProgressStatusEvent.getRequest();
-        ProgressStatus progressStatus = changeProgressStatusEvent.getNewProgressStatus();
-        changeStatusAndSave(request, progressStatus);
+    @EventListener
+    public void assignRequest(AssignRequestEvent assignRequestEvent) {
+        Request request = assignRequestEvent.getRequest();
+        changeStatusAndSave(request, AssignRequestEvent.PROGRESS_STATUS);
     }
 
     /**
      * Closes request and changes it {@link Request#progressStatus}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param closeRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'CLOSED'")
-    public void closeRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request request = changeProgressStatusEvent.getRequest();
-        ProgressStatus closedProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
+    @EventListener
+    public void closeRequest(CloseRequestEvent closeRequestEvent) {
+        Request request = closeRequestEvent.getRequest();
         //Check if request is parent
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
         if (joinedRequests.isEmpty()) {
             Long parentRequestId = request.getParentId();
             request.setParentId(null);
-            changeStatusAndSave(request, closedProgressStatus);
+            changeStatusAndSave(request, CloseRequestEvent.PROGRESS_STATUS);
             if (parentRequestId != null) {
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
             for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
-                changeStatusAndSave(joinedRequest, closedProgressStatus);
+                changeStatusAndSave(joinedRequest, CloseRequestEvent.PROGRESS_STATUS);
             }
             List<Request> subRequests = requestDao.findSubRequests(request);
             subRequests.forEach(requestDao::delete);
@@ -80,19 +79,18 @@ public class ChangeProgressStatusEventListener {
     /**
      * Reopens request and changes it {@link Request#progressStatus}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param reopenRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'FREE'")
-    public void reopenRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request request = changeProgressStatusEvent.getRequest();
-        ProgressStatus freeProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
+    @EventListener
+    public void reopenRequest(ReopenRequestEvent reopenRequestEvent) {
+        Request request = reopenRequestEvent.getRequest();
 
         request.setEstimateTimeInDays(null);
 
-        changeStatusAndSave(request, freeProgressStatus);
+        changeStatusAndSave(request, ReopenRequestEvent.PROGRESS_STATUS);
 
         sendMessageToAssignee(request);
-        request.setAssignee(null);
+        request.getAssignee().setId(null);
         requestDao.save(request);
     }
 
@@ -101,17 +99,18 @@ public class ChangeProgressStatusEventListener {
      * Joined requests will have 'Joined' {@link Request#progressStatus}
      * and not null {@link Request#parentId}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param joinRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'JOINED'")
-    public void joinRequestsIntoParent(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request parentRequest = changeProgressStatusEvent.getRequest();
-        ProgressStatus joinedProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
-        List<Request> joinedRequests = changeProgressStatusEvent.getJoinedRequests();
+    @EventListener
+    public void joinRequestsIntoParent(JoinRequestEvent joinRequestEvent) {
+        Request parentRequest = joinRequestEvent.getParentRequest();
+        List<Request> joinedRequests = joinRequestEvent.getJoinedRequests();
 
         // Find and set max priority status from specified requests to parent request
         PriorityStatus maxPriorityStatus = getMaxPriorityStatus(joinedRequests);
         parentRequest.setPriorityStatus(maxPriorityStatus);
+        // Set progress status
+        parentRequest.setProgressStatus(ProgressStatus.IN_PROGRESS);
         parentRequest.setDateOfCreation(LocalDateTime.now());
         // Save parent request to database
         Request parent = requestDao.save(parentRequest);
@@ -123,8 +122,7 @@ public class ChangeProgressStatusEventListener {
             request.setParentId(parentId);
             request.setAssignee(parentRequest.getAssignee());
             request.setEstimateTimeInDays(parentRequest.getEstimateTimeInDays());
-            request.setLastChanger(parentRequest.getAssignee());
-            changeStatusAndSave(request, joinedProgressStatus);
+            changeStatusAndSave(request, JoinRequestEvent.PROGRESS_STATUS);
         });
     }
 

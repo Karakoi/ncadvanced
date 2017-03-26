@@ -13,7 +13,8 @@ public enum ProgressStatus {
     FREE(5L, 200L),
     JOINED(6L, 300L),
     IN_PROGRESS(7L, 400L),
-    CLOSED(8L, 500L);
+    CLOSED(8L, 500L),
+    NULL(null, null);
 
     private Long id;
     private Long value;

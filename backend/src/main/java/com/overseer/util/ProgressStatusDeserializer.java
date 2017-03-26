@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.overseer.model.enums.ProgressStatus;
-import com.overseer.service.impl.ProgressStatusUtil;
+
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -17,24 +17,19 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ProgressStatusDeserializer extends JsonDeserializer<ProgressStatus> {
 
-//    public ProgressStatusDeserializer() {
-//        super(ProgressStatus.class);
-//    }
-
     private final ProgressStatusUtil progressStatusUtil;
 
     @Override
     public ProgressStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        final JsonNode jsonNode = jsonParser.readValueAsTree();
-        int id = jsonNode.get("id").asInt();
-//        String value = jsonNode.get("name").asText();
+        JsonNode jsonNode = jsonParser.readValueAsTree();
 
-        ProgressStatus progressStatus = progressStatusUtil.getProgressById(id);
-
-        if (progressStatus != null) {
-            return progressStatus;
+        ProgressStatus progressStatus;
+        if (jsonNode.has("id")) {
+            Long id = jsonNode.get("id").asLong();
+            progressStatus = progressStatusUtil.getProgressById(id);
         } else {
-            throw deserializationContext.mappingException("Cannot deserialize ProgressStatus from id " + id);
+            progressStatus = ProgressStatus.NULL;
         }
+        return progressStatus;
     }
 }

@@ -1,6 +1,7 @@
 package com.overseer.service.impl;
 
 import com.overseer.model.ProgressStatusView;
+import com.overseer.util.ProgressStatusUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

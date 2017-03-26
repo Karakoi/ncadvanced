@@ -4,7 +4,6 @@ import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
-import com.overseer.model.enums.ProgressStatus;
 import io.jsonwebtoken.lang.Assert;
 
 import java.time.LocalDate;
@@ -32,8 +31,7 @@ public interface RequestService extends CrudService<Request, Long> {
 
     Long countRequestByReporter(Long reporterId);
 
-
-    Long countRequestByAssignee(Long managerId);
+    Long countClosedRequestByAssignee(Long managerId);
 
     Long countInProgressRequestByAssignee(Long managerId);
 
@@ -70,6 +68,14 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber);
 
     /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId requests assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber);
+
+    /**
      * Returns a list of requests which have provided {@link User} as reporter.
      *
      * @param reporterId requests reporterId, must not be {@literal null}.
@@ -87,14 +93,6 @@ public interface RequestService extends CrudService<Request, Long> {
         Assert.notNull(reporter);
         return findRequestsByReporter(reporter.getId(), pageNumber);
     }
-
-    /**
-     * Returns a list of requests with provided progress status {@link ProgressStatus}.
-     *
-     * @param progressStatus request's progress status, must not be {@literal null}.
-     * @return list of requests with provided progress status {@link ProgressStatus}.
-     */
-    List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageNumber);
 
     /**
      * Returns a list of requests with provided progress status {@link PriorityStatus}.
@@ -218,7 +216,7 @@ public interface RequestService extends CrudService<Request, Long> {
     Request reopenRequest(Long requestId);
 
     /**
-     * Closes all requests which have provided {@link User} as reporter and have specified {@link ProgressStatus}.
+     * Closes all requests which have provided {@link User} as reporter and have specified ProgressStatus.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
      */
@@ -248,9 +246,9 @@ public interface RequestService extends CrudService<Request, Long> {
     Long countRequestsByAssignee(Long id);
 
     /**
-     * Returns a list of requests with Free progress status {@link ProgressStatus}.
+     * Returns a list of requests with Free progress status  ProgressStatus.
      *
-     * @return list of requests with Free progress status {@link ProgressStatus}.
+     * @return list of requests with Free progress status ProgressStatus.
      */
     List<Request> findFreeRequests(int pageNumber);
 

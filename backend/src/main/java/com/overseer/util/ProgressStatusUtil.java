@@ -1,4 +1,4 @@
-package com.overseer.service.impl;
+package com.overseer.util;
 
 import com.overseer.model.ProgressStatusView;
 import com.overseer.model.enums.ProgressStatus;
