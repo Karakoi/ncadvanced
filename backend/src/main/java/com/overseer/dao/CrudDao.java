@@ -1,5 +1,7 @@
 package com.overseer.dao;
 
+import com.overseer.caching.CacheableData;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -56,6 +58,7 @@ public interface CrudDao<T, ID extends Serializable> {
      * @param pageNumber number of page.
      * @return a list of entities.
      */
+    @CacheableData
     List<T> fetchPage(int pageSize, int pageNumber);
 
     /**
