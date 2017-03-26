@@ -23,6 +23,7 @@ export class ReportService {
       });
   }
 
+  /* FOR ADMIN REPORTS */
   getAdminPDFReport(beginDate: Date, endDate: Date): Observable<any> {
     return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}`, {responseType: ResponseContentType.Blob})
       .catch((error: any) => {
@@ -31,16 +32,9 @@ export class ReportService {
       });
   }
 
-  getManagerPDFReport(beginDate: Date, endDate: Date): Observable<any> {
-    return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}`, {responseType: ResponseContentType.Blob})
-      .catch((error: any) => {
-        this.errorService.processError(error);
-        return Observable.throw(error);
-      });
-  }
 
-  getAllStatisticsOfCreatedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getAllStatisticsOfCreatedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getAllStatisticsOfFreeRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getAllStatisticsOfFreeRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -66,9 +60,9 @@ export class ReportService {
       });
   }
 
-  getListOfBestManagersWithFreeStatusByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getBestManagersWithFreeStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
-      .map(resp => resp.json())
+  /* FOR OFFICE MANAGER REPORTS */
+  getManagerPDFReport(beginDate: Date, endDate: Date, id: number): Observable<any> {
+    return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}&id=${id}`, {responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);

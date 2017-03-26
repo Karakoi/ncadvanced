@@ -1,5 +1,8 @@
 package com.overseer.service.impl.report.view;
 
+import static com.itextpdf.text.FontFactory.HELVETICA_BOLD;
+import static com.itextpdf.text.FontFactory.getFont;
+
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -14,6 +17,7 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,10 +110,13 @@ public class AdminReportView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        val dateNow = LocalDateTime.now();
         String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
         new ReportDocumentBuilder(document)
+                .addParagraph(new Paragraph(dateNow.toLocalDate().toString() + ": " + dateNow.toLocalTime().toString()), Element.ALIGN_LEFT)
                 .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
                 .addParagraph(new Paragraph("ADMIN REPORTS"), Element.ALIGN_TOP)
+                .addParagraph(new Paragraph("For period: " + this.start + " : " + this.end, getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addLineSeparator(new LineSeparator())
                 .addLineSeparator(new LineSeparator())
                 .addParagraph(new Paragraph("Count created requests in period from "

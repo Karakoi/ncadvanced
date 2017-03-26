@@ -97,7 +97,7 @@ export class ReportComponent implements OnInit {
   }
 
   private generateManagerPDF() {
-    this.reportService.getManagerPDFReport(this.startdate, this.enddate).subscribe(
+    this.reportService.getManagerPDFReport(this.startdate, this.enddate, this.user.id).subscribe(
       (res: any) => {
         let blob = res.blob();
         let filename = 'manager_report_from_' + this.startdate + '_to_' + this.enddate + '.pdf';

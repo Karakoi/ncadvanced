@@ -1,20 +1,24 @@
 package com.overseer.service.impl.report.view;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
+import static com.itextpdf.text.FontFactory.HELVETICA_BOLD;
+import static com.itextpdf.text.FontFactory.getFont;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
+import com.overseer.service.impl.report.builder.PdfPTableBuilder;
 import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,96 +35,89 @@ public class ManagerReportView extends AbstractPdfView {
 
     private LocalDate start;
     private LocalDate end;
+    private int managerId;
 
-//    private static final float TABLE_SPACING = 10f;
-//    private static final float COLOMN_WIDTH = 2f;
-//    private static final float CELL_PADDING = 10;
-//    private static final int TABLE_WIDTH_PERCENTAGE = 100;
-//    private static final int TABLE_SIZE = 3;
-
+    private static final float DEFAULT_TABLE_WIDTH = 100.0f;
+    private static final int DEFAULT_TABLE_SPACING = 10;
     private final RequestService requestService;
 
-    public void setDatePeriod(LocalDate start, LocalDate end) {
+    public void setDatePeriod(LocalDate start, LocalDate end, int id) {
         this.start = start;
         this.end = end;
+        this.managerId = id;
     }
 
-//    /**
-//     * Gets period and load PdfPTable with data for adding in report.
-//     *
-//     * @param start date from.
-//     * @param end   date to.
-//     * @return return configured PdfPTable with data.
-//     */
-//    private PdfPTable getTableWithCountRequestsByPeriod(LocalDate start, LocalDate end) throws DocumentException {
-//
-//        PdfPTable table = new PdfPTable(TABLE_SIZE);
-//        table.setWidthPercentage(TABLE_WIDTH_PERCENTAGE);
-//        table.setSpacingBefore(TABLE_SPACING);
-//        table.setSpacingAfter(TABLE_SPACING);
-//        float[] columnWidths = {COLOMN_WIDTH, COLOMN_WIDTH, COLOMN_WIDTH};
-//        table.setWidths(columnWidths);
-//        val collection = requestService.findListCountRequestsByPeriod(start, end, ProgressStatus.FREE.getId());
-//        for (RequestDTO r : collection) {
-//
-//            PdfPCell firstCell = new PdfPCell(new Paragraph("Count: " + r.getCount()));
-//            firstCell.setBorderColor(BaseColor.BLACK);
-//            firstCell.setPaddingLeft(CELL_PADDING);
-//            firstCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            firstCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//
-//            PdfPCell secondCell = new PdfPCell(new Paragraph("Start Date: " + r.getStartDateLimit()));
-//            secondCell.setBorderColor(BaseColor.BLACK);
-//            secondCell.setPaddingLeft(CELL_PADDING);
-//            secondCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            secondCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//
-//            PdfPCell thirtCell = new PdfPCell(new Paragraph("End Date: " + r.getEndDateLimit()));
-//            thirtCell.setBorderColor(BaseColor.BLACK);
-//            thirtCell.setPaddingLeft(CELL_PADDING);
-//            thirtCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            thirtCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//
-//            table.addCell(firstCell);
-//            table.addCell(secondCell);
-//            table.addCell(thirtCell);
-//        }
-//        return table;
-//    }
-//
-//    /**
-//     * Gets period and load it to PDF list.
-//     *
-//     * @param start date from.
-//     * @param end   date to.
-//     * @return return configured Pdf list with data.
-//     */
-//    private List getListWithBestManagers(LocalDate start, LocalDate end) {
-//        List list = new List();
-//        val collection = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId());
-//
-//        System.out.println(collection);
-//        for (int i = 0; i < collection.size(); i++) {
-//            list.add(new ListItem("Position " + (i + 1)) + " Closed requests: " + collection.get(i).getCount() + ", Name: "
-//                    + new ListItem(collection.get(i).getManagerFirstName() + " " + collection.get(i).getManagerLastName()));
-//        }
-//        return list;
-//    }
+    /**
+     * Gets period and load PdfPTable with data for adding in manager's report.
+     *
+     * @param start date from.
+     * @param end   date to.
+     * @param id    manager id.
+     * @return return configured PdfPTable with data.
+     */
+    private PdfPTable generateClosedRequestsTable(LocalDate start, LocalDate end, int id) {
+        val collection = requestService.findListCountRequestsByManagerAndPeriod(start, end, ProgressStatus.CLOSED.getId(), id);
+        final int tableColumnNum = 3;
+        final int colorR = 185;
+        final int colorG = 247;
+        final int colorB = 166;
+        PdfPTable table = new PdfPTableBuilder(tableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)
+                .addPdfPCells(new BaseColor(colorR, colorG, colorB), getFont(HELVETICA_BOLD),
+                        "Count", "From", "To")
+                .build();
+
+        collection
+                .forEach(request -> {
+                    table.addCell(request.getCount().toString());
+                    table.addCell(request.getStartDateLimit().toString());
+                    table.addCell(request.getEndDateLimit().toString());
+                });
+
+        return table;
+    }
+
+    /**
+     * Gets period and load PdfPTable with data for adding in manager's report.
+     *
+     * @param id    manager id.
+     * @return return configured PdfPTable with data.
+     */
+    private PdfPTable generateNeededCloseRequestsTable(int id) {
+        val topInProgressRequests = requestService.findInProgressRequestsByAssignee((long) id, 1);
+        final int tableColumnNum = 4;
+        final int colorR = 253;
+        final int colorG = 166;
+        final int colorB = 149;
+        PdfPTable table = new PdfPTableBuilder(tableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)
+                .addPdfPCells(new BaseColor(colorR, colorG, colorB), getFont(HELVETICA_BOLD),
+                        "Title", "Priority", "Date of creation", "Description")
+                .build();
+        topInProgressRequests
+                .forEach(request -> {
+                    table.addCell(request.getTitle());
+                    table.addCell(request.getPriorityStatus().getName());
+                    table.addCell(request.getDateOfCreation().toString());
+                    table.addCell(request.getDescription());
+                });
+        return table;
+    }
+
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
+        val dateNow = LocalDateTime.now();
         new ReportDocumentBuilder(document)
+                .addParagraph(new Paragraph(dateNow.toLocalDate().toString() + ": " + dateNow.toLocalTime().toString()), Element.ALIGN_LEFT)
                 .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
                 .addParagraph(new Paragraph("OFFICE MANAGER REPORTS"), Element.ALIGN_TOP)
+                .addParagraph(new Paragraph("For period: " + this.start + " : " + this.end, getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addLineSeparator(new LineSeparator())
                 .addLineSeparator(new LineSeparator())
-//                .addParagraph(new Paragraph("Count created requests in period from "
-//                        + start.toString() + " to " + end.toString()), Element.ALIGN_CENTER)
-//                .addTable(getTableWithCountRequestsByPeriod(start, end))
-//                .addLineSeparator(new LineSeparator())
-//                .addParagraph(new Paragraph("Best managers: "), Element.ALIGN_CENTER)
-//                .addList(getListWithBestManagers(start, end))
+                .addParagraph(new Paragraph("Statistic for closed request by peroid:", getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
+                .addTable(generateClosedRequestsTable(this.start, this.end, this.managerId))
+                .addParagraph(new Paragraph("You need close this request in the near future:", getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
+                .addTable(generateNeededCloseRequestsTable(this.managerId))
                 .buildDocument();
     }
 }

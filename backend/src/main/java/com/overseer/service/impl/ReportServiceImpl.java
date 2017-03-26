@@ -47,8 +47,8 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public View generateManagerPDFReport(LocalDate start, LocalDate end) {
-        managerReportView.setDatePeriod(start, end);
+    public View generateManagerPDFReport(LocalDate start, LocalDate end, int id) {
+        managerReportView.setDatePeriod(start, end, id);
         return managerReportView;
     }
 
@@ -56,7 +56,7 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public List<RequestDTO> getAllStatisticsOfCreatedRequestsByPeriod(LocalDate start, LocalDate end) {
+    public List<RequestDTO> getAllStatisticsOfFreeRequestsByPeriod(LocalDate start, LocalDate end) {
         //Main list with Request DTO's
         List<RequestDTO> allRequests = new ArrayList<>();
 

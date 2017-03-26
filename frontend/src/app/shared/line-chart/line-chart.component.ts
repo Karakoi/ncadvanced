@@ -62,7 +62,7 @@ export class LineChartComponent {
 
   public buildAdminChart() {
     let closedRequests: Array<any> = [];
-    let createdRequests: Array<any> = [];
+    let freeRequests: Array<any> = [];
     this.clear();
     this.reportService.getAllStatisticsOfClosedRequestsByPeriod(this.startDate, this.endDate)
       .subscribe((array: RequestDTO[]) => {
@@ -74,15 +74,15 @@ export class LineChartComponent {
           this.lineChartLabels.push(firstDate.concat(" : " + secondDate));
         });
 
-        this.reportService.getAllStatisticsOfCreatedRequestsByPeriod(this.startDate, this.endDate)
+        this.reportService.getAllStatisticsOfFreeRequestsByPeriod(this.startDate, this.endDate)
           .subscribe((array: RequestDTO[]) => {
             console.log(array);
             array.forEach(requestDTO => {
-              createdRequests.push(requestDTO.count);
+              freeRequests.push(requestDTO.count);
             });
 
-            this.lineChartData = [{data: closedRequests, label: 'Count closed requests'},
-              {data: createdRequests, label: 'Count created requests'}];
+            this.lineChartData = [{data: closedRequests, label: 'Count of closed requests'},
+              {data: freeRequests, label: 'Count of free requests'}];
           });
       });
   }
