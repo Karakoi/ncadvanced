@@ -4,10 +4,13 @@
     <li><a [routerLink]="['/users/deactivated']">Deactivated users</a></li>
   </ul>
   <div class="panel panel-default">
-    <!--<div class="template-header">
-      Users
-    </div>-->
     <div class="panel-body">
+      <select class="form-control pull-left" style="width: 90px;">
+        <option>10</option>
+        <option selected>20</option>
+        <option>50</option>
+        <option>100</option>
+      </select>
       <button class="btn btn-success btn-sm pull-right add-request" (click)="openAddUserModal()">New user</button>
       <table class="table table-bordered table-hover table-condensed">
         <thead>
@@ -73,17 +76,11 @@
         </tr>
         </tbody>
       </table>
-      <select class="form-control pull-left" style="width: 90px;">
-        <option>10</option>
-        <option selected>20</option>
-        <option>50</option>
-        <option>100</option>
-      </select>
-      <ul class="pagination pull-right">
+      <!--<ul class="pagination pull-right">
         <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
         <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageNumber)">
           <a>{{item}}</a></li>
-      </ul>
+      </ul>-->
     </div>
   </div>
 </div>
