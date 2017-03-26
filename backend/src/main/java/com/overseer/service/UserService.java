@@ -1,6 +1,5 @@
 package com.overseer.service;
 
-import com.overseer.dto.RequestSearchDTO;
 import com.overseer.dto.UserSearchDTO;
 import com.overseer.model.Role;
 import com.overseer.model.User;
