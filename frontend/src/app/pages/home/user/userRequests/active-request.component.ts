@@ -41,7 +41,7 @@ export class ActiveRequest implements OnInit {
 
   pageChange(data){
       this.employeeService.getRequestsByReporter(this.currentUser.id, data.page).subscribe(requests => {
-        this.requests = requests.filter(r => r.progressStatus.name != "Closed");
+        this.requests = requests.filter(r => r.progressStatus.name != "CLOSED");
       })
   }
 
@@ -49,7 +49,7 @@ export class ActiveRequest implements OnInit {
     this.authService.currentUser.subscribe(u => {
       this.currentUser = u;
       this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
-        this.requests = requests.filter(r => r.progressStatus.name != "Closed");
+        this.requests = requests.filter(r => r.progressStatus.name != "CLOSED");
         this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
           this.totalItems = count;
           this.loaded = true;

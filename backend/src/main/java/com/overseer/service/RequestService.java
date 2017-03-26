@@ -4,7 +4,6 @@ import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
-import com.overseer.model.enums.ProgressStatus;
 import io.jsonwebtoken.lang.Assert;
 
 import java.time.LocalDate;
@@ -31,9 +30,6 @@ public interface RequestService extends CrudService<Request, Long> {
     Long countClosedRequestsByReporter(Long reporterId);
 
     Long countRequestByReporter(Long reporterId);
-
-
-    Long countRequestByAssignee(Long managerId);
 
     Long countClosedRequestByAssignee(Long managerId);
 
