@@ -1,4 +1,4 @@
-package com.overseer.service.impl.report.builder;
+package com.overseer.service.impl.builder;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPTable;

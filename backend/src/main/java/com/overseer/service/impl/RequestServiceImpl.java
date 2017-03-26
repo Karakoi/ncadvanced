@@ -3,6 +3,7 @@ package com.overseer.service.impl;
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.event.ChangeProgressStatusEvent;
 import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -11,6 +12,7 @@ import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.service.RequestService;
+import com.overseer.service.impl.builder.SqlQueryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
@@ -292,6 +294,55 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public List<Request> findFreeRequests(int pageNumber) {
         return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
+    }
+
+    @Override
+    public List<Request> searchRequests(RequestSearchDTO searchDTO) {
+        SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
+
+        sqlQueryBuilder.where().isNull("r.parent_id");
+
+        String title = searchDTO.getTitle();
+        if (!title.isEmpty()) {
+            sqlQueryBuilder.and().like("title", title);
+        }
+
+        String reporterName = searchDTO.getReporterName();
+        if (!reporterName.isEmpty()) {
+            sqlQueryBuilder.and().like(new String[]{"reporter.first_name", "reporter.last_name", "reporter.second_name"}, reporterName);
+        }
+
+        String assigneeName = searchDTO.getAssigneeName();
+        if (!assigneeName.isEmpty()) {
+            sqlQueryBuilder.and().like(new String[]{"assignee.first_name", "assignee.last_name", "assignee.second_name"}, assigneeName);
+        }
+
+        String estimate = searchDTO.getEstimate();
+        if (!estimate.isEmpty()) {
+            sqlQueryBuilder.and().equal("r.estimate_time_in_days", estimate);
+        }
+
+        String progress = searchDTO.getProgress();
+        if (!progress.isEmpty()) {
+            sqlQueryBuilder.and().equal("progress.name", progress);
+        }
+
+        String priority = searchDTO.getPriority();
+        if (!priority.isEmpty()) {
+            sqlQueryBuilder.and().equal("priority.name", priority);
+        }
+
+        String dateOfCreation = searchDTO.getDateOfCreation();
+        if (!dateOfCreation.isEmpty()) {
+            sqlQueryBuilder.and().equalDate("date_of_creation", dateOfCreation);
+        }
+
+        int limit = searchDTO.getLimit();
+        sqlQueryBuilder.limit(limit);
+
+        String query = sqlQueryBuilder.build();
+
+        return requestDao.searchRequests(query);
     }
 
     /**

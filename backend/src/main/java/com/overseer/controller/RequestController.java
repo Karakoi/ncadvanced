@@ -1,5 +1,6 @@
 package com.overseer.controller;
 
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.Request;
 import com.overseer.service.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -131,6 +132,18 @@ public class RequestController {
     @GetMapping("/fetch")
     public ResponseEntity<List<Request>> fetchRequestPage(@RequestParam int page) {
         val requests = requestService.fetchPage(page);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    /**
+     * Returns list of filtered requests by specified search params in {@link RequestSearchDTO} object.
+     *
+     * @param searchDTO search params dto object
+     * @return {@link Request} list with http status 200 OK..
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<Request>> searchRequests(RequestSearchDTO searchDTO) {
+        List<Request> requests = requestService.searchRequests(searchDTO);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 

@@ -1,5 +1,6 @@
 package com.overseer.controller;
 
+import com.overseer.dto.UserSearchDTO;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -7,15 +8,7 @@ import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -138,7 +131,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/pageCount")
     public ResponseEntity<Long> getPageCount() {
-        long pageCount = userService.getCount() / DEFAULT_PAGE_SIZE + 1;
+        long pageCount = userService.getCount();
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
 
@@ -148,5 +141,17 @@ public class UserController {
     @Value
     private static final class RecoverInfo {
         private final String email;
+    }
+
+    /**
+     * Returns list of filtered users by specified search params in {@link UserSearchDTO} object.
+     *
+     * @param searchDTO search params dto object
+     * @return {@link User} list with http status 200 OK..
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchRequests(UserSearchDTO searchDTO) {
+        List<User> users = userService.searchUsers(searchDTO);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

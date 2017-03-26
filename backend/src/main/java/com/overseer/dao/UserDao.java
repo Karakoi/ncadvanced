@@ -63,4 +63,12 @@ public interface UserDao extends CrudDao<User, Long> {
      * @return a count of {@link User} entities.
      */
     Long getCountAllDeactivated();
+
+    /**
+     * Returns list of filtered users by specified search query.
+     *
+     * @param searchQuery search params sql query
+     * @return list of filtered requests
+     */
+    List<User> searchRequests(String searchQuery);
 }

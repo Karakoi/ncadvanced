@@ -10,8 +10,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.overseer.model.Request;
 import com.overseer.model.User;
-import com.overseer.service.impl.report.builder.PdfPTableBuilder;
-import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
+import com.overseer.service.impl.builder.PdfPTableBuilder;
+import com.overseer.service.impl.builder.ReportDocumentBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

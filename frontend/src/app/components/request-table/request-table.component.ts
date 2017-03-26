@@ -7,6 +7,7 @@ import {AssignRequestComponent} from "./request-assign/assign-request.component"
 import {JoinRequestComponent} from "./request-join/join-request.component";
 import {CloseRequestComponent} from "./request-close/close-request.component";
 import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
+import {RequestSearchDTO} from "../../model/dto/request-seaarch-dto.model";
 
 declare let $: any;
 
@@ -44,6 +45,7 @@ export class RequestTable {
     join: false,
     reopen: false,
     close: false,
+    ajax: true,
     columns: {
       title: true,
       estimate: true,
@@ -53,8 +55,9 @@ export class RequestTable {
       reporter: true,
       assignee: true,
     }
-  };
+  }
 
+  searchDTO : RequestSearchDTO;
 
   @ViewChild(RequestFormComponent)
   requestForm: RequestFormComponent;
@@ -73,8 +76,19 @@ export class RequestTable {
 
   @ViewChild(ReopenRequestComponent)
   reopenRequestComponent: ReopenRequestComponent;
-  
+
   constructor(private requestService: RequestService) {
+    this.searchDTO = {
+      title: "",
+      dateOfCreation: "",
+      estimate: "",
+      priority: "",
+      progress: "",
+      reporterName: "",
+      assigneeName: "",
+      limit: 20
+    };
+
     this.orderType = true;
     this.orderField = 'title';
     this.searchTypes = {
@@ -101,6 +115,7 @@ export class RequestTable {
 
   perPageChange(data) {
     this.perPage = data;
+    this.setTitleSearch('limit', data);
   }
 
   check(data) {
@@ -127,7 +142,7 @@ export class RequestTable {
     this.reopenRequestComponent.request = request;
     this.reopenRequestComponent.modal.open();
   }
-  
+
   isChecked(id) {
     return this.selected.has(id);
   }
@@ -166,4 +181,41 @@ export class RequestTable {
     this.requestForm.modal.open();
   }
 
+  setTitleSearch(field, value) {
+    switch (field) {
+      case 'title':
+        this.searchDTO.title = value;
+        break;
+      case 'dateOfCreation':
+        this.searchDTO.dateOfCreation = value;
+        break;
+      case 'estimate':
+        this.searchDTO.estimate = value;
+        break;
+      case 'priority':
+        this.searchDTO.priority = value;
+        break;
+      case 'progress':
+        this.searchDTO.progress = value;
+        break;
+      case 'reporterName':
+        this.searchDTO.reporterName = value;
+        break;
+      case 'assigneeName':
+        this.searchDTO.assigneeName = value;
+        break;
+      case 'limit':
+        this.searchDTO.limit = value;
+        break;
+    }
+    this.getSearchData(this.searchDTO);
+    console.log(this.searchDTO)
+  }
+
+  getSearchData(searchDTO){
+    this.requestService.searchAll(searchDTO).subscribe(requests => {
+      console.log(requests);
+      this.requests = requests;
+    })
+  }
 }

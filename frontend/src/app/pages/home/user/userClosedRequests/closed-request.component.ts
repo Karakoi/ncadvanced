@@ -32,6 +32,7 @@ export class ClosedRequest implements OnInit {
     join: false,
     reopen: true,
     close: false,
+    ajax: false,
     columns: {
       title: true,
       estimate: true,
