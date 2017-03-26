@@ -2,8 +2,8 @@ package com.overseer.event;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
+import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
-import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;

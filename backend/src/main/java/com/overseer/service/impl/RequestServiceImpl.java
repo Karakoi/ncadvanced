@@ -118,6 +118,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber) {
+        Assert.notNull(assigneeId, "assignee must not be null");
+        val list = this.requestDao.findClosedRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
+                list.size(), assigneeId, pageNumber);
+        return list;
+    }
+    
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public List<Request> findRequestsByAssignee(Long assigneeId, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
         val list = this.requestDao.findRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
@@ -381,7 +393,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public Request reopenRequest(Long requestId) {
         Assert.notNull(requestId, "id of request must not be null");
-        log.debug("Close request with id: {} ", requestId);
+        log.debug("Reopen request with id: {} ", requestId);
 
         Request request = requestDao.findOne(requestId);
         if (request == null) {
@@ -428,6 +440,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Long countClosedRequestsByReporter(Long reporterId) {
         Assert.notNull(reporterId, "Reporter id must be not null");
         return requestDao.countRequestsByReporterAndProgress(reporterId, ProgressStatus.CLOSED.name());
+    }
+
+    @Override
+    public Long countClosedRequestByAssignee(Long managerId) {
+        return requestDao.countClosedRequestByAssignee(managerId);
     }
 
     @Override
