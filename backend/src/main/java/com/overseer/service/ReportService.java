@@ -16,9 +16,18 @@ public interface ReportService {
      *
      * @param start period start.
      * @param end   period end.
-     * @return admin reports documents.
+     * @return view with admin reports.
      */
     View generateAdminPDFReport(LocalDate start, LocalDate end);
+
+    /**
+     * Method generate PDF report for user role Manager.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return view with manager reports.
+     */
+    View generateManagerPDFReport(LocalDate start, LocalDate end);
 
     /**
      * The method receives all the created requests for a period of months.

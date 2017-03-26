@@ -36,7 +36,9 @@
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
-              <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
+              <td>
+                <date-parse [date]="request.dateOfCreation"></date-parse>
+              </td>
             </tr>
             <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
@@ -56,13 +58,15 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}}
+                  {{request.reporter.lastName}}</a>
               </td>
             </tr>
             <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}}
+                  {{request.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>
@@ -73,10 +77,10 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> PDF:</td>
               <td>
-                <a href="/api/reports/request?id={{request.id}}" class="btn btn-danger">
+                <button type="button" (click)="getPDF()" class="btn btn-danger">
                   <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
                   <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                </a>
+                </button>
               </td>
             </tr>
             </tbody>
@@ -119,7 +123,10 @@
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false && subRequests != false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <button *ngIf="showSubRequests && type == 'Request' && isInProgress(request)" class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
+          <button *ngIf="showSubRequests && type == 'Request' && isInProgress(request)"
+                  class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub
+            request
+          </button>
           <p class="no-content-msg">
             <i *ngIf="subRequests == false">There are no sub requests at that moment.</i>
           </p>
@@ -138,9 +145,12 @@
             <tr *ngFor="let subRequest of subRequests">
               <td *ngIf="showSubRequests">{{subRequest.title}}</td>
               <td *ngIf="showSubRequests">{{subRequest.description}}</td>
-              <td *ngIf="showSubRequests"><date-parse [date]="subRequest.dateOfCreation"></date-parse></td>
+              <td *ngIf="showSubRequests">
+                <date-parse [date]="subRequest.dateOfCreation"></date-parse>
+              </td>
               <td *ngIf="showSubRequests" class="details">
-                <button [routerLink]="['/request', subRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+                <button [routerLink]="['/request', subRequest.id]"
+                        class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
               </td>
               <td *ngIf="showSubRequests && !isClosed(request)" class="text-center delete-col">
                 <button [attr.value]="subRequest.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
@@ -177,11 +187,15 @@
             </tr>
             <tr *ngFor="let joinedRequest of joinedRequests">
               <td *ngIf="showJoinedRequests">{{joinedRequest.title}}</td>
-              <td *ngIf="showJoinedRequests">{{joinedRequest.reporter.firstName}} {{joinedRequest.reporter.lastName}}</td>
+              <td *ngIf="showJoinedRequests">{{joinedRequest.reporter.firstName}} {{joinedRequest.reporter.lastName}}
+              </td>
               <td *ngIf="showJoinedRequests">{{joinedRequest.priorityStatus.name}}</td>
-              <td *ngIf="showJoinedRequests"><date-parse [date]="joinedRequest.dateOfCreation"></date-parse></td>
+              <td *ngIf="showJoinedRequests">
+                <date-parse [date]="joinedRequest.dateOfCreation"></date-parse>
+              </td>
               <td *ngIf="showJoinedRequests" class="details">
-                <button [routerLink]="['/request', joinedRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+                <button [routerLink]="['/request', joinedRequest.id]"
+                        class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
               </td>
             </tr>
             </tbody>
@@ -210,13 +224,15 @@
                 <span>
                   Field <span class="bold-text">"{{history.columnName}}"</span>
                   was changed from <span class="bold-text">"{{showHistoryValue(history.oldValue, history.demonstrationOfOldValue)}}"</span>
-                  to <span class="bold-text">"{{showHistoryValue(history.newValue, history.demonstrationOfNewValue)}}"</span>
+                  to <span
+                  class="bold-text">"{{showHistoryValue(history.newValue, history.demonstrationOfNewValue)}}"</span>
 
                   by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
                 </span>
               </td>
               <td>
-                <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
+                <span class="bold-text"><span class="badge pull-right"><date-parse
+                  [date]="history.dateOfChange"></date-parse></span></span>
               </td>
             </tr>
             </tbody>
@@ -225,6 +241,7 @@
       </div>
     </div>
   </div>
-  <add-sub-request [subRequests]="subRequests" [parentId]="request.id" (updated)="updateSubRequests($event)"></add-sub-request>
+  <add-sub-request [subRequests]="subRequests" [parentId]="request.id"
+                   (updated)="updateSubRequests($event)"></add-sub-request>
   <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
 </div>

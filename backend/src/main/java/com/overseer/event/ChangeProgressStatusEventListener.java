@@ -55,7 +55,6 @@ public class ChangeProgressStatusEventListener {
     @EventListener
     public void closeRequest(CloseRequestEvent closeRequestEvent) {
         Request request = closeRequestEvent.getRequest();
-
         //Check if request is parent
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
         if (joinedRequests.isEmpty()) {

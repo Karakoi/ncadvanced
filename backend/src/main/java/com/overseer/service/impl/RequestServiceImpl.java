@@ -14,7 +14,6 @@ import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
-import com.overseer.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;

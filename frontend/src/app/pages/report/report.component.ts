@@ -9,7 +9,7 @@ import {LineChartComponent} from "../../shared/line-chart/line-chart.component";
 import {ReportService} from "../../service/report.service";
 import {User} from "../../model/user.model";
 import {Subject} from "rxjs";
-// import * as FileSaver from "file-saver";
+import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'report',
@@ -86,25 +86,38 @@ export class ReportComponent implements OnInit {
     this.barChart.buildManagerChart();
   }
 
-  // private generateAdminPDF() {
-  //   this.reportService.getPDFReport().subscribe(
-  //     data => {
-  //       console.log(data);
-  //       let blob = new Blob([data], {type: 'application/pdf'});
-  //       // console.log(blob);
-  //       console.log("ddddddd");
-  //       FileSaver.saveAs(blob, "report.pdf");
-  //       console.log("ddddddd22222");
-  //       this.toastr.success("Report was created successfully", "Success!");
-  //     }, e => this.handleError(e));
+  private generateAdminPDF() {
+    this.reportService.getAdminPDFReport(this.startdate, this.enddate).subscribe(
+      (res: any) => {
+        let blob = res.blob();
+        let filename = 'admin_report_from_' + this.startdate + '_to_' + this.enddate + '.pdf';
+        FileSaver.saveAs(blob, filename);
+      }
+    );
+  }
+
+  private generateManagerPDF() {
+    this.reportService.getManagerPDFReport(this.startdate, this.enddate).subscribe(
+      (res: any) => {
+        let blob = res.blob();
+        let filename = 'manager_report_from_' + this.startdate + '_to_' + this.enddate + '.pdf';
+        FileSaver.saveAs(blob, filename);
+      }
+    );
+  }
+
+  // public downloadFile() {
+  //   return this.http.get(this.api, { responseType: ResponseContentType.Blob })
+  //     .subscribe(
+  //       (res: any) =>
+  //       {
+  //         let blob = res.blob();
+  //         let filename = 'report.xlsx';
+  //         FileSaver.saveAs(blob, filename);
+  //       }
+  //     );
   // }
-  //
-  // private handleError(error) {
-  //   switch (error.status) {
-  //     case 500:
-  //       this.toastr.error("Can't create report", 'Error');
-  //   }
-  // }
+
 
   isAdmin(): boolean {
     return this.role === 'admin';

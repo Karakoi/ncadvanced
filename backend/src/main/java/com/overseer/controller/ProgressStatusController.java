@@ -1,7 +1,6 @@
 package com.overseer.controller;
 
 import com.overseer.model.ProgressStatusView;
-import com.overseer.util.ProgressStatusUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProgressStatusController {
 
-    private final ProgressStatusUtil progressStatusUtil;
+    private final com.overseer.util.ProgressStatusUtil progressStatusUtil;
 
     /**
      * Returns all {@link ProgressStatusView} entities.

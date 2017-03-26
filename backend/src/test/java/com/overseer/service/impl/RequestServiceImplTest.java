@@ -10,7 +10,6 @@ import com.overseer.service.RequestService;
 import lombok.Value;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,6 +152,7 @@ public class RequestServiceImplTest {
 
         // when
         Request assignRequest = requestService.assignRequest(request);
+
         // then
         assertThat(assignRequest.getProgressStatus(), is(ProgressStatus.IN_PROGRESS));
     }
@@ -166,8 +166,8 @@ public class RequestServiceImplTest {
         requestService.closeRequest(request);
         userDao.delete(request.getReporter());
         requestService.reopenRequest(request.getId());
-        // then
 
+        // then
     }
 
     @Test(expected=InappropriateProgressStatusException.class)

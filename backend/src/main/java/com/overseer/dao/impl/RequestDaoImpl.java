@@ -8,7 +8,6 @@ import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.util.ProgressStatusUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,6 +33,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     private static final int LOW = 3;
     private static final int DEFAULT_DAY_IN_MONTH = 1;
     private static final Long DEFAULT_MONTHS_STEP = 1L;
+
     private ProgressStatusUtil progressStatusUtil;
     private SecurityContextService securityContextService;
 

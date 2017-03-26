@@ -36,17 +36,29 @@ public class ReportController {
     }
 
     /**
-     * Gets Document pdf report.
+     * Method gets pdf report for admin.
      *
-     * @return Document doc with reporting data.
+     * @return view with reporting data.
      */
-    @GetMapping("/adminPDFReport")
+    @RequestMapping(value = "/adminPDFReport", method = RequestMethod.GET, produces = "application/pdf")
     public View getAdminPDFReport(@RequestParam String beginDate, @RequestParam String endDate) {
 
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-
         return reportService.generateAdminPDFReport(start, end);
+    }
+
+    /**
+     * Method gets pdf report for office manager.
+     *
+     * @return view with reporting data.
+     */
+    @RequestMapping(value = "/managerPDFReport", method = RequestMethod.GET, produces = "application/pdf")
+    public View getManagerPDFReport(@RequestParam String beginDate, @RequestParam String endDate) {
+
+        LocalDate start = LocalDate.parse(beginDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+        return reportService.generateManagerPDFReport(start, end);
     }
 
     /**
