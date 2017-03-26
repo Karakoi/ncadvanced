@@ -27,7 +27,8 @@
       "scripts": [
         "../node_modules/jquery/dist/jquery.js",
         "../node_modules/bootstrap/dist/js/bootstrap.js",
-        "../node_modules/chart.js/dist/Chart.bundle.min.js"
+        "../node_modules/chart.js/dist/Chart.bundle.min.js",
+        "../node_modules/file-saver/FileSaver.js"
       ]
     }
   ],
@@ -65,6 +66,12 @@
       "module": false,
       "pipe": true,
       "service": true
+    },
+    "packages":{
+      "file-saver":{
+        "main":"FileSaver.js",
+        "format": "cjs"
+      }
     }
   }
 }

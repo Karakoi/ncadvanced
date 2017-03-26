@@ -126,7 +126,6 @@ export class RequestProfileComponent implements OnInit {
         this.toastr.success("Request updated", "Success")
       });
   }
-
   getRequestType(request): string {
     if (request.progressStatus.name == null && request.priorityStatus.name == null) {
       return "Sub request"
