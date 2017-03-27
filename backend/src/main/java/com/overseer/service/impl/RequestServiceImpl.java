@@ -282,14 +282,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Long> quantityByProgressStatus() {
-        return requestDao.countRequestByProgressStatus();
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
     public List<Long> quantityForUser(Long userId) {
         return requestDao.countRequestByProgressStatusForUser(userId);
     }
@@ -298,24 +290,48 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Long> quantityByPriorityStatus() {
-        return requestDao.countRequestByPriorityStatus();
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public List<Long> quantityByProgressStatusForSixMonths() {
-        return requestDao.countRequestByProgressStatusForSixMonths();
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
     public List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId) {
         return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long countTotalUsers() {
+        return requestDao.countTotalUsers();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long countTotalRequests() {
+        return requestDao.countTotalRequests();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long countRequestsCreatedToday() {
+        return requestDao.countRequestsCreatedToday();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long getRunningRequestToday() {
+        return requestDao.countRequestsRunningToday();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> countStatisticForAdminDashBoard(Long howLong) {
+        return requestDao.statisticForAdminDashBoard(howLong);
     }
 
     /**

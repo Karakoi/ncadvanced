@@ -1,13 +1,42 @@
-
-<div class="container">
+<div class="container" style="background-color: white">
   <div class="header-content">
-    <h1 align="center">Request Info</h1>
+    <h1 align="center">Home - Dashboard</h1>
+
     <div class="row">
-      <google-chart (click)="setStatistic()" [data]="pieChartRequestForSixMonths"></google-chart>
+      <div class="col-md-15">
+        <div class="col-md-6 col-lg-3">
+          <h4 style="color: indigo">Total users: {{totalUsers}}</h4>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <h4 style="color: indigo">Total requests: {{totalRequests}}</h4>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <h4 style="color: indigo">Requests today: {{requestToday}}</h4>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <h4 style="color: indigo">Running today: {{runningToday}}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div align="center">
+      <button (click)="setStatisticForSixMonths()" class="btn btn-success">Half Year</button>
+      <button (click)="setStatisticForTwelveMonths()" class="btn btn-primary">One Year</button>
+      <button (click)="setStatisticForAllTime()" class="btn btn-primary" style="background-color: lightseagreen">All Time</button>
     </div>
     <div class="row">
-      <google-chart (click)="setStatistic()" [data]="pieChartRequestPriority"></google-chart>
-      <google-chart (click)="setStatistic()" [data]="pieChartRequest"></google-chart>
+      <google-chart [data]="pieChartRequestForSixMonths"></google-chart>
+    </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="col-md-12 col-lg-6">
+        <google-chart [data]="pieChartRequestPriority"></google-chart>
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <google-chart [data]="pieChartRequest"></google-chart>
+      </div>
     </div>
   </div>
 </div>

@@ -300,13 +300,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
     void deleteParentRequestIfItHasNoChildren(Long parentId);
 
     /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by progress status. 
-     */
-    List<Long> countRequestByProgressStatus();
-
-    /**
      * Returns list to build pie chart for user profile.
      *
      * @return list of statistic request for user profile.
@@ -314,20 +307,33 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Long> countRequestByProgressStatusForUser(Long userId);
 
     /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by priority status.
-     */
-    List<Long> countRequestByPriorityStatus();
-
-    /**
-     * @return list of statistic for six months by progress status.
-     */
-    List<Long> countRequestByProgressStatusForSixMonths();
-
-    /**
      * @return list of statistic for six months by progress status for user.
      */
     List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
 
+    /**
+     * @return number of total Users.
+     */
+    Long countTotalUsers();
+
+    /**
+     * @return number of total Requests.
+     */
+    Long countTotalRequests();
+
+    /**
+     * @return number of today's requests for admin dashboard to create statistic.
+     */
+    Long countRequestsCreatedToday();
+
+    /**
+     * @return number of today's requests that were changed progress status from free to anyone except to closed.
+     */
+    Long countRequestsRunningToday();
+
+    /**
+     * @param howLong set which exactly statistic we need.
+     * @return list of statistic for admin dashboard.
+     */
+    List<Long> statisticForAdminDashBoard(Long howLong);
 }

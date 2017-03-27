@@ -254,13 +254,6 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findFreeRequests(int pageNumber);
 
     /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by progress status.
-     */
-    List<Long> quantityByProgressStatus();
-
-    /**
      * Returns list to build pie chart for user profile.
      *
      * @return list of statistic request for user profile.
@@ -268,20 +261,32 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Long> quantityForUser(Long userId);
 
     /**
-     * Returns Returns list to build pie chart.
-     *
-     * @return list of statistic request by priority status.
-     */
-    List<Long> quantityByPriorityStatus();
-
-    /**
-     * @return list of statistic request by progress status.
-     */
-    List<Long> quantityByProgressStatusForSixMonths();
-
-    /**
      * @return list of statistic request by progress status for user.
      */
     List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId);
 
+    /**
+     * @return number of total Users.
+     */
+    Long countTotalUsers();
+
+    /**
+     * @return number of total requests.
+     */
+    Long countTotalRequests();
+
+    /**
+     * @return number of today's requests.
+     */
+    Long countRequestsCreatedToday();
+
+    /**
+     * @return number of today's requests that were chanced progress status from free to anyone except to closed and free.
+     */
+    Long getRunningRequestToday();
+
+    /**
+     * @return list of statistic for admin dashboard.
+     */
+    List<Long> countStatisticForAdminDashBoard(Long howLong);
 }

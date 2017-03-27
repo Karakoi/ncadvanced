@@ -102,9 +102,9 @@ export class RequestService {
       });
   }
 
-  getQuantityRequest(): Observable<number[]> {
-    return this.authHttp.get(`${url}/countRequestByProgressStatus`).map(resp => resp.json());
-  }
+  // getQuantityRequest(): Observable<number[]> {
+  //   return this.authHttp.get(`${url}/countRequestByProgressStatus`).map(resp => resp.json());
+  // }
 
   getFree(page: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/fetchFree?page=` + page)
@@ -181,17 +181,17 @@ export class RequestService {
     return this.authHttp.get(`${url}/countRequestForUser?userId=` + userId).map(resp => resp.json())
   }
 
-  getStatisticForSixMonths(): Observable<number[]> {
-    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatus`).map(resp => resp.json());
+  getStatisticForAdminDashBoard(howLong: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/getStatisticForAdminDashBoard?howLong=` + howLong).map(resp => resp.json());
   }
 
   getStatisticForSixMonthsForUser(userId: number): Observable<number[]> {
     return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatusForUser?userId=` + userId).map(resp => resp.json());
   }
 
-  getQuantityRequestByPriority(): Observable<number[]> {
-    return this.authHttp.get(`${url}/countRequestByPriorityStatus`).map(resp => resp.json());
-  }
+  // getQuantityRequestByPriority(): Observable<number[]> {
+  //   return this.authHttp.get(`${url}/countRequestByPriorityStatus`).map(resp => resp.json());
+  // }
 
   getSubRequests(id:number):Observable<Request[]> {
     return this.authHttp.get(`${url}/getSubRequests/${id}`)
@@ -209,5 +209,21 @@ export class RequestService {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
+  }
+
+  getTotalUsers(): Observable<number> {
+    return this.authHttp.get(`${url}/getTotalUsers`).map(resp => resp.json());
+  }
+
+  getTotalRequests(): Observable<number> {
+    return this.authHttp.get(`${url}/getTotalRequests`).map(resp => resp.json());
+  }
+
+  getRequestToday(): Observable<number> {
+    return this.authHttp.get(`${url}/getRequestToday`).map(resp => resp.json());
+  }
+
+  getRunningToday(): Observable<number> {
+    return this.authHttp.get(`${url}/getRunningToday`).map(resp => resp.json());
   }
 }

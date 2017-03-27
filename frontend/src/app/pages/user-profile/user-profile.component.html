@@ -43,8 +43,9 @@
           </table>
         </div>
       </div>
-        <google-chart (click)="setStatistic()" style="" [data]="pieChartRequest" ></google-chart>
-        <google-chart (click)="setStatistic()" [data]="pieChartRequestForSixMonths"></google-chart>
+      <h5 align="center" *ngIf="hasAnyRequest">You haven't had any request yet</h5>
+      <google-chart *ngIf="hasSixMonthsRec" [data]="pieChartRequestForSixMonths"></google-chart>
+      <google-chart *ngIf="hasRequest" [data]="pieChartRequest" ></google-chart>
     </div>
   </div>
 </div>

@@ -293,18 +293,6 @@ public class RequestController {
     }
 
     /**
-     * Returns list of progress.
-     *
-     * @return list of progress.
-     */
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("/countRequestByProgressStatus")
-    public ResponseEntity<List<Long>> getQuantityRequestByProgressStatus() {
-        List<Long> quantity = requestService.quantityByProgressStatus();
-        return new ResponseEntity<>(quantity, HttpStatus.OK);
-    }
-
-    /**
      * Returns list of progress for User.
      *
      * @param userId value of User id in database.
@@ -335,28 +323,6 @@ public class RequestController {
     }
 
     /**
-     * Returns list of progress for User.
-     *
-     * @return list of progress for User.
-     */
-    @GetMapping("/countRequestByPriorityStatus")
-    public ResponseEntity<List<Long>> getQuantityForUserByPriorityStatus() {
-        List<Long> quantity = requestService.quantityByPriorityStatus();
-        return new ResponseEntity<>(quantity, HttpStatus.OK);
-    }
-
-    /**
-     * Returns statistic for six months.
-     *
-     * @return list of statistic for six months.
-     */
-    @GetMapping("/getStatisticForSixMonthsByProgressStatus")
-    public ResponseEntity<List<Long>> getStatisticForSixMonthsByProgressStatus() {
-        List<Long> statisticList = requestService.quantityByProgressStatusForSixMonths();
-        return new ResponseEntity<>(statisticList, HttpStatus.OK);
-    }
-
-    /**
      * Returns statistic for six months for User.
      *
      * @param userId value of User id in database.
@@ -366,6 +332,52 @@ public class RequestController {
     public ResponseEntity<List<Long>> getStatisticForSixMonthsForUser(@RequestParam Long userId) {
         List<Long> statisticListForUser = requestService.quantityByProgressStatusForSixMonthsForUser(userId);
         return new ResponseEntity<>(statisticListForUser, HttpStatus.OK);
+    }
+
+    /**
+     * @return value of total Users.
+     */
+    @GetMapping("getTotalUsers")
+    public ResponseEntity<Long> getTotalUsers() {
+        Long totalUsers = requestService.countTotalUsers();
+        return new ResponseEntity<>(totalUsers, HttpStatus.OK);
+    }
+
+    /**
+     * @return value of total Requests.
+     */
+    @GetMapping("getTotalRequests")
+    public ResponseEntity<Long> getTotalRequests() {
+        Long totalRequests = requestService.countTotalRequests();
+        return new ResponseEntity<>(totalRequests, HttpStatus.OK);
+    }
+
+    /**
+     * @return value of today's requests.
+     */
+    @GetMapping("getRequestToday")
+    public ResponseEntity<Long> getRequestToday() {
+        Long requestsCreatedToday = requestService.countRequestsCreatedToday();
+        return new ResponseEntity<>(requestsCreatedToday, HttpStatus.OK);
+    }
+
+    /**
+     * @return value of today's requests that change progress status from free to anyone except to closed and free.
+     */
+    @GetMapping("getRunningToday")
+    public ResponseEntity<Long> getRunningToday() {
+        Long runningRequestToday = requestService.getRunningRequestToday();
+        return new ResponseEntity<>(runningRequestToday, HttpStatus.OK);
+    }
+
+    /**
+     * @param howLong set which exactly statistic we need.
+     * @return list of statistic for admin dashboard.
+     */
+    @GetMapping("getStatisticForAdminDashBoard")
+    public ResponseEntity<List<Long>> getStatisticForAdminDashBoard(@RequestParam Long howLong) {
+        List<Long> totalStatistic = requestService.countStatisticForAdminDashBoard(howLong);
+        return new ResponseEntity<>(totalStatistic, HttpStatus.OK);
     }
 }
 

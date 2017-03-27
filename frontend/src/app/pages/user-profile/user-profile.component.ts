@@ -13,8 +13,11 @@ import {RequestService} from "../../service/request.service";
 export class UserProfileComponent implements OnInit {
 
   user: User;
-  requests: Array<number> = [1,1,1,1,1];
-  sixMonthsStatistic: Array<number>;
+  requests: Array<number>;
+  statisticForUser: Array<number>;
+  hasRequest: boolean = false;
+  hasSixMonthsRec: boolean = false;
+  hasAnyRequest: boolean = false;
 
   constructor(private userService: UserService,
               private route: ActivatedRoute,
@@ -27,10 +30,20 @@ export class UserProfileComponent implements OnInit {
       this.userService.get(id).subscribe((user: User) => {
         this.user = user;
         this.requestService.getQuantityForUser(this.user.id).subscribe(s => {
-          this.requests = s;
+          if (s[0]!= 0 || s[1]!= 0 || s[2]!= 0) {
+            this.hasRequest = true;
+            this.requests = s;
+            this.setStatisticByProgressStatus();
+          } else {
+            this.hasAnyRequest = true;
+          }
         });
         this.requestService.getStatisticForSixMonthsForUser(this.user.id).subscribe(s => {
-          this.sixMonthsStatistic = s;
+          if (s[0]!= 0 || s[1]!= 0) {
+            this.hasSixMonthsRec = true;
+            this.statisticForUser = s;
+            this.setStatisticForSixMonths();
+          }
         });
       });
     });
@@ -41,11 +54,9 @@ export class UserProfileComponent implements OnInit {
       chartType: 'PieChart',
       dataTable: [
         ['Request', 'Info'],
-        ['In progress: '+ this.requests[3], this.requests[3]],
-        ['Free: ' + this.requests[1],this.requests[1]],
-        ['Registered: ' + this.requests[0], this.requests[0]],
-        ['Reopen: ' + this.requests[4], this.requests[4]],
-        ['Joined: ' + this.requests[2],this.requests[2]],
+        ['Free: ' + this.requests[0],this.requests[0]],
+        ['Joined: ' + this.requests[1],this.requests[1]],
+        ['In progress: '+ this.requests[2], this.requests[2]],
       ],
       options: {
         title: 'Your request statistic',
@@ -74,14 +85,14 @@ export class UserProfileComponent implements OnInit {
 
   setStatisticForSixMonths(){
     this.pieChartRequestForSixMonths = {
-      chartType: 'Gauge',
+      chartType: 'BarChart',
       dataTable: [
-        ['Open', ''],
-        ['Open', this.sixMonthsStatistic[0]],
-        ['Closed', this.sixMonthsStatistic[1]]],
+        ['Status', 'Open','Closed'],
+        ['Status', this.statisticForUser[0],this.statisticForUser[1]]
+      ],
       options: {
         hAxis: {
-          title: 'Request statistic for six month',
+          title: 'Request statistic for six months',
           minValue: 0,
           textStyle: {
             bold: true,
@@ -114,9 +125,8 @@ export class UserProfileComponent implements OnInit {
   pieChartRequestForSixMonths = {
     chartType: 'BarChart',
     dataTable: [
-      ['Request', ''],
-      ['Click to see open',100],
-      ['Click to see closed',100],
+      ['Request', 'Open', 'Closed'],
+      ['Click to see open',100,100]
     ],
     options: {
       hAxis: {
@@ -148,9 +158,4 @@ export class UserProfileComponent implements OnInit {
       }
     }
   };
-
-  setStatistic(): void {
-    this.setStatisticByProgressStatus();
-    this.setStatisticForSixMonths();
-  }
 }
