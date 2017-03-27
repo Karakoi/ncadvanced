@@ -21,7 +21,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of closed requests which have provided {@link User} as reporter.
      */
-    List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber);
+    List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber, int size);
 
     /**
      * Returns number of closed requests for reporter.
@@ -69,7 +69,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param assigneeId requests assignee, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as assignee.
      */
-    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber);
+    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int size, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as assignee.
@@ -77,7 +77,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param assigneeId requests assignee, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as assignee.
      */
-    List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber);
+    List<Request> findClosedRequestsByAssignee(Long assigneeId, int size, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -85,7 +85,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param reporterId requests reporterId, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    List<Request> findRequestsByReporter(Long reporterId, int pageNumber);
+    List<Request> findRequestsByReporter(Long reporterId, int pageNumber, int size);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -93,9 +93,9 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param reporter requests reporter, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    default List<Request> findRequestsByReporter(User reporter, int pageNumber) {
+    default List<Request> findRequestsByReporter(User reporter, int pageNumber, int size) {
         Assert.notNull(reporter);
-        return findRequestsByReporter(reporter.getId(), pageNumber);
+        return findRequestsByReporter(reporter.getId(), pageNumber, size);
     }
 
     /**
@@ -262,7 +262,7 @@ public interface RequestService extends CrudService<Request, Long> {
      *
      * @return list of requests with Free progress status {@link ProgressStatus}.
      */
-    List<Request> findFreeRequests(int pageNumber);
+    List<Request> findFreeRequests(int pageNumber, int size);
 
     /**
      * Returns list of filtered requests by specified searchRequests params in {@link RequestSearchDTO} object.

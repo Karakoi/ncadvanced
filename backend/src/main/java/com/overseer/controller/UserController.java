@@ -91,8 +91,8 @@ public class UserController {
      */
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(@RequestParam int page) {
-        List<User> users = userService.fetchPage(page);
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam int page, @RequestParam int size) {
+        List<User> users = userService.fetchPage(page, size);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -103,8 +103,8 @@ public class UserController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/deactivated")
-    public ResponseEntity<List<User>> getAllDeactivatedUsers(@RequestParam int page) {
-        List<User> users = userService.findAllDeactivated(page);
+    public ResponseEntity<List<User>> getAllDeactivatedUsers(@RequestParam int page, @RequestParam int size) {
+        List<User> users = userService.findAllDeactivated(page, size);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -124,7 +124,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/pageDeactivatedUsersCount")
     public ResponseEntity<Long> getPageDeactivatedUsersCount() {
-        long pageCount = userService.getCountAllDeactivated() / DEFAULT_PAGE_SIZE + 1;
+        long pageCount = userService.getCountAllDeactivated();
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
 

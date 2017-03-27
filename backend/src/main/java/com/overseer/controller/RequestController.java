@@ -130,8 +130,8 @@ public class RequestController {
      * @return {@link Request} list with http status 200 OK..
      */
     @GetMapping("/fetch")
-    public ResponseEntity<List<Request>> fetchRequestPage(@RequestParam int page) {
-        val requests = requestService.fetchPage(page);
+    public ResponseEntity<List<Request>> fetchRequestPage(@RequestParam int page, @RequestParam int size) {
+        val requests = requestService.fetchPage(page, size);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -227,8 +227,8 @@ public class RequestController {
      * @return {@link Request} list with http status 200 OK..
      */
     @GetMapping("/fetchFree")
-    public ResponseEntity<List<Request>> fetchFreeRequestPage(@RequestParam int page) {
-        val requests = requestService.findFreeRequests(page);
+    public ResponseEntity<List<Request>> fetchFreeRequestPage(@RequestParam int page, @RequestParam int size) {
+        val requests = requestService.findFreeRequests(page, size);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -249,8 +249,10 @@ public class RequestController {
 
 
     @GetMapping("/requestsByReporter")
-    public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId, int pageNumber) {
-        val requests = requestService.findRequestsByReporter(userId, pageNumber);
+    public ResponseEntity<List<Request>> getRequestsByReporter(@RequestParam long userId,
+                                                               @RequestParam int pageNumber,
+                                                               @RequestParam int size) {
+        val requests = requestService.findRequestsByReporter(userId, pageNumber, size);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -261,8 +263,9 @@ public class RequestController {
 
     @GetMapping("/inProgressRequestsByAssignee")
     public ResponseEntity<List<Request>> getInProgressRequestsByAssignee(@RequestParam int page,
+                                                                         @RequestParam int size,
                                                                          @RequestParam long manager) {
-        val requests = requestService.findInProgressRequestsByAssignee(manager, page);
+        val requests = requestService.findInProgressRequestsByAssignee(manager, size, page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
@@ -273,14 +276,17 @@ public class RequestController {
 
     @GetMapping("/closedRequestsByAssignee")
     public ResponseEntity<List<Request>> getClosedRequestsByAssignee(@RequestParam int page,
+                                                                     @RequestParam int size,
                                                                      @RequestParam long manager) {
-        val requests = requestService.findClosedRequestsByAssignee(manager, page);
+        val requests = requestService.findClosedRequestsByAssignee(manager, size, page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     @GetMapping("/closedRequestsByReporter")
-    public ResponseEntity<List<Request>> getClosedRequestsByReporter(@RequestParam long userId, int pageNumber) {
-        val requests = requestService.findClosedRequestsByReporter(userId, pageNumber);
+    public ResponseEntity<List<Request>> getClosedRequestsByReporter(@RequestParam long userId,
+                                                                     @RequestParam int pageNumber,
+                                                                     @RequestParam int size) {
+        val requests = requestService.findClosedRequestsByReporter(userId, pageNumber, size);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
