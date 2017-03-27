@@ -2,6 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.ProgressStatusDao;
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.dto.RequestSearchDTO;
 import com.overseer.event.ChangeProgressStatusEvent;
@@ -520,5 +521,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         request.setProgressStatus(progress);
         request.setAssignee(new User());
         return requestDao.save(request);
+    }
+
+    @Override
+    public List<DeadlineDTO> getManagerDeadlines(Long managerID) {
+        return requestDao.getDeadlinesByAssignee(managerID);
     }
 }
