@@ -474,10 +474,8 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     @Override
     public List<Long> statisticForAdminDashBoard(Long howLong) {
         LocalDate localDate = LocalDate.now().minusMonths(howLong);
-        System.out.println(localDate);
         if (howLong.equals(VALUE_TO_GET_STATISTIC_FOR_ALL_TIME)) {
             localDate = LocalDate.of(START_PROJECT_YEARS, START_PROJECT_MONTHS, START_PROJECT_DAY);
-            System.out.println(localDate);
         }
         System.out.println(localDate);
         String queryProgress = queryService().getQuery("request.countStatisticForAdminDashBoardByProgressStatus");

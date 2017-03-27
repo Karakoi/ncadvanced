@@ -199,7 +199,6 @@ public interface RequestService extends CrudService<Request, Long> {
      * and not null {@link Request#parentId}
      *
      * @param subRequest specified sub request
-     * @param subRequest    specified sub request
      * @return joined sub request
      */
     Request saveSubRequest(Request subRequest);
@@ -272,13 +271,6 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return filtered requests list
      */
     List<Request> searchRequests(RequestSearchDTO searchDTO);
-
-    /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by progress status.
-     */
-    List<Long> quantityByProgressStatus();
 
     /**
      * Returns list to build pie chart for user profile.
