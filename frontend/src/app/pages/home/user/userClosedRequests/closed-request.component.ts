@@ -16,7 +16,8 @@ export class ClosedRequest implements OnInit {
   private selected: Set<number> = new Set();
   private currentUser: User;
   private totalItems: number = 20;
-  private per: number = 20;
+
+  pageSize: number = 20;
 
   constructor(private authService: AuthService,
               private employeeService: EmployeeService) {
@@ -48,7 +49,7 @@ export class ClosedRequest implements OnInit {
   ngOnInit() {
     this.authService.currentUser.subscribe(u => {
       this.currentUser = u;
-      this.employeeService.getClosedRequestsByReporter(u.id, 1).subscribe(requests => {
+      this.employeeService.getClosedRequestsByReporter(u.id, 1, this.pageSize).subscribe(requests => {
         this.requests = requests;
         this.employeeService.countClosedRequestsByReporter(u.id).subscribe(count => {
           this.totalItems = count;
@@ -59,7 +60,7 @@ export class ClosedRequest implements OnInit {
   }
 
   pageChange(data) {
-    this.employeeService.getClosedRequestsByReporter(this.currentUser.id, data.page).subscribe(requests => {
+    this.employeeService.getClosedRequestsByReporter(this.currentUser.id, data.page, this.pageSize).subscribe(requests => {
       this.requests = requests;
     })
   }
@@ -75,6 +76,13 @@ export class ClosedRequest implements OnInit {
       (success) => {
         this.requests = this.requests.map(r => r).filter(r => !this.selected.has(r.id))
         this.selected.clear();
+    })
+  }
+
+  perChangeLoad(pageData) {
+    this.pageSize = pageData.size;
+    this.employeeService.getClosedRequestsByReporter(this.currentUser.id, pageData.page, pageData.size).subscribe(requests => {
+      this.requests = requests;
     })
   }
 }
