@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -294,4 +295,8 @@ public interface RequestService extends CrudService<Request, Long> {
      */
     List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId);
 
+    /**
+     * @return list of manager deadlines information entities.
+     */
+    List<DeadlineDTO> getManagerDeadlines(Long managerID);
 }

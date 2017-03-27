@@ -1,6 +1,9 @@
 package com.overseer.dao.impl;
 
+import static com.overseer.util.DeadlineCalculator.getDeadline;
+
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -279,7 +282,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                         return list;
                     });
         } catch (DataAccessException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -335,7 +337,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                         return data;
                     });
         } catch (DataAccessException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -361,7 +362,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                         return bestManagers;
                     });
         } catch (DataAccessException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -485,6 +485,31 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         String quantityQueryClosed = queryService().getQuery("request.countStatisticForSixMonthsForUserClosed");
         userStatistic.add(jdbc().queryForObject(quantityQueryClosed, source, Long.class));
         return userStatistic;
+    }
+
+    @Override
+    public List<DeadlineDTO> getDeadlinesByAssignee(Long assigneeID) {
+        String getDeadlinesByAssignee = this.queryService().getQuery("deadlines.getByAssignee");
+        List<DeadlineDTO> managerDeadlines = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("assignee_id", assigneeID);
+            return jdbc().query(getDeadlinesByAssignee,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            DeadlineDTO deadline = new DeadlineDTO();
+                            deadline.setId(resultSet.getLong("id"));
+                            deadline.setTitle(resultSet.getString("title"));
+                            deadline.setDeadline(getDeadline(resultSet.getDate("date").toLocalDate(),
+                                    resultSet.getByte("estimate")));
+                            managerDeadlines.add(deadline);
+                        }
+                        return managerDeadlines;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.overseer.controller;
 
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.model.Request;
 import com.overseer.service.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -374,6 +375,11 @@ public class RequestController {
     public ResponseEntity<List<Long>> getStatisticForSixMonthsForUser(@RequestParam Long userId) {
         List<Long> statisticListForUser = requestService.quantityByProgressStatusForSixMonthsForUser(userId);
         return new ResponseEntity<>(statisticListForUser, HttpStatus.OK);
+    }
+
+    @GetMapping("getDeadlines")
+    public ResponseEntity<List<DeadlineDTO>> getManagerDeadlines(@RequestParam Long managerID) {
+        return new ResponseEntity<List<DeadlineDTO>>(requestService.getManagerDeadlines(managerID), HttpStatus.OK);
     }
 }
 
