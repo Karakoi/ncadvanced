@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private static final Long DEFAULT_PAGE_SIZE = 20L;
 
     private final UserService userService;
 

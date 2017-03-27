@@ -86,8 +86,8 @@ export class UserService {
     return this.cache.loadFromObservable(cacheKey, request);
   }
 
-  getAll(page: number): Observable<User[]> {
-    return this.authHttp.get(`${url}?page=` + page)
+  getAll(page: number, size: number): Observable<User[]> {
+    return this.authHttp.get(`${url}?page=` + page + '&size=' + size)
       .map(resp => resp.json()).publishReplay(1, 2000).refCount()
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -95,8 +95,8 @@ export class UserService {
       });
   }
 
-  getAllDeactivated(page: number): Observable<User[]> {
-    return this.authHttp.get(`${url}/deactivated?page=` + page)
+  getAllDeactivated(page: number, size: number): Observable<User[]> {
+    return this.authHttp.get(`${url}/deactivated?page=` + page + '&size=' + size)
         .map(resp => resp.json()).publishReplay(1, 2000).refCount()
         .catch((error: any) => {
           this.errorService.processError(error);

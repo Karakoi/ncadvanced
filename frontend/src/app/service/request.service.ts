@@ -76,8 +76,8 @@ export class RequestService {
   }
 
 
-  getAll(page: number): Observable<Request[]> {
-    return this.authHttp.get(`${url}/fetch?page=` + page)
+  getAll(page: number, size: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/fetch?page=` + page + '&size=' + size)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -127,8 +127,8 @@ export class RequestService {
     return this.authHttp.get(`${url}/countRequestByProgressStatus`).map(resp => resp.json());
   }
 
-  getFree(page: number): Observable<Request[]> {
-    return this.authHttp.get(`${url}/fetchFree?page=` + page)
+  getFree(page: number, size: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/fetchFree?page=` + page + '&size=' + size)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -154,8 +154,8 @@ export class RequestService {
       });
   }
 
-  getInProgressAssigned(page: number, user_id: number): Observable<Request[]> {
-    return this.authHttp.get(`${url}/inProgressRequestsByAssignee?page=` + page + `&manager=` + user_id)
+  getInProgressAssigned(page: number, size: number, user_id: number): Observable<Request[]> {
+    return this.authHttp.get(`${url}/inProgressRequestsByAssignee?page=` + page + '&size=' + size + `&manager=` + user_id)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -173,8 +173,8 @@ export class RequestService {
   }
 
 
-  getClosedAssigned(page:number, user_id:number):Observable<Request[]> {
-    return this.authHttp.get(`${url}/closedRequestsByAssignee?page=` + page + `&manager=` + user_id)
+  getClosedAssigned(page:number, size: number, user_id:number):Observable<Request[]> {
+    return this.authHttp.get(`${url}/closedRequestsByAssignee?page=` + page + '&size=' + size + `&manager=` + user_id)
       .map(resp => resp.json())
       .catch((error:any) => {
         this.errorService.processError(error);
