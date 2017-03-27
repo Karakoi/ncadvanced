@@ -7,7 +7,6 @@ import 'rxjs/Rx';
 
   selector: 'admin-home',
   templateUrl: 'admin.component.html',
-  styleUrls: ['admin.component.css']
 })
 export class AdminComponent implements OnInit {
   statisticForAdminDashBoard: Array<number>;
@@ -15,12 +14,13 @@ export class AdminComponent implements OnInit {
   totalRequests: number;
   runningToday: number;
   requestToday: number;
-  when: string = 'for six months';
+  when: string = 'for 6 months';
+  selectPeriod: number;
 
   constructor(private requestService: RequestService) {}
 
   ngOnInit(): void {
-    this.setStatisticForSixMonths();
+    this.setStatisticByDefault();
 
     this.requestService.getTotalUsers().subscribe(s => {
       this.totalUsers = s;
@@ -183,33 +183,22 @@ export class AdminComponent implements OnInit {
     }
   };
 
-  setStatisticForTwelveMonths(): void {
-    this.requestService.getStatisticForAdminDashBoard(12).subscribe(s => {
-      this.statisticForAdminDashBoard = s;
-      this.when = 'for twelve months';
-      this.setStatisticByProgress();
-      this.setStatisticByPriority();
-      this.setStatisticForBarChart();
-    });
-  }
-
-  setStatisticForSixMonths(): void {
+  setStatisticByDefault(): void {
     this.requestService.getStatisticForAdminDashBoard(6).subscribe(s => {
       this.statisticForAdminDashBoard = s;
-      this.when = 'for six months';
       this.setStatisticByProgress();
       this.setStatisticByPriority();
       this.setStatisticForBarChart();
     });
   }
 
-  setStatisticForAllTime(): void {
-    this.requestService.getStatisticForAdminDashBoard(10).subscribe(s => {
-      this.statisticForAdminDashBoard = s;
-      this.when = 'for all time';
-      this.setStatisticByProgress();
-      this.setStatisticByPriority();
-      this.setStatisticForBarChart();
-    });
-  }
+    setStatisticByDropdown(howLong: number): void {
+      this.requestService.getStatisticForAdminDashBoard(howLong).subscribe(s => {
+        this.statisticForAdminDashBoard = s;
+        this.when = 'for ' + howLong + ' months';
+        this.setStatisticByProgress();
+        this.setStatisticByPriority();
+        this.setStatisticForBarChart();
+      });
+    }
 }

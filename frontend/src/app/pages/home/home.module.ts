@@ -12,6 +12,7 @@ import {FormTemplateModule} from "../../shared/form-template/form-template.modul
 import {RequestModule} from "../../shared/request/request.module";
 import {RequestFormComponent} from "./request-form/request-form.component";
 import {BasicRequestTableModule} from "../../components/request-table/request-table.module";
+import {DropdownModule} from "ng2-bootstrap";
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import {BasicRequestTableModule} from "../../components/request-table/request-ta
     RequestModule,
     BasicRequestTableModule,
     Ng2GoogleChartsModule,
+    DropdownModule.forRoot()
   ],
   declarations: [
     AdminComponent,

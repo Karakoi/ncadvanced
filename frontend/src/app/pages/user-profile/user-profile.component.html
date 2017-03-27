@@ -43,7 +43,7 @@
           </table>
         </div>
       </div>
-      <h5 align="center" *ngIf="hasAnyRequest">You haven't had any request yet</h5>
+      <h5 align="center" *ngIf="hasAnyRequest">User hasn't had any request yet</h5>
       <google-chart *ngIf="hasSixMonthsRec" [data]="pieChartRequestForSixMonths"></google-chart>
       <google-chart *ngIf="hasRequest" [data]="pieChartRequest" ></google-chart>
     </div>

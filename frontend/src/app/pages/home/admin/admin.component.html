@@ -1,6 +1,6 @@
-<div class="container" style="background-color: white">
+<div class="container" style="background-color: #ffffff">
   <div class="header-content">
-    <h1 align="center">Home - Dashboard</h1>
+    <h1 align="center"></h1>
 
     <div class="row">
       <div class="col-md-15">
@@ -14,16 +14,16 @@
           <h4 style="color: indigo">Requests today: {{requestToday}}</h4>
         </div>
         <div class="col-md-6 col-lg-3">
-          <h4 style="color: indigo">Running today: {{runningToday}}</h4>
-        </div>
+        <h4 style="color: indigo">Running today: {{runningToday}}</h4>
+      </div>
       </div>
     </div>
 
-    <div align="center">
-      <button (click)="setStatisticForSixMonths()" class="btn btn-success">Half Year</button>
-      <button (click)="setStatisticForTwelveMonths()" class="btn btn-primary">One Year</button>
-      <button (click)="setStatisticForAllTime()" class="btn btn-primary" style="background-color: lightseagreen">All Time</button>
+    <div>
+      <input type="number" value="{{selectPeriod}}" [(ngModel)]="selectPeriod" placeholder="months">
+      <button class="btn btn-primary" (click)="setStatisticByDropdown(selectPeriod)">Set period</button>
     </div>
+
     <div class="row">
       <google-chart [data]="pieChartRequestForSixMonths"></google-chart>
     </div>
