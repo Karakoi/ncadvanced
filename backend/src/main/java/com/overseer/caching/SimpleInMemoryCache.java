@@ -8,11 +8,8 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 
-//TODO Change value type tu future
-//TODO Make cache clean more intellectual
-
 /**
- * Simple cache for dao, if dao has annotation {@link CacheableData} it's gonna be stored in map
+ * Simple cache for dao, if dao has annotation CacheableData it's gonna be stored in map
  * and returned it next request.
  *
  * @param <K> Key for storing in map which identify method invoking.
@@ -24,24 +21,6 @@ class SimpleInMemoryCache<K, V> {
 
     private Map<K, Future<V>> cache = new ConcurrentHashMap<>();
 
-    /**
-     * Im javadoc.
-     * @param key Im javadoc.
-     * @param callable Im javadoc.
-     * @return Im javadoc.
-     */
-    Future<V> createIfAbsent(K key, final Callable<V> callable) {
-        Future<V> future = cache.get(key);
-        if (future == null) {
-            final FutureTask<V> futureTask = new FutureTask<>(callable);
-            future = cache.putIfAbsent(key, futureTask);
-            if (future == null) {
-                future = futureTask;
-                futureTask.run();
-            }
-        }
-        return future;
-    }
 
     SimpleInMemoryCache(long lifeTime) {
         Thread t = new Thread(() -> {
@@ -60,6 +39,25 @@ class SimpleInMemoryCache<K, V> {
     }
 
     /**
+     * Save value as a future if it not exists.
+     * @param key just a key for value.
+     * @param callable value wrapped it callable so it can be stored as future.
+     * @return future of value if it exists or just added.
+     */
+    private Future<V> createIfAbsent(K key, final Callable<V> callable) {
+        Future<V> future = cache.get(key);
+        if (future == null) {
+            final FutureTask<V> futureTask = new FutureTask<>(callable);
+            future = cache.putIfAbsent(key, futureTask);
+            if (future == null) {
+                future = futureTask;
+                futureTask.run();
+            }
+        }
+        return future;
+    }
+
+    /**
      * Get data from cache by key.
      *
      * @param key identifier of method and params.
@@ -73,9 +71,8 @@ class SimpleInMemoryCache<K, V> {
             value = future.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            return value;
         }
+        return value;
     }
 
     void cleanup() {
@@ -96,9 +93,9 @@ class SimpleInMemoryCache<K, V> {
     }
 
     /**
-     * Im javadoc.
-     * @param key Im javadoc.
-     * @param value Im javadoc.
+     * Adding value to map.
+     * @param key just a key for value.
+     * @param value value which will be stored.
      */
     void put(K key, V value) {
         LOG.debug("Adding date to cache with key: {}", key);

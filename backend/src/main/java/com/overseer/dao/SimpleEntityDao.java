@@ -1,6 +1,6 @@
 package com.overseer.dao;
 
-import com.overseer.caching.CacheableData;
+import com.overseer.caching.annotation.CacheableData;
 
 import java.util.List;
 

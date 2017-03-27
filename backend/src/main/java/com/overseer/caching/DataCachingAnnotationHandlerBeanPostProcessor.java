@@ -1,5 +1,7 @@
 package com.overseer.caching;
 
+import com.overseer.caching.annotation.CacheChanger;
+import com.overseer.caching.annotation.CacheableData;
 import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,7 @@ import java.util.*;
 @Component
 public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(DataCachingAnnotationHandlerBeanPostProcessor.class);
-    private Map<String, Class> map = new HashMap<>();
+    private Map<String, Class> repositoryMap = new HashMap<>();
     private static final long DEFAULT_CACHE_CLEAN_TIME = 120;
     private SimpleInMemoryCache<Triplet<Object, String, List>, Object>
             simpleInMemoryCache = new SimpleInMemoryCache<>(DEFAULT_CACHE_CLEAN_TIME);
@@ -26,14 +28,14 @@ public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostPr
     @Override
     public Object postProcessBeforeInitialization(Object bean, String name) throws BeansException {
         if (bean.getClass().isAnnotationPresent(Repository.class)) {
-            map.put(name, bean.getClass());
+            repositoryMap.put(name, bean.getClass());
         }
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String name) throws BeansException {
-        Class beanClass = map.get(name);
+        Class beanClass = repositoryMap.get(name);
         if (beanClass == null) {
             return bean;
         }
@@ -45,7 +47,7 @@ public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostPr
             }
             if (method.isAnnotationPresent(CacheableData.class)) {
                 Triplet<Object, String, List> key = Triplet.with(bean, method.getName(), null);
-                if (args != null) {                         //for methods which has arguments
+                if (args != null) {                                  //for methods which has arguments
                     LOG.debug("Method has arguments. Added to key");
                     key = key.setAt2(Arrays.asList(args));
                 }
