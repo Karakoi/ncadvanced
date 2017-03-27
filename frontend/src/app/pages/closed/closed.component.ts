@@ -15,6 +15,7 @@ export class ClosedComponent {
   requests:Request[] = [];
   pageCount:number;
   currentUserId: number;
+  pageSize: number = 20;
 
   settings = {
     delete: false,
@@ -44,7 +45,7 @@ export class ClosedComponent {
   ngOnInit() {
     this.authService.currentUser.subscribe((user:User) => {
       this.currentUserId = user.id;
-      this.requestService.getClosedAssigned(1, this.currentUserId).subscribe((requests:Request[]) => {
+      this.requestService.getClosedAssigned(1, this.pageSize, this.currentUserId).subscribe((requests:Request[]) => {
         this.requests = requests;
       });
       this.requestService.getClosedAssignedPageCount(this.currentUserId).subscribe((count) => this.pageCount = count);
@@ -52,9 +53,15 @@ export class ClosedComponent {
   }
 
   pageChange(data){
-    this.requestService.getClosedAssigned(data.page, this.currentUserId).subscribe(requests => {
+    this.requestService.getClosedAssigned(data.page, this.pageSize, this.currentUserId).subscribe(requests => {
       this.requests = requests;
     })
   }
 
+  perChangeLoad(pageData) {
+    this.pageSize = pageData.size;
+    this.requestService.getClosedAssigned(pageData.page, pageData.size, this.currentUserId).subscribe(requests => {
+      this.requests = requests;
+    })
+  }
 }

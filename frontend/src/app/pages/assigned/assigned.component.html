@@ -17,7 +17,7 @@
           </ul>
         </div>
         <div class="panel-body">
-          <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings" (paginationChange)="pageChange()"></r-table>
+          <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings" (paginationChange)="pageChange($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>
         </div>
       </div>
     </div>

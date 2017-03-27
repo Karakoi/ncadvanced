@@ -25,6 +25,7 @@ export class RequestTable {
   @Output() paginationChange = new EventEmitter();
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter();
   @Output() reopenEvent = new EventEmitter();
+  @Output() perChangeLoad = new EventEmitter();
   private perPage: number = 20;
   term: any;
   orderType: boolean;
@@ -103,8 +104,10 @@ export class RequestTable {
     this.selected = new Set();
   }
 
+  currentPage : number = 1;
 
   changed(data) {
+    this.currentPage = data.page;
     this.paginationChange.emit(data);
   }
 
@@ -115,7 +118,8 @@ export class RequestTable {
 
   perPageChange(data) {
     this.perPage = data;
-    this.setTitleSearch('limit', data);
+    let pageData = {"page" : this.currentPage, "size": data};
+    this.perChangeLoad.emit(pageData);
   }
 
   check(data) {

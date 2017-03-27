@@ -64,7 +64,7 @@ public interface CrudService<T, ID extends Serializable> {
      *
      * @return all entities.
      */
-    List<T> fetchPage(int pageNumber);
+    List<T> fetchPage(int pageNumber, int size);
 
     /**
      * Get count of users.

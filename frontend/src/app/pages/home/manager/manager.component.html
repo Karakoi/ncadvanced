@@ -31,7 +31,7 @@
           <div class="tab-content">
             <div class="tab-pane fade in active" id="freeRequests" *ngIf="requests.length">
               <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings"
-              (paginationChange)="pageChange($event)" (selectedEvent)="select($event)"></r-table>
+              (paginationChange)="pageChange($event)" (selectedEvent)="select($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>
             </div>
             <div class="tab-pane fade" id="myRequests">
               <div class="text-center" *ngIf="!myRequests.length">

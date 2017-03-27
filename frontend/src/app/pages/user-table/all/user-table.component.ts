@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild, Input, EventEmitter, Output} from "@angular/core";
 import {UserService} from "../../../service/user.service";
 import {AddUserComponent} from "./user-add/add-user.component";
 import {User} from "../../../model/user.model";
@@ -13,6 +13,10 @@ declare var $: any;
   styleUrls: ['user-table.component.css']
 })
 export class UserTableComponent implements OnInit {
+
+  private usersCount: number;
+  private perPage: number = 20;
+
   users: User[];
   pageNumber: number;
   orderType: boolean;
@@ -44,15 +48,19 @@ export class UserTableComponent implements OnInit {
       email: "",
       role: "",
       dateOfDeactivation: "",
-      limit: 20
+      limit: 20,
+      isDeactivated: "false"
     };
   }
 
   ngOnInit() {
-    this.userService.getAll(1).subscribe((users: User[]) => {
+    this.userService.getAll(1, this.perPage).subscribe((users: User[]) => {
       this.users = users;
     });
-    this.userService.getPageCount().subscribe((count) => this.pageNumber = count);
+    this.userService.getPageCount().subscribe((count) => {
+      this.pageNumber = count;
+      console.log(count);
+    });
   }
 
   changeOrderParams(type, field) {
@@ -81,6 +89,11 @@ export class UserTableComponent implements OnInit {
     return items;
   }
 
+  perPageChange(data) {
+    this.perPage = data;
+    this.setTitleSearch('limit', data);
+  }
+
   get sorted(): User[] {
     return this.users
       .map(user => user)
@@ -95,12 +108,34 @@ export class UserTableComponent implements OnInit {
     let page = data.target.text;
     $('.paginate_button').removeClass('active');
     $(data.target.parentElement).addClass('active');
-    this.userService.getAll(page).subscribe((users: User[]) => {
+    this.userService.getAll(page, this.perPage).subscribe((users: User[]) => {
       this.users = users;
     });
   }
 
+  curPage: number = 1;
+
+  changeSize(size) {
+    this.perPage = size;
+    this.searchDTO.limit = size;
+    if (this.searchDTO.firstName != "" || this.searchDTO.lastName != "" || this.searchDTO.email != "" || this.searchDTO.role != "") {
+      this.setTitleSearch('limit', size)
+    } else {
+      this.userService.getAll(this.curPage, this.perPage).subscribe(users => {
+        this.users = users;
+      })
+    }
+  }
+
+  changed(data) {
+    this.curPage = data.page;
+    this.userService.getAll(data.page, this.perPage).subscribe(users => {
+      this.users = users;
+    })
+  }
+
   setTitleSearch(field, value) {
+
     switch (field) {
       case 'firstName':
         this.searchDTO.firstName = value;

@@ -140,8 +140,8 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
      * {@inheritDoc}.
      */
     @Override
-    public List<User> findAllDeactivated(int pageNumber) {
-        val list = userDao.findAllDeactivated(this.DEFAULT_PAGE_SIZE, pageNumber);
+    public List<User> findAllDeactivated(int pageNumber, int size) {
+        val list = userDao.findAllDeactivated(size, pageNumber);
         log.debug("Fetched {} deactivated users for page number: {}", list.size(), pageNumber);
         return list;
     }
@@ -167,6 +167,11 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
 
         sqlQueryBuilder.where().notNull("u.role");
+
+        boolean isDeactivated = Boolean.parseBoolean(searchDTO.getIsDeactivated());
+        if (isDeactivated) {
+            sqlQueryBuilder.and().is("u.is_deactivated");
+        }
 
         String firstName = searchDTO.getFirstName();
         if (!firstName.isEmpty()) {

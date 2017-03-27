@@ -1,6 +1,7 @@
 package com.overseer.dao;
 
 import com.overseer.caching.annotation.CacheChanger;
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -356,4 +357,8 @@ public interface RequestDao extends CrudDao<Request, Long> {
      */
     List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
 
+    /**
+     * @return list of manager deadlines information entity.
+     */
+    List<DeadlineDTO> getDeadlinesByAssignee(Long assigneeID);
 }

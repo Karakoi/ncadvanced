@@ -54,7 +54,7 @@ public interface UserService extends CrudService<User, Long> {
      * @param pageNumber number of page.
      * @return a list of {@link User} entities.
      */
-    List<User> findAllDeactivated(int pageNumber);
+    List<User> findAllDeactivated(int pageNumber, int size);
 
     /**
      * Activates {@link User} entity with given id.
