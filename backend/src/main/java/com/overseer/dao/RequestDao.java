@@ -257,9 +257,10 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param start        period start.
      * @param end          period end.
      * @param progressStatusId progress status id.
+     * @param countTop count managers in top.
      * @return list of best managers in provided period.
      */
-    List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
+    List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId, int countTop);
 
     /**
      * Returns a list of requests created in provided date.

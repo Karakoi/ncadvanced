@@ -24,8 +24,8 @@ export class ReportService {
   }
 
   /* FOR ADMIN REPORTS */
-  getAdminPDFReport(beginDate: Date, endDate: Date): Observable<any> {
-    return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}`, {responseType: ResponseContentType.Blob})
+  getAdminPDFReport(beginDate: Date, endDate: Date, countTopManagers: number): Observable<any> {
+    return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
@@ -51,8 +51,8 @@ export class ReportService {
       });
   }
 
-  getListOfBestManagersWithClosedStatusByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getBestManagersWithClosedStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getListOfBestManagersWithClosedStatusByPeriod(beginDate: Date, endDate: Date, countTopManagers: number): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getBestManagersWithClosedStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);

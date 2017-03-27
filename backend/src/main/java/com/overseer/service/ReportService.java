@@ -16,9 +16,10 @@ public interface ReportService {
      *
      * @param start period start.
      * @param end   period end.
+     * @param countTop   count managers in top.
      * @return view with admin reports.
      */
-    View generateAdminPDFReport(LocalDate start, LocalDate end);
+    View generateAdminPDFReport(LocalDate start, LocalDate end, int countTop);
 
     /**
      * Method generate PDF report for user role Manager.

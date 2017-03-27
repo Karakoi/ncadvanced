@@ -75,11 +75,12 @@ public class ReportController {
      * @return view with reporting data.
      */
     @RequestMapping(value = "/adminPDFReport", method = RequestMethod.GET, produces = "application/pdf")
-    public View getAdminPDFReport(@RequestParam String beginDate, @RequestParam String endDate) {
-
+    public View getAdminPDFReport(@RequestParam String beginDate,
+                                  @RequestParam String endDate,
+                                  @RequestParam int countTop) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-        return reportService.generateAdminPDFReport(start, end);
+        return reportService.generateAdminPDFReport(start, end, countTop);
     }
 
     /**
@@ -123,10 +124,11 @@ public class ReportController {
      */
     @GetMapping("/getBestManagersWithClosedStatusByPeriod")
     public ResponseEntity<List<RequestDTO>> getBestManagersWithClosedStatusByPeriod(@RequestParam String beginDate,
-                                                                                    @RequestParam String endDate) {
+                                                                                    @RequestParam String endDate,
+                                                                                    @RequestParam int countTop) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId());
+        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId(), countTop);
         return new ResponseEntity<>(topManagers, HttpStatus.OK);
     }
 

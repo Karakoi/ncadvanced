@@ -114,7 +114,7 @@ public class ManagerReportView extends AbstractPdfView {
                 .addParagraph(new Paragraph("For period: " + this.start + " : " + this.end, getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addLineSeparator(new LineSeparator())
                 .addLineSeparator(new LineSeparator())
-                .addParagraph(new Paragraph("Statistic for closed request by peroid:", getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
+                .addParagraph(new Paragraph("Statistic for closed request by period:", getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addTable(generateClosedRequestsTable(this.start, this.end, this.managerId))
                 .addParagraph(new Paragraph("You need close this request in the near future:", getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addTable(generateNeededCloseRequestsTable(this.managerId))

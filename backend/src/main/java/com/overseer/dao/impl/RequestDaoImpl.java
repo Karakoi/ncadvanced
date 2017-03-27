@@ -483,13 +483,14 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId) {
+    public List<RequestDTO> findListOfBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId, int countTop) {
         List<RequestDTO> bestManagers = new ArrayList<>();
         try {
             val parameterSource = new MapSqlParameterSource();
             parameterSource.addValue("begin", java.sql.Date.valueOf(start));
             parameterSource.addValue("end", java.sql.Date.valueOf(end));
             parameterSource.addValue("progress_status_id", progressStatusId);
+            parameterSource.addValue("top", countTop);
             return jdbc().query(this.queryService().getQuery("request.bestManagersByPeriod"),
                     parameterSource, resultSet -> {
                         while (resultSet.next()) {

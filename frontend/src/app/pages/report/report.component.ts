@@ -20,19 +20,19 @@ import * as FileSaver from "file-saver";
 export class ReportComponent implements OnInit {
 
   private role: string;
-  private user: User;
+  private currentUser: User;
   private reportForm: FormGroup;
 
   @ViewChild(BarChartComponent)
   public barChart: BarChartComponent;
 
-  // @ViewChild(BarChartComponent)
-  // public barChart2: BarChartComponent;
-
   @ViewChild(LineChartComponent)
   public lineChart: LineChartComponent;
-  private startdate: any;
-  private enddate: any;
+  private startDate: any;
+  private endDate: any;
+  private isGenerated: boolean = false;
+  private countManagers: number[] = [1, 3, 5, 10];
+  private countTopManagers: number;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -42,10 +42,8 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initForm();
-
     this.authService.currentUser.subscribe((user: User) => {
-      this.user = user;
+      this.currentUser = user;
     });
     this.role = this.authService.role;
     this.authService.events.subscribe((event: Subject<AuthEvent>) => {
@@ -53,6 +51,7 @@ export class ReportComponent implements OnInit {
         this.role = this.authService.role;
       }
     });
+    this.initForm();
   }
 
   validateField(field: string): boolean {
@@ -63,61 +62,56 @@ export class ReportComponent implements OnInit {
     this.reportForm = this.formBuilder.group({
       dateOfStart: ['', CustomValidators.dateISO],
       dateOfEnd: ['', CustomValidators.dateISO],
+      countManagersSelector: [''],
     });
   }
 
   private saveDates(formData) {
     if (formData.dateOfEnd > formData.dateOfStart) {
-      this.startdate = formData.dateOfStart;
-      this.enddate = formData.dateOfEnd;
-      this.toastr.success("Data START: ".concat(this.startdate.toString() + ", Data END:" + this.enddate.toString()), "DATA:");
+      this.countTopManagers = formData.countManagersSelector;
+      this.startDate = formData.dateOfStart;
+      this.endDate = formData.dateOfEnd;
+      console.log(this.countTopManagers);
+      if (!this.isGenerated) {
+        this.isGenerated = true;
+      } else {
+        this.generateReportByRole(this.startDate, this.endDate);
+      }
+      this.toastr.success("START Date: ".concat(this.startDate.toString() + ", END Date:" + this.endDate.toString()), "DATA:");
     }
     else {
-      this.toastr.error("Error. Uncorrect dates: End date must be bigger than the start date");
+      this.toastr.error("Error. Incorrect dates: End date must be bigger than the start date");
     }
   }
 
-  private generateAdminReport() {
-    this.barChart.buildAdminChart();
-    this.lineChart.buildAdminChart();
-  }
-
-  private generateManagerReport() {
-    this.barChart.buildManagerChart();
+  private generateReportByRole(start: any, end: any) {
+    if (this.isAdmin()) {
+      this.barChart.buildAdminChart(start, end, this.countTopManagers);
+      this.lineChart.buildAdminChart(start, end);
+    } else {
+      this.barChart.buildManagerChart(start, end);
+    }
   }
 
   private generateAdminPDF() {
-    this.reportService.getAdminPDFReport(this.startdate, this.enddate).subscribe(
+    this.reportService.getAdminPDFReport(this.startDate, this.endDate, this.countTopManagers).subscribe(
       (res: any) => {
         let blob = res.blob();
-        let filename = 'admin_report_from_' + this.startdate + '_to_' + this.enddate + '.pdf';
+        let filename = 'admin_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';
         FileSaver.saveAs(blob, filename);
       }
     );
   }
 
   private generateManagerPDF() {
-    this.reportService.getManagerPDFReport(this.startdate, this.enddate, this.user.id).subscribe(
+    this.reportService.getManagerPDFReport(this.startDate, this.endDate, this.currentUser.id).subscribe(
       (res: any) => {
         let blob = res.blob();
-        let filename = 'manager_report_from_' + this.startdate + '_to_' + this.enddate + '.pdf';
+        let filename = 'manager_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';
         FileSaver.saveAs(blob, filename);
       }
     );
   }
-
-  // public downloadFile() {
-  //   return this.http.get(this.api, { responseType: ResponseContentType.Blob })
-  //     .subscribe(
-  //       (res: any) =>
-  //       {
-  //         let blob = res.blob();
-  //         let filename = 'report.xlsx';
-  //         FileSaver.saveAs(blob, filename);
-  //       }
-  //     );
-  // }
-
 
   isAdmin(): boolean {
     return this.role === 'admin';
@@ -126,5 +120,4 @@ export class ReportComponent implements OnInit {
   isManager(): boolean {
     return this.role === 'office manager'
   }
-
 }

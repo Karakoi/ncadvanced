@@ -38,8 +38,8 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public View generateAdminPDFReport(LocalDate start, LocalDate end) {
-        adminReportView.setDatePeriod(start, end);
+    public View generateAdminPDFReport(LocalDate start, LocalDate end, int countTop) {
+        adminReportView.setDatePeriod(start, end, countTop);
         return adminReportView;
     }
 
