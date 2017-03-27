@@ -23,7 +23,7 @@ public class ProgressStatusServiceImplTest {
     @Test
     public void findAllPriorityStatuses() throws Exception {
         List<ProgressStatus> allProgressStatuses = progressStatusService.findAllProgressStatuses();
-        final int expectedStatusesSize = 6;
+        final int expectedStatusesSize = 4;
         Assert.assertNotNull(allProgressStatuses);
         Assert.assertEquals(expectedStatusesSize, allProgressStatuses.size());
     }

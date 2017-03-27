@@ -3,6 +3,7 @@ import {UserService} from "../../../service/user.service";
 import {AddUserComponent} from "./user-add/add-user.component";
 import {User} from "../../../model/user.model";
 import {DeleteUserComponent} from "./user-delete/delete-user.component";
+import {UserSearchDTO} from "../../../model/dto/user-search-dto.model";
 declare var $: any;
 
 
@@ -17,6 +18,10 @@ export class UserTableComponent implements OnInit {
   orderType: boolean;
   orderField: string;
   searchTypes: any;
+  searchDTO : UserSearchDTO;
+  settings = {
+    ajax: true
+  };
 
   @ViewChild(AddUserComponent)
   addUserComponent: AddUserComponent;
@@ -32,6 +37,14 @@ export class UserTableComponent implements OnInit {
       lastName: "",
       email: "",
       role: ""
+    };
+    this.searchDTO = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+      dateOfDeactivation: "",
+      limit: 20
     };
   }
 
@@ -87,4 +100,32 @@ export class UserTableComponent implements OnInit {
     });
   }
 
+  setTitleSearch(field, value) {
+    switch (field) {
+      case 'firstName':
+        this.searchDTO.firstName = value;
+        break;
+      case 'lastName':
+        this.searchDTO.lastName = value;
+        break;
+      case 'email':
+        this.searchDTO.email = value;
+        break;
+      case 'role':
+        this.searchDTO.role = value;
+        break;
+      case 'limit':
+        this.searchDTO.limit = value;
+        break;
+    }
+    this.getSearchData(this.searchDTO);
+    console.log(this.searchDTO)
+  }
+
+  getSearchData(searchDTO){
+    this.userService.searchAll(searchDTO).subscribe(users => {
+     console.log(users);
+     this.users = users;
+     })
+  }
 }

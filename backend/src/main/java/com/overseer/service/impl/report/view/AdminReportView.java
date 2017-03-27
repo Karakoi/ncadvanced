@@ -7,7 +7,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.overseer.dto.RequestDTO;
 import com.overseer.service.RequestService;
-import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
+import com.overseer.service.impl.builder.ReportDocumentBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;

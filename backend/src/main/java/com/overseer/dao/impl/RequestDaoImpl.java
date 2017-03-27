@@ -1,6 +1,9 @@
 package com.overseer.dao.impl;
 
+import static com.overseer.util.DeadlineCalculator.getDeadline;
+
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -85,6 +88,12 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public Long countClosedRequestByAssignee(Long managerId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countClosedByAssignee"),
+                new MapSqlParameterSource("assigneeId", managerId), Long.class);
+    }
+
+    @Override
     public List<Request> findSubRequests(Long id) {
         Assert.notNull(id, "id must not be null");
         String subRequestsQuery = this.queryService().getQuery("request.select")
@@ -135,6 +144,22 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                     this.getMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber) {
+        Assert.notNull(assigneeId, "id must not be null");
+        String findByAssigneeQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findClosedByAssignee"));
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("limit", pageSize);
+            parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+            parameterSource.addValue("assigneeId", assigneeId);
+            return jdbc().query(findByAssigneeQuery, parameterSource, this.getMapper());
+        } catch (DataAccessException e) {
             return null;
         }
     }
@@ -259,7 +284,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                         return list;
                     });
         } catch (DataAccessException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -315,7 +339,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                         return data;
                     });
         } catch (DataAccessException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -341,7 +364,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                         return bestManagers;
                     });
         } catch (DataAccessException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -504,6 +526,31 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public List<DeadlineDTO> getDeadlinesByAssignee(Long assigneeID) {
+        String getDeadlinesByAssignee = this.queryService().getQuery("deadlines.getByAssignee");
+        List<DeadlineDTO> managerDeadlines = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("assignee_id", assigneeID);
+            return jdbc().query(getDeadlinesByAssignee,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            DeadlineDTO deadline = new DeadlineDTO();
+                            deadline.setId(resultSet.getLong("id"));
+                            deadline.setTitle(resultSet.getString("title"));
+                            deadline.setDeadline(getDeadline(resultSet.getDate("date").toLocalDate(),
+                                    resultSet.getByte("estimate")));
+                            managerDeadlines.add(deadline);
+                        }
+                        return managerDeadlines;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public Long countFree() {
         String findCountQuery = queryService().getQuery("request.countFree");
         return jdbc().queryForObject(findCountQuery, new MapSqlParameterSource(), Long.class);
@@ -525,6 +572,16 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             return jdbc().query(findByStatusQuery,
                     parameterSource,
                     this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Request> searchRequests(String searchQuery) {
+        String findByStatusQuery = this.queryService().getQuery("request.select").concat(searchQuery);
+        try {
+            return jdbc().query(findByStatusQuery, this.getMapper());
         } catch (DataAccessException e) {
             return null;
         }

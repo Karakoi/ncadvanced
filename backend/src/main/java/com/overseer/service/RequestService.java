@@ -1,6 +1,8 @@
 package com.overseer.service;
 
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -35,6 +37,8 @@ public interface RequestService extends CrudService<Request, Long> {
 
     Long countRequestByAssignee(Long managerId);
 
+    Long countClosedRequestByAssignee(Long managerId);
+
     Long countInProgressRequestByAssignee(Long managerId);
     /**
      * Returns a list of sub requests for the given request {@link Request}.
@@ -67,6 +71,14 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return list of requests which have provided {@link User} as assignee.
      */
     List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber);
+
+    /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId requests assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -254,6 +266,21 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findFreeRequests(int pageNumber);
 
     /**
+     * Returns list of filtered requests by specified searchRequests params in {@link RequestSearchDTO} object.
+     *
+     * @param searchDTO searchRequests params dto object
+     * @return filtered requests list
+     */
+    List<Request> searchRequests(RequestSearchDTO searchDTO);
+
+    /**
+     * Returns list to build pie chart.
+     *
+     * @return list of statistic request by progress status.
+     */
+    List<Long> quantityByProgressStatus();
+
+    /**
      * Returns list to build pie chart for user profile.
      *
      * @return list of statistic request for user profile.
@@ -289,4 +316,8 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return list of statistic for admin dashboard.
      */
     List<Long> countStatisticForAdminDashBoard(Long howLong);
+    /**
+     * @return list of manager deadlines information entities.
+     */
+    List<DeadlineDTO> getManagerDeadlines(Long managerID);
 }

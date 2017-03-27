@@ -1,5 +1,6 @@
 package com.overseer.dao;
 
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
@@ -84,6 +85,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
 
     /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
+
+    /**
      * Returns a list of requests which have provided {@link User} as reporter.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
@@ -126,6 +135,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return number of requests for assignee.
      */
     Long countInProgressRequestByAssignee(Long managerId);
+
+    /**
+     * Returns number of requests for assignee.
+     *
+     * @param managerId assignee id must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countClosedRequestByAssignee(Long managerId);
 
     /**
      * Returns a list of closed requests which have provided {@link User} as reporter.
@@ -284,6 +301,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> findFreeRequests(int pageSize, int pageNumber);
 
     /**
+     * Returns list of filtered requests by specified search query.
+     *
+     * @param searchQuery search params sql query
+     * @return list of filtered requests
+     */
+    List<Request> searchRequests(String searchQuery);
+
+    /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
      * @param statusIds list of progress status ids, must not be {@literal null}
@@ -336,4 +361,8 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of statistic for admin dashboard.
      */
     List<Long> statisticForAdminDashBoard(Long howLong);
+    /**
+     * @return list of manager deadlines information entity.
+     */
+    List<DeadlineDTO> getDeadlinesByAssignee(Long assigneeID);
 }

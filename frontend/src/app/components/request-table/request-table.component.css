@@ -41,7 +41,15 @@ th:hover {
   margin-bottom: 10px;
 }
 
-.removSpace {
+.removeSpace {
   margin-bottom: 10px;
   margin-top: -8px;
+}
+
+.glyphicon-trash, .glyphicon-repeat {
+  width: 30px;
+}
+
+.no-requests {
+  text-align: center;
 }

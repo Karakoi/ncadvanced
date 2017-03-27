@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.dto.UserSearchDTO;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 
@@ -69,4 +70,11 @@ public interface UserService extends CrudService<User, Long> {
      */
     Long getCountAllDeactivated();
 
+    /**
+     * Returns list of filtered users by specified search params in {@link UserSearchDTO} object.
+     *
+     * @param searchDTO search params dto object
+     * @return {@link User} list with http status 200 OK..
+     */
+    List<User> searchUsers(UserSearchDTO searchDTO);
 }
