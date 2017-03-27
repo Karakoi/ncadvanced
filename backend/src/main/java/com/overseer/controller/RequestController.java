@@ -1,7 +1,7 @@
 package com.overseer.controller;
 
-import com.overseer.dto.RequestSearchDTO;
 import com.overseer.dto.DeadlineDTO;
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.Request;
 import com.overseer.service.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -392,7 +392,7 @@ public class RequestController {
 
     @GetMapping("getDeadlines")
     public ResponseEntity<List<DeadlineDTO>> getManagerDeadlines(@RequestParam Long managerID) {
-        return new ResponseEntity<List<DeadlineDTO>>(requestService.getManagerDeadlines(managerID), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.getManagerDeadlines(managerID), HttpStatus.OK);
     }
 }
 
