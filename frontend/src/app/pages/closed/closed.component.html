@@ -2,7 +2,7 @@
   <div class="row" *ngIf="!requests.length">
     <div class="header-content">
       <div class="header-content-inner text-center">
-        <h1 id="homeHeading">You haven`t assigned requests!</h1>
+        <h1 id="homeHeading">You haven`t closed requests!</h1>
       </div>
     </div>
   </div>
@@ -17,7 +17,7 @@
           </ul>
         </div>
         <div class="panel-body">
-          <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings" (paginationChange)="pageChange()"></r-table>
+          <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings" (paginationChange)="pageChange($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>
         </div>
       </div>
     </div>
