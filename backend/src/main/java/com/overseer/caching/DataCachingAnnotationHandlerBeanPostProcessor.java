@@ -1,6 +1,5 @@
 package com.overseer.caching;
 
-import lombok.val;
 import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
@@ -39,32 +37,28 @@ public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostPr
         if (beanClass == null) {
             return bean;
         }
-
-            LOG.debug("Checking bean {} with annotation Repository on containing cache annotation", bean);
-            return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
-                System.out.println(method.getName());
-                System.out.println(bean.toString());
-                for (Annotation a : method.getAnnotations()) {
-                    System.out.println(a.annotationType());
+        LOG.debug("Checking bean {} with annotation Repository on containing cache annotation", bean);
+        return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
+            if (method.isAnnotationPresent(CacheChanger.class)) {
+                LOG.debug("Method {} has annotation CacheChanger, start cleaning cache");
+                simpleInMemoryCache.cleanup();
+            }
+            if (method.isAnnotationPresent(CacheableData.class)) {
+                Triplet<Object, String, List> key = Triplet.with(bean, method.getName(), null);
+                if (args != null) {                         //for methods which has arguments
+                    LOG.debug("Method has arguments. Added to key");
+                    key = key.setAt2(Arrays.asList(args));
                 }
-                if (method.isAnnotationPresent(CacheChanger.class)) {
-                    LOG.debug("Method {} has annotation CacheChanger, start cleaning cache");
-                    simpleInMemoryCache.cleanup();
-                }
-                if (method.isAnnotationPresent(CacheableData.class)) {
-                    Triplet<Object, String, List> key = Triplet.with(bean, method.getName(), Arrays.asList(args));
-                    LOG.debug("Method {} has annotation, starting checking cache", method);
-                    if (simpleInMemoryCache.contains(key)) {
-                        return simpleInMemoryCache.getData(key);
-                    } else {
-                        val result = method.invoke(bean, args);
-                        simpleInMemoryCache.put(key, result);
-                        return result;
-                    }
+                LOG.debug("Method {} has annotation, starting checking cache", method);
+                if (simpleInMemoryCache.contains(key)) {
+                    return simpleInMemoryCache.getData(key);
                 } else {
-                    return method.invoke(bean, args);
+                    simpleInMemoryCache.put(key, method.invoke(bean, args));
+                    return simpleInMemoryCache.getData(key);
                 }
-            });
+            } else {
+                return method.invoke(bean, args);
+            }
+        });
     }
-
 }

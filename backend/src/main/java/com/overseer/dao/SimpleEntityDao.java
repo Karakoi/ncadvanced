@@ -1,5 +1,7 @@
 package com.overseer.dao;
 
+import com.overseer.caching.CacheableData;
+
 import java.util.List;
 
 /**
@@ -21,5 +23,6 @@ public interface SimpleEntityDao<T> extends CrudDao<T, Long> {
      *
      * @return all entities.
      */
+    @CacheableData
     List<T> findAll();
 }
