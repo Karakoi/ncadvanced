@@ -208,14 +208,11 @@
             <tr *ngFor="let history of historyRecords">
               <td *ngIf="showHistory">
                 <span>
-                  Field <span class="bold-text">"{{history.columnName}}"</span>
-                  was changed from <span class="bold-text">"{{showHistoryValue(history.oldValue, history.demonstrationOfOldValue)}}"</span>
-                  to <span class="bold-text">"{{showHistoryValue(history.newValue, history.demonstrationOfNewValue)}}"</span>
-
+                  {{showHistoryMessage(history)}}
                   by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
                 </span>
               </td>
-              <td>
+              <td *ngIf="showHistory">
                 <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
               </td>
             </tr>
