@@ -27,7 +27,7 @@ public class Request extends AbstractEntity {
     private static final int MIN_TITLE_LENGTH = 5;
     private static final int MAX_TITLE_LENGTH = 45;
     private static final int MIN_DESCRIPTION_LENGTH = 10;
-    private static final int MAX_DESCRIPTION_LENGTH = 200;
+    private static final int MAX_DESCRIPTION_LENGTH = 500;
 
     @NotNull
     @Size(min = MIN_TITLE_LENGTH, max = MAX_TITLE_LENGTH)

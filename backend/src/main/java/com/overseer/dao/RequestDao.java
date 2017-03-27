@@ -1,5 +1,6 @@
 package com.overseer.dao;
 
+import com.overseer.caching.annotation.CacheChanger;
 import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
@@ -322,6 +323,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      *
      * @param parentId list of progress status ids, must not be {@literal null}
      */
+    @CacheChanger
     void deleteParentRequestIfItHasNoChildren(Long parentId);
 
     /**

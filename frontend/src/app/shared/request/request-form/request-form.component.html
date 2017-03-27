@@ -34,7 +34,7 @@
         <label for="description">Description:</label>
         <textarea id="description" class="form-control" rows="5" formControlName="description"></textarea>
         <div *ngIf="!validate('description')" class="help-block text-left">
-          <span *ngIf="requestForm.get('description')">Message length should be between 10 and 200 characters.</span>
+          <span *ngIf="requestForm.get('description')">Message length should be between 10 and 500 characters.</span>
         </div>
       </div>
     </modal-header>
