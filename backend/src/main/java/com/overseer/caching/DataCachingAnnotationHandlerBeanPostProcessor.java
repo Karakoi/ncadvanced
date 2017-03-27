@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
@@ -43,8 +44,11 @@ public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostPr
             return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
                 System.out.println(method.getName());
                 System.out.println(bean.toString());
-                if (method.getName().contains("save") || method.getName().contains("delete")) {
-                    System.out.println("cleaning on save or delete");
+                for (Annotation a : method.getAnnotations()) {
+                    System.out.println(a.annotationType());
+                }
+                if (method.isAnnotationPresent(CacheChanger.class)) {
+                    LOG.debug("Method {} has annotation CacheChanger, start cleaning cache");
                     simpleInMemoryCache.cleanup();
                 }
                 if (method.isAnnotationPresent(CacheableData.class)) {

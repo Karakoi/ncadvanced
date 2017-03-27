@@ -1,5 +1,6 @@
 package com.overseer.dao;
 
+import com.overseer.caching.CacheChanger;
 import com.overseer.caching.CacheableData;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ public interface CrudDao<T, ID extends Serializable> {
      * @param entity must not be {@literal null}.
      * @return the saved entity.
      */
+    @CacheChanger
     T save(T entity);
 
     /**
@@ -34,6 +36,7 @@ public interface CrudDao<T, ID extends Serializable> {
      *
      * @param entity must not be {@literal null}.
      */
+    @CacheChanger
     void delete(T entity);
 
     /**
@@ -41,6 +44,7 @@ public interface CrudDao<T, ID extends Serializable> {
      *
      * @param id must not be {@literal null}.
      */
+    @CacheChanger
     void delete(ID id);
 
     /**

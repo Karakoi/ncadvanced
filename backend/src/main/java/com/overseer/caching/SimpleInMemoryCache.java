@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 //TODO Change value type tu future
-//TODO Add new annotation for data update
+//TODO Make cache clean more intellectual
 /**
  * Simple cache for dao, if dao has annotation {@link CacheableData} it's gonna be stored in map
  * and returned it next request.
