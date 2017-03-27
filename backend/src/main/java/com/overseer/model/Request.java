@@ -42,9 +42,6 @@ public class Request extends AbstractEntity {
     @JsonInclude(NON_NULL)
     private PriorityStatus priorityStatus;
 
-//    @JsonInclude(NON_NULL)
-//    private ProgressStatusView progressStatusView;
-
     @JsonInclude(NON_NULL)
     private ProgressStatus progressStatus;
 

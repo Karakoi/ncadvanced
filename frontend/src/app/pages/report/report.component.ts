@@ -120,4 +120,5 @@ export class ReportComponent implements OnInit {
   isManager(): boolean {
     return this.role === 'office manager'
   }
+
 }

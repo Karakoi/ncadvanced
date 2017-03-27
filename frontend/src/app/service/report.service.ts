@@ -5,6 +5,7 @@ import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {ErrorService} from "./error.service";
 import {RequestDTO} from "../model/dto/requestDTO.model";
+import {ProgressStatus, Request} from "../model/request.model";
 
 const url = '/api/reports';
 
