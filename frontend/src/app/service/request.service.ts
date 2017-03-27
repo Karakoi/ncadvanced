@@ -6,6 +6,7 @@ import {AuthHttp} from "angular2-jwt";
 import {Request} from "../model/request.model";
 import {ErrorService} from "./error.service";
 import {RequestSearchDTO} from "../model/dto/request-seaarch-dto.model";
+import {DeadlineDTO} from "../model/dto/deadlineDTO.model"
 
 const url = '/api/requests';
 
@@ -255,6 +256,15 @@ export class RequestService {
     return this.authHttp.get(`${url}/getJoinedGroupRequests/${id}`)
       .map(resp => resp.json())
       .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getDeadlines(id:number):Observable<DeadlineDTO[]> {
+    return this.authHttp.get(`${url}/getDeadlines?managerID=` + id)
+      .map(resp => resp.json())
+      .catch((error:any) => { 
         this.errorService.processError(error);
         return Observable.throw(error);
       });

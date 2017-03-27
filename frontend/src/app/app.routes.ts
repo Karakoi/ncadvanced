@@ -51,6 +51,11 @@ export const appRoutes: Routes = [
   },
   // Available for manager
   {
+    path: 'calendar',
+    loadChildren: './pages/deadline/deadline.module#DeadlineModule',
+    canActivate: [PrivatePageGuard, ManagerPageGuard]
+  },
+  {
     path: 'assigned/inProgress',
     loadChildren: './pages/assigned/assigned.module#AssignedModule',
     canActivate: [PrivatePageGuard, ManagerPageGuard]
