@@ -124,6 +124,8 @@
             <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.assigneeName" (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
             <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>          </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
+          <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
+          <td class="td-center" *ngIf="settings.close"><span class="glyphicon glyphicon-ok-sign text-center"></span></td>
           <td class="td-center" *ngIf="settings.reopen"><span class="glyphicon glyphicon-repeat text-center"></span></td>
         </tr>
         <tr style="cursor: pointer;"
@@ -159,12 +161,12 @@
                   (click)="openDeleteRequestModal(request)"></span>
           </td>
           <td class="text-center " *ngIf="settings.assign">
-            <span [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs"
-                  (click)="openAssignRequestModal(request)"></span>
+            <button [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs btn-success"
+                  (click)="openAssignRequestModal(request)"></button>
           </td>
           <td class="text-center" *ngIf="settings.close">
-            <span [attr.value]="request.id" class="glyphicon glyphicon-ok-sign center-block btn btn-xs"
-                  (click)="close(request)"></span>
+            <button [attr.value]="request.id" class="glyphicon glyphicon-ok-sign center-block btn btn-xs btn-success"
+                  (click)="close(request)"></button>
           </td>
           <td class="text-center" *ngIf="settings.reopen">
             <span [attr.value]="request.id" class="glyphicon glyphicon-repeat center-block btn btn-success btn-xs"
