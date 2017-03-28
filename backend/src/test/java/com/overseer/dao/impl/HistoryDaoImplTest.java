@@ -142,7 +142,6 @@ public class HistoryDaoImplTest {
     }
 
     @Test
-    @Ignore
     public void findAllForEntityTestForCheckOldAndNewValuesInThirdHistoryRecord() throws Exception {
         // given
         updateRequest();
@@ -175,7 +174,6 @@ public class HistoryDaoImplTest {
     }
 
     @Test
-    @Ignore
     public void findAllForEntityTestForCheckOldAndNewValuesInFirstHistoryRecord() throws Exception {
         // given
         updateRequest();
