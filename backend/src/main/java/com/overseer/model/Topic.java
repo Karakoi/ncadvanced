@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.Size;
 
 /**
  * Topic entity.

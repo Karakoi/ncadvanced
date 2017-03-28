@@ -1,5 +1,7 @@
 package com.overseer.dao.impl;
 
+import static com.overseer.util.ValidationUtil.validate;
+
 import com.overseer.dao.TopicDao;
 import com.overseer.model.Message;
 import com.overseer.model.Role;
@@ -21,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.overseer.util.ValidationUtil.validate;
 
 /**
  * <p>
@@ -70,7 +70,7 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
 
         // inserting roles as topic_to_role db table
         List<Role> rolesOfEntity = entity.getRoles();
-        for(int i=0; i < rolesOfEntity.size(); i++){
+        for (int i = 0; i < rolesOfEntity.size(); i++) {
             Role currentRoleWithoutId = rolesOfEntity.get(i);
             Role currentRoleWithId = roleDao.findByName(currentRoleWithoutId.getName());
             currentRoleWithoutId.setId(currentRoleWithId.getId());
@@ -80,7 +80,12 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         return entity;
     }
 
-    private void saveTopicRole(Long roleId, Long topicId){
+    /**
+     * This method save role for topic.
+     * @param roleId id of role.
+     * @param topicId id of topic.
+     */
+    private void saveTopicRole(Long roleId, Long topicId) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("role_id", roleId);
         parameterSource.addValue("topic_id", topicId);
@@ -132,11 +137,11 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         return this.queryService().getQuery("topic.insert");
     }
 
-    private String getInsertQueryForRole(){
+    private String getInsertQueryForRole() {
         return this.queryService().getQuery("topic_to_role.insert");
     }
 
-    private String getDeleteAllByTopicIdQuery(){
+    private String getDeleteAllByTopicIdQuery() {
         return this.queryService().getQuery("topic_to_role.delete_all_by_topic_id");
     }
 
@@ -176,16 +181,19 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         };
     }
 
+    /**
+     * Inner class that allow us to get a list of {@link Topic} from ResultSet object from database.
+     */
     private class TopicObjectsExtractor implements ResultSetExtractor<List<Topic>> {
         @Override
         public List<Topic> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
             Map<Long, Topic> map = new HashMap<>();
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Long id = resultSet.getLong("topic_id");
                 Topic topic = map.get(id);
 
-                if(topic == null){
+                if (topic == null) {
                     topic = new Topic();
                     topic.setId(resultSet.getLong("topic_id"));
                     topic.setTitle(resultSet.getString("title"));
@@ -200,15 +208,18 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         }
     }
 
+    /**
+     * Inner class that allow us to get a {@link Topic} from ResultSet object from database.
+     */
     private class TopicOneObjectExtractor implements ResultSetExtractor<Topic> {
         @Override
         public Topic extractData(ResultSet resultSet) throws SQLException, DataAccessException {
             Topic topic = new Topic();
             boolean haveGeneralTopicData = false; // true, if we already get all topics fields except roles
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Long id = resultSet.getLong("topic_id");
-                if(!haveGeneralTopicData){
+                if (!haveGeneralTopicData) {
                     topic.setId(id);
                     topic.setTitle(resultSet.getString("title"));
                     topic.setDescription(resultSet.getString("description"));
@@ -218,7 +229,7 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
                 role.setId(resultSet.getLong("role_id"));
                 topic.getRoles().add(role);
             }
-            if(!haveGeneralTopicData){
+            if (!haveGeneralTopicData) {
                 return null;
             }
             return topic;

@@ -29,6 +29,10 @@ public class TopicDaoImplTest {
 
     private Role role;
 
+    @Test
+    public void test(){
+
+    }
     /*@Before
     public void setUp() throws Exception {
         role = new Role("admin");

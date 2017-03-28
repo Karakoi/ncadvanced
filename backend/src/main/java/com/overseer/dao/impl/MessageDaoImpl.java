@@ -35,9 +35,9 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
      * {@inheritDoc}.
      */
     @Override
-    public int deleteByTopicId(Long topicId){
+    public int deleteByTopicId(Long topicId) {
         List<Message> messagesByTopic = findByTopic(topicId);
-        for(Message message: messagesByTopic){
+        for (Message message: messagesByTopic) {
             delete(message);
         }
         return messagesByTopic.size();
