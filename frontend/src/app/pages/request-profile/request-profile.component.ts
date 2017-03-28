@@ -27,6 +27,7 @@ export class RequestProfileComponent implements OnInit {
   historyRecords: History[];
   subRequests: Request[];
   joinedRequests: Request[];
+  role: string = 'employee';
 
   @ViewChild(DeleteSubRequestComponent)
   deleteSubRequestComponent: DeleteSubRequestComponent;
@@ -42,6 +43,11 @@ export class RequestProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe((user: User) => {
+      this.currentUser = user;
+      this.role = user.role.name;
+    });
+
     this.route.params.subscribe(params => {
       let id = +params['id'];
 
@@ -65,9 +71,6 @@ export class RequestProfileComponent implements OnInit {
         this.joinedRequests = joinedRequests;
         /*console.log(joinedRequests)*/
       });
-    });
-    this.authService.currentUser.subscribe((user: User) => {
-      this.currentUser = user;
     });
   }
 
@@ -192,5 +195,10 @@ export class RequestProfileComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  isEmployee(): boolean {
+    console.log(this.role)
+    return this.role === 'employee'
   }
 }
