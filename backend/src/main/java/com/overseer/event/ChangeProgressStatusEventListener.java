@@ -53,6 +53,11 @@ public class ChangeProgressStatusEventListener {
         changeStatusAndSave(request, progressStatus);
     }
 
+  /*  @EventListener
+    public void testEvent(ChangeProgressStatusEvent changeProgressStatusEvent) {
+        System.out.println(changeProgressStatusEvent.getNewProgressStatus());
+    }
+*/
     /**
      * Closes request and changes it {@link Request#progressStatus}.
      *
