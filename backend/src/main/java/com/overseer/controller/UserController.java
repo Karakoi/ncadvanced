@@ -154,9 +154,16 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/findUserChatFriends")
-    public ResponseEntity<List<User>> findUserChatFriends(@RequestParam Long userId) {
-        List<User> users = userService.findUserChatFriends(userId);
+    /**
+     * Returns list of specified user chat partners.
+     * Partners - users users who sent a message or which user sent.
+     *
+     * @param userId specified user
+     * @return list of chat partners
+     */
+    @GetMapping("/findUserChatPartners")
+    public ResponseEntity<List<User>> findUserChatPartners(@RequestParam Long userId) {
+        List<User> users = userService.findUserChatPartners(userId);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

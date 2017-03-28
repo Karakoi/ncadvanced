@@ -106,6 +106,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         userDao.save(user);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public User findByEmail(String email) throws NoSuchEntityException {
         Assert.notNull(email, "email must not be null");
@@ -114,6 +117,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return user;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
@@ -122,6 +128,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return list;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findManagersByEmployee(Long employeeId) {
         val list = userDao.findManagersByEmployee(employeeId);
@@ -129,6 +138,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return list;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findUsersByManager(Long managerId) {
         val list = userDao.findUsersByManager(managerId);
@@ -156,12 +168,18 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         userDao.activate(id);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public Long getCountAllDeactivated() {
         log.debug("Get count of all deactivated users");
         return userDao.getCountAllDeactivated();
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> searchUsers(UserSearchDTO searchDTO) {
         SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
@@ -206,9 +224,11 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return userDao.searchRequests(query);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public List<User> findUserChatFriends(Long userId) {
-        val list = userDao.findUserChatFriends(userId);
-        return list;
+    public List<User> findUserChatPartners(Long userId) {
+        return userDao.findUserChatPartners(userId);
     }
 }

@@ -143,7 +143,7 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
     /**
      * {@inheritDoc}.
      */
-    public List<User> findUserChatFriends(Long userId) {
+    public List<User> findUserChatPartners(Long userId) {
         Assert.notNull(userId, "User can't be null");
         return this.jdbc().query(this.queryService().getQuery("user.findAllChatFriends"),
                 new MapSqlParameterSource("userId", userId),

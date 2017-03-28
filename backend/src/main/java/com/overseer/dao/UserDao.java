@@ -72,5 +72,12 @@ public interface UserDao extends CrudDao<User, Long> {
      */
     List<User> searchRequests(String searchQuery);
 
-    List<User> findUserChatFriends(Long userId);
+    /**
+     * Returns list of specified user chat partners.
+     * Partners - users users who sent a message or which user sent.
+     *
+     * @param userId specified user
+     * @return list of chat partners
+     */
+    List<User> findUserChatPartners(Long userId);
 }

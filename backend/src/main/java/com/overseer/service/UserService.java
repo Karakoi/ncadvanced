@@ -78,5 +78,12 @@ public interface UserService extends CrudService<User, Long> {
      */
     List<User> searchUsers(UserSearchDTO searchDTO);
 
-    List<User> findUserChatFriends(Long userId);
+    /**
+     * Returns list of specified user chat partners.
+     * Partners - users users who sent a message or which user sent.
+     *
+     * @param userId specified user
+     * @return list of chat partners
+     */
+    List<User> findUserChatPartners(Long userId);
 }
