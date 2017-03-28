@@ -2,13 +2,15 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <p class="panel-title">
-        <inline-editor type="text"
+        <inline-editor *ngIf="!isFree(request)"
+                       type="text"
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
-                       size="40"
-                       [disabled]="isFree(request)"
-        >
+                       size="40">
         </inline-editor>
+        <span *ngIf="isFree(request)" >
+          {{request.title}}
+        </span>
       </p>
     </div>
     <div class="panel-body">
@@ -96,13 +98,16 @@
             <tbody>
             <tr>
               <td *ngIf="showDescription">
-                <inline-editor type="textarea"
+                <inline-editor *ngIf="!isFree(request)"
+                               type="textarea"
                                [(ngModel)]="request.description"
                                (onSave)="updateRequest($event)"
-                               [disabled]="isFree(request)"
                                cols="100"
                                rows="3">
                 </inline-editor>
+                <span *ngIf="isFree(request)">
+                      {{request.description}}
+                </span>
               </td>
               <td *ngIf="!showDescription"><i>Click arrow down to show full description</i></td>
             </tr>
