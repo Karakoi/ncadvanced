@@ -103,7 +103,7 @@ public class TopicController {
      */
     @GetMapping("/fetch")
     public ResponseEntity<List<Topic>> fetchRequestPage(@RequestParam int page) {
-        val topics = topicService.fetchPage(page);
+        val topics = topicService.fetchPage(page, Math.toIntExact(DEFAULT_PAGE_SIZE));
         return new ResponseEntity<>(topics, HttpStatus.OK);
     }
 

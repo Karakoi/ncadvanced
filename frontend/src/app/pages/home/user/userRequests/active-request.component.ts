@@ -3,7 +3,6 @@ import {AuthService} from "../../../../service/auth.service";
 import {EmployeeService} from "../../../../service/employee.service";
 import {User} from "../../../../model/user.model";
 import {Request} from "../../../../model/request.model";
-import {ReportService} from "../../../../service/report.service";
 
 
 @Component({
@@ -25,6 +24,7 @@ export class ActiveRequest implements OnInit {
     info: true,
     multiSelect: false,
     filterRow: true,
+    ajax: false,
     columns: {
       title: true,
       dateOfCreation: true,
@@ -36,13 +36,12 @@ export class ActiveRequest implements OnInit {
   }
 
   constructor(private authService: AuthService,
-              private employeeService: EmployeeService,
-              private reportService: ReportService,) {
+              private employeeService: EmployeeService) {
   }
 
 
   pageChange(data){
-      this.employeeService.getRequestsByReporter(this.currentUser.id, data.page).subscribe(requests => {
+      this.employeeService.getRequestsByReporter(this.currentUser.id, data.page, this.pageSize).subscribe(requests => {
         this.requests = requests.filter(r => r.progressStatus.name != "CLOSED");
       })
   }
@@ -50,11 +49,8 @@ export class ActiveRequest implements OnInit {
   ngOnInit() {
     this.authService.currentUser.subscribe(u => {
       this.currentUser = u;
-      this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
-        requests.forEach(r => {
-          console.log(r.progressStatus.name);
-        });
-        this.requests = requests.filter(r => r.progressStatus.name != "CLOSED");
+      this.employeeService.getRequestsByReporter(u.id, 1, this.pageSize).subscribe(requests => {
+        this.requests = requests.filter(r => r.progressStatus.name != "CLOSED" && r.progressStatus.name != null);
         this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
           this.totalItems = count;
           this.loaded = true;
@@ -63,5 +59,10 @@ export class ActiveRequest implements OnInit {
   })
   }
 
-
+  perChangeLoad(pageData) {
+    this.pageSize = pageData.size;
+    this.employeeService.getRequestsByReporter(this.currentUser.id, pageData.page, pageData.size).subscribe(requests => {
+      this.requests = requests.filter(r => r.progressStatus.name != "CLOSED");
+    })
+  }
 }

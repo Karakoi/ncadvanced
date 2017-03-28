@@ -2,6 +2,7 @@ package com.overseer.service.impl;
 
 import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.UserDao;
+import com.overseer.dto.UserSearchDTO;
 import com.overseer.exception.RemovingYourselfException;
 import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.exception.entity.NoSuchEntityException;
@@ -11,6 +12,7 @@ import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import com.overseer.service.RequestService;
 import com.overseer.service.UserService;
+import com.overseer.service.impl.builder.SqlQueryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -104,6 +106,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         userDao.save(user);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public User findByEmail(String email) throws NoSuchEntityException {
         Assert.notNull(email, "email must not be null");
@@ -112,6 +117,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return user;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
@@ -120,6 +128,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return list;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findManagersByEmployee(Long employeeId) {
         val list = userDao.findManagersByEmployee(employeeId);
@@ -127,6 +138,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return list;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findUsersByManager(Long managerId) {
         val list = userDao.findUsersByManager(managerId);
@@ -138,8 +152,8 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
      * {@inheritDoc}.
      */
     @Override
-    public List<User> findAllDeactivated(int pageNumber) {
-        val list = userDao.findAllDeactivated(this.DEFAULT_PAGE_SIZE, pageNumber);
+    public List<User> findAllDeactivated(int pageNumber, int size) {
+        val list = userDao.findAllDeactivated(size, pageNumber);
         log.debug("Fetched {} deactivated users for page number: {}", list.size(), pageNumber);
         return list;
     }
@@ -154,9 +168,67 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         userDao.activate(id);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public Long getCountAllDeactivated() {
         log.debug("Get count of all deactivated users");
         return userDao.getCountAllDeactivated();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> searchUsers(UserSearchDTO searchDTO) {
+        SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
+
+        sqlQueryBuilder.where().notNull("u.role");
+
+        boolean isDeactivated = Boolean.parseBoolean(searchDTO.getIsDeactivated());
+        if (isDeactivated) {
+            sqlQueryBuilder.and().is("u.is_deactivated");
+        }
+
+        String firstName = searchDTO.getFirstName();
+        if (!firstName.isEmpty()) {
+            sqlQueryBuilder.and().like("u.first_name", firstName);
+        }
+
+        String lastName = searchDTO.getLastName();
+        if (!lastName.isEmpty()) {
+            sqlQueryBuilder.and().like("u.last_name", lastName);
+        }
+
+        String email = searchDTO.getEmail();
+        if (!email.isEmpty()) {
+            sqlQueryBuilder.and().like("u.email", email);
+        }
+
+        String role = searchDTO.getRole();
+        if (!role.isEmpty()) {
+            sqlQueryBuilder.and().like("r.name", role);
+        }
+
+        String dateOfDeactivation = searchDTO.getDateOfDeactivation();
+        if (!dateOfDeactivation.isEmpty()) {
+            sqlQueryBuilder.and().equalDate("u.date_of_deactivation", dateOfDeactivation);
+        }
+
+        int limit = searchDTO.getLimit();
+        sqlQueryBuilder.limit(limit);
+
+        String query = sqlQueryBuilder.build();
+
+        return userDao.searchRequests(query);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findUserChatPartners(Long userId) {
+        return userDao.findUserChatPartners(userId);
     }
 }

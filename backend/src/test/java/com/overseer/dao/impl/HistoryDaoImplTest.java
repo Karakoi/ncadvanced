@@ -7,6 +7,7 @@ import com.overseer.model.*;
 import com.overseer.model.enums.ProgressStatus;
 import lombok.Value;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +164,7 @@ public class HistoryDaoImplTest {
     }
 
     @Test
-    public void findAllForEntityTestForCheckOldAndNewValuesInFirstHistoryRecord() throws Exception {
+    public void findAllForEntityTestForCheckOldAndNewValuesInThirdHistoryRecord() throws Exception {
         // given
         updateRequest();
 
@@ -172,10 +173,10 @@ public class HistoryDaoImplTest {
         List<History> allHistoryForRequest = historyDAO.findAllForEntity(request.getId());
 
         // then
-        assertThat(allHistoryForRequest.get(0).getColumnName(), is("title"));
-        assertThat(allHistoryForRequest.get(0).getOldValue(), is(TEST_TITLE_1));
-        assertThat(allHistoryForRequest.get(0).getNewValue(), is(TEST_TITLE_2));
-        assertThat(allHistoryForRequest.get(0).getRecordId(), is(request.getId()));
+        assertThat(allHistoryForRequest.get(2).getColumnName(), is("assignee_id"));
+        assertThat(new Long(allHistoryForRequest.get(2).getOldValue()), is(oldAssigneeId));
+        assertThat(new Long(allHistoryForRequest.get(2).getNewValue()), is(assignee.getId()));
+        assertThat(allHistoryForRequest.get(2).getRecordId(), is(request.getId()));
     }
 
     @Test
@@ -195,7 +196,7 @@ public class HistoryDaoImplTest {
     }
 
     @Test
-    public void findAllForEntityTestForCheckOldAndNewValuesInThirdHistoryRecord() throws Exception {
+    public void findAllForEntityTestForCheckOldAndNewValuesInFirstHistoryRecord() throws Exception {
         // given
         updateRequest();
 
@@ -204,9 +205,9 @@ public class HistoryDaoImplTest {
         List<History> allHistoryForRequest = historyDAO.findAllForEntity(request.getId());
 
         // then
-        assertThat(allHistoryForRequest.get(2).getColumnName(), is("assignee_id"));
-        assertThat(new Long(allHistoryForRequest.get(2).getOldValue()), is(oldAssigneeId));
-        assertThat(new Long(allHistoryForRequest.get(2).getNewValue()), is(assignee.getId()));
-        assertThat(allHistoryForRequest.get(2).getRecordId(), is(request.getId()));
+        assertThat(allHistoryForRequest.get(0).getColumnName(), is("title"));
+        assertThat(allHistoryForRequest.get(0).getOldValue(), is(TEST_TITLE_1));
+        assertThat(allHistoryForRequest.get(0).getNewValue(), is(TEST_TITLE_2));
+        assertThat(allHistoryForRequest.get(0).getRecordId(), is(request.getId()));
     }
 }

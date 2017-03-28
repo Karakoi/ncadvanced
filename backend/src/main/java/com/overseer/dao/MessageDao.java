@@ -27,4 +27,6 @@ public interface MessageDao extends CrudDao<Message, Long> {
     }
 
     List<Message> findByTopic(Long topicId);
+
+    List<Message> findDialogMessages(Long senderId, Long recipientId);
 }

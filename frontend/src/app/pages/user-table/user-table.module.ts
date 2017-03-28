@@ -14,6 +14,7 @@ import {UserTableDeactivatedComponent} from "./deactivated/user-table-deactivate
 import {ActivateUserComponent} from "./deactivated/user-activate/activate-user.component";
 import {usersTableRoutes} from "./user-table.routes";
 import {PipeModule} from "../../pipes/pipe.module";
+import {PaginationModule} from "ng2-bootstrap";
 
 
 const routes: Routes = [
@@ -29,7 +30,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     PipeModule.forRoot(),
     FormsModule,
-    DateParseModule
+    DateParseModule,
+    PaginationModule.forRoot()
   ],
   declarations: [
     UserTableComponent,

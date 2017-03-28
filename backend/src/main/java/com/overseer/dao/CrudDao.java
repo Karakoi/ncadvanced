@@ -1,5 +1,8 @@
 package com.overseer.dao;
 
+import com.overseer.caching.annotation.CacheChanger;
+import com.overseer.caching.annotation.CacheableData;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +20,7 @@ public interface CrudDao<T, ID extends Serializable> {
      * @param entity must not be {@literal null}.
      * @return the saved entity.
      */
+    @CacheChanger
     T save(T entity);
 
     /**
@@ -32,6 +36,7 @@ public interface CrudDao<T, ID extends Serializable> {
      *
      * @param entity must not be {@literal null}.
      */
+    @CacheChanger
     void delete(T entity);
 
     /**
@@ -39,6 +44,7 @@ public interface CrudDao<T, ID extends Serializable> {
      *
      * @param id must not be {@literal null}.
      */
+    @CacheChanger
     void delete(ID id);
 
     /**
@@ -56,6 +62,7 @@ public interface CrudDao<T, ID extends Serializable> {
      * @param pageNumber number of page.
      * @return a list of entities.
      */
+    @CacheableData
     List<T> fetchPage(int pageSize, int pageNumber);
 
     /**

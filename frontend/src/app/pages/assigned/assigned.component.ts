@@ -15,6 +15,7 @@ export class AssignedComponent {
   requests:Request[] = [];
   pageCount:number;
   currentUserId: number;
+  pageSize: number = 20;
 
   settings = {
     delete: false,
@@ -43,7 +44,7 @@ export class AssignedComponent {
   ngOnInit() {
     this.authService.currentUser.subscribe((user:User) => {
       this.currentUserId = user.id;
-      this.requestService.getInProgressAssigned(1, this.currentUserId).subscribe((requests:Request[]) => {
+      this.requestService.getInProgressAssigned(1, this.pageSize, this.currentUserId).subscribe((requests:Request[]) => {
         this.requests = requests;
       });
       this.requestService.getInProgressAssignedPageCount(this.currentUserId).subscribe((count) => this.pageCount = count);
@@ -51,9 +52,15 @@ export class AssignedComponent {
   }
 
   pageChange(data){
-    this.requestService.getInProgressAssigned(data.page, this.currentUserId).subscribe(requests => {
+    this.requestService.getInProgressAssigned(data.page, this.pageSize, this.currentUserId).subscribe(requests => {
       this.requests = requests;
     })
   }
 
+  perChangeLoad(pageData) {
+    this.pageSize = pageData.size;
+    this.requestService.getInProgressAssigned(1, this.pageSize, this.currentUserId).subscribe((requests:Request[]) => {
+      this.requests = requests;
+    });
+  }
 }

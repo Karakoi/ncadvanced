@@ -1,9 +1,11 @@
 package com.overseer.event;
 
+import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 
 import com.overseer.model.Request;
+import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
@@ -57,6 +59,9 @@ public class ChangeProgressStatusEventListener {
     public void closeRequest(CloseRequestEvent closeRequestEvent) {
         Request request = closeRequestEvent.getRequest();
         //Check if request is parent
+        if (request.getAssignee().getId() == 0) {
+            request.setAssignee(new User());
+        }
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
         if (joinedRequests.isEmpty()) {
             Long parentRequestId = request.getParentId();
@@ -66,7 +71,7 @@ public class ChangeProgressStatusEventListener {
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
-            for (Request joinedRequest : joinedRequests) {
+            for (Request joinedRequest: joinedRequests) {
                 joinedRequest.setParentId(null);
                 changeStatusAndSave(joinedRequest, CloseRequestEvent.PROGRESS_STATUS);
             }
@@ -84,7 +89,9 @@ public class ChangeProgressStatusEventListener {
     @EventListener
     public void reopenRequest(ReopenRequestEvent reopenRequestEvent) {
         Request request = reopenRequestEvent.getRequest();
-
+        if (request.getAssignee().getId() == 0) {
+            request.setAssignee(new User());
+        }
         request.setEstimateTimeInDays(null);
 
         changeStatusAndSave(request, ReopenRequestEvent.PROGRESS_STATUS);

@@ -1,2 +1,2 @@
 <r-table *ngIf="loaded" [requests]="requests" [requestsCount]="pageCount"
-         (paginationChange)="pageChange($event)"></r-table>
+         (paginationChange)="pageChange($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>

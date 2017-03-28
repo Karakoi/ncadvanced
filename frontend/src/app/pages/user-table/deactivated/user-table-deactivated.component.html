@@ -4,10 +4,14 @@
     <li class="active"><a [routerLink]="['/users/deactivated']"><b>Deactivated users</b></a></li>
   </ul>
   <div class="panel panel-default">
-    <!--<div class="template-header">
-      Deactivated users
-    </div>-->
     <div class="panel-body">
+      <select class="form-control pull-left size-select" style="width: 90px;" (change)="changeSize($event.target.value)">
+        <option>5</option>
+        <option>10</option>
+        <option selected>20</option>
+        <option>50</option>
+        <option>100</option>
+      </select>
       <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
@@ -31,22 +35,31 @@
             <span *ngIf="orderType && orderField == 'dateOfDeactivation'" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></span>
             <span *ngIf="!orderType && orderField == 'dateOfDeactivation'" class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
           </th>
-          <th>Activate</th>
+          <th class="activate">Activate</th>
         </tr>
         </thead>
         <tbody>
         <tr>
           <td>
-            <input type="text" [(ngModel)]="searchTypes.firstName" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.firstName" class="form-control"/>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.firstName" (ngModelChange)="setTitleSearch('firstName', $event)" class="form-control"/>
           </td>
           <td>
-            <input type="text" [(ngModel)]="searchTypes.lastName" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.lastName" class="form-control"/>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.lastName" (ngModelChange)="setTitleSearch('lastName', $event)" class="form-control"/>
           </td>
           <td>
-            <input type="text" [(ngModel)]="searchTypes.email" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.email" class="form-control"/>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.email" (ngModelChange)="setTitleSearch('email', $event)" class="form-control"/>
           </td>
           <td>
-            <select class="form-control" [(ngModel)]="searchTypes.role">
+            <select *ngIf="!settings.ajax" class="form-control" [(ngModel)]="searchTypes.role">
+              <option></option>
+              <option>admin</option>
+              <option>employee</option>
+              <option>office manager</option>
+            </select>
+            <select *ngIf="settings.ajax" class="form-control" [(ngModel)]="searchDTO.role" (ngModelChange)="setTitleSearch('role', $event)">
               <option></option>
               <option>admin</option>
               <option>employee</option>
@@ -54,7 +67,8 @@
             </select>
           </td>
           <td>
-            <input type="date" [(ngModel)]="searchTypes.dateOfDeactivation" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="date" [(ngModel)]="searchTypes.dateOfDeactivation" class="form-control"/>
+            <input *ngIf="settings.ajax" type="date" [ngModel]="searchDTO.date" (ngModelChange)="setTitleSearch('date', $event)" class="form-control"/>
           </td>
           <td class="td-center"><span class="glyphicon glyphicon-upload"></span></td>
         </tr>
@@ -71,11 +85,11 @@
         </tr>
         </tbody>
       </table>
-      <ul class="pagination pull-right">
-        <li class="paginate_button active" (click)="load($event)"><a>1</a></li>
-        <li class="paginate_button" (click)="load($event)" *ngFor="let item of createRange(pageNumber)">
-          <a>{{item}}</a></li>
-      </ul>
+      <div class="text-center">
+        <pagination [totalItems]="pageNumber"
+                    [itemsPerPage]="perPage" (pageChanged)="changed($event)"
+        ></pagination>
+      </div>
     </div>
   </div>
 </div>

@@ -41,9 +41,10 @@ public class MessageController {
     }
 
     @PostMapping("/sendMessage")
-    public void sendMessageToEmail(@RequestBody Message message) {
+    public ResponseEntity<Message> sendMessageToEmail(@RequestBody Message message) {
         Assert.notNull(message.getText(), "Message has to have text");
-        messageService.create(message);
+        Message savedMessage = messageService.create(message);
+        return new ResponseEntity<>(savedMessage, HttpStatus.OK);
     }
 
     @GetMapping("/messagesByRecipient")
@@ -56,6 +57,13 @@ public class MessageController {
     @GetMapping("/messagesByTopic")
     public ResponseEntity<List<Message>> getMessagesByTopic(@RequestParam Long topicId) {
         val messages = messageService.findByTopic(topicId);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+
+    @GetMapping("/messagesByDialog")
+    public ResponseEntity<List<Message>> findDialogMessages(@RequestParam Long senderId,
+                                                            @RequestParam Long recipientId) {
+        val messages = messageService.findDialogMessages(senderId, recipientId);
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 }
