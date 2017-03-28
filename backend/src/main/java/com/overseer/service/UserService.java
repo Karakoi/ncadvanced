@@ -54,7 +54,7 @@ public interface UserService extends CrudService<User, Long> {
      * @param pageNumber number of page.
      * @return a list of {@link User} entities.
      */
-    List<User> findAllDeactivated(int pageNumber);
+    List<User> findAllDeactivated(int pageNumber, int size);
 
     /**
      * Activates {@link User} entity with given id.
@@ -77,4 +77,13 @@ public interface UserService extends CrudService<User, Long> {
      * @return {@link User} list with http status 200 OK..
      */
     List<User> searchUsers(UserSearchDTO searchDTO);
+
+    /**
+     * Returns list of specified user chat partners.
+     * Partners - users users who sent a message or which user sent.
+     *
+     * @param userId specified user
+     * @return list of chat partners
+     */
+    List<User> findUserChatPartners(Long userId);
 }

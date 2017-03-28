@@ -4,5 +4,6 @@ export interface UserSearchDTO {
   email: string,
   role: string,
   dateOfDeactivation: string,
-  limit: number
+  limit: number,
+  isDeactivated: string
 }

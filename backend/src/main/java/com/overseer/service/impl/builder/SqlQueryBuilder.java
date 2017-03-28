@@ -53,6 +53,11 @@ public class SqlQueryBuilder {
         return this;
     }
 
+    public SqlQueryBuilder is(String field) {
+        builder.append(field);
+        return this;
+    }
+
     public SqlQueryBuilder like(String field, String value) {
         builder.append(format("lower(%s) LIKE lower('%%%s%%')", field, value));
         return this;

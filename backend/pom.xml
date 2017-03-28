@@ -118,6 +118,13 @@
             <artifactId>itextpdf</artifactId>
             <version>5.5.10</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>1.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -129,7 +136,7 @@
             <!-- ======================================================== -->
             <!--                  maven-checkstyle-plugin                 -->
             <!-- ======================================================== -->
-            <plugin>
+             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstyle.version}</version>

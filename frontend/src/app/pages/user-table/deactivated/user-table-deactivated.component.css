@@ -57,3 +57,7 @@ th:hover {
 .panel-body,.panel,.panel-default{
   min-width: 792px;
 }
+
+.size-select {
+  margin-bottom: 15px;
+}

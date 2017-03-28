@@ -73,7 +73,7 @@ public class UserDaoImplTest {
 
         // when
         userDao.delete(testUser);
-        User savedUser = userDao.findOne(testUser.getId());
+        User savedUser = userDao.findByEmail(testUser.getEmail());
 
         // then
         assertThat(savedUser, is(nullValue()));

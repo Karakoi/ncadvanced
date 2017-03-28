@@ -109,9 +109,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber) {
+    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int size, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
-        val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, size, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
                 list.size(), assigneeId, pageNumber);
         return list;
@@ -121,9 +121,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber) {
+    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int size, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
-        val list = this.requestDao.findClosedRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findClosedRequestsByAssignee(assigneeId, size, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
                 list.size(), assigneeId, pageNumber);
         return list;
@@ -133,9 +133,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByReporter(Long reporterId, int pageNumber) {
+    public List<Request> findRequestsByReporter(Long reporterId, int pageNumber, int size) {
         Assert.notNull(reporterId, "reporter must not be null");
-        val list = this.requestDao.findRequestsByReporter(reporterId, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findRequestsByReporter(reporterId, size, pageNumber);
         log.debug("Fetched {} requests for reporter with id: {} for page number: {}",
                 list.size(), reporterId, pageNumber);
         return list;
@@ -260,6 +260,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
         // Define progress status with 'Joined' value for child requests
         ProgressStatus joinedProgressStatus = progressStatusDao.findOne(JOINED_STATUS);
+        ProgressStatus parentProgressStatus = progressStatusDao.findOne(IN_PROGRESS_STATUS);
+        parentRequest.setProgressStatus(parentProgressStatus);
         ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, joinedProgressStatus, parentRequest, joinedRequests);
         publisher.publishEvent(event);
 
@@ -293,8 +295,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     }
 
     @Override
-    public List<Request> findFreeRequests(int pageNumber) {
-        return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
+    public List<Request> findFreeRequests(int pageNumber, int size) {
+        return requestDao.findFreeRequests(size, pageNumber);
     }
 
     @Override
@@ -446,6 +448,21 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return request;
     }
 
+    /**
+     * Closes request with any progress status and changes it {@link Request#progressStatus}.
+     *
+     * @param request specified request
+     * @return closed request
+     */
+    private Request forceCloseRequest(Request request) {
+        Assert.notNull(request, "request must not be null");
+        log.debug("Close request with id: {} ", request.getId());
+        ProgressStatus closedProgressStatus = progressStatusDao.findOne(CLOSED_STATUS);
+        ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, closedProgressStatus, request);
+        publisher.publishEvent(event);
+        return request;
+    }
+
     @Override
     public Request reopenRequest(Long requestId) {
         Assert.notNull(requestId, "id of request must not be null");
@@ -508,7 +525,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         idsOfProgresStatuses.add(IN_PROGRESS_STATUS);
         idsOfProgresStatuses.add(JOINED_STATUS);
         List<Request> requests = requestDao.findRequestsByProgressStatusesAndReporterId(idsOfProgresStatuses, reporterId);
-        requests.forEach(this::closeRequest);
+        requests.forEach(this::forceCloseRequest);
     }
 
     @Override
@@ -517,11 +534,10 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     }
 
     @Override
-    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber) {
+    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber, int size) {
         Assert.notNull(reporterId, "Reporter id must be not null");
         Assert.notNull(pageNumber, "Page number must be not null");
-        return requestDao.findRequestsByReporterAndProgress(reporterId, "Closed",
-                DEFAULT_PAGE_SIZE, pageNumber);
+        return requestDao.findRequestsByReporterAndProgress(reporterId, "Closed", size, pageNumber);
     }
 
     @Override

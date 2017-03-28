@@ -15,8 +15,8 @@ export class ActiveRequest implements OnInit {
   private loaded: boolean = false;
   private currentUser: User;
   private totalItems: number;
-  private per: number = 20;
 
+  pageSize: number = 20;
 
   settings = {
     delete: true,
@@ -41,7 +41,7 @@ export class ActiveRequest implements OnInit {
 
 
   pageChange(data){
-      this.employeeService.getRequestsByReporter(this.currentUser.id, data.page).subscribe(requests => {
+      this.employeeService.getRequestsByReporter(this.currentUser.id, data.page, this.pageSize).subscribe(requests => {
         this.requests = requests.filter(r => r.progressStatus.name != "Closed");
       })
   }
@@ -49,7 +49,7 @@ export class ActiveRequest implements OnInit {
   ngOnInit() {
     this.authService.currentUser.subscribe(u => {
       this.currentUser = u;
-      this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
+      this.employeeService.getRequestsByReporter(u.id, 1, this.pageSize).subscribe(requests => {
         this.requests = requests.filter(r => r.progressStatus.name != "Closed" && r.progressStatus.name != null);
         this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
           this.totalItems = count;
@@ -59,4 +59,10 @@ export class ActiveRequest implements OnInit {
   })
   }
 
+  perChangeLoad(pageData) {
+    this.pageSize = pageData.size;
+    this.employeeService.getRequestsByReporter(this.currentUser.id, pageData.page, pageData.size).subscribe(requests => {
+      this.requests = requests.filter(r => r.progressStatus.name != "Closed");
+    })
+  }
 }

@@ -19,10 +19,11 @@ export class EmployeeService {
     this.cache = cache;
   }
 
-  getRequestsByReporter(reporterId: number, page: number): Observable<Request[]>{
+  getRequestsByReporter(reporterId: number, page: number, size: number): Observable<Request[]>{
     let params: URLSearchParams = new URLSearchParams();
     params.set('userId', reporterId.toString());
     params.set('pageNumber', page.toString());
+    params.set('size', size.toString());
     return this.authHttp.get(`${url}/requestsByReporter`, {search: params})
       .map(resp => resp.json())
       .catch((error: any) => {
@@ -31,10 +32,11 @@ export class EmployeeService {
       });
   }
 
-  getClosedRequestsByReporter(reporterId: number, page: number): Observable<Request[]>{
+  getClosedRequestsByReporter(reporterId: number, page: number, size: number): Observable<Request[]>{
     let params: URLSearchParams = new URLSearchParams();
     params.set('userId', reporterId.toString());
     params.set('pageNumber', page.toString());
+    params.set('size', size.toString());
     return this.authHttp.get(`${url}/closedRequestsByReporter`, {search: params})
       .map(resp => resp.json())
       .catch((error: any) => {

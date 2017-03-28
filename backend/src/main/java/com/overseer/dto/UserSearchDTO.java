@@ -18,4 +18,5 @@ public class UserSearchDTO {
     private String role;
     private String dateOfDeactivation;
     private int limit;
+    private String isDeactivated;
 }

@@ -12,6 +12,10 @@ declare var $: any;
   styleUrls: ['user-table-deactivated.component.css']
 })
 export class UserTableDeactivatedComponent implements OnInit {
+
+  private usersCount: number;
+  private perPage: number = 20;
+
   users: User[];
   pageNumber: number;
   orderType: boolean;
@@ -41,12 +45,13 @@ export class UserTableDeactivatedComponent implements OnInit {
       email: "",
       role: "",
       dateOfDeactivation: "",
-      limit: 20
+      limit: 20,
+      isDeactivated: "true"
     };
   }
 
   ngOnInit() {
-    this.userService.getAllDeactivated(1).subscribe((users: User[]) => {
+    this.userService.getAllDeactivated(1, this.perPage).subscribe((users: User[]) => {
       this.users = users;
       console.log(users)
     });
@@ -89,7 +94,23 @@ export class UserTableDeactivatedComponent implements OnInit {
     let page = data.target.text;
     $('.paginate_button').removeClass('active');
     $(data.target.parentElement).addClass('active');
-    this.userService.getAllDeactivated(page).subscribe((users: User[]) => {
+    this.userService.getAllDeactivated(page, this.perPage).subscribe((users: User[]) => {
+      this.users = users;
+    });
+  }
+
+  curPage: number = 1;
+
+  changed(data) {
+    this.curPage = data.page;
+    this.userService.getAllDeactivated(data.page, this.perPage).subscribe(users => {
+      this.users = users;
+    })
+  }
+
+  changeSize(size) {
+    this.perPage = size;
+    this.userService.getAllDeactivated(this.curPage, this.perPage).subscribe((users: User[]) => {
       this.users = users;
     });
   }

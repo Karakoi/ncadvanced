@@ -101,6 +101,10 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
         return this.queryService().getQuery("user.findAll");
     }
 
+    protected String getUserChatFriendsQuery() {
+        return this.queryService().getQuery("user.findAllChatFriends");
+    }
+
     /**
      * Returns {@link RowMapper} implementation for {@link User} entity.
      *
@@ -134,6 +138,16 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
             }
             return user;
         };
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    public List<User> findUserChatPartners(Long userId) {
+        Assert.notNull(userId, "User can't be null");
+        return this.jdbc().query(this.queryService().getQuery("user.findAllChatFriends"),
+                new MapSqlParameterSource("userId", userId),
+                this.getMapper());
     }
 
     @Override

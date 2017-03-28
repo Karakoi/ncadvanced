@@ -117,12 +117,12 @@ BEGIN
   VALUES ('parent_id',
           OLD.parent_id,
           NEW.parent_id,
-          (SELECT concat(first_name, ' ', last_name)
-           FROM "user" u
-           WHERE u.id = OLD.parent_id),
-          (SELECT concat(first_name, ' ', last_name)
-           FROM "user" u
-           WHERE u.id = NEW.parent_id),
+          (SELECT r.title
+           FROM request r
+           WHERE r.id = OLD.parent_id),
+          (SELECT r.title
+           FROM request r
+           WHERE r.id = NEW.parent_id),
           localtimestamp,
           (SELECT last_changer_id
            FROM request r

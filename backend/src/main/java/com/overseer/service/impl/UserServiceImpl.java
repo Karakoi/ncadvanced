@@ -106,6 +106,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         userDao.save(user);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public User findByEmail(String email) throws NoSuchEntityException {
         Assert.notNull(email, "email must not be null");
@@ -114,6 +117,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return user;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
@@ -122,6 +128,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return list;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findManagersByEmployee(Long employeeId) {
         val list = userDao.findManagersByEmployee(employeeId);
@@ -129,6 +138,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return list;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> findUsersByManager(Long managerId) {
         val list = userDao.findUsersByManager(managerId);
@@ -140,8 +152,8 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
      * {@inheritDoc}.
      */
     @Override
-    public List<User> findAllDeactivated(int pageNumber) {
-        val list = userDao.findAllDeactivated(this.DEFAULT_PAGE_SIZE, pageNumber);
+    public List<User> findAllDeactivated(int pageNumber, int size) {
+        val list = userDao.findAllDeactivated(size, pageNumber);
         log.debug("Fetched {} deactivated users for page number: {}", list.size(), pageNumber);
         return list;
     }
@@ -156,17 +168,28 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         userDao.activate(id);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public Long getCountAllDeactivated() {
         log.debug("Get count of all deactivated users");
         return userDao.getCountAllDeactivated();
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<User> searchUsers(UserSearchDTO searchDTO) {
         SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
 
         sqlQueryBuilder.where().notNull("u.role");
+
+        boolean isDeactivated = Boolean.parseBoolean(searchDTO.getIsDeactivated());
+        if (isDeactivated) {
+            sqlQueryBuilder.and().is("u.is_deactivated");
+        }
 
         String firstName = searchDTO.getFirstName();
         if (!firstName.isEmpty()) {
@@ -199,5 +222,13 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         String query = sqlQueryBuilder.build();
 
         return userDao.searchRequests(query);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findUserChatPartners(Long userId) {
+        return userDao.findUserChatPartners(userId);
     }
 }
