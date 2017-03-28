@@ -2,6 +2,7 @@ package com.overseer.dao.impl;
 
 import static com.overseer.util.ValidationUtil.validate;
 
+import com.overseer.dao.RoleDao;
 import com.overseer.dao.TopicDao;
 import com.overseer.model.Message;
 import com.overseer.model.Role;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
 
     @Autowired
-    private RoleDaoImpl roleDao;
+    private RoleDao roleDao;
 
     @Override
     public Topic findOne(Long id) {
