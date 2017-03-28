@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 /**
  * {@inheritDoc}.
  */
-@Service
+@Service("securityContextService")
 @RequiredArgsConstructor
 public class SecurityContextServiceImpl implements SecurityContextService {
     private final UserDao userDao;

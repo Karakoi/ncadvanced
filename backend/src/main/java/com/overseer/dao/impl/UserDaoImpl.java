@@ -101,6 +101,10 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
         return this.queryService().getQuery("user.findAll");
     }
 
+    protected String getUserChatFriendsQuery() {
+        return this.queryService().getQuery("user.findAllChatFriends");
+    }
+
     /**
      * Returns {@link RowMapper} implementation for {@link User} entity.
      *
@@ -134,6 +138,16 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
             }
             return user;
         };
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    public List<User> findUserChatPartners(Long userId) {
+        Assert.notNull(userId, "User can't be null");
+        return this.jdbc().query(this.queryService().getQuery("user.findAllChatFriends"),
+                new MapSqlParameterSource("userId", userId),
+                this.getMapper());
     }
 
     @Override
@@ -182,5 +196,20 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
     public void activate(Long id) {
         Assert.notNull(id, "id must not be null");
         this.jdbc().update(this.queryService().getQuery("user.activate"), new MapSqlParameterSource("id", id));
+    }
+
+    @Override
+    public Long getCountAllDeactivated() {
+        return this.jdbc().queryForObject(this.queryService().getQuery("user.deletedCount"), new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public List<User> searchRequests(String searchQuery) {
+        String query = this.queryService().getQuery("user.search").concat(searchQuery);
+        try {
+            return jdbc().query(query, this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 }

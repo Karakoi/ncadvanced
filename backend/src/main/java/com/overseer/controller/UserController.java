@@ -1,5 +1,6 @@
 package com.overseer.controller;
 
+import com.overseer.dto.UserSearchDTO;
 import com.overseer.model.User;
 import com.overseer.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -7,15 +8,7 @@ import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private static final Long DEFAULT_PAGE_SIZE = 20L;
 
     private final UserService userService;
 
@@ -98,8 +90,8 @@ public class UserController {
      */
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(@RequestParam int page) {
-        List<User> users = userService.fetchPage(page);
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam int page, @RequestParam int size) {
+        List<User> users = userService.fetchPage(page, size);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -110,8 +102,8 @@ public class UserController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/deactivated")
-    public ResponseEntity<List<User>> getAllDeactivatedUsers(@RequestParam int page) {
-        List<User> users = userService.findAllDeactivated(page);
+    public ResponseEntity<List<User>> getAllDeactivatedUsers(@RequestParam int page, @RequestParam int size) {
+        List<User> users = userService.findAllDeactivated(page, size);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -128,10 +120,17 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/pageDeactivatedUsersCount")
+    public ResponseEntity<Long> getPageDeactivatedUsersCount() {
+        long pageCount = userService.getCountAllDeactivated();
+        return new ResponseEntity<>(pageCount, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @GetMapping("/pageCount")
     public ResponseEntity<Long> getPageCount() {
-        long pageCount = userService.getCount() / DEFAULT_PAGE_SIZE + 1;
+        long pageCount = userService.getCount();
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
 
@@ -141,5 +140,30 @@ public class UserController {
     @Value
     private static final class RecoverInfo {
         private final String email;
+    }
+
+    /**
+     * Returns list of filtered users by specified search params in {@link UserSearchDTO} object.
+     *
+     * @param searchDTO search params dto object
+     * @return {@link User} list with http status 200 OK..
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchRequests(UserSearchDTO searchDTO) {
+        List<User> users = userService.searchUsers(searchDTO);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    /**
+     * Returns list of specified user chat partners.
+     * Partners - users users who sent a message or which user sent.
+     *
+     * @param userId specified user
+     * @return list of chat partners
+     */
+    @GetMapping("/findUserChatPartners")
+    public ResponseEntity<List<User>> findUserChatPartners(@RequestParam Long userId) {
+        List<User> users = userService.findUserChatPartners(userId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

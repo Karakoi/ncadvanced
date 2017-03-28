@@ -36,6 +36,7 @@ public class PriorityStatusDaoImplTest {
     public void setUp() throws Exception {
         savedPriorityStatus = new PriorityStatus();
         savedPriorityStatus.setName(TEST_NAME);
+        savedPriorityStatus.setValue(400);
         priorityStatusDao.save(savedPriorityStatus);
     }
 

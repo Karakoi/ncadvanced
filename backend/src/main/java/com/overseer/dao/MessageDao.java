@@ -34,4 +34,6 @@ public interface MessageDao extends CrudDao<Message, Long> {
      * @return number of deleted messages.
      */
     int deleteByTopicId(Long topicId);
+
+    List<Message> findDialogMessages(Long senderId, Long recipientId);
 }

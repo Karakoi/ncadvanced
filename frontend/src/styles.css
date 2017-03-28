@@ -59,12 +59,12 @@ h6 {
 #sidebar-wrapper {
     z-index: 1000;
     position: fixed;
-    left: 250px;
+    left: 270px;
     width: 0;
     height: 100%;
-    margin-left: -250px;
+    margin-left: -270px;
     overflow-y: auto;
-    background: #000;
+    background: #242121;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -79,6 +79,7 @@ h6 {
     width: 100%;
     position: absolute;
     padding: 15px;
+    margin-left: 15px;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -96,7 +97,7 @@ h6 {
     }
 
     #sidebar-wrapper {
-        width: 250px;
+        width: 270px;
     }
 
     #wrapper.toggled #sidebar-wrapper {

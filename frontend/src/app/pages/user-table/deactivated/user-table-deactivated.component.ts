@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {UserService} from "../../../service/user.service";
 import {User} from "../../../model/user.model";
 import {ActivateUserComponent} from "./user-activate/activate-user.component";
+import {UserSearchDTO} from "../../../model/dto/user-search-dto.model";
 declare var $: any;
 
 
@@ -11,11 +12,19 @@ declare var $: any;
   styleUrls: ['user-table-deactivated.component.css']
 })
 export class UserTableDeactivatedComponent implements OnInit {
+
+  private usersCount: number;
+  private perPage: number = 20;
+
   users: User[];
   pageNumber: number;
   orderType: boolean;
   orderField: string;
   searchTypes: any;
+  searchDTO : UserSearchDTO;
+  settings = {
+    ajax: false
+  };
 
   @ViewChild(ActivateUserComponent)
   activateUserComponent: ActivateUserComponent;
@@ -30,13 +39,23 @@ export class UserTableDeactivatedComponent implements OnInit {
       role: "",
       dateOfDeactivation: ""
     };
+    this.searchDTO = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+      dateOfDeactivation: "",
+      limit: 20,
+      isDeactivated: "true"
+    };
   }
 
   ngOnInit() {
-    this.userService.getAllDeactivated(1).subscribe((users: User[]) => {
+    this.userService.getAllDeactivated(1, this.perPage).subscribe((users: User[]) => {
       this.users = users;
+      console.log(users)
     });
-    this.userService.getPageCount().subscribe((count) => this.pageNumber = count);
+    this.userService.getDeactivatedUsersPageCount().subscribe((count) => this.pageNumber = count);
   }
 
   changeOrderParams(type, field) {
@@ -75,9 +94,56 @@ export class UserTableDeactivatedComponent implements OnInit {
     let page = data.target.text;
     $('.paginate_button').removeClass('active');
     $(data.target.parentElement).addClass('active');
-    this.userService.getAllDeactivated(page).subscribe((users: User[]) => {
+    this.userService.getAllDeactivated(page, this.perPage).subscribe((users: User[]) => {
       this.users = users;
     });
   }
 
+  curPage: number = 1;
+
+  changed(data) {
+    this.curPage = data.page;
+    this.userService.getAllDeactivated(data.page, this.perPage).subscribe(users => {
+      this.users = users;
+    })
+  }
+
+  changeSize(size) {
+    this.perPage = size;
+    this.userService.getAllDeactivated(this.curPage, this.perPage).subscribe((users: User[]) => {
+      this.users = users;
+    });
+  }
+
+  setTitleSearch(field, value) {
+    switch (field) {
+      case 'firstName':
+        this.searchDTO.firstName = value;
+        break;
+      case 'lastName':
+        this.searchDTO.lastName = value;
+        break;
+      case 'email':
+        this.searchDTO.email = value;
+        break;
+      case 'role':
+        this.searchDTO.role = value;
+        break;
+      case 'date':
+        this.searchDTO.dateOfDeactivation = value;
+        break;
+      case 'limit':
+        this.searchDTO.limit = value;
+        break;
+    }
+    this.getSearchData(this.searchDTO);
+    console.log(this.searchDTO)
+  }
+
+  getSearchData(searchDTO){
+    this.userService.searchAll(searchDTO).subscribe(users => {
+      console.log(users);
+      this.users = users;
+    })
+  }
 }

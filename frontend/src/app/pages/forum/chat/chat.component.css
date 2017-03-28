@@ -1,8 +1,4 @@
-img {
-  height: 36px;
-  width: 36px;
-  margin-right: 5px;
-}
+
 
 .user-info-box {
   height: 36px;
@@ -37,4 +33,29 @@ img {
 
 .user-msg {
   background-color: #337AB7;
+}
+
+.container{
+  width: auto;
+}
+
+#msg-container {
+  max-height: 500px;
+  overflow: auto;
+}
+
+.submit-box {
+  margin-top: 20px;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.glyphicon-plus-sign:before {
+  vertical-align: middle;
+}
+
+.search-result {
+  cursor: pointer;
 }

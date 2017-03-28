@@ -36,6 +36,7 @@ public class TopicDaoImplTest {
     /*@Before
     public void setUp() throws Exception {
         role = new Role("admin");
+        role.setId(10L);
         testTopic = new Topic("Some topic", role);
         testTopic = topicDao.save(testTopic);
         testTopicId = testTopic.getId();

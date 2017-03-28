@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild, Input, EventEmitter, Output} from "@angular/core";
 import {UserService} from "../../../service/user.service";
 import {AddUserComponent} from "./user-add/add-user.component";
 import {User} from "../../../model/user.model";
 import {DeleteUserComponent} from "./user-delete/delete-user.component";
+import {UserSearchDTO} from "../../../model/dto/user-search-dto.model";
 declare var $: any;
 
 
@@ -12,11 +13,19 @@ declare var $: any;
   styleUrls: ['user-table.component.css']
 })
 export class UserTableComponent implements OnInit {
+
+  private usersCount: number;
+  private perPage: number = 20;
+
   users: User[];
   pageNumber: number;
   orderType: boolean;
   orderField: string;
   searchTypes: any;
+  searchDTO : UserSearchDTO;
+  settings = {
+    ajax: true
+  };
 
   @ViewChild(AddUserComponent)
   addUserComponent: AddUserComponent;
@@ -33,13 +42,25 @@ export class UserTableComponent implements OnInit {
       email: "",
       role: ""
     };
+    this.searchDTO = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+      dateOfDeactivation: "",
+      limit: 20,
+      isDeactivated: "false"
+    };
   }
 
   ngOnInit() {
-    this.userService.getAll(1).subscribe((users: User[]) => {
+    this.userService.getAll(1, this.perPage).subscribe((users: User[]) => {
       this.users = users;
     });
-    this.userService.getPageCount().subscribe((count) => this.pageNumber = count);
+    this.userService.getPageCount().subscribe((count) => {
+      this.pageNumber = count;
+      console.log(count);
+    });
   }
 
   changeOrderParams(type, field) {
@@ -68,6 +89,11 @@ export class UserTableComponent implements OnInit {
     return items;
   }
 
+  perPageChange(data) {
+    this.perPage = data;
+    this.setTitleSearch('limit', data);
+  }
+
   get sorted(): User[] {
     return this.users
       .map(user => user)
@@ -82,9 +108,59 @@ export class UserTableComponent implements OnInit {
     let page = data.target.text;
     $('.paginate_button').removeClass('active');
     $(data.target.parentElement).addClass('active');
-    this.userService.getAll(page).subscribe((users: User[]) => {
+    this.userService.getAll(page, this.perPage).subscribe((users: User[]) => {
       this.users = users;
     });
   }
 
+  curPage: number = 1;
+
+  changeSize(size) {
+    this.perPage = size;
+    this.searchDTO.limit = size;
+    if (this.searchDTO.firstName != "" || this.searchDTO.lastName != "" || this.searchDTO.email != "" || this.searchDTO.role != "") {
+      this.setTitleSearch('limit', size)
+    } else {
+      this.userService.getAll(this.curPage, this.perPage).subscribe(users => {
+        this.users = users;
+      })
+    }
+  }
+
+  changed(data) {
+    this.curPage = data.page;
+    this.userService.getAll(data.page, this.perPage).subscribe(users => {
+      this.users = users;
+    })
+  }
+
+  setTitleSearch(field, value) {
+
+    switch (field) {
+      case 'firstName':
+        this.searchDTO.firstName = value;
+        break;
+      case 'lastName':
+        this.searchDTO.lastName = value;
+        break;
+      case 'email':
+        this.searchDTO.email = value;
+        break;
+      case 'role':
+        this.searchDTO.role = value;
+        break;
+      case 'limit':
+        this.searchDTO.limit = value;
+        break;
+    }
+    this.getSearchData(this.searchDTO);
+    console.log(this.searchDTO)
+  }
+
+  getSearchData(searchDTO){
+    this.userService.searchAll(searchDTO).subscribe(users => {
+     console.log(users);
+     this.users = users;
+     })
+  }
 }

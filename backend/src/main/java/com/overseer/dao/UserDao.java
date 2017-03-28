@@ -56,4 +56,28 @@ public interface UserDao extends CrudDao<User, Long> {
      * @param id user's id, must not be {@literal null}.
      */
     void activate(Long id);
+
+    /**
+     * Returns a amount of {@link User} entities who's deactivated.
+     *
+     * @return a count of {@link User} entities.
+     */
+    Long getCountAllDeactivated();
+
+    /**
+     * Returns list of filtered users by specified search query.
+     *
+     * @param searchQuery search params sql query
+     * @return list of filtered requests
+     */
+    List<User> searchRequests(String searchQuery);
+
+    /**
+     * Returns list of specified user chat partners.
+     * Partners - users users who sent a message or which user sent.
+     *
+     * @param userId specified user
+     * @return list of chat partners
+     */
+    List<User> findUserChatPartners(Long userId);
 }

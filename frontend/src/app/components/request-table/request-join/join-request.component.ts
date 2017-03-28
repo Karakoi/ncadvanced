@@ -8,7 +8,6 @@ import {RequestService} from "../../../service/request.service";
 import {AuthService} from "../../../service/auth.service";
 import {User} from "../../../model/user.model";
 
-//TODO Implement new joining request mechanism
 
 @Component({
   selector: 'join-request',
@@ -64,7 +63,7 @@ export class JoinRequestComponent implements OnInit {
       this.request.lastChanger = user;
       this.request.title = params.title;
       this.request.description = params.description;
-      this.request.estimateTimeInDays = params.estimateTimeInDays;
+      this.request.estimateTimeInDays = params.estimateTimeInDays || 3;
       this.requests = this.requests.filter(item => this.checked.indexOf(item["id"]) < 0);
       this.requestService.join(this.request, this.checked).subscribe((request) => {
         this.toastr.success("Requests was joined successfully", "Success!");

@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.dto.UserSearchDTO;
 import com.overseer.model.Role;
 import com.overseer.model.User;
 
@@ -53,7 +54,7 @@ public interface UserService extends CrudService<User, Long> {
      * @param pageNumber number of page.
      * @return a list of {@link User} entities.
      */
-    List<User> findAllDeactivated(int pageNumber);
+    List<User> findAllDeactivated(int pageNumber, int size);
 
     /**
      * Activates {@link User} entity with given id.
@@ -62,4 +63,27 @@ public interface UserService extends CrudService<User, Long> {
      */
     void activate(Long id);
 
+    /**
+     * Returns a amount of {@link User} entities who's deactivated.
+     *
+     * @return a count of {@link User} entities.
+     */
+    Long getCountAllDeactivated();
+
+    /**
+     * Returns list of filtered users by specified search params in {@link UserSearchDTO} object.
+     *
+     * @param searchDTO search params dto object
+     * @return {@link User} list with http status 200 OK..
+     */
+    List<User> searchUsers(UserSearchDTO searchDTO);
+
+    /**
+     * Returns list of specified user chat partners.
+     * Partners - users users who sent a message or which user sent.
+     *
+     * @param userId specified user
+     * @return list of chat partners
+     */
+    List<User> findUserChatPartners(Long userId);
 }

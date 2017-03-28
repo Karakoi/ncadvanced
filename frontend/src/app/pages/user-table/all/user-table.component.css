@@ -57,3 +57,11 @@ th:hover {
 .nav-tabs > li > a {
   font-weight: bold;
 }
+
+.container{
+  width: auto;
+}
+
+.panel-body,.panel,.panel-default{
+  min-width: 659px;
+}

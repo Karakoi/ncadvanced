@@ -1,9 +1,10 @@
 package com.overseer.service;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
+import com.overseer.dto.RequestDTO;
+import org.springframework.web.servlet.View;
 
-import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Email service, which process messages and send it.
@@ -12,33 +13,42 @@ public interface ReportService {
 
     /**
      * Method generate PDF report for user role Admin.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return admin reports documents.
      */
-    Document generateAdminPDFReport() throws IOException, DocumentException;
+    View generateAdminPDFReport(LocalDate start, LocalDate end);
 
     /**
-     * Method generate PDF report for user role Office Manager.
+     * The method receives all the created requests for a period of months.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return list of requests transfer objects.
      */
-    Document generateManagerPDFReport() throws IOException, DocumentException;
+    List<RequestDTO> getAllStatisticsOfCreatedRequestsByPeriod(LocalDate start, LocalDate end);
 
     /**
-     * Method generate PDF report for user role Employee.
+     * The method receives all the closed requests for a period of months.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return list of requests transfer objects.
      */
-    Document generateEmployeePDFReport() throws IOException, DocumentException;
+    List<RequestDTO> getAllStatisticsOfClosedRequestsByPeriod(LocalDate start, LocalDate end);
 
     /**
-     * Method generate excel report for user role Admin.
+     * The method receives all manager's closed requests for a period of months.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @return list of requests transfer objects.
      */
-    void generateAdminExcelReport();
+    List<RequestDTO> getManagerStatisticsOfClosedRequestsByPeriod(LocalDate start, LocalDate end, int id);
 
     /**
-     * Method generate excel report for user role Office Manager.
+     * Method generate PDF for request.
      */
-    void generateManagerExcelReport();
-
-    /**
-     * Method generate excel report for user role Employee.
-     */
-    void generateEmployeeExcelReport();
-
-
+    View generateRequestPDFReport(Long requestId);
 }

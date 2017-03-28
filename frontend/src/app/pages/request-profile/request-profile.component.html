@@ -6,6 +6,7 @@
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
                        size="40"
+                       [disabled]="isFree(request) && isEmployee()"
         >
         </inline-editor>
       </p>
@@ -66,6 +67,20 @@
             </tr>
             </tbody>
           </table>
+          <p><b>Export:</b></p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> PDF:</td>
+              <td>
+                <a href="/api/reports/request?id={{request.id}}" class="btn btn-danger">
+                  <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+                  <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <!-- DESCRIPTION -->
@@ -84,6 +99,7 @@
                 <inline-editor type="textarea"
                                [(ngModel)]="request.description"
                                (onSave)="updateRequest($event)"
+                               [disabled]="isFree(request) && isEmployee()"
                                cols="100"
                                rows="3">
                 </inline-editor>
@@ -103,7 +119,7 @@
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false && subRequests != false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <button *ngIf="showSubRequests && type == 'Request'" class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
+          <button *ngIf="showSubRequests && type == 'Request' && isInProgress(request)" class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
           <p class="no-content-msg">
             <i *ngIf="subRequests == false">There are no sub requests at that moment.</i>
           </p>
@@ -192,14 +208,11 @@
             <tr *ngFor="let history of historyRecords">
               <td *ngIf="showHistory">
                 <span>
-                  Field <span class="bold-text">"{{history.columnName}}"</span>
-                  was changed from <span class="bold-text">"{{showHistoryValue(history.oldValue, history.demonstrationOfOldValue)}}"</span>
-                  to <span class="bold-text">"{{showHistoryValue(history.newValue, history.demonstrationOfNewValue)}}"</span>
-
+                  {{showHistoryMessage(history)}}
                   by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
                 </span>
               </td>
-              <td>
+              <td *ngIf="showHistory">
                 <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
               </td>
             </tr>

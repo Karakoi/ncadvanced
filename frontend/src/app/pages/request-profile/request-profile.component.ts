@@ -27,6 +27,7 @@ export class RequestProfileComponent implements OnInit {
   historyRecords: History[];
   subRequests: Request[];
   joinedRequests: Request[];
+  role: string = 'employee';
 
   @ViewChild(DeleteSubRequestComponent)
   deleteSubRequestComponent: DeleteSubRequestComponent;
@@ -42,6 +43,11 @@ export class RequestProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe((user: User) => {
+      this.currentUser = user;
+      this.role = user.role.name;
+    });
+
     this.route.params.subscribe(params => {
       let id = +params['id'];
 
@@ -66,12 +72,53 @@ export class RequestProfileComponent implements OnInit {
         /*console.log(joinedRequests)*/
       });
     });
-    this.authService.currentUser.subscribe((user: User) => {
-      this.currentUser = user;
-    });
   }
 
-  showHistoryValue(generalValue: string, demonstrationValue: string){
+
+  showHistoryMessage(history: History): string{
+    let text: string;
+    switch (history.columnName){
+
+      case "title":
+        text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
+        break;
+      case "estimate_time_in_date":
+        text = "Estimate time (in day) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
+        break;
+
+      case "description":
+        text = "Description was changed from \"" +
+          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
+        break;
+      case "priority_status_id":
+        text = "Priority was changed from \"" +
+          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
+        break;
+      case "progress_status_id":
+        text = "Progress status was changed from \"" +
+          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
+        break;
+
+      case "assignee_id":
+        text = "This request was assigned";
+        break;
+
+      case "parent_id":
+        if(history.newValue == null){
+          text = "This request was unjoined from \"" + history.demonstrationOfOldValue + "\" request";
+        } else {
+          text = "This request was joined in \"" + history.demonstrationOfNewValue + "\" request";
+        }
+        break;
+
+      default:
+        text = "Some changes";
+    }
+
+    return text;
+  }
+
+  /*showHistoryValue(generalValue: string, demonstrationValue: string){
     if(demonstrationValue != null){
       return demonstrationValue;
     } else {
@@ -81,7 +128,7 @@ export class RequestProfileComponent implements OnInit {
         return "empty value";
       }
     }
-  }
+  }*/
 
   openAddSubRequestModal(): void {
     this.addSubRequestComponent.modal.open();
@@ -132,5 +179,26 @@ export class RequestProfileComponent implements OnInit {
     } else {
       return "Request"
     }
+  }
+
+  isFree(request):boolean {
+    if (request.progressStatus.name == 'Free') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  isInProgress(request):boolean {
+    if (request.progressStatus.name == 'In progress') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isEmployee(): boolean {
+    console.log(this.role)
+    return this.role === 'employee'
   }
 }

@@ -82,8 +82,8 @@ public abstract class CrudServiceImpl<T extends AbstractEntity> implements CrudS
     }
 
     @Override
-    public List<T> fetchPage(int pageNumber) {
-        val list = this.crudDao.fetchPage(DEFAULT_PAGE_SIZE, pageNumber);
+    public List<T> fetchPage(int pageNumber, int size) {
+        val list = this.crudDao.fetchPage(size, pageNumber);
         log.debug("Fetched {} entities for page number: {}", list.size(), pageNumber);
         return list;
     }

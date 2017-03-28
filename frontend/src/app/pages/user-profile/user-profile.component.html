@@ -43,6 +43,13 @@
           </table>
         </div>
       </div>
+      <div *ngIf="hasSixMonthsRec">
+        <input type="number" value="{{setPeriod}}" [(ngModel)]="setPeriod" placeholder="months">
+        <button class="btn btn-primary" (click)="setStatisticByPeriod(setPeriod)">Set period in months</button>
+      </div>
+      <h5 align="center" *ngIf="hasAnyRequest">User hasn't had any request yet.</h5>
+      <google-chart *ngIf="hasSixMonthsRec" [data]="pieChartRequestForOpenClosed"></google-chart>
+      <google-chart *ngIf="hasRequest" [data]="pieChartRequest" ></google-chart>
     </div>
   </div>
 </div>

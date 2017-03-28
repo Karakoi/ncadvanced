@@ -19,6 +19,7 @@ export class ManagerComponent {
   checked: number[] = [];
   pageCount: number;
   myPageCount: number;
+  pageSize: number = 20;
 
   constructor(private requestService: RequestService,
               private authService: AuthService) {
@@ -35,11 +36,20 @@ export class ManagerComponent {
     this.requestService.getAllByAssignee(this.user.id, page).subscribe((requests: Request[]) => {
       this.myRequests = requests;
     });
-    this.requestService.getRequestCountByAssignee(this.user.id).subscribe((count) => {this.myPageCount = count; console.log(count)});
+    this.requestService.getRequestCountByAssignee(this.user.id).subscribe((count) => {
+      this.myPageCount = count;
+    });
   }
 
   pageChange(data){
-    this.requestService.getFree(data.page).subscribe(requests => {
+    this.requestService.getFree(data.page, this.pageSize).subscribe(requests => {
+      this.requests = requests;
+    })
+  }
+
+  perChangeLoad(pageData) {
+    this.pageSize = pageData.size;
+    this.requestService.getFree(pageData.page, pageData.size).subscribe(requests => {
       this.requests = requests;
     })
   }
@@ -52,6 +62,7 @@ export class ManagerComponent {
     filterRow: true,
     join: true,
     assign: true,
+    close: false,
     columns: {
       title: true,
       estimate: false,
@@ -61,7 +72,7 @@ export class ManagerComponent {
       reporter: true,
       assignee: false,
     }
-  }
+  };
 
   mySettings = {
     delete: false,
@@ -70,6 +81,7 @@ export class ManagerComponent {
     multiSelect: false,
     filterRow: true,
     assign: false,
+    close: false,
     columns: {
       title: true,
       estimate: true,
@@ -79,15 +91,14 @@ export class ManagerComponent {
       reporter: true,
       assignee: false,
     }
-  }
+  };
 
   select(data) {
     this.selected = Array.from(data);
-    console.log(this.selected)
   }
 
   private fetchFreeRequests(page: number) {
-    this.requestService.getFree(page).subscribe((requests: Request[]) => {
+    this.requestService.getFree(page, this.pageSize).subscribe((requests: Request[]) => {
       this.requests = requests;
     });
     this.requestService.getPageCountFree().subscribe((count) => this.pageCount = count);

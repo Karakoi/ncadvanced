@@ -1,12 +1,42 @@
-
-<div class="container">
+<div class="container" style="background-color: #ffffff">
   <div class="header-content">
-    <h1 align="center">Request Info</h1>
-    <google-chart [data]="pieChartRequest"></google-chart>
-  </div>
+    <h1 align="center"></h1>
 
-  <br>
-  <div>
-  <!--<ng2-smart-table [settings]="settings" [source]="testTable"></ng2-smart-table> -->
+    <div class="row">
+      <div class="col-md-15">
+        <div class="col-md-6 col-lg-3">
+          <h4 style="color: indigo">Total users: {{totalUsers}}</h4>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <h4 style="color: indigo">Total requests: {{totalRequests}}</h4>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <h4 style="color: indigo">Requests today: {{requestToday}}</h4>
+        </div>
+        <div class="col-md-6 col-lg-3">
+        <h4 style="color: indigo">Running today: {{runningToday}}</h4>
+      </div>
+      </div>
+    </div>
+
+    <div>
+      <input type="number" value="{{selectPeriod}}" [(ngModel)]="selectPeriod" placeholder="months">
+      <button class="btn btn-primary" (click)="setStatisticByDropdown(selectPeriod)">Set period in months</button>
+    </div>
+
+    <div class="row">
+      <google-chart [data]="pieChartRequestForSixMonths"></google-chart>
+    </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="col-md-12 col-lg-6">
+        <google-chart [data]="pieChartRequestPriority"></google-chart>
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <google-chart [data]="pieChartRequest"></google-chart>
+      </div>
+    </div>
   </div>
 </div>

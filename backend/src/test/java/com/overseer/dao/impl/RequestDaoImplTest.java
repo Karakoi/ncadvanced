@@ -40,7 +40,7 @@ public class RequestDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-        requestsGroupIds = Arrays.asList(113L, 114L, 115L);
+        requestsGroupIds = Arrays.asList(114L, 115L, 116L);
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
-var bar_chart_component_1 = require("./bar-chart.component");
+var bar_chart_component_1 = require("./bar-chart.component.ts");
 var BarChartModule = (function () {
     function BarChartModule() {
     }

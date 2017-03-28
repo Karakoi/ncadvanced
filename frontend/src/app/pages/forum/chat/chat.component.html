@@ -7,34 +7,66 @@
       </div>
       <div class="template-body">
         <div class="col-lg-9">
-          <div class="msg" *ngFor="let message of messages">
-            <div class="user-info-box">
-              <img class="topic-user-logo"
-                   src="{{message.author.img}}"
-                   alt="topic-user-logo">
-              <b><a href="">{{message.author.firstName}}</a><span class="msg-time-info"> {{message.time}}</span></b>
-            </div>
-            <span class="msg-box {{message.type}}">
+          <div id="msg-container">
+            <div class="msg" *ngFor="let message of messages">
+              <div class="user-info-box">
+                <gravatar [email]="message.sender.email" [size]="30" [center]="false"></gravatar>
+                <b><a href="">{{message.sender.firstName}}</a><span class="msg-time-info"> <time-parse
+                  [date]="message.dateAndTime"></time-parse></span></b>
+              </div>
+              <span *ngIf="message.sender.id == currentUser.id" class="msg-box user-msg">
               {{message.text}}
             </span>
+              <span *ngIf="message.sender.id != currentUser.id" class="msg-box friend-msg">
+              {{message.text}}
+            </span>
+            </div>
+          </div>
+          <div class="text-center" *ngIf="!chatFriend">
+            <br>
+            <h3>Welcome to Overseer chat!</h3>
+            <h4> Select your conversation partner to start messaging or find and add new!</h4>
+            <img src="http://www.clipartbest.com/cliparts/4cb/MMa/4cbMMa6Xi.png" alt="">
+          </div>
+          <div *ngIf="chatFriend && (!messages || messages.length == 0)">
+            Start a conversation by writing to {{chatFriend.firstName}} something!
+          </div>
+          <div class="submit-box" *ngIf="chatFriend">
+            <form [formGroup]="messageForm" (ngSubmit)="createNewMessage(messageForm.value)"
+                  [ngClass]="{'has-error': !validate('text')}">
+              <div class="form-group col-lg-12 no-padding">
+                <textarea class="form-control" rows="3" formControlName="text" placeholder="Message text.."></textarea>
+                <div *ngIf="!validate('text')" class="help-block text-left">
+                  <span *ngIf="messageForm.get('text')">Message length should be between 2 and 500 characters.</span>
+                </div>
+              </div>
+              <div class="form-group col-lg-12 no-padding submit-form-group">
+                <button type="submit" class="btn btn-primary pull-right" [disabled]="messageForm.invalid">Send message
+                </button>
+              </div>
+            </form>
           </div>
         </div>
         <div class="col-lg-3">
+          <div class="input-group">
+            <input type="text" [ngModel]="searchDTO.firstName" (ngModelChange)="setTitleSearch($event)"
+                   class="form-control" placeholder="Search by last name..."/>
+            <span class="input-group-btn">
+            <button class="btn btn-default" (click)="clear()" type="button"><span class="glyphicon glyphicon-trash"></span></button>
+          </span>
+          </div>
           <div class="list-group">
-            <a href="#" class="list-group-item active">Bogdan Bachkala</a>
-            <a href="#" class="list-group-item">Dasha Romanova</a>
-            <a href="#" class="list-group-item">Andrey Karakoy</a>
-            <a href="#" class="list-group-item">Viacheslav Rurenko</a>
+            <a *ngFor="let user of findedUsers" class="list-group-item">
+              <span class="search-result" (click)="updateFindedUsersArray(user)">{{user.firstName}} {{user.lastName}} <span  class="glyphicon glyphicon-plus-sign pull-right"></span></span>
+            </a>
+          </div>
+          <div class="list-group">
+            <span class="list-group-item active">Friends list:</span>
+            <a *ngFor="let user of chatFriends" class="list-group-item">
+              <span class="search-result" (click)="loadUserMessages(user)">{{user.firstName}} {{user.lastName}}</span>
+            </a>
           </div>
         </div>
-        <form action="">
-          <div class="form-group col-lg-12">
-            <textarea class="form-control" rows="3" placeholder="Message text.."></textarea>
-          </div>
-          <div class="form-group col-lg-12 submit-form-group">
-            <button type="submit" class="btn btn-primary pull-right">Send message</button>
-          </div>
-        </form>
       </div>
     </form-template>
 

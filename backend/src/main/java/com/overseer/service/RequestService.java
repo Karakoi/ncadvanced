@@ -1,5 +1,8 @@
 package com.overseer.service;
 
+import com.overseer.dto.DeadlineDTO;
+import com.overseer.dto.RequestDTO;
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
@@ -19,16 +22,24 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param reporterId id of the reporter, must not be {@literal null}.
      * @return list of closed requests which have provided {@link User} as reporter.
      */
-    List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber);
+    List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber, int size);
 
     /**
      * Returns number of closed requests for reporter.
+     *
      * @param reporterId reporter id must be not null.
      * @return number of requests for reporter.
      */
     Long countClosedRequestsByReporter(Long reporterId);
 
     Long countRequestByReporter(Long reporterId);
+
+
+    Long countRequestByAssignee(Long managerId);
+
+    Long countClosedRequestByAssignee(Long managerId);
+
+    Long countInProgressRequestByAssignee(Long managerId);
     /**
      * Returns a list of sub requests for the given request {@link Request}.
      *
@@ -54,12 +65,28 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findRequestsByAssignee(Long assigneeId, int pageNumber);
 
     /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId requests assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int size, int pageNumber);
+
+    /**
+     * Returns a list of requests which have provided {@link User} as assignee.
+     *
+     * @param assigneeId requests assignee, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee.
+     */
+    List<Request> findClosedRequestsByAssignee(Long assigneeId, int size, int pageNumber);
+
+    /**
      * Returns a list of requests which have provided {@link User} as reporter.
      *
      * @param reporterId requests reporterId, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    List<Request> findRequestsByReporter(Long reporterId, int pageNumber);
+    List<Request> findRequestsByReporter(Long reporterId, int pageNumber, int size);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -67,9 +94,9 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param reporter requests reporter, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as reporter.
      */
-    default List<Request> findRequestsByReporter(User reporter, int pageNumber) {
+    default List<Request> findRequestsByReporter(User reporter, int pageNumber, int size) {
         Assert.notNull(reporter);
-        return findRequestsByReporter(reporter.getId(), pageNumber);
+        return findRequestsByReporter(reporter.getId(), pageNumber, size);
     }
 
     /**
@@ -98,13 +125,55 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> findRequestsByPeriod(LocalDate start, LocalDate end, int pageNumber);
 
     /**
-     * Returns a count of requests created in provided period.
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a request DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return request DTO created in provided period.
+     */
+    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a list of requests DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @return list of requests DTO created in provided period.
+     */
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+
+    /**
+     * Returns a list of requests DTO created in provided period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusName progress status name.
+     * @param id                 manager id.
+     * @return list of requests DTO created in provided period.
+     */
+    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+
+    /**
+     * Returns a list of best managers in provided period.
      *
      * @param start period start.
      * @param end   period end.
-     * @return count of requests created in provided period.
+     * @return list of best managers in provided period.
      */
-    Long findCountsRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName);
 
     /**
      * Returns a list of requests created in provided date.
@@ -129,7 +198,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * Sub request will have null {@link Request#progressStatus}, {@link Request#priorityStatus}
      * and not null {@link Request#parentId}
      *
-     * @param subRequest    specified sub request
+     * @param subRequest specified sub request
      * @return joined sub request
      */
     Request saveSubRequest(Request subRequest);
@@ -167,6 +236,7 @@ public interface RequestService extends CrudService<Request, Long> {
 
     /**
      * Save plain request from employee.
+     *
      * @param request specified  request.
      * @return saved request
      */
@@ -192,12 +262,53 @@ public interface RequestService extends CrudService<Request, Long> {
      *
      * @return list of requests with Free progress status {@link ProgressStatus}.
      */
-    List<Request> findFreeRequests(int pageNumber);
+    List<Request> findFreeRequests(int pageNumber, int size);
 
     /**
-     * Returns list to build pie chart.
+     * Returns list of filtered requests by specified searchRequests params in {@link RequestSearchDTO} object.
      *
-     * @return list of statistic request.
+     * @param searchDTO searchRequests params dto object
+     * @return filtered requests list
      */
-    List<Long> quantity();
+    List<Request> searchRequests(RequestSearchDTO searchDTO);
+
+    /**
+     * @return list of statistic request by progress status for user.
+     */
+    List<Long> quantityByProgressStatusForUser(Long userId);
+
+    /**
+     * @return list of closed and open requests for bar chart on user page.
+     */
+    List<Long> quantityOpenClosedRequestForUser(Long userId, Long howLong);
+
+    /**
+     * @return number of total Users.
+     */
+    Long countTotalUsers();
+
+    /**
+     * @return number of total requests.
+     */
+    Long countTotalRequests();
+
+    /**
+     * @return number of today's requests.
+     */
+    Long countRequestsCreatedToday();
+
+    /**
+     * @return number of today's requests that were chanced progress status from free to anyone except to closed and free.
+     */
+    Long getRunningRequestToday();
+
+    /**
+     * @return list of statistic for admin dashboard.
+     */
+    List<Long> countStatisticForAdminDashBoard(Long howLong);
+
+    /**
+     * @return list of manager deadlines information entities.
+     */
+    List<DeadlineDTO> getManagerDeadlines(Long managerID);
 }
