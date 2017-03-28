@@ -9,6 +9,7 @@ import {Md5} from 'ts-md5/dist/md5';
 export class GravatarComponent implements OnInit{
   @Input('email') email: string = "";
   @Input('size') size: number = 50;
+  @Input('center') center: boolean = true;
 
   constructor() {}
   ngOnInit() {}
