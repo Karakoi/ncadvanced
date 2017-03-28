@@ -153,4 +153,10 @@ public class UserController {
         List<User> users = userService.searchUsers(searchDTO);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @GetMapping("/findUserChatFriends")
+    public ResponseEntity<List<User>> findUserChatFriends(@RequestParam Long userId) {
+        List<User> users = userService.findUserChatFriends(userId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }

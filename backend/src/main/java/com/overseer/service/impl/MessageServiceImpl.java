@@ -44,4 +44,11 @@ public class MessageServiceImpl extends CrudServiceImpl<Message> implements Mess
         log.debug("Fetched messages for topic with id: {}", topicId);
         return list;
     }
+
+    @Override
+    public List<Message> findDialogMessages(Long senderId, Long recipientId) {
+        val list = messageDao.findDialogMessages(senderId, recipientId);
+        log.debug("Fetched messages for dialog for sender with id {} and recipient with id {}", senderId, recipientId);
+        return list;
+    }
 }

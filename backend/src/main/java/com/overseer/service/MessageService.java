@@ -15,4 +15,6 @@ public interface MessageService extends CrudService<Message, Long> {
     Long getCountByRecipient(Long recipientId);
 
     List<Message> findByTopic(Long topicId);
+
+    List<Message> findDialogMessages(Long senderId, Long recipientId);
 }

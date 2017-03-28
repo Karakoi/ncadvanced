@@ -205,4 +205,10 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
         return userDao.searchRequests(query);
     }
+
+    @Override
+    public List<User> findUserChatFriends(Long userId) {
+        val list = userDao.findUserChatFriends(userId);
+        return list;
+    }
 }

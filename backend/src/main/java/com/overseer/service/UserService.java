@@ -77,4 +77,6 @@ public interface UserService extends CrudService<User, Long> {
      * @return {@link User} list with http status 200 OK..
      */
     List<User> searchUsers(UserSearchDTO searchDTO);
+
+    List<User> findUserChatFriends(Long userId);
 }
