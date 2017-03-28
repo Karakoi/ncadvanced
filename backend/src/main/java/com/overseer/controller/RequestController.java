@@ -320,10 +320,24 @@ public class RequestController {
      * @param userId value of User id in database.
      * @return list of progress for User.
      */
-    @GetMapping("/countRequestForUser")
+    @GetMapping("/getStatisticByProgressStatusForUser")
     public ResponseEntity<List<Long>> getQuantityForUser(@RequestParam Long userId) {
-        final List<Long> quantityUser = requestService.quantityForUser(userId);
+        final List<Long> quantityUser = requestService.quantityByProgressStatusForUser(userId);
         return new ResponseEntity<>(quantityUser, HttpStatus.OK);
+    }
+
+    /**
+     * Returns list for bar chart in admin page.
+     *
+     * @param userId value of User id in database.
+     * @param howLong means for which period we need statistic in months.
+     * @return list of open and closed requests for User.
+     */
+    @GetMapping("/getOpenClosedRequestForUser")
+    public ResponseEntity<List<Long>> getOpenClosedRequestForUser(@RequestParam Long userId,
+                                                                  @RequestParam Long howLong) {
+        final List<Long> openClosedRequestForUser = requestService.quantityOpenClosedRequestForUser(userId, howLong);
+        return new ResponseEntity<>(openClosedRequestForUser, HttpStatus.OK);
     }
 
     /**
@@ -342,18 +356,6 @@ public class RequestController {
                                                                @RequestParam int pageNumber) {
         val list = this.requestService.findRequestsByAssignee(assigneeId, pageNumber);
         return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-    /**
-     * Returns statistic for six months for User.
-     *
-     * @param userId value of User id in database.
-     * @return list of statistic for six months.
-     */
-    @GetMapping("getStatisticForSixMonthsByProgressStatusForUser")
-    public ResponseEntity<List<Long>> getStatisticForSixMonthsForUser(@RequestParam Long userId) {
-        List<Long> statisticListForUser = requestService.quantityByProgressStatusForSixMonthsForUser(userId);
-        return new ResponseEntity<>(statisticListForUser, HttpStatus.OK);
     }
 
     /**

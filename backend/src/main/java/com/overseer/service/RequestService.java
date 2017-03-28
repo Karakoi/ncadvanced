@@ -273,16 +273,14 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> searchRequests(RequestSearchDTO searchDTO);
 
     /**
-     * Returns list to build pie chart for user profile.
-     *
-     * @return list of statistic request for user profile.
-     */
-    List<Long> quantityForUser(Long userId);
-
-    /**
      * @return list of statistic request by progress status for user.
      */
-    List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId);
+    List<Long> quantityByProgressStatusForUser(Long userId);
+
+    /**
+     * @return list of closed and open requests for bar chart on user page.
+     */
+    List<Long> quantityOpenClosedRequestForUser(Long userId, Long howLong);
 
     /**
      * @return number of total Users.
@@ -308,6 +306,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return list of statistic for admin dashboard.
      */
     List<Long> countStatisticForAdminDashBoard(Long howLong);
+
     /**
      * @return list of manager deadlines information entities.
      */

@@ -435,14 +435,22 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId) {
-        String quantityQuery = queryService().getQuery("request.countStatisticForSixMonthsForUser");
+    public List<Long> countOpenClosedRequestForUser(Long userId, Long howLong) {
+        LocalDate localDate = LocalDate.now().minusMonths(howLong);
+        if (VALUE_TO_GET_STATISTIC_FOR_ALL_TIME.equals(howLong)) {
+            localDate = LocalDate.of(START_PROJECT_YEARS, START_PROJECT_MONTHS, START_PROJECT_DAY);
+        }
+        String quantityQuery = queryService().getQuery("request.countStatisticForForUser");
         List<Long> userStatistic = new LinkedList<>();
-        userStatistic.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("userId", userId), Long.class));
-        MapSqlParameterSource source = new MapSqlParameterSource();
+        val parameterSource = new MapSqlParameterSource("userId", userId);
+        parameterSource.addValue("howLong", localDate);
+        parameterSource.addValue("userId", userId);
+        userStatistic.add(jdbc().queryForObject(quantityQuery, parameterSource, Long.class));
+        val source = new MapSqlParameterSource();
+        source.addValue("howLong", localDate);
         source.addValue("progress", CLOSED);
         source.addValue("userId", userId);
-        String quantityQueryClosed = queryService().getQuery("request.countStatisticForSixMonthsForUserClosed");
+        String quantityQueryClosed = queryService().getQuery("request.countStatisticForUserClosed");
         userStatistic.add(jdbc().queryForObject(quantityQueryClosed, source, Long.class));
         return userStatistic;
     }
@@ -474,10 +482,9 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     @Override
     public List<Long> statisticForAdminDashBoard(Long howLong) {
         LocalDate localDate = LocalDate.now().minusMonths(howLong);
-        if (howLong.equals(VALUE_TO_GET_STATISTIC_FOR_ALL_TIME)) {
+        if (VALUE_TO_GET_STATISTIC_FOR_ALL_TIME.equals(howLong)) {
             localDate = LocalDate.of(START_PROJECT_YEARS, START_PROJECT_MONTHS, START_PROJECT_DAY);
         }
-        System.out.println(localDate);
         String queryProgress = queryService().getQuery("request.countStatisticForAdminDashBoardByProgressStatus");
         List<Long> adminStatisticList = new LinkedList<>();
         val parameterSourceForFree = new MapSqlParameterSource();

@@ -124,10 +124,6 @@ export class RequestService {
       });
   }
 
-  // getQuantityRequest(): Observable<number[]> {
-  //   return this.authHttp.get(`${url}/countRequestByProgressStatus`).map(resp => resp.json());
-  // }
-
   getFree(page: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/fetchFree?page=` + page)
       .map(resp => resp.json())
@@ -227,21 +223,19 @@ export class RequestService {
       });
   }
 
-  getQuantityForUser(userId: number): Observable<number[]> {
-    return this.authHttp.get(`${url}/countRequestForUser?userId=` + userId).map(resp => resp.json())
+  getQuantityForUserByProgressStatus(userId: number): Observable<number[]> {
+      return this.authHttp.get(`${url}/getStatisticByProgressStatusForUser?userId=` + userId).map(resp => resp.json())
   }
 
   getStatisticForAdminDashBoard(howLong: number): Observable<number[]> {
     return this.authHttp.get(`${url}/getStatisticForAdminDashBoard?howLong=` + howLong).map(resp => resp.json());
   }
 
-  getStatisticForSixMonthsForUser(userId: number): Observable<number[]> {
-    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatusForUser?userId=` + userId).map(resp => resp.json());
-  }
+  getOpenClosedRequestForUser(userId: number, howLong: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/getOpenClosedRequestForUser?userId=` + userId + `&howLong=` + howLong)
+      .map(resp => resp.json());
 
-  // getQuantityRequestByPriority(): Observable<number[]> {
-  //   return this.authHttp.get(`${url}/countRequestByPriorityStatus`).map(resp => resp.json());
-  // }
+  }
 
   getSubRequests(id: number): Observable<Request[]> {
     return this.authHttp.get(`${url}/getSubRequests/${id}`)
@@ -264,7 +258,7 @@ export class RequestService {
   getDeadlines(id:number):Observable<DeadlineDTO[]> {
     return this.authHttp.get(`${url}/getDeadlines?managerID=` + id)
       .map(resp => resp.json())
-      .catch((error:any) => { 
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });

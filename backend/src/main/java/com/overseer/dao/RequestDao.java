@@ -334,7 +334,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * @return list of statistic for six months by progress status for user.
      */
-    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
+    List<Long> countOpenClosedRequestForUser(Long userId, Long howLong);
 
     /**
      * @return number of total Users.
@@ -361,6 +361,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of statistic for admin dashboard.
      */
     List<Long> statisticForAdminDashBoard(Long howLong);
+
     /**
      * @return list of manager deadlines information entity.
      */

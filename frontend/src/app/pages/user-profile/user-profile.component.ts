@@ -18,6 +18,8 @@ export class UserProfileComponent implements OnInit {
   hasRequest: boolean = false;
   hasSixMonthsRec: boolean = false;
   hasAnyRequest: boolean = false;
+  setPeriod: number;
+  when: string = 'for 6 months';
 
   constructor(private userService: UserService,
               private route: ActivatedRoute,
@@ -29,7 +31,7 @@ export class UserProfileComponent implements OnInit {
       let id = +params['id'];
       this.userService.get(id).subscribe((user: User) => {
         this.user = user;
-        this.requestService.getQuantityForUser(this.user.id).subscribe(s => {
+        this.requestService.getQuantityForUserByProgressStatus(this.user.id).subscribe(s => {
           if (s[0]!= 0 || s[1]!= 0 || s[2]!= 0) {
             this.hasRequest = true;
             this.requests = s;
@@ -38,11 +40,12 @@ export class UserProfileComponent implements OnInit {
             this.hasAnyRequest = true;
           }
         });
-        this.requestService.getStatisticForSixMonthsForUser(this.user.id).subscribe(s => {
+        this.requestService.getOpenClosedRequestForUser(this.user.id, 6).subscribe(s => {
           if (s[0]!= 0 || s[1]!= 0) {
             this.hasSixMonthsRec = true;
+            this.when = 'for ' + 6 + ' months.';
             this.statisticForUser = s;
-            this.setStatisticForSixMonths();
+            this.setStatisticOpenClosedReq();
           }
         });
       });
@@ -83,8 +86,8 @@ export class UserProfileComponent implements OnInit {
     }
   };
 
-  setStatisticForSixMonths(){
-    this.pieChartRequestForSixMonths = {
+  setStatisticOpenClosedReq(){
+    this.pieChartRequestForOpenClosed = {
       chartType: 'BarChart',
       dataTable: [
         ['Status', 'Open','Closed'],
@@ -92,7 +95,7 @@ export class UserProfileComponent implements OnInit {
       ],
       options: {
         hAxis: {
-          title: 'Request statistic for six months',
+          title: 'Request statistic ' + this.when,
           minValue: 0,
           textStyle: {
             bold: true,
@@ -122,7 +125,7 @@ export class UserProfileComponent implements OnInit {
     };
   }
 
-  pieChartRequestForSixMonths = {
+  pieChartRequestForOpenClosed = {
     chartType: 'BarChart',
     dataTable: [
       ['Request', 'Open', 'Closed'],
@@ -130,7 +133,7 @@ export class UserProfileComponent implements OnInit {
     ],
     options: {
       hAxis: {
-        title: 'Click to see statistic',
+        title: 'Request statistic ' + this.when,
         minValue: 0,
         textStyle: {
           bold: true,
@@ -158,4 +161,15 @@ export class UserProfileComponent implements OnInit {
       }
     }
   };
+
+  setStatisticByPeriod(howLong: number): void {
+    this.requestService.getOpenClosedRequestForUser(this.user.id, howLong).subscribe(s => {
+      if (s[0]!= 0 || s[1]!= 0) {
+        this.hasSixMonthsRec = true;
+        this.when = 'for ' + howLong + ' months.';
+        this.statisticForUser = s;
+        this.setStatisticOpenClosedReq();
+      }
+    });
+  }
 }
