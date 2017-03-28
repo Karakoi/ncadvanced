@@ -5,6 +5,7 @@ import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
+import com.overseer.model.User;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,6 +63,9 @@ public class ChangeProgressStatusEventListener {
         Request request = changeProgressStatusEvent.getRequest();
         ProgressStatus closedProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
         //Check if request is parent
+        if (request.getAssignee().getId() == 0) {
+            request.setAssignee(new User());
+        }
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
         if (joinedRequests.isEmpty()) {
             Long parentRequestId = request.getParentId();
@@ -71,7 +75,7 @@ public class ChangeProgressStatusEventListener {
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
-            for (Request joinedRequest: joinedRequests) {
+            for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
                 changeStatusAndSave(joinedRequest, closedProgressStatus);
             }
@@ -90,7 +94,9 @@ public class ChangeProgressStatusEventListener {
     public void reopenRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
         Request request = changeProgressStatusEvent.getRequest();
         ProgressStatus freeProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
-
+        if (request.getAssignee().getId() == 0) {
+            request.setAssignee(new User());
+        }
         request.setEstimateTimeInDays(null);
 
         changeStatusAndSave(request, freeProgressStatus);
