@@ -36,6 +36,12 @@ export class ProfileComponent implements OnInit {
   }
 
   hasUpdate() {
+
+    if (this.user.password == null) {
+      this.toastr.error('Firstly enter ur password to update profile', 'Wrong');
+      return;
+    }
+
     this.authService.login(this.user.email, this.user.password).subscribe(() => {
       this.update();
     }, e => this.toastr.error('Wrong', 'Password is not correct'));
