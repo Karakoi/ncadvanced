@@ -227,20 +227,18 @@ export class RequestService {
       });
   }
 
-  getQuantityForUser(userId: number): Observable<number[]> {
-    return this.authHttp.get(`${url}/countRequestForUser?userId=` + userId).map(resp => resp.json())
+  getQuantityForUserByProgressStatus(userId: number): Observable<number[]> {
+      return this.authHttp.get(`${url}/getStatisticByProgressStatusForUser?userId=` + userId).map(resp => resp.json())
   }
 
-  getStatisticForSixMonths(): Observable<number[]> {
-    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatus`).map(resp => resp.json());
+  getStatisticForAdminDashBoard(howLong: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/getStatisticForAdminDashBoard?howLong=` + howLong).map(resp => resp.json());
   }
 
-  getStatisticForSixMonthsForUser(userId: number): Observable<number[]> {
-    return this.authHttp.get(`${url}/getStatisticForSixMonthsByProgressStatusForUser?userId=` + userId).map(resp => resp.json());
-  }
+  getOpenClosedRequestForUser(userId: number, howLong: number): Observable<number[]> {
+    return this.authHttp.get(`${url}/getOpenClosedRequestForUser?userId=` + userId + `&howLong=` + howLong)
+      .map(resp => resp.json());
 
-  getQuantityRequestByPriority(): Observable<number[]> {
-    return this.authHttp.get(`${url}/countRequestByPriorityStatus`).map(resp => resp.json());
   }
 
   getSubRequests(id: number): Observable<Request[]> {
@@ -264,9 +262,25 @@ export class RequestService {
   getDeadlines(id:number):Observable<DeadlineDTO[]> {
     return this.authHttp.get(`${url}/getDeadlines?managerID=` + id)
       .map(resp => resp.json())
-      .catch((error:any) => { 
+      .catch((error:any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
+  }
+
+  getTotalUsers(): Observable<number> {
+    return this.authHttp.get(`${url}/getTotalUsers`).map(resp => resp.json());
+  }
+
+  getTotalRequests(): Observable<number> {
+    return this.authHttp.get(`${url}/getTotalRequests`).map(resp => resp.json());
+  }
+
+  getRequestToday(): Observable<number> {
+    return this.authHttp.get(`${url}/getRequestToday`).map(resp => resp.json());
+  }
+
+  getRunningToday(): Observable<number> {
+    return this.authHttp.get(`${url}/getRunningToday`).map(resp => resp.json());
   }
 }

@@ -199,7 +199,6 @@ public interface RequestService extends CrudService<Request, Long> {
      * and not null {@link Request#parentId}
      *
      * @param subRequest specified sub request
-     * @param subRequest    specified sub request
      * @return joined sub request
      */
     Request saveSubRequest(Request subRequest);
@@ -274,35 +273,39 @@ public interface RequestService extends CrudService<Request, Long> {
     List<Request> searchRequests(RequestSearchDTO searchDTO);
 
     /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by progress status.
-     */
-    List<Long> quantityByProgressStatus();
-
-    /**
-     * Returns list to build pie chart for user profile.
-     *
-     * @return list of statistic request for user profile.
-     */
-    List<Long> quantityForUser(Long userId);
-
-    /**
-     * Returns Returns list to build pie chart.
-     *
-     * @return list of statistic request by priority status.
-     */
-    List<Long> quantityByPriorityStatus();
-
-    /**
-     * @return list of statistic request by progress status.
-     */
-    List<Long> quantityByProgressStatusForSixMonths();
-
-    /**
      * @return list of statistic request by progress status for user.
      */
-    List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId);
+    List<Long> quantityByProgressStatusForUser(Long userId);
+
+    /**
+     * @return list of closed and open requests for bar chart on user page.
+     */
+    List<Long> quantityOpenClosedRequestForUser(Long userId, Long howLong);
+
+    /**
+     * @return number of total Users.
+     */
+    Long countTotalUsers();
+
+    /**
+     * @return number of total requests.
+     */
+    Long countTotalRequests();
+
+    /**
+     * @return number of today's requests.
+     */
+    Long countRequestsCreatedToday();
+
+    /**
+     * @return number of today's requests that were chanced progress status from free to anyone except to closed and free.
+     */
+    Long getRunningRequestToday();
+
+    /**
+     * @return list of statistic for admin dashboard.
+     */
+    List<Long> countStatisticForAdminDashBoard(Long howLong);
 
     /**
      * @return list of manager deadlines information entities.
