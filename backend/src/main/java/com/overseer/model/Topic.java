@@ -19,11 +19,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Topic extends AbstractEntity {
-    private static final int MIN_TITLE_LENGTH = 5;
+    private static final int MIN_LENGTH = 3;
     private static final int MAX_TITLE_LENGTH = 20;
+    private static final int MAX_DESCRIPTION_LENGTH = 500;
 
-    @Size(min = MIN_TITLE_LENGTH, max = MAX_TITLE_LENGTH)
+    @Size(min = MIN_LENGTH, max = MAX_TITLE_LENGTH)
     private String title;
 
-    private List<Role> role = new ArrayList<>();
+    @Size(min = MIN_LENGTH, max = MAX_DESCRIPTION_LENGTH)
+    private String description;
+
+    private List<Role> roles = new ArrayList<>();
 }

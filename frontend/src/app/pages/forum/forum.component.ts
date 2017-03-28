@@ -31,7 +31,9 @@ export class ForumComponent implements OnInit {
   ngOnInit(): void {
     this.topic = {
       id: null,
-      title: null
+      title: null,
+      description: null,
+      roles: null
     };
     this.topicForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]]

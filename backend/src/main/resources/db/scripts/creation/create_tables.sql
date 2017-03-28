@@ -97,8 +97,9 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 --DROP TABLE IF EXISTS "public"."topic";
 CREATE TABLE "public"."topic" (
-"id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
-"title" varchar(45) COLLATE "default" NOT NULL
+ "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
+ "title" varchar(45) COLLATE "default" NOT NULL,
+ "description" varchar(500) NOT NULL
 )
 WITH (OIDS=FALSE);
 
@@ -256,9 +257,9 @@ ALTER TABLE "public"."history" ADD FOREIGN KEY ("changer_id") REFERENCES "public
 -- ----------------------------
 -- Foreign Key structure for table "public"."message"
 -- ----------------------------
-ALTER TABLE "public"."message" ADD FOREIGN KEY ("recipient_id") REFERENCES "public"."user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."message" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."message" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."message" ADD FOREIGN KEY ("recipient_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "public"."message" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "public"."message" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."request"
@@ -273,7 +274,7 @@ ALTER TABLE "public"."request" ADD FOREIGN KEY ("reporter_id") REFERENCES "publi
 -- Foreign Key structure for table "public"."topic_to_role"
 -- ----------------------------
 ALTER TABLE "public"."topic_to_role" ADD FOREIGN KEY ("role_id") REFERENCES "public"."role" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."topic_to_role" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."topic_to_role" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."user"

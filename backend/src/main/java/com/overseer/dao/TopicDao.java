@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The <code>TopicDao</code> interface represents access to {@link Topic} object in database.
  */
-public interface TopicDao extends SimpleEntityDao<Topic> {
+public interface TopicDao extends CrudDao<Topic, Long> {
 
     /**
      * Find all topics where user post messages.

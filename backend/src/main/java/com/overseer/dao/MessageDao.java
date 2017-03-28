@@ -27,4 +27,11 @@ public interface MessageDao extends CrudDao<Message, Long> {
     }
 
     List<Message> findByTopic(Long topicId);
+
+    /**
+     * This method deletes all messages in given topic by id.
+     * @param topicId id of the topic.
+     * @return number of deleted messages.
+     */
+    int deleteByTopicId(Long topicId);
 }

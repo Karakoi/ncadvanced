@@ -352,31 +352,29 @@ insert into request (title, description, reporter_id, priority_status_id, progre
 ---
 
 
--- froum data
-insert into topic (title) values ('ipsum consequat');
-insert into topic (title) values ('velit ipsum');
-
-
-insert into topic (title) values ('mattis odio');
-insert into topic (title) values ('a suscipit');
-insert into topic (title) values ('rutrum neque');
-insert into topic (title) values ('sit amet');
-insert into topic (title) values ('nulla sed');
-insert into topic (title) values ('in felis');
-insert into topic (title) values ('odio odio');
-insert into topic (title) values ('ac enim');
-insert into topic (title) values ('vel ipsum');
-insert into topic (title) values ('adipiscing lorem');
-insert into topic (title) values ('quis orci');
-insert into topic (title) values ('id ligula');
-insert into topic (title) values ('ante vestibulum');
-insert into topic (title) values ('rhoncus aliquam');
-insert into topic (title) values ('ullamcorper purus');
-insert into topic (title) values ('et ultrices');
-insert into topic (title) values ('volutpat in');
-insert into topic (title) values ('at velit');
-insert into topic (title) values ('ac consequat');
-insert into topic (title) values ('ante ipsum');
+-- forum data
+insert into topic (title, description) values ('ipsum consequat', 'the best description');
+insert into topic (title, description) values ('velit ipsum', 'the best description');
+insert into topic (title, description) values ('mattis odio', 'the best description');
+insert into topic (title, description) values ('a suscipit', 'the best description');
+insert into topic (title, description) values ('rutrum neque', 'the best description');
+insert into topic (title, description) values ('sit amet', 'the best description');
+insert into topic (title, description) values ('nulla sed', 'the best description');
+insert into topic (title, description) values ('in felis', 'the best description');
+insert into topic (title, description) values ('odio odio', 'the best description');
+insert into topic (title, description) values ('ac enim', 'the best description');
+insert into topic (title, description) values ('vel ipsum', 'the best description');
+insert into topic (title, description) values ('adipiscing lorem', 'the best description');
+insert into topic (title, description) values ('quis orci', 'the best description');
+insert into topic (title, description) values ('id ligula', 'the best description');
+insert into topic (title, description) values ('ante vestibulum', 'the best description');
+insert into topic (title, description) values ('rhoncus aliquam', 'the best description');
+insert into topic (title, description) values ('ullamcorper purus', 'the best description');
+insert into topic (title, description) values ('et ultrices', 'the best description');
+insert into topic (title, description) values ('volutpat in', 'the best description');
+insert into topic (title, description) values ('at velit', 'the best description');
+insert into topic (title, description) values ('ac consequat', 'the best description');
+insert into topic (title, description) values ('ante ipsum', 'the best description');
 
 -- Messages
 
