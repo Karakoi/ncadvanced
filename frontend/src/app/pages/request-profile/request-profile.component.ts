@@ -16,7 +16,7 @@ import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.componen
   styleUrls: ['request-profile.component.css']
 })
 export class RequestProfileComponent implements OnInit {
-
+  followed: boolean = false;
   currentUser: User;
   request: Request;
   type: string;
@@ -198,7 +198,11 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isEmployee(): boolean {
-    console.log(this.role)
     return this.role === 'employee'
+  }
+
+  follow(){
+    this.followed = !this.followed;
+    console.log("follow")
   }
 }
