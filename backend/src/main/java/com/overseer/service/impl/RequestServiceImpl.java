@@ -260,6 +260,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
         // Define progress status with 'Joined' value for child requests
         ProgressStatus joinedProgressStatus = progressStatusDao.findOne(JOINED_STATUS);
+        ProgressStatus parentProgressStatus = progressStatusDao.findOne(IN_PROGRESS_STATUS);
+        parentRequest.setProgressStatus(parentProgressStatus);
         ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, joinedProgressStatus, parentRequest, joinedRequests);
         publisher.publishEvent(event);
 

@@ -17,11 +17,11 @@ public class DeadlineCalculator {
     public static LocalDate getDeadline(LocalDate start, int estimate) {
         DayOfWeek currentDay;
         while (estimate > 1) {
+            start = start.plusDays(1);
             currentDay = start.getDayOfWeek();
             if (currentDay != DayOfWeek.SATURDAY && currentDay != DayOfWeek.SUNDAY) {
                 estimate--;
             }
-            start = start.plusDays(1);
         }
         return start;
     }

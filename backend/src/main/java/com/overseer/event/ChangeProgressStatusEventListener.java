@@ -77,7 +77,7 @@ public class ChangeProgressStatusEventListener {
             }
             List<Request> subRequests = requestDao.findSubRequests(request);
             subRequests.forEach(requestDao::delete);
-            requestDao.deleteParentRequestIfItHasNoChildren(request.getParentId());
+            requestDao.deleteParentRequestIfItHasNoChildren(request.getId());
         }
     }
 
