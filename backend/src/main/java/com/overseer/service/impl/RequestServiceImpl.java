@@ -260,6 +260,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
         // Define progress status with 'Joined' value for child requests
         ProgressStatus joinedProgressStatus = progressStatusDao.findOne(JOINED_STATUS);
+        ProgressStatus parentProgressStatus = progressStatusDao.findOne(IN_PROGRESS_STATUS);
+        parentRequest.setProgressStatus(parentProgressStatus);
         ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, joinedProgressStatus, parentRequest, joinedRequests);
         publisher.publishEvent(event);
 
@@ -430,6 +432,21 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return request;
     }
 
+    /**
+     * Closes request with any progress status and changes it {@link Request#progressStatus}.
+     *
+     * @param request specified request
+     * @return closed request
+     */
+    private Request forceCloseRequest(Request request) {
+        Assert.notNull(request, "request must not be null");
+        log.debug("Close request with id: {} ", request.getId());
+        ProgressStatus closedProgressStatus = progressStatusDao.findOne(CLOSED_STATUS);
+        ChangeProgressStatusEvent event = new ChangeProgressStatusEvent(this, closedProgressStatus, request);
+        publisher.publishEvent(event);
+        return request;
+    }
+
     @Override
     public Request reopenRequest(Long requestId) {
         Assert.notNull(requestId, "id of request must not be null");
@@ -492,7 +509,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         idsOfProgresStatuses.add(IN_PROGRESS_STATUS);
         idsOfProgresStatuses.add(JOINED_STATUS);
         List<Request> requests = requestDao.findRequestsByProgressStatusesAndReporterId(idsOfProgresStatuses, reporterId);
-        requests.forEach(this::closeRequest);
+        requests.forEach(this::forceCloseRequest);
     }
 
     @Override

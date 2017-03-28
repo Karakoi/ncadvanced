@@ -52,7 +52,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of joined requests.
      */
     default List<Request> findJoinedRequests(Request parent) {
-        Assert.notNull(parent);
+        Assert.notNull(parent, "parent is null");
         Long id = parent.getId();
         return findJoinedRequests(id);
     }

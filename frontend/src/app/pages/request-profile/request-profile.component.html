@@ -6,7 +6,7 @@
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
                        size="40"
-                       [disabled]="isFree(request)"
+                       [disabled]="isFree(request) && isEmployee()"
         >
         </inline-editor>
       </p>
@@ -99,7 +99,7 @@
                 <inline-editor type="textarea"
                                [(ngModel)]="request.description"
                                (onSave)="updateRequest($event)"
-                               [disabled]="isFree(request)"
+                               [disabled]="isFree(request) && isEmployee()"
                                cols="100"
                                rows="3">
                 </inline-editor>

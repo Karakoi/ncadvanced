@@ -4,6 +4,14 @@
   </modal-header>
   <modal-body>
 
+    <div style="text-align: center">
+      <span>
+        <em style="color: red; text-align: center">
+          Please name and describe the general request for the selected!
+        </em>
+      </span>
+    </div>
+
     <form [formGroup]="requestForm" autocomplete="off" novalidate>
       <modal-body>
         <!--REQUEST TITLE-->
@@ -39,6 +47,14 @@
       </modal-body>
     </form>
 
+    <div style="text-align: center">
+      <span>
+        <em style="color: red; text-align: center">
+          The priority of the general request will be selected as the maximum!
+        </em>
+      </span>
+    </div>
+
     <div class="panel-body">
       <table class="table table-bordered table-hover table-striped">
         <thead>
@@ -52,7 +68,9 @@
         <tbody>
         <tr *ngFor="let req of getChecked">
           <td>{{ req.title }}</td>
-          <td> <date-parse [date]="req.dateOfCreation"></date-parse></td>
+          <td>
+            <date-parse [date]="req.dateOfCreation"></date-parse>
+          </td>
           <td>{{ req.priorityStatus.name }}</td>
           <td>{{ req.reporter.firstName }}</td>
         </tr>
