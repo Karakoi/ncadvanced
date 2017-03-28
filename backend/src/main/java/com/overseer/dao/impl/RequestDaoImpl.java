@@ -1,7 +1,10 @@
 package com.overseer.dao.impl;
 
+import static com.overseer.util.DeadlineCalculator.getDeadline;
+
 import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.RequestDao;
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.Request;
@@ -19,6 +22,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+
 
 /**
  * <p>
@@ -515,6 +520,43 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         Assert.notNull(parentId, "id must not be null");
         String deleteQuery = this.queryService().getQuery("request.deleteParentRequestIfHasNoChildren");
         this.jdbc().update(deleteQuery, new MapSqlParameterSource("id", parentId));
+    }
+
+    //-----------------------DEADLINE---------------------------
+
+    @Override
+    public List<DeadlineDTO> getDeadlinesByAssignee(Long assigneeID) {
+        String getDeadlinesByAssignee = this.queryService().getQuery("deadlines.getByAssignee");
+        List<DeadlineDTO> managerDeadlines = new ArrayList<>();
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("assignee_id", assigneeID);
+            return jdbc().query(getDeadlinesByAssignee,
+                    parameterSource, resultSet -> {
+                        while (resultSet.next()) {
+                            DeadlineDTO deadline = new DeadlineDTO();
+                            deadline.setId(resultSet.getLong("id"));
+                            deadline.setTitle(resultSet.getString("title"));
+                            deadline.setDeadline(getDeadline(resultSet.getDate("date").toLocalDate(),
+                                    resultSet.getByte("estimate")));
+                            managerDeadlines.add(deadline);
+                        }
+                        return managerDeadlines;
+                    });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<Request> searchRequests(String searchQuery) {
+        String findByStatusQuery = this.queryService().getQuery("request.select").concat(searchQuery);
+        try {
+            return jdbc().query(findByStatusQuery, this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     //-----------------------QUERY---------------------------

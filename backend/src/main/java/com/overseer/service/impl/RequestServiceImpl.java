@@ -2,7 +2,9 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
+import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
+import com.overseer.dto.RequestSearchDTO;
 import com.overseer.event.AssignRequestEvent;
 import com.overseer.event.CloseRequestEvent;
 import com.overseer.event.JoinRequestEvent;
@@ -14,6 +16,7 @@ import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
+import com.overseer.service.impl.builder.SqlQueryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,9 +121,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageNumber) {
+    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int size, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
-        val list = this.requestDao.findClosedRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findClosedRequestsByAssignee(assigneeId, size, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
                 list.size(), assigneeId, pageNumber);
         return list;
@@ -142,9 +145,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageNumber) {
+    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int size, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
-        val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, size, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
                 list.size(), assigneeId, pageNumber);
         return list;
@@ -154,9 +157,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findRequestsByReporter(Long reporterId, int pageNumber) {
+    public List<Request> findRequestsByReporter(Long reporterId, int pageNumber, int size) {
         Assert.notNull(reporterId, "reporter must not be null");
-        val list = this.requestDao.findRequestsByReporter(reporterId, DEFAULT_PAGE_SIZE, pageNumber);
+        val list = this.requestDao.findRequestsByReporter(reporterId, size, pageNumber);
         log.debug("Fetched {} requests for reporter with id: {} for page number: {}",
                 list.size(), reporterId, pageNumber);
         return list;
@@ -166,19 +169,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber) {
+    public List<Request> findClosedRequestsByReporter(Long reporterId, int pageNumber, int size) {
         Assert.notNull(reporterId, "Reporter id must be not null");
         Assert.notNull(pageNumber, "Page number must be not null");
-        return requestDao.findRequestsByReporterAndProgress(reporterId, ProgressStatus.CLOSED,
-                DEFAULT_PAGE_SIZE, pageNumber);
+        return requestDao.findRequestsByReporterAndProgress(reporterId, ProgressStatus.CLOSED, size, pageNumber);
     }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findFreeRequests(int pageNumber) {
-        return requestDao.findFreeRequests(DEFAULT_PAGE_SIZE, pageNumber);
+    public List<Request> findFreeRequests(int pageNumber, int size) {
+        return requestDao.findFreeRequests(size, pageNumber);
     }
 
     /**
@@ -214,6 +216,62 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         val list = this.requestDao.findRequestsByDate(date);
         log.debug("Fetched {} requests for date: {}", list.size(), date);
         return list;
+    }
+
+    //-----------------------DEADLINE---------------------------
+
+    @Override
+    public List<DeadlineDTO> getManagerDeadlines(Long managerID) {
+        return requestDao.getDeadlinesByAssignee(managerID);
+    }
+
+    @Override
+    public List<Request> searchRequests(RequestSearchDTO searchDTO) {
+        SqlQueryBuilder sqlQueryBuilder = new SqlQueryBuilder();
+
+        sqlQueryBuilder.where().isNull("r.parent_id");
+
+        String title = searchDTO.getTitle();
+        if (!title.isEmpty()) {
+            sqlQueryBuilder.and().like("title", title);
+        }
+
+        String reporterName = searchDTO.getReporterName();
+        if (!reporterName.isEmpty()) {
+            sqlQueryBuilder.and().like(new String[]{"reporter.first_name", "reporter.last_name", "reporter.second_name"}, reporterName);
+        }
+
+        String assigneeName = searchDTO.getAssigneeName();
+        if (!assigneeName.isEmpty()) {
+            sqlQueryBuilder.and().like(new String[]{"assignee.first_name", "assignee.last_name", "assignee.second_name"}, assigneeName);
+        }
+
+        String estimate = searchDTO.getEstimate();
+        if (!estimate.isEmpty()) {
+            sqlQueryBuilder.and().equal("r.estimate_time_in_days", estimate);
+        }
+
+        String progress = searchDTO.getProgress();
+        if (!progress.isEmpty()) {
+            sqlQueryBuilder.and().equal("progress.name", progress);
+        }
+
+        String priority = searchDTO.getPriority();
+        if (!priority.isEmpty()) {
+            sqlQueryBuilder.and().equal("priority.name", priority);
+        }
+
+        String dateOfCreation = searchDTO.getDateOfCreation();
+        if (!dateOfCreation.isEmpty()) {
+            sqlQueryBuilder.and().equalDate("date_of_creation", dateOfCreation);
+        }
+
+        int limit = searchDTO.getLimit();
+        sqlQueryBuilder.limit(limit);
+
+        String query = sqlQueryBuilder.build();
+
+        return requestDao.searchRequests(query);
     }
 
     //-----------------------REPORT---------------------------
@@ -367,6 +425,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return request;
     }
 
+
     /**
      * {@inheritDoc}.
      */
@@ -399,7 +458,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         if (request == null) {
             throw new NoSuchEntityException("Request with given id: " + requestId + " is absent in DB");
         }
-        User reporter = userDao.findOne(request.getReporter().getId());
+        User reporter = userDao.findByEmail(request.getReporter().getEmail());
         if (reporter == null) {
             throw new NoSuchEntityException("Reporter of request with id: " + requestId + " is absent in DB");
         }

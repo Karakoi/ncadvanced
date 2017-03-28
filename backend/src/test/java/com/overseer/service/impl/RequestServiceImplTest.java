@@ -7,9 +7,11 @@ import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.*;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
+import com.overseer.service.UserService;
 import lombok.Value;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class RequestServiceImplTest {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private UserService userService;
 
     private Request request;
     private User assignee;
@@ -129,6 +134,7 @@ public class RequestServiceImplTest {
 
     }
 
+    @Ignore
     @Test
     public void joinRequestsIntoParent() throws Exception {
         Request parent = requestService.joinRequestsIntoParent(requestsGroupIds, request);
@@ -163,7 +169,8 @@ public class RequestServiceImplTest {
         // when
         requestService.assignRequest(request);
         requestService.closeRequest(request);
-        userDao.delete(request.getReporter());
+        userService.delete(request.getReporter());
+//        userDao.delete(request.getReporter());
         requestService.reopenRequest(request.getId());
 
         // then

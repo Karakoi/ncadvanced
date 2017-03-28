@@ -9,8 +9,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
-import com.overseer.service.impl.report.builder.PdfPTableBuilder;
-import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
+import com.overseer.service.impl.builder.PdfPTableBuilder;
+import com.overseer.service.impl.builder.ReportDocumentBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -83,7 +83,9 @@ public class ManagerReportView extends AbstractPdfView {
      * @return return configured PdfPTable with data.
      */
     private PdfPTable generateNeededCloseRequestsTable(int id) {
-        val topInProgressRequests = requestService.findInProgressRequestsByAssignee((long) id, 1);
+        final int size = 20;
+        final int pageNum = 1;
+        val topInProgressRequests = requestService.findInProgressRequestsByAssignee((long) id, size, pageNum);
         final int tableColumnNum = 4;
         final int colorR = 253;
         final int colorG = 166;

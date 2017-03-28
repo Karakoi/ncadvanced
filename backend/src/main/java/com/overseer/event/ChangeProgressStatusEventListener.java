@@ -1,6 +1,5 @@
 package com.overseer.event;
 
-import com.overseer.auth.service.SecurityContextService;
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 
@@ -89,9 +88,9 @@ public class ChangeProgressStatusEventListener {
     @EventListener
     public void reopenRequest(ReopenRequestEvent reopenRequestEvent) {
         Request request = reopenRequestEvent.getRequest();
-        if (request.getAssignee().getId() == 0) {
-            request.setAssignee(new User());
-        }
+//        if (request.getAssignee().getId() == 0) {
+//            request.setAssignee(new User());
+//        }
         request.setEstimateTimeInDays(null);
 
         changeStatusAndSave(request, ReopenRequestEvent.PROGRESS_STATUS);

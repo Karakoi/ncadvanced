@@ -16,7 +16,7 @@ export class ActiveRequest implements OnInit {
   private currentUser: User;
   private totalItems: number;
   private per: number = 20;
-
+  pageSize: number = 20;
 
   settings = {
     delete: true,
