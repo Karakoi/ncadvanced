@@ -81,7 +81,7 @@ export class ManagerComponent {
     multiSelect: false,
     filterRow: true,
     assign: false,
-    close: false,
+    close: true,
     columns: {
       title: true,
       estimate: true,

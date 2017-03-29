@@ -4,10 +4,12 @@ import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 
 import com.overseer.model.Request;
+import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import com.overseer.service.RequestSubscribeService;
+import com.overseer.service.impl.email.UniversalMessageBuilder;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +39,8 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
 
     @Autowired
     private RequestSubscribeService requestSubscribeService;
+    @Autowired
+    private UniversalMessageBuilder universalMessageBuilder;
 
     public ChangeProgressStatusEventListener(RequestDao requestDao,
                                              @Qualifier("officeManagerNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForAssignee,
@@ -64,21 +68,6 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
         changeStatusAndSave(request, AssignRequestEvent.PROGRESS_STATUS);
     }
 
-    /**
-     * Sending message to all subscribers of email when request progress has changed.
-     *
-     * @param changeProgressStatusEvent event of changing progress status.
-     */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus != null ")
-    public void testEvent(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        val subscribers = requestSubscribeService.getSubscribersOfRequest(changeProgressStatusEvent.getRequest().getId());
-        SimpleMailMessage message = emailStrategyForAssignee.buildMessage(changeProgressStatusEvent.getRequest());
-        if (!subscribers.isEmpty()) {
-            val subscribersEmail  = subscribers.stream().map(User::getEmail).toArray(String[]::new);
-            message.setTo(subscribersEmail);
-            emailService.sendMessage(message);
-        }
-    }
 
     /**
      * Closes request and changes it {@link Request#progressStatus}.
@@ -98,7 +87,7 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
-            for (Request joinedRequest: joinedRequests) {
+            for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
                 changeStatusAndSave(joinedRequest, CloseRequestEvent.PROGRESS_STATUS);
             }
@@ -159,14 +148,19 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
 
     /**
      * Changes progress status, save request and send message to Reporter.
+     * and send message to all subscribers of email when request progress has changed.
      *
      * @param request        specified request
      * @param progressStatus specified progressStatus
      */
     private void changeStatusAndSave(Request request, ProgressStatus progressStatus) {
         request.setProgressStatus(progressStatus);
-        requestDao.save(request);
-
+        val req = requestDao.save(request);
+        val subscribers = requestSubscribeService.getSubscribersOfRequest(req.getId());
+        for (User sub : subscribers) {
+            val message = universalMessageBuilder.getMessageBody(request, sub);
+            emailService.sendMessage(message);
+        }
         sendMessageToReporter(request);
 
         RequestChangeEvent event = new RequestChangeEvent(this, request);

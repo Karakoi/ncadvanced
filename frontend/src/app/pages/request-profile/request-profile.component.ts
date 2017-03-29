@@ -10,6 +10,8 @@ import {History} from "../../model/history.model";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
 import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
 import {SuscribeService} from "../../service/subscribe.service";
+import {ReportService} from "../../service/report.service";
+import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'request-profile',
