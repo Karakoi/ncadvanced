@@ -1,0 +1,15 @@
+.label-warning {
+  background-color: rgba(240, 173, 78, 0.8);
+}
+
+.label-primary {
+  background-color: rgba(51, 122, 183, 0.75);
+}
+
+.label-default {
+  background-color: rgba(119, 119, 119, 0.75);
+}
+
+.label-success {
+  background-color: rgba(92, 184, 92, 0.75);
+}
