@@ -139,10 +139,10 @@
             {{request.estimateTimeInDays}}
           </td>
           <td *ngIf="settings.columns.priorityStatus" [routerLink]="settings.info ? ['/request', request.id]: null">
-            {{request.priorityStatus.name}}
+            <priority-marker [value]="request.priorityStatus.name"></priority-marker>
           </td>
           <td *ngIf="settings.columns.progressStatus" [routerLink]="settings.info ? ['/request', request.id]: null">
-            {{request.progressStatus.name}}
+            <progress-marker [value]="request.progressStatus.name"></progress-marker>
           </td>
           <td *ngIf="settings.columns.reporter" [routerLink]="settings.info ? ['/request', request.id]: null">
             {{request.reporter.firstName}}
