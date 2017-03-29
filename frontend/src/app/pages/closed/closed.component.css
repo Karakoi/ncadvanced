@@ -1,0 +1,8 @@
+.nav-tabs > li.active > a {
+  background-color: #337AB7;
+  color: white;
+}
+
+.nav-tabs > li > a {
+  font-weight: bold;
+}

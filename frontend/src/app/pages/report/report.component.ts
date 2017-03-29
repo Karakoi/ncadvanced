@@ -9,7 +9,7 @@ import {LineChartComponent} from "../../shared/line-chart/line-chart.component";
 import {ReportService} from "../../service/report.service";
 import {User} from "../../model/user.model";
 import {Subject} from "rxjs";
-// import * as FileSaver from "file-saver";
+import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'report',
@@ -20,19 +20,19 @@ import {Subject} from "rxjs";
 export class ReportComponent implements OnInit {
 
   private role: string;
-  private user: User;
+  private currentUser: User;
   private reportForm: FormGroup;
 
   @ViewChild(BarChartComponent)
   public barChart: BarChartComponent;
 
-  // @ViewChild(BarChartComponent)
-  // public barChart2: BarChartComponent;
-
   @ViewChild(LineChartComponent)
   public lineChart: LineChartComponent;
-  private startdate: any;
-  private enddate: any;
+  private startDate: any;
+  private endDate: any;
+  private isGenerated: boolean = false;
+  private countManagers: number[] = [1, 3, 5, 10];
+  private countTopManagers: number;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -42,10 +42,8 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initForm();
-
     this.authService.currentUser.subscribe((user: User) => {
-      this.user = user;
+      this.currentUser = user;
     });
     this.role = this.authService.role;
     this.authService.events.subscribe((event: Subject<AuthEvent>) => {
@@ -53,6 +51,7 @@ export class ReportComponent implements OnInit {
         this.role = this.authService.role;
       }
     });
+    this.initForm();
   }
 
   validateField(field: string): boolean {
@@ -63,48 +62,56 @@ export class ReportComponent implements OnInit {
     this.reportForm = this.formBuilder.group({
       dateOfStart: ['', CustomValidators.dateISO],
       dateOfEnd: ['', CustomValidators.dateISO],
+      countManagersSelector: [''],
     });
   }
 
   private saveDates(formData) {
     if (formData.dateOfEnd > formData.dateOfStart) {
-      this.startdate = formData.dateOfStart;
-      this.enddate = formData.dateOfEnd;
-      this.toastr.success("Data START: ".concat(this.startdate.toString() + ", Data END:" + this.enddate.toString()), "DATA:");
+      this.countTopManagers = formData.countManagersSelector;
+      this.startDate = formData.dateOfStart;
+      this.endDate = formData.dateOfEnd;
+      console.log(this.countTopManagers);
+      if (!this.isGenerated) {
+        this.isGenerated = true;
+      } else {
+        this.generateReportByRole(this.startDate, this.endDate);
+      }
+      this.toastr.success("START Date: ".concat(this.startDate.toString() + ", END Date:" + this.endDate.toString()), "DATA:");
     }
     else {
-      this.toastr.error("Error. Uncorrect dates: End date must be bigger than the start date");
+      this.toastr.error("Error. Incorrect dates: End date must be bigger than the start date");
     }
   }
 
-  private generateAdminReport() {
-    this.barChart.buildAdminChart();
-    this.lineChart.buildAdminChart();
+  private generateReportByRole(start: any, end: any) {
+    if (this.isAdmin()) {
+      this.barChart.buildAdminChart(start, end, this.countTopManagers);
+      this.lineChart.buildAdminChart(start, end);
+    } else {
+      this.barChart.buildManagerChart(start, end);
+    }
   }
 
-  private generateManagerReport() {
-    this.barChart.buildManagerChart();
+  private generateAdminPDF() {
+    this.reportService.getAdminPDFReport(this.startDate, this.endDate, this.countTopManagers).subscribe(
+      (res: any) => {
+        let blob = res.blob();
+        let filename = 'admin_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';
+        FileSaver.saveAs(blob, filename);
+      }
+    );
   }
 
-  // private generateAdminPDF() {
-  //   this.reportService.getPDFReport().subscribe(
-  //     data => {
-  //       console.log(data);
-  //       let blob = new Blob([data], {type: 'application/pdf'});
-  //       // console.log(blob);
-  //       console.log("ddddddd");
-  //       FileSaver.saveAs(blob, "report.pdf");
-  //       console.log("ddddddd22222");
-  //       this.toastr.success("Report was created successfully", "Success!");
-  //     }, e => this.handleError(e));
-  // }
-  //
-  // private handleError(error) {
-  //   switch (error.status) {
-  //     case 500:
-  //       this.toastr.error("Can't create report", 'Error');
-  //   }
-  // }
+  private generateManagerPDF() {
+    this.reportService.getManagerPDFReport(this.startDate, this.endDate, this.currentUser.id).subscribe(
+      (res: any) => {
+        let blob = res.blob();
+        let filename = 'manager_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';
+        FileSaver.saveAs(blob, filename);
+      }
+    );
+  }
 
   isAdmin(): boolean {
     return this.role === 'admin';

@@ -9,6 +9,9 @@ import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
 import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
+import {SuscribeService} from "../../service/subscribe.service";
+import {ReportService} from "../../service/report.service";
+import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'request-profile',
@@ -16,7 +19,7 @@ import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.componen
   styleUrls: ['request-profile.component.css']
 })
 export class RequestProfileComponent implements OnInit {
-
+  followed: boolean = false;
   currentUser: User;
   request: Request;
   type: string;
@@ -27,6 +30,7 @@ export class RequestProfileComponent implements OnInit {
   historyRecords: History[];
   subRequests: Request[];
   joinedRequests: Request[];
+  role: string = 'employee';
 
   @ViewChild(DeleteSubRequestComponent)
   deleteSubRequestComponent: DeleteSubRequestComponent;
@@ -36,12 +40,20 @@ export class RequestProfileComponent implements OnInit {
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
+              private reportService: ReportService,
               private toastr: ToastsManager,
               private authService: AuthService,
-              private historyService: HistoryService) {
+              private historyService: HistoryService,
+              private subscribeService: SuscribeService) {
   }
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe((user: User) => {
+      this.currentUser = user;
+      this.role = user.role.name;
+
+
+
     this.route.params.subscribe(params => {
       let id = +params['id'];
 
@@ -53,6 +65,9 @@ export class RequestProfileComponent implements OnInit {
       this.requestService.get(id).subscribe((request: Request) => {
         this.request = request;
         this.type = this.getRequestType(request);
+        this.subscribeService.check(this.request.id, this.currentUser.id).subscribe(result => {
+          this.followed = result;
+        })
         /*console.log(request)*/
       });
 
@@ -66,12 +81,54 @@ export class RequestProfileComponent implements OnInit {
         /*console.log(joinedRequests)*/
       });
     });
-    this.authService.currentUser.subscribe((user: User) => {
-      this.currentUser = user;
     });
   }
 
-  showHistoryValue(generalValue: string, demonstrationValue: string){
+
+  showHistoryMessage(history: History): string{
+    let text: string;
+    switch (history.columnName){
+
+      case "title":
+        text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
+        break;
+      case "estimate_time_in_date":
+        text = "Estimate time (in day) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
+        break;
+
+      case "description":
+        text = "Description was changed from \"" +
+          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
+        break;
+      case "priority_status_id":
+        text = "Priority was changed from \"" +
+          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
+        break;
+      case "progress_status_id":
+        text = "Progress status was changed from \"" +
+          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
+        break;
+
+      case "assignee_id":
+        text = "This request was assigned";
+        break;
+
+      case "parent_id":
+        if(history.newValue == null){
+          text = "This request was unjoined from \"" + history.demonstrationOfOldValue + "\" request";
+        } else {
+          text = "This request was joined in \"" + history.demonstrationOfNewValue + "\" request";
+        }
+        break;
+
+      default:
+        text = "Some changes";
+    }
+
+    return text;
+  }
+
+  /*showHistoryValue(generalValue: string, demonstrationValue: string){
     if(demonstrationValue != null){
       return demonstrationValue;
     } else {
@@ -81,7 +138,7 @@ export class RequestProfileComponent implements OnInit {
         return "empty value";
       }
     }
-  }
+  }*/
 
   openAddSubRequestModal(): void {
     this.addSubRequestComponent.modal.open();
@@ -114,7 +171,7 @@ export class RequestProfileComponent implements OnInit {
 
   updateRequest() {
     this.request.parentId = null;
-    if (this.request.assignee.id === 0){
+    if (this.request.assignee.id === 0) {
       this.request.assignee = <User>{};
     }
     this.request.lastChanger = this.currentUser;
@@ -148,5 +205,37 @@ export class RequestProfileComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  isEmployee(): boolean {
+    return this.role === 'employee'
+  }
+
+  follow(){
+    this.subscribeService.toggleSubscribe(this.request.id, this.currentUser.id).subscribe(resp => {
+      this.followed = resp;
+    });
+  }
+
+  isClosed(request):boolean {
+    if (request.progressStatus.name == 'Closed') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isNotEmployee(): boolean {
+    return this.currentUser.role.name !== 'employee';
+  }
+
+  getPDF() {
+    this.reportService.getPDFRequest(this.request.id).subscribe(
+      (res:any) => {
+        let blob = res.blob();
+        let filename = 'request_' + this.request.id + '.pdf';
+        FileSaver.saveAs(blob, filename);
+      }
+    );
   }
 }

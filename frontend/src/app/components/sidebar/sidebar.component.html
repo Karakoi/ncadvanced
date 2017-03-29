@@ -2,9 +2,13 @@
 <div id="sidebar-wrapper">
 
   <ul class="sidebar-nav">
+    <br/>
     <li class="logo" *ngIf="user">
-      <gravatar [email]="user.email" [size]="80"></gravatar>
+      <a [routerLink]="['/profile']">
+        <gravatar [email]="user.email" [size]="80"></gravatar>
+      </a>
     </li>
+    <br/>
     <!--This div will be visible regardless of role-->
     <li>
       <a [routerLink]="['/profile']">Profile</a>
@@ -15,15 +19,6 @@
     <li>
       <a [routerLink]="['/forum/chat']">Chat</a>
     </li>
-    <li>
-      <a [routerLink]="['/forum/message']">Send Message</a>
-    </li>
-    <li>
-      <a [routerLink]="['/forum/inbox']">Inbox</a>
-    </li>
-    <li>
-      <a [routerLink]="['/reports']">Reports</a>
-    </li>
     <!--Show this div, if user's role is Admin -->
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">All users</a>
@@ -32,12 +27,16 @@
       <a [routerLink]="['/requests']" *ngIf="isAdmin()">All requests</a>
     </li>
     <li>
-      <a [routerLink]="['/reports']" *ngIf="isAdmin()">Reports</a>
+      <a [routerLink]="['/reports']" *ngIf="isManager() || isAdmin()">Reports</a>
     </li>
     <!--Show this div, if user's role is Manager -->
     <li>
-      <a [routerLink]="['/assigned']" *ngIf="isManager()">Assigned</a>
+      <a [routerLink]="['/assigned/inProgress']" *ngIf="isManager()">Assigned</a>
+    </li>
+    <li>
+      <a [routerLink]="['/calendar']" *ngIf="isManager()">Calendar</a>
     </li>
   </ul>
 </div>
 <!-- /#sidebar-wrapper -->
+

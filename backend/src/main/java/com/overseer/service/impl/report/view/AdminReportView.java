@@ -1,18 +1,22 @@
 package com.overseer.service.impl.report.view;
 
+import static com.itextpdf.text.FontFactory.HELVETICA_BOLD;
+import static com.itextpdf.text.FontFactory.getFont;
+
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-import com.overseer.dto.RequestDTO;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
-import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
+import com.overseer.service.impl.builder.PdfPTableBuilder;
+import com.overseer.service.impl.builder.ReportDocumentBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,18 +31,17 @@ public class AdminReportView extends AbstractPdfView {
 
     private LocalDate start;
     private LocalDate end;
+    private int countTop;
 
-    private static final float TABLE_SPACING = 10f;
-    private static final float COLOMN_WIDTH = 2f;
-    private static final float CELL_PADDING = 10;
-    private static final int TABLE_WIDTH_PERCENTAGE = 100;
-    private static final int TABLE_SIZE = 3;
+    private static final float DEFAULT_TABLE_WIDTH = 100.0f;
+    private static final int DEFAULT_TABLE_SPACING = 10;
 
     private final RequestService requestService;
 
-    public void setDatePeriod(LocalDate start, LocalDate end) {
+    public void setDatePeriod(LocalDate start, LocalDate end, int countTop) {
         this.start = start;
         this.end = end;
+        this.countTop = countTop;
     }
 
     /**
@@ -50,37 +53,23 @@ public class AdminReportView extends AbstractPdfView {
      */
     private PdfPTable getTableWithCountRequestsByPeriod(LocalDate start, LocalDate end) throws DocumentException {
 
-        PdfPTable table = new PdfPTable(TABLE_SIZE);
-        table.setWidthPercentage(TABLE_WIDTH_PERCENTAGE);
-        table.setSpacingBefore(TABLE_SPACING);
-        table.setSpacingAfter(TABLE_SPACING);
-        float[] columnWidths = {COLOMN_WIDTH, COLOMN_WIDTH, COLOMN_WIDTH};
-        table.setWidths(columnWidths);
-        val collection = requestService.findListCountRequestsByPeriod(start, end, "Free");
-        for (RequestDTO r : collection) {
+        val collection = requestService.findListCountRequestsByPeriod(start, end, ProgressStatus.FREE.getId());
+        final int tableColumnNum = 3;
+        final int colorR = 185;
+        final int colorG = 247;
+        final int colorB = 166;
+        PdfPTable table = new PdfPTableBuilder(tableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)
+                .addPdfPCells(new BaseColor(colorR, colorG, colorB), getFont(HELVETICA_BOLD),
+                        "Count", "Start Date", "End Date")
+                .build();
 
-            PdfPCell firstCell = new PdfPCell(new Paragraph("Count: " + r.getCount()));
-            firstCell.setBorderColor(BaseColor.BLACK);
-            firstCell.setPaddingLeft(CELL_PADDING);
-            firstCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            firstCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        collection
+                .forEach(request -> {
+                    table.addCell(request.getCount().toString());
+                    table.addCell(request.getStartDateLimit().toString());
+                    table.addCell(request.getEndDateLimit().toString());
+                });
 
-            PdfPCell secondCell = new PdfPCell(new Paragraph("Start Date: " + r.getStartDateLimit()));
-            secondCell.setBorderColor(BaseColor.BLACK);
-            secondCell.setPaddingLeft(CELL_PADDING);
-            secondCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            secondCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-            PdfPCell thirtCell = new PdfPCell(new Paragraph("End Date: " + r.getEndDateLimit()));
-            thirtCell.setBorderColor(BaseColor.BLACK);
-            thirtCell.setPaddingLeft(CELL_PADDING);
-            thirtCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            thirtCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-            table.addCell(firstCell);
-            table.addCell(secondCell);
-            table.addCell(thirtCell);
-        }
         return table;
     }
 
@@ -91,9 +80,9 @@ public class AdminReportView extends AbstractPdfView {
      * @param end   date to.
      * @return return configured Pdf list with data.
      */
-    private List getListWithBestManagers(LocalDate start, LocalDate end) {
+    private List getListWithBestManagers(LocalDate start, LocalDate end, int countTop) {
         List list = new List();
-        val collection = requestService.findBestManagersByPeriod(start, end, "Closed");
+        val collection = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId(), countTop);
 
         System.out.println(collection);
         for (int i = 0; i < collection.size(); i++) {
@@ -105,10 +94,13 @@ public class AdminReportView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        val dateNow = LocalDateTime.now();
         String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
         new ReportDocumentBuilder(document)
+                .addParagraph(new Paragraph(dateNow.toLocalDate().toString() + ": " + dateNow.toLocalTime().toString()), Element.ALIGN_LEFT)
                 .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
                 .addParagraph(new Paragraph("ADMIN REPORTS"), Element.ALIGN_TOP)
+                .addParagraph(new Paragraph("For period: " + this.start + " : " + this.end, getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addLineSeparator(new LineSeparator())
                 .addLineSeparator(new LineSeparator())
                 .addParagraph(new Paragraph("Count created requests in period from "
@@ -116,7 +108,7 @@ public class AdminReportView extends AbstractPdfView {
                 .addTable(getTableWithCountRequestsByPeriod(start, end))
                 .addLineSeparator(new LineSeparator())
                 .addParagraph(new Paragraph("Best managers: "), Element.ALIGN_CENTER)
-                .addList(getListWithBestManagers(start, end))
+                .addList(getListWithBestManagers(start, end, countTop))
                 .buildDocument();
     }
 }

@@ -1,0 +1,16 @@
+.nav-tabs {
+  border: none;
+}
+
+.panel {
+  border-radius: 0 4px 4px 4px;
+}
+
+.nav-tabs > li.active > a {
+  background-color: #337AB7;
+  color: white;
+}
+
+.nav-tabs > li > a {
+  font-weight: bold;
+}

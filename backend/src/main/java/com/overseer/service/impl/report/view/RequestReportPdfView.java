@@ -10,8 +10,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.overseer.model.Request;
 import com.overseer.model.User;
-import com.overseer.service.impl.report.builder.PdfPTableBuilder;
-import com.overseer.service.impl.report.builder.ReportDocumentBuilder;
+import com.overseer.service.impl.builder.PdfPTableBuilder;
+import com.overseer.service.impl.builder.ReportDocumentBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -57,7 +57,7 @@ public class RequestReportPdfView extends AbstractPdfView {
                         .addDoubleCell("Title:",            request.getTitle())
                         .addDoubleCell("Reporter:",         getUserFullName(request.getReporter()))
                         .addDoubleCell("Assignee:",         getUserFullName(request.getAssignee()))
-                        .addDoubleCell("Progress:",         request.getProgressStatus().getName())
+                        .addDoubleCell("Progress:",         request.getProgressStatus().name())
                         .addDoubleCell("Priority:",         request.getPriorityStatus().getName())
                         .addDoubleCell("Date of creation:", getFormattedDate(request.getDateOfCreation()))
                         .addDoubleCell("Estimate time:",    valueOf(request.getEstimateTimeInDays()))

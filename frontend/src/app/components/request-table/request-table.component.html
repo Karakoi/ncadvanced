@@ -1,16 +1,18 @@
-<div *ngIf="requests.length > 0">
-
+<div *ngIf="requests">
   <form-template>
     <div class="template-body">
       <div class="space">
-        <button ngClass="removSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">New request</button>
-        <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger" (click)="uncheck()">Uncheck
-          all
-        </button>
-        <button *ngIf="settings.join && checked.length > 1" class="btn btn-primary" (click)="join()">Join</button>
-        <button *ngIf="settings.reopen && checked.length > 1" class="btn btn-primary block"
-                (click)="reopen()">Reopen
-        </button>
+        <select #perPageSelect class="form-control pull-left" style="width: 90px; margin-right: 5px"
+                (change)="perPageChange(perPageSelect.value)" ngClass="removeSpace">
+          <option>10</option>
+          <option selected>20</option>
+          <option>50</option>
+          <option>100</option>
+        </select>
+        <button ngClass="removeSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">New request</button>
+        <button *ngIf="settings.join && checked.length > 1" class="btn btn-primary removeSpace" (click)="join()">Join all</button>
+        <button *ngIf="settings.reopen && checked.length > 1" class="btn btn-primary removeSpace block" (click)="reopen()">Reopen all</button>
+        <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger removeSpace" (click)="uncheck()">Uncheck all</button>
       </div>
       <table class="table table-bordered table-hover">
         <thead>
@@ -65,22 +67,30 @@
           <th *ngIf="settings.delete">Delete</th>
           <th *ngIf="settings.assign">Assign</th>
           <th *ngIf="settings.close">Close</th>
+          <th *ngIf="settings.reopen">Reopen</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngIf="settings.filterRow">
           <td *ngIf="settings.multiSelect"></td>
           <td *ngIf="settings.columns.title">
-            <input type="text" [(ngModel)]="searchTypes.title" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.title" (ngModelChange)="setTitleSearch('title', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.title" class="form-control"/>          </td>
           <td *ngIf="settings.columns.dateOfCreation">
-            <input type="date" [(ngModel)]="searchTypes.date" class="form-control"/>
+            <input *ngIf="settings.ajax" type="date" [ngModel]="searchDTO.dateOfCreation" (ngModelChange)="setTitleSearch('dateOfCreation', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="date" [(ngModel)]="searchTypes.date" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.estimate">
-            <input type="text" [(ngModel)]="searchTypes.estimateTime" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.estimate" (ngModelChange)="setTitleSearch('estimate', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.estimate" class="form-control"/>          </td>
           <td *ngIf="settings.columns.priorityStatus">
-            <select class="form-control" [(ngModel)]="searchTypes.priorityStatus">
+            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.priority" (ngModelChange)="setTitleSearch('priority', $event)">
+              <option></option>
+              <option>High</option>
+              <option>Normal</option>
+              <option>Low</option>
+            </select>
+            <select *ngIf="!settings.ajax" class="form-control" [(ngModel)]="searchTypes.priorityStatus">
               <option></option>
               <option>High</option>
               <option>Normal</option>
@@ -88,7 +98,14 @@
             </select>
           </td>
           <td *ngIf="settings.columns.progressStatus">
-            <select class="form-control" [(ngModel)]="searchTypes.progressStatus">
+            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.progress" (ngModelChange)="setTitleSearch('progress', $event)">
+              <option></option>
+              <option>Free</option>
+              <option>In progress</option>
+              <option>Joined</option>
+              <option>Closed</option>
+            </select>
+            <select *ngIf="!settings.ajax" class="form-control" [(ngModel)]="searchTypes.progressStatus">
               <option></option>
               <option>Free</option>
               <option>In progress</option>
@@ -97,14 +114,15 @@
             </select>
           </td>
           <td *ngIf="settings.columns.reporter">
-            <input type="text" [(ngModel)]="searchTypes.reporterName" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.reporterName" (ngModelChange)="setTitleSearch('reporterName', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.reporterName" class="form-control"/>          </td>
           <td *ngIf="settings.columns.assignee">
-            <input type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>
-          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.assigneeName" (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>          </td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
           <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
-          <td class="td-center" *ngIf="settings.close"><span class="center-block btn btn-success">Close</span></td>
+          <td class="td-center" *ngIf="settings.close"><span class="glyphicon glyphicon-ok-sign text-center"></span></td>
+          <td class="td-center" *ngIf="settings.reopen"><span class="glyphicon glyphicon-repeat text-center"></span></td>
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
@@ -121,10 +139,10 @@
             {{request.estimateTimeInDays}}
           </td>
           <td *ngIf="settings.columns.priorityStatus" [routerLink]="settings.info ? ['/request', request.id]: null">
-            {{request.priorityStatus.name}}
+            <priority-marker [value]="request.priorityStatus.name"></priority-marker>
           </td>
           <td *ngIf="settings.columns.progressStatus" [routerLink]="settings.info ? ['/request', request.id]: null">
-            {{request.progressStatus.name}}
+            <progress-marker [value]="request.progressStatus.name"></progress-marker>
           </td>
           <td *ngIf="settings.columns.reporter" [routerLink]="settings.info ? ['/request', request.id]: null">
             {{request.reporter.firstName}}
@@ -139,26 +157,27 @@
                   (click)="openDeleteRequestModal(request)"></span>
           </td>
           <td class="text-center " *ngIf="settings.assign">
-            <span [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs"
-                  (click)="openAssignRequestModal(request)"></span>
+            <button [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs btn-success"
+                  (click)="openAssignRequestModal(request)"></button>
           </td>
           <td class="text-center" *ngIf="settings.close">
-            <button class="center-block btn btn-success" (click)="close(request)">Close</button>
+            <button [attr.value]="request.id" class="glyphicon glyphicon-ok-sign center-block btn btn-xs btn-success"
+                  (click)="close(request)"></button>
           </td>
+          <td class="text-center" *ngIf="settings.reopen">
+            <span [attr.value]="request.id" class="glyphicon glyphicon-repeat center-block btn btn-success btn-xs"
+                  (click)="reOpen(request)"></span>
+          </td>
+        </tr>
+        <tr *ngIf="requests.length == 0">
+          <td class="no-requests" colspan="1000">Requests for this type or the specified search parameters was not found.</td>
         </tr>
         </tbody>
       </table>
-      <select #perPageSelect class="form-control pull-left" style="width: 90px;"
-              (change)="perPageChange(perPageSelect.value)">
-        <option>10</option>
-        <option selected>20</option>
-        <option>50</option>
-        <option>100</option>
-      </select>
-      <div class="text-center">
+      <div class="text-center" *ngIf="!searchDTO.title && !searchDTO.dateOfCreation && !searchDTO.priority && !searchDTO.estimate && !searchDTO.progress && !searchDTO.reporterName && !searchDTO.assigneeName">
         <pagination [totalItems]="requestsCount"
-                    [itemsPerPage]="perPage" (pageChanged)="changed($event)">
-        </pagination>
+                    [itemsPerPage]="perPage" (pageChanged)="changed($event)"
+        ></pagination>
       </div>
 
     </div>
@@ -170,5 +189,6 @@
   <join-request *ngIf="settings.join" [requests]="requests" [checked]="checked"
                 (updated)="updateRequests($event)"></join-request>
   <close-request *ngIf="settings.close" [requests]="requests" (updated)="updateRequests($event)"></close-request>
+  <reopen-request *ngIf="settings.reopen" [requests]="requests" (updated)="updateRequests($event)"></reopen-request>
 </div>
 

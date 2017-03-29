@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class MessageServiceImpl extends CrudServiceImpl<Message> implements MessageService {
-    private static final int DEFAULT_PAGE_SIZE = 10;
 
     private MessageDao messageDao;
 
@@ -25,23 +24,16 @@ public class MessageServiceImpl extends CrudServiceImpl<Message> implements Mess
     }
 
     @Override
-    public List<Message> findByRecipient(Long recipientId, int pageNumber) {
-        val list = messageDao.findByRecipient(recipientId, DEFAULT_PAGE_SIZE, pageNumber);
-        log.debug("Fetched {} messages for user with id: {}", list.size(), recipientId);
+    public List<Message> findByTopic(Long topicId) {
+        val list = messageDao.findByTopic(topicId);
+        log.debug("Fetched messages for topic with id: {}", topicId);
         return list;
     }
 
     @Override
-    public Long getCountByRecipient(Long recipientId) {
-        val count = messageDao.getCountByRecipient(recipientId);
-        log.debug("Counted {} messages for user with id: {}", recipientId);
-        return count;
-    }
-
-    @Override
-    public List<Message> findByTopic(Long topicId) {
-        val list = messageDao.findByTopic(topicId);
-        log.debug("Fetched messages for topic with id: {}", topicId);
+    public List<Message> findDialogMessages(Long senderId, Long recipientId) {
+        val list = messageDao.findDialogMessages(senderId, recipientId);
+        log.debug("Fetched messages for dialog for sender with id {} and recipient with id {}", senderId, recipientId);
         return list;
     }
 }

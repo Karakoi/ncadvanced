@@ -10,9 +10,7 @@ import java.util.List;
  */
 public interface MessageService extends CrudService<Message, Long> {
 
-    List<Message> findByRecipient(Long recipientId, int pageNumber);
-
-    Long getCountByRecipient(Long recipientId);
-
     List<Message> findByTopic(Long topicId);
+
+    List<Message> findDialogMessages(Long senderId, Long recipientId);
 }

@@ -2,6 +2,7 @@ import {Component, ViewChild, Input} from "@angular/core";
 import {ReportService} from "../../service/report.service";
 import {ToastsManager} from "ng2-toastr";
 import {RequestDTO} from "../../model/dto/requestDTO.model";
+import {User} from "../../model/user.model";
 
 @Component({
   selector: 'line-chart',
@@ -13,6 +14,9 @@ export class LineChartComponent {
               private toastr: ToastsManager) {
   }
 
+  ngOnInit(): void {
+      this.buildAdminChart(this.startDate, this.endDate);
+  }
 
   // public lineChartColors:Array<any> = [
   //   { // grey
@@ -60,11 +64,11 @@ export class LineChartComponent {
     this.lineChartData = [{data: [], label: ''}, {data: [], label: ''}];
   }
 
-  public buildAdminChart() {
+  public buildAdminChart(start: any, end: any) {
     let closedRequests: Array<any> = [];
-    let createdRequests: Array<any> = [];
+    let freeRequests: Array<any> = [];
     this.clear();
-    this.reportService.getAllStaticticsOfClosedRequestsByPeriod(this.startDate, this.endDate)
+    this.reportService.getAllStatisticsOfClosedRequestsByPeriod(start, end)
       .subscribe((array: RequestDTO[]) => {
         console.log(array);
         array.forEach(requestDTO => {
@@ -74,15 +78,15 @@ export class LineChartComponent {
           this.lineChartLabels.push(firstDate.concat(" : " + secondDate));
         });
 
-        this.reportService.getAllStaticticsOfCreatedRequestsByPeriod(this.startDate, this.endDate)
+        this.reportService.getAllStatisticsOfFreeRequestsByPeriod(start, end)
           .subscribe((array: RequestDTO[]) => {
             console.log(array);
             array.forEach(requestDTO => {
-              createdRequests.push(requestDTO.count);
+              freeRequests.push(requestDTO.count);
             });
 
-            this.lineChartData = [{data: closedRequests, label: 'Count closed requests'},
-              {data: createdRequests, label: 'Count created requests'}];
+            this.lineChartData = [{data: closedRequests, label: 'Count of closed requests'},
+              {data: freeRequests, label: 'Count of free requests'}];
           });
       });
   }

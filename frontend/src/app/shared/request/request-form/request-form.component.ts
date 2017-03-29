@@ -48,7 +48,7 @@ export class RequestFormComponent implements OnInit {
     this.requestForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(45)]],
       priorityStatus: [null, Validators.required],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]]
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]]
     });
 
     this.authService.currentUser.subscribe((user: User) => {

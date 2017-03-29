@@ -16,7 +16,7 @@ export class ActiveRequest implements OnInit {
   private currentUser: User;
   private totalItems: number;
   private per: number = 20;
-
+  pageSize: number = 20;
 
   settings = {
     delete: true,
@@ -24,6 +24,7 @@ export class ActiveRequest implements OnInit {
     info: true,
     multiSelect: false,
     filterRow: true,
+    ajax: false,
     columns: {
       title: true,
       dateOfCreation: true,
@@ -40,16 +41,16 @@ export class ActiveRequest implements OnInit {
 
 
   pageChange(data){
-      this.employeeService.getRequestsByReporter(this.currentUser.id, data.page).subscribe(requests => {
-        this.requests = requests.filter(r => r.progressStatus.name != "Closed");
+      this.employeeService.getRequestsByReporter(this.currentUser.id, data.page, this.pageSize).subscribe(requests => {
+        this.requests = requests.filter(r => r.progressStatus.name != "CLOSED");
       })
   }
 
   ngOnInit() {
     this.authService.currentUser.subscribe(u => {
       this.currentUser = u;
-      this.employeeService.getRequestsByReporter(u.id, 1).subscribe(requests => {
-        this.requests = requests.filter(r => r.progressStatus.name != "Closed");
+      this.employeeService.getRequestsByReporter(u.id, 1, this.pageSize).subscribe(requests => {
+        this.requests = requests.filter(r => r.progressStatus.name != "CLOSED" && r.progressStatus.name != null);
         this.employeeService.countRequestsByReporter(u.id).subscribe(count => {
           this.totalItems = count;
           this.loaded = true;
@@ -58,4 +59,10 @@ export class ActiveRequest implements OnInit {
   })
   }
 
+  perChangeLoad(pageData) {
+    this.pageSize = pageData.size;
+    this.employeeService.getRequestsByReporter(this.currentUser.id, pageData.page, pageData.size).subscribe(requests => {
+      this.requests = requests.filter(r => r.progressStatus.name != "CLOSED");
+    })
+  }
 }

@@ -2,11 +2,19 @@ package com.overseer.event;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
-import com.overseer.model.ProgressStatus;
+
 import com.overseer.model.Request;
+import com.overseer.model.User;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
+import com.overseer.service.RequestSubscribeService;
+import com.overseer.service.impl.email.UniversalMessageBuilder;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
@@ -19,12 +27,20 @@ import java.util.List;
  * Listener for ChangeProgressStatusEvent.
  */
 @Component
-public class ChangeProgressStatusEventListener {
+public class ChangeProgressStatusEventListener implements ApplicationEventPublisherAware {
+
+    private ApplicationEventPublisher publisher;
 
     private RequestDao requestDao;
+
     private EmailBuilder<Request> emailStrategyForAssignee;
     private EmailBuilder<Request> emailStrategyForReporter;
     private EmailService emailService;
+
+    @Autowired
+    private RequestSubscribeService requestSubscribeService;
+    @Autowired
+    private UniversalMessageBuilder universalMessageBuilder;
 
     public ChangeProgressStatusEventListener(RequestDao requestDao,
                                              @Qualifier("officeManagerNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForAssignee,
@@ -36,40 +52,44 @@ public class ChangeProgressStatusEventListener {
         this.emailService = emailService;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
+    }
+
     /**
      * Assigns request to specified office manager and changes it {@link Request#progressStatus}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param assignRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'In progress'")
-    public void assignRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request request = changeProgressStatusEvent.getRequest();
-        ProgressStatus progressStatus = changeProgressStatusEvent.getNewProgressStatus();
-        changeStatusAndSave(request, progressStatus);
+    @EventListener
+    public void assignRequest(AssignRequestEvent assignRequestEvent) {
+        Request request = assignRequestEvent.getRequest();
+        changeStatusAndSave(request, AssignRequestEvent.PROGRESS_STATUS);
     }
+
 
     /**
      * Closes request and changes it {@link Request#progressStatus}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param closeRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'Closed'")
-    public void closeRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request request = changeProgressStatusEvent.getRequest();
-        ProgressStatus closedProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
+    @EventListener
+    public void closeRequest(CloseRequestEvent closeRequestEvent) {
+        Request request = closeRequestEvent.getRequest();
         //Check if request is parent
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
         if (joinedRequests.isEmpty()) {
             Long parentRequestId = request.getParentId();
             request.setParentId(null);
-            changeStatusAndSave(request, closedProgressStatus);
+            changeStatusAndSave(request, CloseRequestEvent.PROGRESS_STATUS);
             if (parentRequestId != null) {
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
-            for (Request joinedRequest: joinedRequests) {
+            for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
-                changeStatusAndSave(joinedRequest, closedProgressStatus);
+                changeStatusAndSave(joinedRequest, CloseRequestEvent.PROGRESS_STATUS);
             }
             List<Request> subRequests = requestDao.findSubRequests(request);
             subRequests.forEach(requestDao::delete);
@@ -80,19 +100,17 @@ public class ChangeProgressStatusEventListener {
     /**
      * Reopens request and changes it {@link Request#progressStatus}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param reopenRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'Free'")
-    public void reopenRequest(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request request = changeProgressStatusEvent.getRequest();
-        ProgressStatus freeProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
-
+    @EventListener
+    public void reopenRequest(ReopenRequestEvent reopenRequestEvent) {
+        Request request = reopenRequestEvent.getRequest();
         request.setEstimateTimeInDays(null);
 
-        changeStatusAndSave(request, freeProgressStatus);
+        changeStatusAndSave(request, ReopenRequestEvent.PROGRESS_STATUS);
 
         sendMessageToAssignee(request);
-        request.setAssignee(null);
+        request.getAssignee().setId(null);
         requestDao.save(request);
     }
 
@@ -101,17 +119,18 @@ public class ChangeProgressStatusEventListener {
      * Joined requests will have 'Joined' {@link Request#progressStatus}
      * and not null {@link Request#parentId}.
      *
-     * @param changeProgressStatusEvent event of changing progress status
+     * @param joinRequestEvent event of changing progress status
      */
-    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus.name == 'Joined'")
-    public void joinRequestsIntoParent(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        Request parentRequest = changeProgressStatusEvent.getRequest();
-        ProgressStatus joinedProgressStatus = changeProgressStatusEvent.getNewProgressStatus();
-        List<Request> joinedRequests = changeProgressStatusEvent.getJoinedRequests();
+    @EventListener
+    public void joinRequestsIntoParent(JoinRequestEvent joinRequestEvent) {
+        Request parentRequest = joinRequestEvent.getParentRequest();
+        List<Request> joinedRequests = joinRequestEvent.getJoinedRequests();
 
         // Find and set max priority status from specified requests to parent request
         PriorityStatus maxPriorityStatus = getMaxPriorityStatus(joinedRequests);
         parentRequest.setPriorityStatus(maxPriorityStatus);
+        // Set progress status
+        parentRequest.setProgressStatus(ProgressStatus.IN_PROGRESS);
         parentRequest.setDateOfCreation(LocalDateTime.now());
         // Save parent request to database
         Request parent = requestDao.save(parentRequest);
@@ -123,21 +142,29 @@ public class ChangeProgressStatusEventListener {
             request.setParentId(parentId);
             request.setAssignee(parentRequest.getAssignee());
             request.setEstimateTimeInDays(parentRequest.getEstimateTimeInDays());
-            request.setLastChanger(parentRequest.getAssignee());
-            changeStatusAndSave(request, joinedProgressStatus);
+            changeStatusAndSave(request, JoinRequestEvent.PROGRESS_STATUS);
         });
     }
 
     /**
      * Changes progress status, save request and send message to Reporter.
+     * and send message to all subscribers of email when request progress has changed.
      *
-     * @param request specified request
+     * @param request        specified request
      * @param progressStatus specified progressStatus
      */
     private void changeStatusAndSave(Request request, ProgressStatus progressStatus) {
         request.setProgressStatus(progressStatus);
-        requestDao.save(request);
+        val req = requestDao.save(request);
+        val subscribers = requestSubscribeService.getSubscribersOfRequest(req.getId());
+        for (User sub : subscribers) {
+            val message = universalMessageBuilder.getMessageBody(request, sub);
+            emailService.sendMessage(message);
+        }
         sendMessageToReporter(request);
+
+        RequestChangeEvent event = new RequestChangeEvent(this, request);
+        publisher.publishEvent(event);
     }
 
     /**

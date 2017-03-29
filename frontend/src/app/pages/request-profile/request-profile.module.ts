@@ -9,6 +9,8 @@ import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request
 import {FormTemplateModule} from "../../shared/form-template/form-template.module";
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
+import {PriorityMarkerModule} from "../../util/priority-marker/priority-marker.module";
+import {ProgressMarkerModule} from "../../util/progress-marker/progress-marker.module";
 
 const routes: Routes = [
   {path: '', component: RequestProfileComponent},
@@ -16,6 +18,8 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    PriorityMarkerModule,
+    ProgressMarkerModule,
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,

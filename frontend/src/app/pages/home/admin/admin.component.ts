@@ -3,33 +3,40 @@ import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
 import 'rxjs/Rx';
 
-declare let $: any;
-
 @Component({
 
   selector: 'admin-home',
   templateUrl: 'admin.component.html',
+  styleUrls: ['admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  requests: Request[];
-  progress: Array<number>;
-  priority: Array<number>;
-  sixMonthsStatistic: Array<number>;
+  statisticForAdminDashBoard: Array<number>;
+  totalUsers: number;
+  totalRequests: number;
+  runningToday: number;
+  requestToday: number;
+  when: string = 'for 6 months';
+  selectPeriod: number;
 
-  constructor(private requestService: RequestService) {
-  }
+  constructor(private requestService: RequestService) {}
 
   ngOnInit(): void {
-    this.requestService.getQuantityRequest().subscribe((s => {
-      this.progress = s;
-    }));
+    this.setStatisticByDefault();
 
-    this.requestService.getQuantityRequestByPriority().subscribe((s => {
-      this.priority = s;
-    }));
+    this.requestService.getTotalUsers().subscribe(s => {
+      this.totalUsers = s;
+    });
 
-    this.requestService.getStatisticForSixMonths().subscribe(s => {
-      this.sixMonthsStatistic = s;
+    this.requestService.getTotalRequests().subscribe(s => {
+      this.totalRequests = s;
+    });
+
+    this.requestService.getRequestToday().subscribe(s => {
+      this.requestToday = s;
+    });
+
+    this.requestService.getRunningToday().subscribe(s => {
+      this.runningToday = s;
     })
   }
 
@@ -38,14 +45,12 @@ export class AdminComponent implements OnInit {
       chartType: 'PieChart',
       dataTable: [
         ['Request', 'Info'],
-        ['In progress: '+ this.progress[3], this.progress[3]],
-        ['Free: ' + this.progress[1],this.progress[1]],
-        ['Registered: ' + this.progress[0], this.progress[0]],
-        ['Reopen: ' + this.progress[4], this.progress[4]],
-        ['Joined: ' + this.progress[2],this.progress[2]],
+        ['Free: ' + this.statisticForAdminDashBoard[0],this.statisticForAdminDashBoard[0]],
+        ['Joined: ' + this.statisticForAdminDashBoard[1],this.statisticForAdminDashBoard[1]],
+        ['In progress: '+ this.statisticForAdminDashBoard[2], this.statisticForAdminDashBoard[2]],
       ],
       options: {
-        title: 'Request statistic by progress status',
+        title: 'Request statistic by progress',
         legend: { position: 'bottom'
         },
         is3D: true,
@@ -58,10 +63,10 @@ export class AdminComponent implements OnInit {
     chartType: 'PieChart',
     dataTable: [
       ['Request', 'Info'],
-      ['Click to see statistic',100],
+      ['Request statistic',100],
     ],
     options: {
-      title: 'Request statistic by progress status',
+      title: 'Request statistic by progress',
       legend: { position: 'bottom'
       },
       is3D: true,
@@ -74,12 +79,12 @@ export class AdminComponent implements OnInit {
       chartType: 'PieChart',
       dataTable: [
         ['Request', 'Info'],
-        ['High: '+ this.priority[0], this.priority[0]],
-        ['Normal: ' + this.priority[1],this.priority[1]],
-        ['Low: ' + this.priority[2], this.priority[2]],
+        ['High: '+ this.statisticForAdminDashBoard[5], this.statisticForAdminDashBoard[5]],
+        ['Normal: ' + this.statisticForAdminDashBoard[6],this.statisticForAdminDashBoard[6]],
+        ['Low: ' + this.statisticForAdminDashBoard[7], this.statisticForAdminDashBoard[7]],
       ],
       options: {
-        title: 'Request statistic by priority status',
+        title: 'Request statistic by priority',
         legend: { position: 'bottom'
         },
         is3D: true,
@@ -92,10 +97,10 @@ export class AdminComponent implements OnInit {
     chartType: 'PieChart',
     dataTable: [
       ['Request', 'Info'],
-      ['Click to see statistic',100],
+      ['Request statistic',100],
     ],
     options: {
-      title: 'Request statistic by priority status',
+      title: 'Request statistic by priority',
       legend: { position: 'bottom'
       },
       is3D: true,
@@ -103,16 +108,16 @@ export class AdminComponent implements OnInit {
     }
   };
 
-  setStatisticForSixMonths(){
+  setStatisticForBarChart(){
    this.pieChartRequestForSixMonths = {
-      chartType: 'Gauge',
+      chartType: 'BarChart',
       dataTable: [
-        ['Open', ''],
-        ['Open', this.sixMonthsStatistic[0]],
-        ['Closed', this.sixMonthsStatistic[1]]],
+        ['Requests', 'Open','Closed'],
+        ['Status', this.statisticForAdminDashBoard[4], this.statisticForAdminDashBoard[3]],
+        ],
       options: {
         hAxis: {
-          title: 'Request statistic for six month',
+          title: 'Request statistic ' + this.when,
           minValue: 0,
           textStyle: {
             bold: true,
@@ -145,13 +150,12 @@ export class AdminComponent implements OnInit {
   pieChartRequestForSixMonths = {
     chartType: 'BarChart',
     dataTable: [
-      ['Request', ''],
-      ['Click to see open',100],
-      ['Click to see closed',100],
+      ['Request', 'Open','Closed'],
+      ['Status',100,100],
     ],
     options: {
       hAxis: {
-        title: 'Click to see statistic',
+        title: 'Request statistic ' + this.when,
         minValue: 0,
         textStyle: {
           bold: true,
@@ -180,9 +184,22 @@ export class AdminComponent implements OnInit {
     }
   };
 
-  setStatistic(): void {
-    this.setStatisticForSixMonths();
-    this.setStatisticByPriority();
-    this.setStatisticByProgress();
+  setStatisticByDefault(): void {
+    this.requestService.getStatisticForAdminDashBoard(6).subscribe(s => {
+      this.statisticForAdminDashBoard = s;
+      this.setStatisticByProgress();
+      this.setStatisticByPriority();
+      this.setStatisticForBarChart();
+    });
   }
+
+    setStatisticByDropdown(howLong: number): void {
+      this.requestService.getStatisticForAdminDashBoard(howLong).subscribe(s => {
+        this.statisticForAdminDashBoard = s;
+        this.when = 'for ' + howLong + ' months';
+        this.setStatisticByProgress();
+        this.setStatisticByPriority();
+        this.setStatisticForBarChart();
+      });
+    }
 }

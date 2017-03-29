@@ -11,10 +11,13 @@ import {MessageItemComponent} from "./incoming-messages/incom-message/incoming-m
 import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {GravatarModule} from "../../shared/gravatar/gravatar.module";
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
+import {ChatService} from "../../service/chat.service";
+import {TimeParseModule} from "../../util/time-parser/time-parse.module";
 
 @NgModule({
   imports: [
     DateParseModule,
+    TimeParseModule,
     GravatarModule,
     CommonModule,
     FormsModule,
@@ -33,7 +36,8 @@ import {DateParseModule} from "../../util/date-parser/date-parse.module";
   ],
   providers: [
     UserService,
-    AuthService
+    AuthService,
+    ChatService
   ]
 })
 export class ForumModule {

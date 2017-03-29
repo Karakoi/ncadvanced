@@ -19,11 +19,6 @@ import java.util.List;
  */
 @Repository
 public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
-    @Override
-    public Long getCountByRecipient(Long recipientId) {
-        return jdbc().queryForObject(getCountByRecipientQuery(),
-                new MapSqlParameterSource("recipient", recipientId), Long.class);
-    }
 
     @Override
     public List<Message> findByTopic(Long topicId) {
@@ -32,15 +27,10 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
     }
 
     @Override
-    public List<Message> findByRecipient(Long recipientId, int pageSize, int pageNumber) {
-        val parameterSource = new MapSqlParameterSource("recipient", recipientId);
-        parameterSource.addValue("limit", pageSize);
-        parameterSource.addValue("offset", pageSize * (pageNumber - 1));
-        return jdbc().query(getMessageByRecipientQuery(), parameterSource, getMapper());
-    }
-
-    protected String getMessageByRecipientQuery() {
-        return queryService().getQuery("message.select") + queryService().getQuery("message.findByRecipient");
+    public List<Message> findDialogMessages(Long senderId, Long recipientId) {
+        val parameterSource = new MapSqlParameterSource("senderId", senderId);
+        parameterSource.addValue("recipientId", recipientId);
+        return jdbc().query(getByFriendQuery(), parameterSource, getDialogMapper());
     }
 
     @Override
@@ -57,6 +47,30 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
 
             User recipient = new User();
             recipient.setId(resultSet.getLong("recipient_id"));
+
+            Message message = new Message();
+            message.setText(resultSet.getString("text"));
+            message.setId(resultSet.getLong("id"));
+            message.setRecipient(recipient);
+            message.setSender(sender);
+            message.setTopic(null);
+            message.setDateAndTime(resultSet.getTimestamp("date_and_time").toLocalDateTime());
+
+            return message;
+        };
+    }
+
+    private RowMapper<Message> getDialogMapper() {
+        return (resultSet, i) -> {
+            User sender = new User();
+            sender.setId(resultSet.getLong("sender_id"));
+            sender.setFirstName(resultSet.getString("sender_first_name"));
+            sender.setEmail(resultSet.getString("sender_email"));
+
+            User recipient = new User();
+            recipient.setId(resultSet.getLong("recipient_id"));
+            recipient.setFirstName(resultSet.getString("recipient_first_name"));
+            recipient.setEmail(resultSet.getString("recipient_email"));
 
             Message message = new Message();
             message.setText(resultSet.getString("text"));
@@ -100,11 +114,11 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
         return queryService().getQuery("message.count");
     }
 
-    private String getCountByRecipientQuery() {
-        return queryService().getQuery("message.countByRecipient");
-    }
-
     private String getByTopicQuery() {
         return queryService().getQuery("message.select") + queryService().getQuery("message.getByTopicQuery");
+    }
+
+    private String getByFriendQuery() {
+        return queryService().getQuery("message.getByFriendQuery");
     }
 }

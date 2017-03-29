@@ -1,13 +1,12 @@
-<div class="container">
+<div class="container col-lg-12">
     <div class="header-content">
       <div class="header-content-inner text-center">
-        <h1>User dashboard</h1>
         <ul class="nav nav-tabs">
           <li class="active"><a [routerLink]="['/home/user/active']">My active requests</a></li>
           <li><a [routerLink]="['/home/user/closed']">My completed request</a></li>
         </ul>
         <r-table *ngIf="loaded" [requests]="requests" [requestsCount]="totalItems" [settings]="settings"
-                 (paginationChange)="pageChange($event)"></r-table>
+                 (paginationChange)="pageChange($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>
       </div>
   </div>
 </div>
