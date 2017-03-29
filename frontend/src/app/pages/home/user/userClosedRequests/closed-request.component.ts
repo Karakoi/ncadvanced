@@ -25,7 +25,7 @@ export class ClosedRequest implements OnInit {
 
   settings = {
     delete: false,
-    add: true,
+    add: false,
     info: true,
     multiSelect: true,
     filterRow: true,
