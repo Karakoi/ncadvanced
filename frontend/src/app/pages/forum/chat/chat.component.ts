@@ -70,6 +70,7 @@ export class ChatComponent implements OnInit {
       this.message.recipient = this.chatFriend;
       this.userService.sendMessage(this.message).subscribe((resp: Response) => {
         this.updateArray(<Message> resp.json());
+        this.messageForm.reset();
       }, e => this.handleErrorCreateMessage(e));
     });
     $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
