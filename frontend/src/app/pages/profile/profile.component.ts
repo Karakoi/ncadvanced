@@ -36,7 +36,6 @@ export class ProfileComponent implements OnInit {
   }
 
   hasUpdate() {
-
     if (this.user.password == null) {
       this.toastr.error('Firstly enter ur password to update profile', 'Wrong');
       return;
@@ -66,10 +65,6 @@ export class ProfileComponent implements OnInit {
       this.user.password = newPass;
       this.update();
     }, e => this.toastr.warning('Old password is incorrect', 'Wrong'));
-  }
-
-  cancel(): void {
-    this.router.navigate(['/home']);
   }
 
   validateField(field: string): boolean {

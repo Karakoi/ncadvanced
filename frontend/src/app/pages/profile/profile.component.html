@@ -126,6 +126,32 @@
               </div>
             </div>
 
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group" [ngClass]="{'has-error': !validateField('password')}">
+                  <label class="control-label">Password</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="password" formControlName="password" [(ngModel)]="user.password"
+                           type="{{showPass ? 'text' : 'password'}}" placeholder="Password"
+                           class="form-control">
+                    <span *ngIf="!validateField('password')"
+                          class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  </div>
+
+                  <div class="input-group" style="margin-top: 10px">
+                    <input type="checkbox" id="showPassCheckB" value="showPass" (click)="showPassword()">
+                    <label class="control-label" for="showPassCheckB"> Show password</label>
+                  </div>
+
+                  <div *ngIf="!validateField('password')" class="help-block text-left">
+                    <span *ngIf="profileForm.get('password').hasError('required')">Password required.</span>
+                    <span *ngIf="profileForm.get('password').hasError('minlength')">
+                Password invalid. Password must be at least six characters long.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <br/>
           </div>
         </div>
