@@ -2,7 +2,7 @@
   <form-template>
     <div class="template-body">
       <div class="space">
-        <select #perPageSelect class="form-control pull-left" style="width: 90px;"
+        <select #perPageSelect class="form-control pull-left" style="width: 90px; margin-right: 5px"
                 (change)="perPageChange(perPageSelect.value)" ngClass="removeSpace">
           <option>10</option>
           <option selected>20</option>
@@ -10,13 +10,9 @@
           <option>100</option>
         </select>
         <button ngClass="removeSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">New request</button>
-        <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger" (click)="uncheck()">Uncheck
-          all
-        </button>
-        <button *ngIf="settings.join && checked.length > 1" class="btn btn-primary" (click)="join()">Join</button>
-        <button *ngIf="settings.reopen && checked.length > 1" class="btn btn-primary block"
-                (click)="reopen()">Reopen
-        </button>
+        <button *ngIf="settings.join && checked.length > 1" class="btn btn-primary removeSpace" (click)="join()">Join all</button>
+        <button *ngIf="settings.reopen && checked.length > 1" class="btn btn-primary removeSpace block" (click)="reopen()">Reopen all</button>
+        <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger removeSpace" (click)="uncheck()">Uncheck all</button>
       </div>
       <table class="table table-bordered table-hover">
         <thead>
