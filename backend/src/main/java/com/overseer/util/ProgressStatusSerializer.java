@@ -18,8 +18,13 @@ public class ProgressStatusSerializer extends JsonSerializer<ProgressStatus> {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeFieldName("id");
         jsonGenerator.writeNumber(progressStatus.getId());
+
         jsonGenerator.writeFieldName("name");
-        jsonGenerator.writeString(progressStatus.getName());
+        String name = progressStatus.getName();
+        name = name.replaceAll("_", " ").toLowerCase();
+        name = name.toUpperCase().charAt(0) + name.substring(1);
+        jsonGenerator.writeString(name);
+
         jsonGenerator.writeFieldName("value");
         jsonGenerator.writeNumber(progressStatus.getValue());
         jsonGenerator.writeEndObject();

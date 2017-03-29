@@ -19,7 +19,6 @@ import com.overseer.service.RequestService;
 import com.overseer.service.impl.builder.SqlQueryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
@@ -39,13 +38,13 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     private static final short DEFAULT_PAGE_SIZE = 20;
 
     private RequestDao requestDao;
-    @Autowired
     private UserDao userDao;
 
     private ApplicationEventPublisher publisher;
 
-    public RequestServiceImpl(RequestDao requestDao) {
+    public RequestServiceImpl(RequestDao requestDao, UserDao userDao) {
         super(requestDao);
+        this.userDao = userDao;
         this.requestDao = requestDao;
     }
 
@@ -121,12 +120,12 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Request> findClosedRequestsByAssignee(Long assigneeId, int size, int pageNumber) {
+    public List<Request> findRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus, int size, int pageNumber) {
         Assert.notNull(assigneeId, "assignee must not be null");
-        val list = this.requestDao.findClosedRequestsByAssignee(assigneeId, size, pageNumber);
+        List<Request> requestsOfGivenAssignee = this.requestDao.findRequestsWithGivenProgressByAssignee(assigneeId, progressStatus, size, pageNumber);
         log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
-                list.size(), assigneeId, pageNumber);
-        return list;
+                requestsOfGivenAssignee.size(), assigneeId, pageNumber);
+        return requestsOfGivenAssignee;
     }
     
     /**
@@ -141,17 +140,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return list;
     }
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public List<Request> findInProgressRequestsByAssignee(Long assigneeId, int size, int pageNumber) {
-        Assert.notNull(assigneeId, "assignee must not be null");
-        val list = this.requestDao.findInProgressRequestsByAssignee(assigneeId, size, pageNumber);
-        log.debug("Fetched {} requests for assignee with id: {} for page number: {}",
-                list.size(), assigneeId, pageNumber);
-        return list;
-    }
 
     /**
      * {@inheritDoc}.
@@ -344,22 +332,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return requestDao.countOpenClosedRequestForUser(userId, howLong);
     }
 
-//    /**
-//     * {@inheritDoc}.
-//     */
-//    @Override
-//    public List<Long> quantityByProgressStatusForSixMonths() {
-//        return requestDao.countRequestByProgressStatusForSixMonths();
-//    }
-
-//    /**
-//     * {@inheritDoc}.
-//     */
-//    @Override
-//    public List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId) {
-//        return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
-//    }
-
     //-----------------------LIFECYCLE---------------------------
 
     /**
@@ -543,17 +515,12 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public Long countClosedRequestsByReporter(Long reporterId) {
         Assert.notNull(reporterId, "Reporter id must be not null");
-        return requestDao.countRequestsByReporterAndProgress(reporterId, ProgressStatus.CLOSED);
+        return requestDao.countRequestsWithNullParentByReporterAndProgress(reporterId, ProgressStatus.CLOSED);
     }
 
     @Override
-    public Long countClosedRequestByAssignee(Long managerId) {
-        return requestDao.countClosedRequestByAssignee(managerId);
-    }
-
-    @Override
-    public Long countInProgressRequestByAssignee(Long managerId) {
-        return requestDao.countInProgressRequestByAssignee(managerId);
+    public Long countRequestsWithGivenProgressByAssignee(Long managerId, ProgressStatus progressStatus) {
+        return requestDao.countRequestsWithGivenProgressByAssignee(managerId, progressStatus);
     }
 
     @Override

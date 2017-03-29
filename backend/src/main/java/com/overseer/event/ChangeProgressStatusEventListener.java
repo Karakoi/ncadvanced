@@ -4,11 +4,12 @@ import com.overseer.dao.RequestDao;
 import com.overseer.model.PriorityStatus;
 
 import com.overseer.model.Request;
-import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,12 @@ import java.util.List;
  * Listener for ChangeProgressStatusEvent.
  */
 @Component
-public class ChangeProgressStatusEventListener {
+public class ChangeProgressStatusEventListener implements ApplicationEventPublisherAware {
+
+    private ApplicationEventPublisher publisher;
 
     private RequestDao requestDao;
+
     private EmailBuilder<Request> emailStrategyForAssignee;
     private EmailBuilder<Request> emailStrategyForReporter;
     private EmailService emailService;
@@ -36,6 +40,11 @@ public class ChangeProgressStatusEventListener {
         this.emailStrategyForAssignee = emailStrategyForAssignee;
         this.emailStrategyForReporter = emailStrategyForReporter;
         this.emailService = emailService;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
     }
 
     /**
@@ -58,9 +67,6 @@ public class ChangeProgressStatusEventListener {
     public void closeRequest(CloseRequestEvent closeRequestEvent) {
         Request request = closeRequestEvent.getRequest();
         //Check if request is parent
-        if (request.getAssignee().getId() == 0) {
-            request.setAssignee(new User());
-        }
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
         if (joinedRequests.isEmpty()) {
             Long parentRequestId = request.getParentId();
@@ -88,9 +94,6 @@ public class ChangeProgressStatusEventListener {
     @EventListener
     public void reopenRequest(ReopenRequestEvent reopenRequestEvent) {
         Request request = reopenRequestEvent.getRequest();
-//        if (request.getAssignee().getId() == 0) {
-//            request.setAssignee(new User());
-//        }
         request.setEstimateTimeInDays(null);
 
         changeStatusAndSave(request, ReopenRequestEvent.PROGRESS_STATUS);
@@ -141,7 +144,11 @@ public class ChangeProgressStatusEventListener {
     private void changeStatusAndSave(Request request, ProgressStatus progressStatus) {
         request.setProgressStatus(progressStatus);
         requestDao.save(request);
+
         sendMessageToReporter(request);
+
+        RequestChangeEvent event = new RequestChangeEvent(this, request);
+        publisher.publishEvent(event);
     }
 
     /**

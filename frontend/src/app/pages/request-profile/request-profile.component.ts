@@ -201,7 +201,6 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isEmployee(): boolean {
-    console.log(this.role)
     return this.role === 'employee'
   }
 
