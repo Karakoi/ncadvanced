@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface RequestSubscribersDao {
 
-    void save(User user, Request request);
+    void save(Long subscriberId, Long requestId);
 
-    void delete(User user, Request request);
+    void delete(Long subscriberId, Long requestId);
 
     List<User> getSubscribersOfRequest(Long requestId);
 
