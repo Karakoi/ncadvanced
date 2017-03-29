@@ -9,6 +9,7 @@ import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
 import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
+import {SuscribeService} from "../../service/subscribe.service";
 import {ReportService} from "../../service/report.service";
 import * as FileSaver from "file-saver";
 
@@ -18,7 +19,7 @@ import * as FileSaver from "file-saver";
   styleUrls: ['request-profile.component.css']
 })
 export class RequestProfileComponent implements OnInit {
-
+  followed: boolean = false;
   currentUser: User;
   request: Request;
   type: string;
@@ -42,14 +43,16 @@ export class RequestProfileComponent implements OnInit {
               private reportService: ReportService,
               private toastr: ToastsManager,
               private authService: AuthService,
-              private historyService: HistoryService) {
+              private historyService: HistoryService,
+              private subscribeService: SuscribeService) {
   }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
       this.role = user.role.name;
-    });
+
+
 
     this.route.params.subscribe(params => {
       let id = +params['id'];
@@ -62,6 +65,9 @@ export class RequestProfileComponent implements OnInit {
       this.requestService.get(id).subscribe((request: Request) => {
         this.request = request;
         this.type = this.getRequestType(request);
+        this.subscribeService.check(this.request.id, this.currentUser.id).subscribe(result => {
+          this.followed = result;
+        })
         /*console.log(request)*/
       });
 
@@ -74,6 +80,7 @@ export class RequestProfileComponent implements OnInit {
         this.joinedRequests = joinedRequests;
         /*console.log(joinedRequests)*/
       });
+    });
     });
   }
 
@@ -202,6 +209,12 @@ export class RequestProfileComponent implements OnInit {
 
   isEmployee(): boolean {
     return this.role === 'employee'
+  }
+
+  follow(){
+    this.subscribeService.toggleSubscribe(this.request.id, this.currentUser.id).subscribe(resp => {
+      this.followed = resp;
+    });
   }
 
   isClosed(request):boolean {

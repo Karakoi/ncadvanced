@@ -9,6 +9,11 @@
                        [disabled]="isFree(request) && isEmployee()"
         >
         </inline-editor>
+
+        <button *ngIf="true" class="btn btn-info" (click)="follow()">
+          <span class="glyphicon" [ngClass]="followed ? 'glyphicon glyphicon-ban-circle' : 'glyphicon-flash info'"
+          [textContent]="followed ? ' Unfollow':' Follow'"></span>
+        </button>
       </p>
     </div>
     <div class="panel-body">
@@ -36,7 +41,9 @@
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
-              <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
+              <td>
+                <date-parse [date]="request.dateOfCreation"></date-parse>
+              </td>
             </tr>
             <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
@@ -56,13 +63,15 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}}
+                  {{request.reporter.lastName}}</a>
               </td>
             </tr>
             <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}}
+                  {{request.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>
@@ -141,9 +150,12 @@
             <tr *ngFor="let subRequest of subRequests">
               <td *ngIf="showSubRequests">{{subRequest.title}}</td>
               <td *ngIf="showSubRequests">{{subRequest.description}}</td>
-              <td *ngIf="showSubRequests"><date-parse [date]="subRequest.dateOfCreation"></date-parse></td>
+              <td *ngIf="showSubRequests">
+                <date-parse [date]="subRequest.dateOfCreation"></date-parse>
+              </td>
               <td *ngIf="showSubRequests" class="details">
-                <button [routerLink]="['/request', subRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+                <button [routerLink]="['/request', subRequest.id]"
+                        class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
               </td>
               <td *ngIf="showSubRequests && !isClosed(request)" class="text-center delete-col">
                 <button [attr.value]="subRequest.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
@@ -184,7 +196,8 @@
               <td *ngIf="showJoinedRequests"><priority-marker [value]="joinedRequest.priorityStatus.name"></priority-marker></td>
               <td *ngIf="showJoinedRequests"><date-parse [date]="joinedRequest.dateOfCreation"></date-parse></td>
               <td *ngIf="showJoinedRequests" class="details">
-                <button [routerLink]="['/request', joinedRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+                <button [routerLink]="['/request', joinedRequest.id]"
+                        class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
               </td>
             </tr>
             </tbody>
@@ -225,6 +238,7 @@
       </div>
     </div>
   </div>
-  <add-sub-request [subRequests]="subRequests" [parentId]="request.id" (updated)="updateSubRequests($event)"></add-sub-request>
+  <add-sub-request [subRequests]="subRequests" [parentId]="request.id"
+                   (updated)="updateSubRequests($event)"></add-sub-request>
   <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
 </div>
