@@ -341,6 +341,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Request saveSubRequest(Request subRequest) {
         Assert.notNull(subRequest, "sub request must not be null");
         log.debug("Create sub request {} for parent request with id {}", subRequest, subRequest.getParentId());
+        subRequest.getProgressStatus().getId();
         return requestDao.save(subRequest);
     }
 
