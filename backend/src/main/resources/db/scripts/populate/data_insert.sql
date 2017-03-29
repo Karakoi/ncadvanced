@@ -14,12 +14,10 @@ insert into priority_status(id, name, value) values (1, 'High', 300);
 insert into priority_status(name, value) values ('Normal', 200);
 insert into priority_status(name, value) values ('Low', 100);
 
-insert into progress_status(name, value) values ('Registered', 100);
 insert into progress_status(name, value) values ('Free', 200);
 insert into progress_status(name, value) values ('Joined', 300);
 insert into progress_status(name, value) values ('In progress', 400);
 insert into progress_status(name, value) values ('Closed', 500);
-insert into progress_status(name, value) values ('Reopen', 600);
 
 insert into role (name) values ('admin');
 insert into role (name) values ('office manager');
