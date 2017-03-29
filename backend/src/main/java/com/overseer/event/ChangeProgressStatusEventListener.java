@@ -8,6 +8,9 @@ import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
+import com.overseer.service.RequestSubscribeService;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
@@ -28,6 +31,9 @@ public class ChangeProgressStatusEventListener {
     private EmailBuilder<Request> emailStrategyForReporter;
     private EmailService emailService;
     private SecurityContextService securityContextService;
+
+    @Autowired
+    private RequestSubscribeService requestSubscribeService;
 
     public ChangeProgressStatusEventListener(RequestDao requestDao,
                                              @Qualifier("officeManagerNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForAssignee,
@@ -53,11 +59,22 @@ public class ChangeProgressStatusEventListener {
         changeStatusAndSave(request, progressStatus);
     }
 
-  /*  @EventListener
+    /**
+     * Sending message to all subscribers of email when request progress has changed.
+     *
+     * @param changeProgressStatusEvent event of changing progress status.
+     */
+    @EventListener(condition = "#changeProgressStatusEvent.newProgressStatus != null ")
     public void testEvent(ChangeProgressStatusEvent changeProgressStatusEvent) {
-        System.out.println(changeProgressStatusEvent.getNewProgressStatus());
+        val subscribers = requestSubscribeService.getSubscribersOfRequest(changeProgressStatusEvent.getRequest().getId());
+        SimpleMailMessage message = emailStrategyForAssignee.buildMessage(changeProgressStatusEvent.getRequest());
+        if (!subscribers.isEmpty()) {
+            val subscribersEmail  = subscribers.stream().map(User::getEmail).toArray(String[]::new);
+            message.setTo(subscribersEmail);
+            emailService.sendMessage(message);
+        }
     }
-*/
+
     /**
      * Closes request and changes it {@link Request#progressStatus}.
      *
@@ -148,7 +165,7 @@ public class ChangeProgressStatusEventListener {
     /**
      * Changes progress status, save request and send message to Reporter.
      *
-     * @param request specified request
+     * @param request        specified request
      * @param progressStatus specified progressStatus
      */
     private void changeStatusAndSave(Request request, ProgressStatus progressStatus) {

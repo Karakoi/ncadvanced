@@ -1,5 +1,9 @@
 package com.overseer.service;
 
+import com.overseer.model.User;
+
+import java.util.List;
+
 /**
  * Provide service to subscribing/unsubscriping on requests changing events.
  */
@@ -11,4 +15,5 @@ public interface RequestSubscribeService {
 
     void delete(Long requestId, Long subscriberId);
 
+    List<User> getSubscribersOfRequest(Long requestId);
 }

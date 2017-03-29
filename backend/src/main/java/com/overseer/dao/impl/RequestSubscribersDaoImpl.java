@@ -5,6 +5,7 @@ import com.overseer.model.User;
 import com.overseer.service.QueryService;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -58,8 +59,13 @@ public class RequestSubscribersDaoImpl implements RequestSubscribersDao {
 
     @Override
     public List<User> getSubscribersOfRequest(Long requestId) {
-        return jdbc.queryForObject(queryService.getQuery("request.subscribers"),
-                new MapSqlParameterSource("requestId", requestId), getMapper());
+        try {
+            return jdbc.queryForObject(queryService.getQuery("request.subscribers"),
+                    new MapSqlParameterSource("requestId", requestId), getMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+
     }
 
 

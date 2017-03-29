@@ -20,7 +20,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
-@ToString
+@ToString(callSuper = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.ANY)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Request extends AbstractEntity {
