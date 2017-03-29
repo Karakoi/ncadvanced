@@ -1,9 +1,5 @@
 .content{
-  width: 1000px;
-  text-align: center;
-  margin: 0 auto;
-  background-color: white;
-  border-radius: 20px;
+  width: auto;
 }
 
 .dummy_user {
@@ -14,9 +10,18 @@
 }
 
 .container{
-  width: auto;
+  /*width: 100%;*/
+  /*text-align: center;*/
+  /*margin: auto;*/
 }
 
 .profile-buttons {
   margin-top: 10px;
 }
+
+/*@media (min-width: 992px){*/
+  /*.col-md-7 {*/
+    /*padding-left: 15%;*/
+  /*}*/
+/*}*/
+

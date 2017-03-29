@@ -79,6 +79,7 @@ export class TopicComponent implements OnInit {
     this.topicService.createMessage(this.message).subscribe((resp: Response) => {
       this.updateArray(<Message> resp.json());
       console.log(resp.json());
+      this.messageForm.reset();
       this.toastr.success("Message sended", "Success")
     }, e => this.handleErrorCreateMessage(e));
   }

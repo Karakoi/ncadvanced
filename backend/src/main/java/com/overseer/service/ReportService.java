@@ -16,9 +16,20 @@ public interface ReportService {
      *
      * @param start period start.
      * @param end   period end.
-     * @return admin reports documents.
+     * @param countTop   count managers in top.
+     * @return view with admin reports.
      */
-    View generateAdminPDFReport(LocalDate start, LocalDate end);
+    View generateAdminPDFReport(LocalDate start, LocalDate end, int countTop);
+
+    /**
+     * Method generate PDF report for user role Manager.
+     *
+     * @param start period start.
+     * @param end   period end.
+     * @param id    manager id.
+     * @return view with manager reports.
+     */
+    View generateManagerPDFReport(LocalDate start, LocalDate end, int id);
 
     /**
      * The method receives all the created requests for a period of months.
@@ -27,7 +38,7 @@ public interface ReportService {
      * @param end   period end.
      * @return list of requests transfer objects.
      */
-    List<RequestDTO> getAllStatisticsOfCreatedRequestsByPeriod(LocalDate start, LocalDate end);
+    List<RequestDTO> getAllStatisticsOfFreeRequestsByPeriod(LocalDate start, LocalDate end);
 
     /**
      * The method receives all the closed requests for a period of months.

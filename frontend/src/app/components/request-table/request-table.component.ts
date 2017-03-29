@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild, Input, Output, EventEmitter} from "@angular/core";
+import {ToastsManager} from "ng2-toastr";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
 import {RequestFormComponent} from "../../shared/request/request-form/request-form.component";
@@ -78,7 +79,8 @@ export class RequestTable {
   @ViewChild(ReopenRequestComponent)
   reopenRequestComponent: ReopenRequestComponent;
 
-  constructor(private requestService: RequestService) {
+  constructor(private requestService: RequestService,
+              private toastr: ToastsManager) {
     this.searchDTO = {
       title: "",
       dateOfCreation: "",
@@ -157,8 +159,12 @@ export class RequestTable {
   }
 
   openDeleteRequestModal(request: Request, event): void {
-    this.deleteRequestComponent.request = request;
-    this.deleteRequestComponent.modal.open();
+    if(request.progressStatus.name === 'FREE'){
+      this.deleteRequestComponent.request = request;
+      this.deleteRequestComponent.modal.open();
+    } else {
+      this.toastr.error('Can not delete not [FREE] request', "Error!");
+    }
   }
 
   openAssignRequestModal(request: Request) {

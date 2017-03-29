@@ -1,6 +1,7 @@
 package com.overseer.controller;
 
 import com.overseer.dto.RequestDTO;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
 import lombok.AllArgsConstructor;
@@ -34,18 +35,52 @@ public class ReportController {
         return reportService.generateRequestPDFReport(requestId);
     }
 
+    //<editor-fold defaultstate="collapsed" desc="methods for manager reports">
     /**
-     * Gets Document pdf report.
+     * Method gets pdf report for office manager.
      *
-     * @return Document doc with reporting data.
+     * @return view with reporting data.
      */
-    @GetMapping("/adminPDFReport")
-    public View getAdminPDFReport(@RequestParam String beginDate, @RequestParam String endDate) {
+    @RequestMapping(value = "/managerPDFReport", method = RequestMethod.GET, produces = "application/pdf")
+    public View getManagerPDFReport(@RequestParam String beginDate, @RequestParam String endDate, @RequestParam int id) {
 
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
+        return reportService.generateManagerPDFReport(start, end, id);
+    }
 
-        return reportService.generateAdminPDFReport(start, end);
+    /**
+     * Gets list of request transfer objects which created in the same period for manager.
+     *
+     * @param beginDate date from.
+     * @param endDate   date to.
+     * @param id        manager id.
+     * @return return list of requestDTO from one period of time for manager.
+     */
+    @GetMapping("/getManagerStatisticsOfClosedRequestsByPeriod")
+    public ResponseEntity<List<RequestDTO>> getManagerStatisticsOfClosedRequestsByPeriod(@RequestParam String beginDate,
+                                                                                         @RequestParam String endDate,
+                                                                                         @RequestParam int id) {
+        LocalDate start = LocalDate.parse(beginDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+        return new ResponseEntity<>(reportService.getManagerStatisticsOfClosedRequestsByPeriod(start, end, id), HttpStatus.OK);
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="methods for admin reports">
+
+    /**
+     * Method gets pdf report for admin.
+     *
+     * @return view with reporting data.
+     */
+    @RequestMapping(value = "/adminPDFReport", method = RequestMethod.GET, produces = "application/pdf")
+    public View getAdminPDFReport(@RequestParam String beginDate,
+                                  @RequestParam String endDate,
+                                  @RequestParam int countTop) {
+        LocalDate start = LocalDate.parse(beginDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+        return reportService.generateAdminPDFReport(start, end, countTop);
     }
 
     /**
@@ -55,14 +90,15 @@ public class ReportController {
      * @param endDate   date to
      * @return return list of requestDTO from one period of time
      */
-    @GetMapping("/getAllStatisticsOfCreatedRequestsByPeriod")
-    public ResponseEntity<List<RequestDTO>> getAllStatisticsOfCreatedRequestsByPeriod(@RequestParam String beginDate,
-                                                                                      @RequestParam String endDate) {
+    @GetMapping("/getAllStatisticsOfFreeRequestsByPeriod")
+    public ResponseEntity<List<RequestDTO>> getAllStatisticsOfFreeRequestsByPeriod(@RequestParam String beginDate,
+                                                                                   @RequestParam String endDate) {
 
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-        return new ResponseEntity<>(reportService.getAllStatisticsOfCreatedRequestsByPeriod(start, end), HttpStatus.OK);
+        return new ResponseEntity<>(reportService.getAllStatisticsOfFreeRequestsByPeriod(start, end), HttpStatus.OK);
     }
+
 
     /**
      * Gets list of request transfer objects which created in the same period.
@@ -88,43 +124,14 @@ public class ReportController {
      */
     @GetMapping("/getBestManagersWithClosedStatusByPeriod")
     public ResponseEntity<List<RequestDTO>> getBestManagersWithClosedStatusByPeriod(@RequestParam String beginDate,
-                                                                                    @RequestParam String endDate) {
+                                                                                    @RequestParam String endDate,
+                                                                                    @RequestParam int countTop) {
         LocalDate start = LocalDate.parse(beginDate, formatter);
         LocalDate end = LocalDate.parse(endDate, formatter);
-        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, "Closed");
+        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId(), countTop);
         return new ResponseEntity<>(topManagers, HttpStatus.OK);
     }
 
-    /**
-     * Gets list of best managers which created in the same period. Data showed with status free.
-     *
-     * @param beginDate date from
-     * @param endDate   date to
-     * @return return list of managers from one period of time
-     */
-    @GetMapping("/getBestManagersWithFreeStatusByPeriod")
-    public ResponseEntity<List<RequestDTO>> getBestManagersWithFreeStatusByPeriod(@RequestParam String beginDate,
-                                                                                  @RequestParam String endDate) {
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, "Free");
-        return new ResponseEntity<>(topManagers, HttpStatus.OK);
-    }
+    //</editor-fold >
 
-    /**
-     * Gets list of request transfer objects which created in the same period for manager.
-     *
-     * @param beginDate date from.
-     * @param endDate   date to.
-     * @param id        manager id.
-     * @return return list of requestDTO from one period of time for manager.
-     */
-    @GetMapping("/getManagerStatisticsOfClosedRequestsByPeriod")
-    public ResponseEntity<List<RequestDTO>> getManagerStatisticsOfClosedRequestsByPeriod(@RequestParam String beginDate,
-                                                                                         @RequestParam String endDate,
-                                                                                         @RequestParam int id) {
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        return new ResponseEntity<>(reportService.getManagerStatisticsOfClosedRequestsByPeriod(start, end, id), HttpStatus.OK);
-    }
 }

@@ -66,7 +66,6 @@ public class UserController {
      * @param user user to update.
      * @return http status 201 CREATED.
      */
-    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         User updatedUser = userService.update(user);
