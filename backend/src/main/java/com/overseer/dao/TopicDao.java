@@ -24,4 +24,12 @@ public interface TopicDao extends CrudDao<Topic, Long> {
      * @param message topic message
      */
     Message saveTopicMessage(Message message);
+
+    /**
+     * Checks whether entity with the given title exists.
+     *
+     * @param title title of topic
+     * @return {@literal true} if entity with the given title exists, {@literal false} otherwise.
+     */
+    boolean existsByTitle(String title);
 }

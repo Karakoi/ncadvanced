@@ -36,19 +36,9 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
     @Autowired
     private RoleDao roleDao;
 
-    @Override
-    public Topic findOne(Long id) {
-        Assert.notNull(id, "id must not be null");
-        String findOneQuery = this.getFindOneQuery();
-        try {
-            return jdbc().query(findOneQuery,
-                    new MapSqlParameterSource("id", id),
-                    new TopicOneObjectExtractor());
-        } catch (DataAccessException e) {
-            return null;
-        }
-    }
-
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public Topic save(Topic entity) {
         validate(entity);
@@ -98,11 +88,16 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
      * {@inheritDoc}.
      */
     @Override
-    public List<Topic> findUserTopics(Long userId) {
-        Assert.notNull(userId, "user id must not be null");
-        return this.jdbc().query(this.queryService().getQuery("topic.findUserTopics"),
-                new MapSqlParameterSource("userId", userId),
-                new TopicObjectsExtractor());
+    public Topic findOne(Long id) {
+        Assert.notNull(id, "id must not be null");
+        String findOneQuery = this.getFindOneQuery();
+        try {
+            return jdbc().query(findOneQuery,
+                    new MapSqlParameterSource("id", id),
+                    new TopicOneObjectExtractor());
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -110,8 +105,19 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         Assert.state(pageNumber > 0, "Must be greater then 0");
         val parameterSource = new MapSqlParameterSource("limit", pageSize);
         parameterSource.addValue("offset", pageSize * (pageNumber - 1));
-        String findAllQuery = this.getFindAllQuery() + this.getFetchPageQuery();
+        String findAllQuery = this.getFindAllQuery();
         return this.jdbc().query(findAllQuery, parameterSource, new TopicObjectsExtractor());
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Topic> findUserTopics(Long userId) {
+        Assert.notNull(userId, "user id must not be null");
+        return this.jdbc().query(getFindUserTopicsQuery(),
+                new MapSqlParameterSource("userId", userId),
+                new TopicObjectsExtractor());
     }
 
     /**
@@ -125,7 +131,7 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         parameterSource.addValue("topicId", message.getTopic().getId());
         parameterSource.addValue("dateAndTime", message.getDateAndTime());
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        this.jdbc().update(this.queryService().getQuery("topic.saveTopicMessage"),
+        this.jdbc().update(getSaveTopicMessageQuery(),
                 parameterSource,
                 keyHolder, new String[]{"id"});
         long generatedId = keyHolder.getKey().longValue();
@@ -133,9 +139,17 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         return message;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    protected String getInsertQuery() {
-        return this.queryService().getQuery("topic.insert");
+    public boolean existsByTitle(String title) {
+        Assert.notNull(title, "title must not be null");
+        String existsQuery = this.getExistsByTitleQuery();
+        Integer i = this.jdbc().queryForObject(existsQuery,
+                new MapSqlParameterSource("title", title),
+                Integer.class);
+        return i > 0;
     }
 
     private String getInsertQueryForRole() {
@@ -146,8 +160,21 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         return this.queryService().getQuery("topic_to_role.delete_all_by_topic_id");
     }
 
-    private String getFetchPageQuery() {
-        return this.queryService().getQuery("topic.fetchPage");
+    private String getFindUserTopicsQuery() {
+        return this.queryService().getQuery("topic.findUserTopics");
+    }
+
+    private String getSaveTopicMessageQuery() {
+        return this.queryService().getQuery("topic.saveTopicMessage");
+    }
+
+    private String getExistsByTitleQuery() {
+        return this.queryService().getQuery("topic.exists_by_title");
+    }
+
+    @Override
+    protected String getInsertQuery() {
+        return this.queryService().getQuery("topic.insert");
     }
 
     @Override
@@ -162,12 +189,16 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
 
     @Override
     protected String getExistsQuery() {
-        return this.queryService().getQuery("topic.exists");
+        return this.queryService().getQuery("topic.exists_by_id");
     }
 
     @Override
     protected String getFindAllQuery() {
-        return this.queryService().getQuery("topic.findAll");
+        return this.queryService().getQuery("topic.findAll") + getFetchPageQuery();
+    }
+
+    private String getFetchPageQuery() {
+        return this.queryService().getQuery("topic.fetchPage");
     }
 
     @Override
@@ -178,7 +209,7 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
     @Override
     protected RowMapper<Topic> getMapper() {
         return (resultSet, rowNum) -> {
-            return null; // in this class we use ResultSetExtractor instead of RowMapper
+            throw new UnsupportedOperationException("In this class is used ResultSetExtractor instead of RowMapper");
         };
     }
 

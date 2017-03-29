@@ -24,10 +24,4 @@ public interface TopicService extends CrudService<Topic, Long> {
      * @param message topic message
      */
     Message saveTopicMessage(Message message);
-
-    /**
-     * Delete topic and its messages.
-     * @param id must not be {@literal null}.
-     */
-    void delete(Long id);
 }

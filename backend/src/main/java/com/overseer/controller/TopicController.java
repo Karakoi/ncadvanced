@@ -31,7 +31,7 @@ public class TopicController {
      * @return {@link Topic} entity with http status 200 OK.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Topic> fetchTopic(@PathVariable Long id) {
+    public ResponseEntity<Topic> findTopic(@PathVariable Long id) {
         val topic = topicService.findOne(id);
         return new ResponseEntity<>(topic, HttpStatus.OK);
     }

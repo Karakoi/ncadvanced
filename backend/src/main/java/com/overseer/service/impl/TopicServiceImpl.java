@@ -2,11 +2,11 @@ package com.overseer.service.impl;
 
 import com.overseer.dao.MessageDao;
 import com.overseer.dao.TopicDao;
+import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.model.Message;
 import com.overseer.model.Topic;
 import com.overseer.service.TopicService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -20,12 +20,29 @@ import java.util.List;
 public class TopicServiceImpl extends CrudServiceImpl<Topic> implements TopicService {
 
     private TopicDao topicDao;
-    @Autowired
+
     private MessageDao messageDao;
 
-    public TopicServiceImpl(TopicDao topicDao) {
+    public TopicServiceImpl(TopicDao topicDao, MessageDao messageDao) {
         super(topicDao);
         this.topicDao = topicDao;
+        this.messageDao = messageDao;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Topic create(Topic entity) throws EntityAlreadyExistsException {
+        Assert.notNull(entity);
+        if (!entity.isNew()) {
+            throw new EntityAlreadyExistsException("Failed to perform create operation. Id was not null: " + entity);
+        }
+        if (topicDao.existsByTitle(entity.getTitle())) {
+            throw new EntityAlreadyExistsException("Failed to perform create operation. Topic with this title is already existed: " + entity);
+        }
+
+        return topicDao.save(entity);
     }
 
     /**
@@ -38,19 +55,6 @@ public class TopicServiceImpl extends CrudServiceImpl<Topic> implements TopicSer
         topicDao.delete(id);
         messageDao.deleteByTopicId(id);
     }
-
-
-
-    /*@Override
-    public Topic create(Topic entity) throws EntityAlreadyExistsException {
-        Assert.notNull(entity);
-        if (!entity.isNew()) {
-            throw new EntityAlreadyExistsException("Failed to perform create operation. Id was not null: " + entity);
-        }
-        Topic topic = topicDao.save(entity);
-
-        return topic;
-    }*/
 
     /**
      * {@inheritDoc}.
