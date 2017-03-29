@@ -25,13 +25,13 @@
             <tr *ngIf="type != 'Sub request'">
               <td><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Progress status:</td>
               <td>
-                <span class="label label-success">{{request.progressStatus.name}}</span>
+                <progress-marker [value]="request.progressStatus.name"></progress-marker>
               </td>
             </tr>
             <tr *ngIf="type != 'Sub request'">
               <td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Priority status:</td>
               <td>
-                <span class="label label-primary">{{request.priorityStatus.name}}</span>
+                <priority-marker [value]="request.priorityStatus.name"></priority-marker>
               </td>
             </tr>
             <tr>
@@ -181,7 +181,7 @@
             <tr *ngFor="let joinedRequest of joinedRequests">
               <td *ngIf="showJoinedRequests">{{joinedRequest.title}}</td>
               <td *ngIf="showJoinedRequests">{{joinedRequest.reporter.firstName}} {{joinedRequest.reporter.lastName}}</td>
-              <td *ngIf="showJoinedRequests">{{joinedRequest.priorityStatus.name}}</td>
+              <td *ngIf="showJoinedRequests"><priority-marker [value]="joinedRequest.priorityStatus.name"></priority-marker></td>
               <td *ngIf="showJoinedRequests"><date-parse [date]="joinedRequest.dateOfCreation"></date-parse></td>
               <td *ngIf="showJoinedRequests" class="details">
                 <button [routerLink]="['/request', joinedRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
@@ -215,7 +215,7 @@
                   by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
                 </span>
               </td>
-              <td *ngIf="showHistory">
+              <td *ngIf="showHistory" width="40px">
                 <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
               </td>
             </tr>

@@ -1,0 +1,11 @@
+.label-danger {
+  background-color: rgba(217, 83, 79, 0.75);
+}
+
+.label-info {
+  background-color: rgba(91, 192, 222, 0.8);
+}
+
+.label-success {
+  background-color: rgba(92, 184, 92, 0.75);
+}

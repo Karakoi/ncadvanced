@@ -19,12 +19,6 @@
     <li>
       <a [routerLink]="['/forum/chat']">Chat</a>
     </li>
-    <li>
-      <a [routerLink]="['/forum/message']">Send Message</a>
-    </li>
-    <li>
-      <a [routerLink]="['/forum/inbox']">Inbox</a>
-    </li>
     <!--Show this div, if user's role is Admin -->
     <li>
       <a [routerLink]="['/users']" *ngIf="isAdmin()">All users</a>
@@ -45,3 +39,4 @@
   </ul>
 </div>
 <!-- /#sidebar-wrapper -->
+
