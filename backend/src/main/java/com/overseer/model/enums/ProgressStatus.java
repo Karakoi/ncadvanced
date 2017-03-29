@@ -28,7 +28,7 @@ public enum ProgressStatus {
     }
 
     public Long getId() {
-        if(id == 0){
+        if (id == 0) {
             return null;
         }
         return id;
