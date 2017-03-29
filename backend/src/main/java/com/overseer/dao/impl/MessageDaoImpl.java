@@ -19,11 +19,6 @@ import java.util.List;
  */
 @Repository
 public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
-    @Override
-    public Long getCountByRecipient(Long recipientId) {
-        return jdbc().queryForObject(getCountByRecipientQuery(),
-                new MapSqlParameterSource("recipient", recipientId), Long.class);
-    }
 
     @Override
     public List<Message> findByTopic(Long topicId) {
@@ -36,18 +31,6 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
         val parameterSource = new MapSqlParameterSource("senderId", senderId);
         parameterSource.addValue("recipientId", recipientId);
         return jdbc().query(getByFriendQuery(), parameterSource, getDialogMapper());
-    }
-
-    @Override
-    public List<Message> findByRecipient(Long recipientId, int pageSize, int pageNumber) {
-        val parameterSource = new MapSqlParameterSource("recipient", recipientId);
-        parameterSource.addValue("limit", pageSize);
-        parameterSource.addValue("offset", pageSize * (pageNumber - 1));
-        return jdbc().query(getMessageByRecipientQuery(), parameterSource, getMapper());
-    }
-
-    protected String getMessageByRecipientQuery() {
-        return queryService().getQuery("message.select") + queryService().getQuery("message.findByRecipient");
     }
 
     @Override
@@ -129,10 +112,6 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
     @Override
     protected String getCountQuery() {
         return queryService().getQuery("message.count");
-    }
-
-    private String getCountByRecipientQuery() {
-        return queryService().getQuery("message.countByRecipient");
     }
 
     private String getByTopicQuery() {

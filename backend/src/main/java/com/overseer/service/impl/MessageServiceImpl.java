@@ -15,27 +15,12 @@ import java.util.List;
 @Service
 @Slf4j
 public class MessageServiceImpl extends CrudServiceImpl<Message> implements MessageService {
-    private static final int DEFAULT_PAGE_SIZE = 10;
 
     private MessageDao messageDao;
 
     public MessageServiceImpl(MessageDao messageDao) {
         super(messageDao);
         this.messageDao = messageDao;
-    }
-
-    @Override
-    public List<Message> findByRecipient(Long recipientId, int pageNumber) {
-        val list = messageDao.findByRecipient(recipientId, DEFAULT_PAGE_SIZE, pageNumber);
-        log.debug("Fetched {} messages for user with id: {}", list.size(), recipientId);
-        return list;
-    }
-
-    @Override
-    public Long getCountByRecipient(Long recipientId) {
-        val count = messageDao.getCountByRecipient(recipientId);
-        log.debug("Counted {} messages for user with id: {}", recipientId);
-        return count;
     }
 
     @Override
