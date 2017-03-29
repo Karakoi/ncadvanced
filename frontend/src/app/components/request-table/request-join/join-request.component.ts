@@ -60,6 +60,7 @@ export class JoinRequestComponent implements OnInit {
       this.request.assignee = user;
       this.request.parentId = null;
       this.request.reporter = user;
+      // this.request.progressStatus.id = 6;
       this.request.lastChanger = user;
       this.request.title = params.title;
       this.request.description = params.description;

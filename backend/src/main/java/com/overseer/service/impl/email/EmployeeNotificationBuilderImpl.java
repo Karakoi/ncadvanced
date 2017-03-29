@@ -31,7 +31,7 @@ public class EmployeeNotificationBuilderImpl extends EmailBuilderImpl<Request> {
                 + "] was altered."
                 + "\n"
                 + "Request progress status was changed to: "
-                + request.getProgressStatus();
+                + request.getProgressStatus().getName();
     }
 
     @Override

@@ -4,9 +4,9 @@ import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.PriorityStatus;
-import com.overseer.model.ProgressStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
+import com.overseer.model.enums.ProgressStatus;
 import io.jsonwebtoken.lang.Assert;
 
 import java.time.LocalDate;
@@ -34,12 +34,15 @@ public interface RequestService extends CrudService<Request, Long> {
 
     Long countRequestByReporter(Long reporterId);
 
+    /**
+     * Returns number of requests for assignee.
+     *
+     * @param assigneeId assignee id must be not null.
+     * @param progressStatus progress status must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus);
 
-    Long countRequestByAssignee(Long managerId);
-
-    Long countClosedRequestByAssignee(Long managerId);
-
-    Long countInProgressRequestByAssignee(Long managerId);
     /**
      * Returns a list of sub requests for the given request {@link Request}.
      *
@@ -67,18 +70,13 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Returns a list of requests which have provided {@link User} as assignee.
      *
-     * @param assigneeId requests assignee, must not be {@literal null}.
-     * @return list of requests which have provided {@link User} as assignee.
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @param progressStatus progress status of request, must not be {@literal null}.
+     * @param pageSize amount of fetch size, must not be {@literal null}.
+     * @param pageNumber page number, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee with given request.
      */
-    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int size, int pageNumber);
-
-    /**
-     * Returns a list of requests which have provided {@link User} as assignee.
-     *
-     * @param assigneeId requests assignee, must not be {@literal null}.
-     * @return list of requests which have provided {@link User} as assignee.
-     */
-    List<Request> findClosedRequestsByAssignee(Long assigneeId, int size, int pageNumber);
+    List<Request> findRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -100,14 +98,6 @@ public interface RequestService extends CrudService<Request, Long> {
     }
 
     /**
-     * Returns a list of requests with provided progress status {@link ProgressStatus}.
-     *
-     * @param progressStatus request's progress status, must not be {@literal null}.
-     * @return list of requests with provided progress status {@link ProgressStatus}.
-     */
-    List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageNumber);
-
-    /**
      * Returns a list of requests with provided progress status {@link PriorityStatus}.
      *
      * @param priorityStatus request's priority status, must not be {@literal null}.
@@ -127,53 +117,55 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Returns a request DTO created in provided period.
      *
-     * @param start              period start.
-     * @param end                period end.
-     * @param progressStatusName progress status name.
+     * @param start            period start.
+     * @param end              period end.
+     * @param progressStatusId progress status id.
      * @return request DTO created in provided period.
      */
-    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+    RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
 
     /**
      * Returns a request DTO created in provided period.
      *
-     * @param start              period start.
-     * @param end                period end.
-     * @param progressStatusName progress status name.
-     * @param id                 manager id.
+     * @param start            period start.
+     * @param end              period end.
+     * @param progressStatusId progress status id.
+     * @param id               manager id.
      * @return request DTO created in provided period.
      */
-    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+    RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
 
     /**
      * Returns a list of requests DTO created in provided period.
      *
-     * @param start              period start.
-     * @param end                period end.
-     * @param progressStatusName progress status name.
+     * @param start            period start.
+     * @param end              period end.
+     * @param progressStatusId progress status id.
      * @return list of requests DTO created in provided period.
      */
-    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+    List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
 
     /**
      * Returns a list of requests DTO created in provided period.
      *
-     * @param start              period start.
-     * @param end                period end.
-     * @param progressStatusName progress status name.
-     * @param id                 manager id.
+     * @param start            period start.
+     * @param end              period end.
+     * @param progressStatusId progress status id.
+     * @param id               manager id.
      * @return list of requests DTO created in provided period.
      */
-    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, String progressStatusName, int id);
+    List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
 
     /**
      * Returns a list of best managers in provided period.
      *
-     * @param start period start.
-     * @param end   period end.
+     * @param start            period start.
+     * @param end              period end.
+     * @param progressStatusId progress status id.
+     * @param countTop count managers in top.
      * @return list of best managers in provided period.
      */
-    List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, String progressStatusName);
+    List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId, int countTop);
 
     /**
      * Returns a list of requests created in provided date.
@@ -228,11 +220,19 @@ public interface RequestService extends CrudService<Request, Long> {
     Request reopenRequest(Long requestId);
 
     /**
-     * Closes all requests which have provided {@link User} as reporter and have specified {@link ProgressStatus}.
+     * Closes all requests which have provided {@link User} as reporter and have specified ProgressStatus.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
      */
     void closeAllRequestsOfGivenReporter(Long reporterId);
+
+
+    /**
+     * Delete all Free requests which have provided {@link User} as reporter.
+     *
+     * @param reporterId id of the reporter, must not be {@literal null}.
+     */
+    void deleteAllFreeRequestsOfGivenReporter(Long reporterId);
 
     /**
      * Save plain request from employee.
@@ -258,9 +258,9 @@ public interface RequestService extends CrudService<Request, Long> {
     Long countRequestsByAssignee(Long id);
 
     /**
-     * Returns a list of requests with Free progress status {@link ProgressStatus}.
+     * Returns a list of requests with Free progress status  ProgressStatus.
      *
-     * @return list of requests with Free progress status {@link ProgressStatus}.
+     * @return list of requests with Free progress status ProgressStatus.
      */
     List<Request> findFreeRequests(int pageNumber, int size);
 

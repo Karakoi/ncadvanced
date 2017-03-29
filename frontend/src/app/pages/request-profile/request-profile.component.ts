@@ -38,6 +38,7 @@ export class RequestProfileComponent implements OnInit {
 
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
+              private reportService: ReportService,
               private toastr: ToastsManager,
               private authService: AuthService,
               private historyService: HistoryService,
@@ -168,7 +169,7 @@ export class RequestProfileComponent implements OnInit {
 
   updateRequest() {
     this.request.parentId = null;
-    if (this.request.assignee.id === 0){
+    if (this.request.assignee.id === 0) {
       this.request.assignee = <User>{};
     }
     this.request.lastChanger = this.currentUser;
@@ -212,5 +213,27 @@ export class RequestProfileComponent implements OnInit {
     this.subscribeService.toggleSubscribe(this.request.id, this.currentUser.id).subscribe(resp => {
       this.followed = resp;
     });
+  }
+
+  isClosed(request):boolean {
+    if (request.progressStatus.name == 'Closed') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isNotEmployee(): boolean {
+    return this.currentUser.role.name !== 'employee';
+  }
+
+  getPDF() {
+    this.reportService.getPDFRequest(this.request.id).subscribe(
+      (res:any) => {
+        let blob = res.blob();
+        let filename = 'request_' + this.request.id + '.pdf';
+        FileSaver.saveAs(blob, filename);
+      }
+    );
   }
 }

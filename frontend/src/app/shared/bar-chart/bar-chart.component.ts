@@ -14,11 +14,12 @@ import {User} from "../../model/user.model";
 @Injectable()
 export class BarChartComponent implements OnInit {
 
-  private user: User;
+  private currentUser: User;
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe((user: User) => {
-      this.user = user;
+      this.currentUser = user;
+      this.buildChartsByRole(this.startDate, this.endDate, this.countTopManagers);
     });
   }
 
@@ -33,7 +34,6 @@ export class BarChartComponent implements OnInit {
     responsive: true
   };
   public barChartData: any[] = [{data: [], label: ''}];
-  // public barChartData2: any[] = [{data: [], label: ''}, {data: [], label: ''}];
   public barChartLabels: Array<string> = [];
   public barChartType: string = 'bar';
   public barChartLegend: boolean = true;
@@ -44,6 +44,7 @@ export class BarChartComponent implements OnInit {
   @Input('startDate') startDate: Date;
   @ViewChild(Date)
   @Input('endDate') endDate: Date;
+  @Input('countTopManagers') countTopManagers: number;
 
   // events
   public chartClicked(e: any): void {
@@ -57,13 +58,12 @@ export class BarChartComponent implements OnInit {
   clear() {
     this.barChartLabels.length = 0;
     this.barChartData = [{data: [], label: ''}];
-    // this.barChartData2 = [{data: [], label: ''}, {data: [], label: ''}];
   }
 
-  public buildAdminChart() {
+  public buildAdminChart(start: any, end: any, countTopManagers: number) {
     let count: Array<any> = [];
     this.clear();
-    this.reportService.getListOfBestManagersWithClosedStatusByPeriod(this.startDate, this.endDate)
+    this.reportService.getListOfBestManagersWithClosedStatusByPeriod(start, end, countTopManagers)
       .subscribe((array: RequestDTO[]) => {
         console.log(array);
         array.forEach(manager => {
@@ -75,11 +75,10 @@ export class BarChartComponent implements OnInit {
       });
   }
 
-  public buildManagerChart() {
-    console.log(this.user.id)
+  public buildManagerChart(start: any, end: any) {
     let closedRequests: Array<any> = [];
     this.clear();
-    this.reportService.getManagerStatisticsOfClosedRequestsByPeriod(this.startDate, this.endDate, this.user.id)
+    this.reportService.getManagerStatisticsOfClosedRequestsByPeriod(start, end, this.currentUser.id)
       .subscribe((array: RequestDTO[]) => {
         console.log(array);
         array.forEach(requestDTO => {
@@ -89,10 +88,26 @@ export class BarChartComponent implements OnInit {
           this.barChartLabels.push(firstDate.concat(" : " + secondDate));
         });
 
-            this.barChartData = [{data: closedRequests, label: 'Count your closed requests'}];
+        this.barChartData = [{data: closedRequests, label: 'Count your closed requests'}];
       });
   }
 
+  isAdmin(): boolean {
+    return this.currentUser.role.name === 'admin';
+  }
+
+  isManager(): boolean {
+    return this.currentUser.role.name === 'office manager'
+  }
+
+  private buildChartsByRole(start: any, end: any, countTopManagers: number) {
+    if (this.isAdmin()) {
+      this.buildAdminChart(start, end, countTopManagers);
+    } else {
+      this.buildManagerChart(start, end);
+    }
+  }
+  
 }
 
 
