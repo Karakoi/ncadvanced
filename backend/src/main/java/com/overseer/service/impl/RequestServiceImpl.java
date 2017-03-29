@@ -82,7 +82,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         log.debug("Delete request with id: {} ", idRequest);
         Request request = requestDao.findOne(idRequest);
         Long progressStatusId = request.getProgressStatus().getId();
-        if (progressStatusId == 0 || ProgressStatus.FREE.getId().equals(progressStatusId)) {
+        if (progressStatusId == null || ProgressStatus.FREE.getId().equals(progressStatusId)) {
             super.delete(idRequest);
         } else {
             throw new InappropriateProgressStatusException("Request with id: "
@@ -332,7 +332,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Long> quantityForUser(Long userId) {
+    public List<Long> quantityByProgressStatusForUser(Long userId) {
         return requestDao.countRequestByProgressStatusForUser(userId);
     }
 
@@ -340,33 +340,25 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<Long> quantityByPriorityStatus() {
-        return requestDao.countRequestByPriorityStatus();
+    public List<Long> quantityOpenClosedRequestForUser(Long userId, Long howLong) {
+        return requestDao.countOpenClosedRequestForUser(userId, howLong);
     }
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public List<Long> quantityByProgressStatus() {
-        return requestDao.countRequestByProgressStatus();
-    }
+//    /**
+//     * {@inheritDoc}.
+//     */
+//    @Override
+//    public List<Long> quantityByProgressStatusForSixMonths() {
+//        return requestDao.countRequestByProgressStatusForSixMonths();
+//    }
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public List<Long> quantityByProgressStatusForSixMonths() {
-        return requestDao.countRequestByProgressStatusForSixMonths();
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId) {
-        return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
-    }
+//    /**
+//     * {@inheritDoc}.
+//     */
+//    @Override
+//    public List<Long> quantityByProgressStatusForSixMonthsForUser(Long userId) {
+//        return requestDao.countRequestByProgressStatusForSixMonthsForUser(userId);
+//    }
 
     //-----------------------LIFECYCLE---------------------------
 
@@ -488,7 +480,60 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         requests.forEach(this::closeRequest);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void deleteAllFreeRequestsOfGivenReporter(Long reporterId) {
+        Assert.notNull(reporterId, "id of request must not be null");
+        log.debug("Close all requests of Reporter with id: {} ", reporterId);
+        List<Long> idsOfProgresStatuses = new ArrayList<>();
+        idsOfProgresStatuses.add(ProgressStatus.FREE.getId());
+        List<Request> requests = requestDao.findRequestsByProgressStatusesAndReporterId(idsOfProgresStatuses, reporterId);
+        requests.forEach(requestDao::delete);
+    }
+
     //-----------------------COUNT---------------------------
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Long> countStatisticForAdminDashBoard(Long howLong) {
+        return requestDao.statisticForAdminDashBoard(howLong);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long getRunningRequestToday() {
+        return requestDao.countRequestsRunningToday();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long countRequestsCreatedToday() {
+        return requestDao.countRequestsCreatedToday();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long countTotalUsers() {
+        return requestDao.countTotalUsers();
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Long countTotalRequests() {
+        return requestDao.countTotalRequests();
+    }
 
     @Override
     public Long countRequestByReporter(Long reporterId) {
@@ -498,7 +543,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     @Override
     public Long countClosedRequestsByReporter(Long reporterId) {
         Assert.notNull(reporterId, "Reporter id must be not null");
-        return requestDao.countRequestsByReporterAndProgress(reporterId, ProgressStatus.CLOSED.name());
+        return requestDao.countRequestsByReporterAndProgress(reporterId, ProgressStatus.CLOSED);
     }
 
     @Override

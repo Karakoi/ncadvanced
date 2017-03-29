@@ -146,6 +146,14 @@ public interface RequestDao extends CrudDao<Request, Long> {
     Long countClosedRequestByAssignee(Long managerId);
 
     /**
+     * Returns number of entities of type <code>T</code>.
+     *
+     * @param assigneeId id of the {@link User}.
+     * @return number of entities of type <code>T</code>.
+     */
+    Long countByAssignee(Long assigneeId);
+
+    /**
      * Returns a list of closed requests which have provided {@link User} as reporter.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.
@@ -154,12 +162,13 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> findRequestsByReporterAndProgress(Long reporterId, ProgressStatus progress, int pageSize, int pageNumber);
 
     /**
-     * Returns number of closed requests for reporter.
+     * Returns number of requests for reporter.
      *
      * @param reporterId reporter id must be not null.
+     * @param progress progress status id.
      * @return number of requests for reporter.
      */
-    Long countRequestsByReporterAndProgress(Long reporterId, String progress);
+    Long countRequestsByReporterAndProgress(Long reporterId, ProgressStatus progress);
 
     /**
      * Returns a list of requests with provided progress status {@link ProgressStatus}.
@@ -334,21 +343,52 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Long> countRequestByProgressStatusForUser(Long userId);
 
     /**
+     * @return number of total Users.
+     */
+    Long countTotalUsers();
+
+    /**
+     * @return number of total Requests.
+     */
+    Long countTotalRequests();
+
+    /**
+     * @return number of today's requests for admin dashboard to create statistic.
+     */
+    Long countRequestsCreatedToday();
+
+    /**
+     * @return number of today's requests that were changed progress status from free to anyone except to closed.
+     */
+    Long countRequestsRunningToday();
+
+    /**
+     * @return list of statistic for six months by progress status for user.
+     */
+    List<Long> countOpenClosedRequestForUser(Long userId, Long howLong);
+
+    /**
+     * @param howLong set which exactly statistic we need.
+     * @return list of statistic for admin dashboard.
+     */
+    List<Long> statisticForAdminDashBoard(Long howLong);
+
+    /**
      * Returns list to build pie chart.
      *
      * @return list of statistic request by priority status.
      */
     List<Long> countRequestByPriorityStatus();
 
-    /**
-     * @return list of statistic for six months by progress status.
-     */
-    List<Long> countRequestByProgressStatusForSixMonths();
+//    /**
+//     * @return list of statistic for six months by progress status.
+//     */
+//    List<Long> countRequestByProgressStatusForSixMonths();
 
-    /**
-     * @return list of statistic for six months by progress status for user.
-     */
-    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
+//    /**
+//     * @return list of statistic for six months by progress status for user.
+//     */
+//    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
 
     /**
      * @return list of manager deadlines information entity.

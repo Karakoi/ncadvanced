@@ -225,6 +225,14 @@ public interface RequestService extends CrudService<Request, Long> {
      */
     void closeAllRequestsOfGivenReporter(Long reporterId);
 
+
+    /**
+     * Delete all Free requests which have provided {@link User} as reporter.
+     *
+     * @param reporterId id of the reporter, must not be {@literal null}.
+     */
+    void deleteAllFreeRequestsOfGivenReporter(Long reporterId);
+
     /**
      * Save plain request from employee.
      *

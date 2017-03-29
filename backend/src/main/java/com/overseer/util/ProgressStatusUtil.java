@@ -21,6 +21,7 @@ public class ProgressStatusUtil {
     private static final int JOINED_ID = 6;
     private static final int IN_PROGRESS_ID = 7;
     private static final int CLOSED_ID = 8;
+    private static final int NULL = 0;
     private List<ProgressStatusView> viewsCollection;
 
     ProgressStatusUtil() {
@@ -97,6 +98,9 @@ public class ProgressStatusUtil {
                 break;
             case CLOSED_ID:
                 progressStatus = ProgressStatus.CLOSED;
+                break;
+            case NULL:
+                progressStatus = ProgressStatus.NULL;
                 break;
             default:
                 progressStatus = null;

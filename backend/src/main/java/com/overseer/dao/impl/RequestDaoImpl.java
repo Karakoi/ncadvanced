@@ -33,11 +33,16 @@ import java.util.List;
 @Repository
 public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
+
     private static final int HIGH = 1;
     private static final int NORMAL = 2;
     private static final int LOW = 3;
     private static final int DEFAULT_DAY_IN_MONTH = 1;
     private static final Long DEFAULT_MONTHS_STEP = 1L;
+    private static final Long VALUE_TO_GET_STATISTIC_FOR_ALL_TIME = 10L;
+    private static final int START_PROJECT_YEARS = 2017;
+    private static final int START_PROJECT_MONTHS = 2;
+    private static final int START_PROJECT_DAY = 7;
 
     private ProgressStatusUtil progressStatusUtil;
     private SecurityContextService securityContextService;
@@ -93,11 +98,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         }
     }
 
-    @Override
-    public Long countClosedRequestByAssignee(Long managerId) {
-        return jdbc().queryForObject(queryService().getQuery("request.countClosedByAssignee"),
-                new MapSqlParameterSource("assigneeId", managerId), Long.class);
-    }
 
     @Override
     public List<Request> findSubRequests(Long id) {
@@ -277,9 +277,9 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     //-----------------------COUNT---------------------------
 
     @Override
-    public Long countRequestsByReporterAndProgress(Long reporterId, String progress) {
+    public Long countRequestsByReporterAndProgress(Long reporterId, ProgressStatus progress) {
         val parameterSource = new MapSqlParameterSource("reporterId", reporterId);
-        parameterSource.addValue("progress", progress);
+        parameterSource.addValue("progress_id", progress.getId());
         return jdbc().queryForObject(queryService().getQuery("request.countByReporterAndProgress"),
                 parameterSource, Long.class);
     }
@@ -288,6 +288,12 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     public Long countRequestsByReporter(Long reporterId) {
         return jdbc().queryForObject(queryService().getQuery("request.countByReporter"),
                 new MapSqlParameterSource("reporterId", reporterId), Long.class);
+    }
+
+    @Override
+    public Long countClosedRequestByAssignee(Long managerId) {
+        return jdbc().queryForObject(queryService().getQuery("request.countClosedByAssignee"),
+                new MapSqlParameterSource("assigneeId", managerId), Long.class);
     }
 
     @Override
@@ -337,6 +343,102 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public Long countTotalUsers() {
+        val query = queryService().getQuery("user.total");
+        return jdbc().queryForObject(query, new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public Long countTotalRequests() {
+        String query = queryService().getQuery("request.total");
+        return jdbc().queryForObject(query, new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public Long countRequestsCreatedToday() {
+        String query = queryService().getQuery("request.today");
+        return jdbc().queryForObject(query, new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public Long countRequestsRunningToday() {
+        String request = queryService().getQuery("request.runningToday");
+        return jdbc().queryForObject(request, new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public List<Long> countOpenClosedRequestForUser(Long userId, Long howLong) {
+        LocalDate localDate = LocalDate.now().minusMonths(howLong);
+        if (VALUE_TO_GET_STATISTIC_FOR_ALL_TIME.equals(howLong)) {
+            localDate = LocalDate.of(START_PROJECT_YEARS, START_PROJECT_MONTHS, START_PROJECT_DAY);
+        }
+        String quantityQuery = queryService().getQuery("request.countStatisticForForUser");
+        List<Long> userStatistic = new LinkedList<>();
+        val parameterSource = new MapSqlParameterSource("userId", userId);
+        parameterSource.addValue("howLong", localDate);
+        parameterSource.addValue("userId", userId);
+        userStatistic.add(jdbc().queryForObject(quantityQuery, parameterSource, Long.class));
+        val source = new MapSqlParameterSource();
+        source.addValue("howLong", localDate);
+        source.addValue("progress", ProgressStatus.CLOSED.getId());
+        source.addValue("userId", userId);
+        String quantityQueryClosed = queryService().getQuery("request.countStatisticForUserClosed");
+        userStatistic.add(jdbc().queryForObject(quantityQueryClosed, source, Long.class));
+        return userStatistic;
+    }
+
+    @Override
+    public List<Long> statisticForAdminDashBoard(Long howLong) {
+        LocalDate localDate = LocalDate.now().minusMonths(howLong);
+        if (VALUE_TO_GET_STATISTIC_FOR_ALL_TIME.equals(howLong)) {
+            localDate = LocalDate.of(START_PROJECT_YEARS, START_PROJECT_MONTHS, START_PROJECT_DAY);
+        }
+        String queryProgress = queryService().getQuery("request.countStatisticForAdminDashBoardByProgressStatus");
+        List<Long> adminStatisticList = new LinkedList<>();
+        val parameterSourceForFree = new MapSqlParameterSource();
+        parameterSourceForFree.addValue("howLong", localDate);
+        parameterSourceForFree.addValue("progress", ProgressStatus.FREE.getId());
+        adminStatisticList.add(jdbc().queryForObject(queryProgress, parameterSourceForFree, Long.class));
+
+        val parameterSourceForJoined = new MapSqlParameterSource();
+        parameterSourceForJoined.addValue("howLong", localDate);
+        parameterSourceForJoined.addValue("progress", ProgressStatus.JOINED.getId());
+        adminStatisticList.add(jdbc().queryForObject(queryProgress, parameterSourceForJoined, Long.class));
+
+        val parameterSourceForInProgress = new MapSqlParameterSource();
+        parameterSourceForInProgress.addValue("howLong", localDate);
+        parameterSourceForInProgress.addValue("progress", ProgressStatus.IN_PROGRESS.getId());
+        adminStatisticList.add(jdbc().queryForObject(queryProgress, parameterSourceForInProgress, Long.class));
+
+        val parameterSourceForClosed = new MapSqlParameterSource();
+        parameterSourceForClosed.addValue("howLong", localDate);
+        parameterSourceForClosed.addValue("progress", ProgressStatus.CLOSED.getId());
+        adminStatisticList.add(jdbc().queryForObject(queryProgress, parameterSourceForClosed, Long.class));
+
+        String queryNotClosedRequests = queryService().getQuery("request.countStatisticForAdminDashBoardNotClosed");
+        adminStatisticList.add(jdbc().queryForObject(queryNotClosedRequests, new MapSqlParameterSource("howLong", localDate), Long.class));
+
+        String query = queryService().getQuery("request.countStatisticForAdminDashBoardByPriorityStatus");
+
+        val parameterSourceForHigh = new MapSqlParameterSource();
+        parameterSourceForHigh.addValue("howLong", localDate);
+        parameterSourceForHigh.addValue("priority", HIGH);
+        adminStatisticList.add(jdbc().queryForObject(query, parameterSourceForHigh, Long.class));
+
+        val parameterSourceForNormal = new MapSqlParameterSource();
+        parameterSourceForNormal.addValue("howLong", localDate);
+        parameterSourceForNormal.addValue("priority", NORMAL);
+        adminStatisticList.add(jdbc().queryForObject(query, parameterSourceForNormal, Long.class));
+
+        val parameterSourceForLow = new MapSqlParameterSource();
+        parameterSourceForLow.addValue("howLong", localDate);
+        parameterSourceForLow.addValue("priority", LOW);
+        adminStatisticList.add(jdbc().queryForObject(query, parameterSourceForLow, Long.class));
+
+        return adminStatisticList;
+    }
+
+    @Override
     public List<Long> countRequestByPriorityStatus() {
         String quantityQuery = queryService().getQuery("request.countByPriorityStatus");
         List<Long> priorityList = new LinkedList<>();
@@ -346,33 +448,39 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         return priorityList;
     }
 
-    @Override
-    public List<Long> countRequestByProgressStatusForSixMonths() {
-        String quantityQueryForSixMonths = queryService().getQuery("request.countStatisticForSixMonths");
-        String quantityQueryForSixMonthsClosed = queryService().getQuery("request.countStatisticForSixMonthsClosed");
-        List<Long> statisticList = new LinkedList<>();
-        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonthsClosed, new MapSqlParameterSource(), Long.class));
-        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonths, new MapSqlParameterSource("progress", ProgressStatus.CLOSED.getId()), Long.class));
-        return statisticList;
-    }
+//    @Override
+//    public List<Long> countRequestByProgressStatusForSixMonths() {
+//        String quantityQueryForSixMonths = queryService().getQuery("request.countStatisticForSixMonths");
+//        String quantityQueryForSixMonthsClosed = queryService().getQuery("request.countStatisticForSixMonthsClosed");
+//        List<Long> statisticList = new LinkedList<>();
+//        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonthsClosed, new MapSqlParameterSource(), Long.class));
+//        statisticList.add(jdbc().queryForObject(quantityQueryForSixMonths, new MapSqlParameterSource("progress", ProgressStatus.CLOSED.getId()), Long.class));
+//        return statisticList;
+//    }
 
-    @Override
-    public List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId) {
-        String quantityQuery = queryService().getQuery("request.countStatisticForSixMonthsForUser");
-        List<Long> userStatistic = new LinkedList<>();
-        userStatistic.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("userId", userId), Long.class));
-        MapSqlParameterSource source = new MapSqlParameterSource();
-        source.addValue("progress", ProgressStatus.CLOSED.getId());
-        source.addValue("userId", userId);
-        String quantityQueryClosed = queryService().getQuery("request.countStatisticForSixMonthsForUserClosed");
-        userStatistic.add(jdbc().queryForObject(quantityQueryClosed, source, Long.class));
-        return userStatistic;
-    }
+//    @Override
+//    public List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId) {
+//        String quantityQuery = queryService().getQuery("request.countStatisticForSixMonthsForUser");
+//        List<Long> userStatistic = new LinkedList<>();
+//        userStatistic.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("userId", userId), Long.class));
+//        MapSqlParameterSource source = new MapSqlParameterSource();
+//        source.addValue("progress", ProgressStatus.CLOSED.getId());
+//        source.addValue("userId", userId);
+//        String quantityQueryClosed = queryService().getQuery("request.countStatisticForSixMonthsForUserClosed");
+//        userStatistic.add(jdbc().queryForObject(quantityQueryClosed, source, Long.class));
+//        return userStatistic;
+//    }
 
     @Override
     public Long countFree() {
         String findCountQuery = queryService().getQuery("request.countFree");
         return jdbc().queryForObject(findCountQuery, new MapSqlParameterSource(), Long.class);
+    }
+
+    @Override
+    public Long countByAssignee(Long assigneeId) {
+        String findCountQuery = queryService().getQuery("request.countByAssignee");
+        return jdbc().queryForObject(findCountQuery, new MapSqlParameterSource("assigneeId", assigneeId), Long.class);
     }
 
     //-----------------------REPORT---------------------------
@@ -638,11 +746,14 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 //                priorityStatus.setId(resultSet.getLong("priority_id"));
 //                priorityStatus.setValue(resultSet.getInt("priority_value"));
 //            }
-            ProgressStatus progressStatus = null;
+            ProgressStatus progressStatus;
             Long progressStatusId = resultSet.getLong("progress_id");
-            if (progressStatusId != null && progressStatusId != 0) {
+            if (progressStatusId == null) {
+                progressStatus = progressStatusUtil.getProgressById(0L);
+            } else {
                 progressStatus = progressStatusUtil.getProgressById(progressStatusId);
             }
+
 
             Long parentId = resultSet.getLong("parent_id");
             if (parentId == 0) {

@@ -77,6 +77,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
             throw new RemovingYourselfException("Id of current user is equals to id of user that is deleting ");
         }
         requestService.closeAllRequestsOfGivenReporter(id);
+//        requestService.deleteAllFreeRequestsOfGivenReporter(id);
         super.delete(id);
     }
 
