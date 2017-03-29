@@ -40,10 +40,7 @@
     </li>
     <!--Show this div, if user's role is Manager -->
     <li>
-      <a [routerLink]="['/assigned/inProgress']" *ngIf="isManager()">Assigned</a>
-    </li>
-    <li>
-      <a [routerLink]="['/calendar']" *ngIf="isManager()">Calendar</a>
+      <a [routerLink]="['/requests/inProgress']" *ngIf="isManager()">Requests</a>
     </li>
   </ul>
 </div>

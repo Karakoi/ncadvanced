@@ -63,3 +63,14 @@ td {
 .label-info {
   cursor: pointer;
 }
+
+.layer {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 820px; /* Ширина блока */
+  height: auto; /* Высота блока */
+  padding: 5px; /* Поля вокруг текста */
+  border: solid 1px #ffffff; /* Параметры рамки */
+}
+*[name = 'editable']{
+}

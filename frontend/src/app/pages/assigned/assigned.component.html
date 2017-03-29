@@ -1,4 +1,4 @@
-<div class="container" *ngIf="requests">
+<div class="container col-lg-12" *ngIf="requests">
   <div class="row" *ngIf="!requests.length">
     <div class="header-content">
       <div class="header-content-inner text-center">
@@ -10,14 +10,21 @@
   <div class="row" *ngIf="requests.length">
     <div class="col-lg-12">
       <ul class="nav nav-tabs">
+        <li><a [routerLink]="['/requests/free']">Free</a></li>
         <li class="active"><a><b>In Progress</b></a></li>
-        <li><a [routerLink]="['/assigned/closed']">Closed</a></li>
+        <li><a [routerLink]="['/requests/closed']">Closed</a></li>
       </ul>
       <div class="panel panel-default">
         <div class="panel-body">
-          <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings" (paginationChange)="pageChange($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>
+          <r-table [requests]="requests"
+                   [requestsCount]="pageCount"
+                   [settings]="settings"
+                   (paginationChange)="pageChange($event)"
+                   (perChangeLoad)="perChangeLoad($event)">
+          </r-table>
         </div>
       </div>
     </div>
   </div>
 </div>
+

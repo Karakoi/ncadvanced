@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -468,17 +470,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         return request;
     }
 
+    @PreAuthorize("hasRole('ADMIN') || #r.assignee.email == authentication.name || #r.progressStatus.id == 5")
     @Override
-    public Request update(Request request) throws NoSuchEntityException {
+    public Request update(@P("r")Request request) throws NoSuchEntityException {
         Assert.notNull(request, "request must not be null");
         log.debug("Updating request with id: {} ", request.getId());
-        Long progressStatusId = request.getProgressStatus().getId();
-        if (!progressStatusId.equals(FREE_STATUS)) {
-            throw new InappropriateProgressStatusException("Request with id: "
-                    + request.getId() + " and ProgressStatus: "
-                    + request.getProgressStatus().getName()
-                    + " can not be updated");
-        }
         return super.update(request);
     }
 

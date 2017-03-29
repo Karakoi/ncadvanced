@@ -9,7 +9,9 @@
           <option>50</option>
           <option>100</option>
         </select>
-        <button ngClass="removeSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">New request</button>
+        <button ngClass="removeSpace" *ngIf="settings.add" class="btn btn-success pull-right" (click)="openFormModal()">
+          New request
+        </button>
         <button *ngIf="settings.multiSelect && checked.length > 1" class="btn btn-danger" (click)="uncheck()">Uncheck
           all
         </button>
@@ -78,17 +80,21 @@
         <tr *ngIf="settings.filterRow">
           <td *ngIf="settings.multiSelect"></td>
           <td *ngIf="settings.columns.title">
-            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.title" (ngModelChange)="setTitleSearch('title', $event)" class="form-control"/>
-            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.title" class="form-control"/>          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.title"
+                   (ngModelChange)="setTitleSearch('title', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.title" class="form-control"/></td>
           <td *ngIf="settings.columns.dateOfCreation">
-            <input *ngIf="settings.ajax" type="date" [ngModel]="searchDTO.dateOfCreation" (ngModelChange)="setTitleSearch('dateOfCreation', $event)" class="form-control"/>
+            <input *ngIf="settings.ajax" type="date" [ngModel]="searchDTO.dateOfCreation"
+                   (ngModelChange)="setTitleSearch('dateOfCreation', $event)" class="form-control"/>
             <input *ngIf="!settings.ajax" type="date" [(ngModel)]="searchTypes.date" class="form-control"/>
           </td>
           <td *ngIf="settings.columns.estimate">
-            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.estimate" (ngModelChange)="setTitleSearch('estimate', $event)" class="form-control"/>
-            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.estimate" class="form-control"/>          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.estimate"
+                   (ngModelChange)="setTitleSearch('estimate', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.estimate" class="form-control"/></td>
           <td *ngIf="settings.columns.priorityStatus">
-            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.priority" (ngModelChange)="setTitleSearch('priority', $event)">
+            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.priority"
+                    (ngModelChange)="setTitleSearch('priority', $event)">
               <option></option>
               <option>High</option>
               <option>Normal</option>
@@ -102,7 +108,8 @@
             </select>
           </td>
           <td *ngIf="settings.columns.progressStatus">
-            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.progress" (ngModelChange)="setTitleSearch('progress', $event)">
+            <select *ngIf="settings.ajax" class="form-control" [ngModel]="searchDTO.progress"
+                    (ngModelChange)="setTitleSearch('progress', $event)">
               <option></option>
               <option>Free</option>
               <option>In progress</option>
@@ -118,15 +125,19 @@
             </select>
           </td>
           <td *ngIf="settings.columns.reporter">
-            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.reporterName" (ngModelChange)="setTitleSearch('reporterName', $event)" class="form-control"/>
-            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.reporterName" class="form-control"/>          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.reporterName"
+                   (ngModelChange)="setTitleSearch('reporterName', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.reporterName" class="form-control"/></td>
           <td *ngIf="settings.columns.assignee">
-            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.assigneeName" (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
-            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/>          </td>
+            <input *ngIf="settings.ajax" type="text" [ngModel]="searchDTO.assigneeName"
+                   (ngModelChange)="setTitleSearch('assigneeName', $event)" class="form-control"/>
+            <input *ngIf="!settings.ajax" type="text" [(ngModel)]="searchTypes.assigneeName" class="form-control"/></td>
           <td class="td-center" *ngIf="settings.delete"><span class="glyphicon glyphicon-trash text-center"></span></td>
           <td class="td-center" *ngIf="settings.assign"><span class="glyphicon glyphicon-plus text-center"></span></td>
-          <td class="td-center" *ngIf="settings.close"><span class="glyphicon glyphicon-ok-sign text-center"></span></td>
-          <td class="td-center" *ngIf="settings.reopen"><span class="glyphicon glyphicon-repeat text-center"></span></td>
+          <td class="td-center" *ngIf="settings.close"><span class="glyphicon glyphicon-ok-sign text-center"></span>
+          </td>
+          <td class="td-center" *ngIf="settings.reopen"><span class="glyphicon glyphicon-repeat text-center"></span>
+          </td>
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
@@ -162,11 +173,11 @@
           </td>
           <td class="text-center " *ngIf="settings.assign">
             <button [attr.value]="request.id" class="glyphicon glyphicon-plus center-block btn btn-xs btn-success"
-                  (click)="openAssignRequestModal(request)"></button>
+                    (click)="openAssignRequestModal(request)"></button>
           </td>
           <td class="text-center" *ngIf="settings.close">
             <button [attr.value]="request.id" class="glyphicon glyphicon-ok-sign center-block btn btn-xs btn-success"
-                  (click)="close(request)"></button>
+                    (click)="close(request)"></button>
           </td>
           <td class="text-center" *ngIf="settings.reopen">
             <span [attr.value]="request.id" class="glyphicon glyphicon-repeat center-block btn btn-success btn-xs"
@@ -174,14 +185,17 @@
           </td>
         </tr>
         <tr *ngIf="requests.length == 0">
-          <td class="no-requests" colspan="1000">Requests for this type or the specified search parameters was not found.</td>
+          <td class="no-requests" colspan="1000">Requests for this type or the specified search parameters was not
+            found.
+          </td>
         </tr>
         </tbody>
       </table>
-      <div class="text-center" *ngIf="!searchDTO.title && !searchDTO.dateOfCreation && !searchDTO.priority && !searchDTO.estimate && !searchDTO.progress && !searchDTO.reporterName && !searchDTO.assigneeName">
+      <div class="text-center"
+           *ngIf="!searchDTO.title && !searchDTO.dateOfCreation && !searchDTO.priority && !searchDTO.estimate && !searchDTO.progress && !searchDTO.reporterName && !searchDTO.assigneeName">
         <pagination [totalItems]="requestsCount"
-                    [itemsPerPage]="perPage" (pageChanged)="changed($event)"
-        ></pagination>
+                    [itemsPerPage]="perPage" (pageChanged)="changed($event)">
+        </pagination>
       </div>
 
     </div>
