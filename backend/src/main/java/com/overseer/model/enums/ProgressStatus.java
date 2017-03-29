@@ -2,13 +2,16 @@ package com.overseer.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.overseer.util.ProgressStatusDeserializer;
+import com.overseer.util.ProgressStatusSerializer;
 
 /**
  * The <code>ProgressStatus</code> enum represents progress status of request.
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonDeserialize(using = ProgressStatusDeserializer.class)
+@JsonSerialize(using = ProgressStatusSerializer.class)
 public enum ProgressStatus {
     FREE(5L, 200L),
     JOINED(6L, 300L),

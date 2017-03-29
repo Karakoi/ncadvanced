@@ -21,7 +21,8 @@ public class ProgressStatusSerializer extends JsonSerializer<ProgressStatus> {
 
         jsonGenerator.writeFieldName("name");
         String name = progressStatus.getName();
-        name = name.replaceAll("_", " ").toLowerCase();
+        name = name.toLowerCase();
+        name = name.replaceAll("_", " ");
         name = name.toUpperCase().charAt(0) + name.substring(1);
         jsonGenerator.writeString(name);
 

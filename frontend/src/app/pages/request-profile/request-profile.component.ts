@@ -177,7 +177,7 @@ export class RequestProfileComponent implements OnInit {
   getRequestType(request): string  {
     if (request.progressStatus.name == null && request.priorityStatus.name == null) {
       return "Sub request"
-    } else if (request.progressStatus.name == 'JOINED') {
+    } else if (request.progressStatus.name == 'Joined') {
       return "Joined request";
     } else {
       return "Request"
@@ -185,7 +185,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isFree(request):boolean {
-    if (request.progressStatus.name == 'FREE') {
+    if (request.progressStatus.name == 'Free') {
       return false;
     } else {
       return true;
@@ -193,7 +193,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isInProgress(request):boolean {
-    if (request.progressStatus.name == 'IN_PROGRESS') {
+    if (request.progressStatus.name == 'In progress') {
       return true;
     } else {
       return false;
@@ -205,7 +205,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isClosed(request):boolean {
-    if (request.progressStatus.name == 'CLOSED') {
+    if (request.progressStatus.name == 'Closed') {
       return true;
     } else {
       return false;
