@@ -9,6 +9,7 @@ import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
 import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
+import {SuscribeService} from "../../service/subscribe.service";
 
 @Component({
   selector: 'request-profile',
@@ -39,14 +40,16 @@ export class RequestProfileComponent implements OnInit {
               private route: ActivatedRoute,
               private toastr: ToastsManager,
               private authService: AuthService,
-              private historyService: HistoryService) {
+              private historyService: HistoryService,
+              private subscribeService: SuscribeService) {
   }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
       this.role = user.role.name;
-    });
+
+
 
     this.route.params.subscribe(params => {
       let id = +params['id'];
@@ -59,6 +62,9 @@ export class RequestProfileComponent implements OnInit {
       this.requestService.get(id).subscribe((request: Request) => {
         this.request = request;
         this.type = this.getRequestType(request);
+        this.subscribeService.check(this.request.id, this.currentUser.id).subscribe(result => {
+          this.followed = result;
+        })
         /*console.log(request)*/
       });
 
@@ -71,6 +77,7 @@ export class RequestProfileComponent implements OnInit {
         this.joinedRequests = joinedRequests;
         /*console.log(joinedRequests)*/
       });
+    });
     });
   }
 
@@ -202,7 +209,8 @@ export class RequestProfileComponent implements OnInit {
   }
 
   follow(){
-    this.followed = !this.followed;
-    console.log("follow")
+    this.subscribeService.toggleSubscribe(this.request.id, this.currentUser.id).subscribe(resp => {
+      this.followed = resp;
+    });
   }
 }

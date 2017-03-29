@@ -10,8 +10,9 @@
         >
         </inline-editor>
 
-        <button *ngIf="true" class="btn btn-info">
-          <span class="glyphicon" [ngClass]="followed ? 'glyphicon-flash info' : 'glyphicon glyphicon-ban-circle'" (click)="follow()"> Follow</span>
+        <button *ngIf="true" class="btn btn-info" (click)="follow()">
+          <span class="glyphicon" [ngClass]="followed ? 'glyphicon glyphicon-ban-circle' : 'glyphicon-flash info'"
+          [textContent]="followed ? ' Unfollow':' Follow'"></span>
         </button>
       </p>
     </div>

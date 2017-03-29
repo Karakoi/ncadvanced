@@ -9,6 +9,7 @@ import java.util.List;
  * The <code>RequestDao</code> interface represents access list of subscribers {@link User} of request {@link Request}.
  */
 public interface RequestSubscribersDao {
+    boolean exists(Long subscriberId, Long requestId);
 
     void save(Long subscriberId, Long requestId);
 

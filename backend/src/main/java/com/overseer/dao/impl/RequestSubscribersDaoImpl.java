@@ -30,6 +30,15 @@ public class RequestSubscribersDaoImpl implements RequestSubscribersDao {
     @Autowired
     private NamedParameterJdbcOperations jdbc;
 
+
+    @Override
+    public boolean exists(Long subscriberId, Long requestId) {
+        val parameter = new MapSqlParameterSource("subscriberId", subscriberId);
+        parameter.addValue("requestId", requestId);
+        return jdbc.queryForObject(
+                queryService.getQuery("request.subscriber.exists"), parameter, Integer.class) == 1;
+    }
+
     @Override
     public void save(Long subscriberId, Long requestId) {
         val parameter = new MapSqlParameterSource("subscriberId", subscriberId);
