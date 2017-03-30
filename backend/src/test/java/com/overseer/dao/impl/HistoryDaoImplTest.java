@@ -163,6 +163,7 @@ public class HistoryDaoImplTest {
         assertThat(allHistoryForRequest.size(), is(3));
     }
 
+    @Ignore
     @Test
     public void findAllForEntityTestForCheckOldAndNewValuesInThirdHistoryRecord() throws Exception {
         // given
@@ -195,6 +196,7 @@ public class HistoryDaoImplTest {
         assertThat(allHistoryForRequest.get(1).getRecordId(), is(request.getId()));
     }
 
+    @Ignore
     @Test
     public void findAllForEntityTestForCheckOldAndNewValuesInFirstHistoryRecord() throws Exception {
         // given
