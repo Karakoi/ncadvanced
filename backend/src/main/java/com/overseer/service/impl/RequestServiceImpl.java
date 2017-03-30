@@ -60,17 +60,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     /**
      * {@inheritDoc}.
      */
+    @PreAuthorize("hasRole('ADMIN') || #r.assignee.email == authentication.name || #r.progressStatus.id == 5")
     @Override
-    public Request update(Request request) throws NoSuchEntityException {
+    public Request update(@P("r")Request request) throws NoSuchEntityException {
         Assert.notNull(request, "request must not be null");
         log.debug("Updating request with id: {} ", request.getId());
-        Long progressStatusId = request.getProgressStatus().getId();
-        if (!ProgressStatus.FREE.getId().equals(progressStatusId)) {
-            throw new InappropriateProgressStatusException("Request with id: "
-                    + request.getId() + " and ProgressStatus: "
-                    + request.getProgressStatus().getName()
-                    + " can not be updated");
-        }
         return super.update(request);
     }
 
