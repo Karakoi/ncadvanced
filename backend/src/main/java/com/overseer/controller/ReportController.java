@@ -29,7 +29,7 @@ public class ReportController {
     /**
      * Handle request to download an Excel document.
      */
-    @RequestMapping(value = "/request", method = RequestMethod.GET)
+    @RequestMapping(value = "/request", headers = "Accept=application/pdf", method = RequestMethod.GET)
     public View download(@RequestParam String id) {
         Long requestId = Long.valueOf(id);
         return reportService.generateRequestPDFReport(requestId);
@@ -41,7 +41,7 @@ public class ReportController {
      *
      * @return view with reporting data.
      */
-    @RequestMapping(value = "/managerPDFReport", method = RequestMethod.GET, produces = "application/pdf")
+    @RequestMapping(value = "/managerPDFReport", headers = "Accept=application/pdf", method = RequestMethod.GET, produces = "application/pdf")
     public View getManagerPDFReport(@RequestParam String beginDate, @RequestParam String endDate, @RequestParam int id) {
 
         LocalDate start = LocalDate.parse(beginDate, formatter);
@@ -74,7 +74,7 @@ public class ReportController {
      *
      * @return view with reporting data.
      */
-    @RequestMapping(value = "/adminPDFReport", method = RequestMethod.GET, produces = "application/pdf")
+    @RequestMapping(value = "/adminPDFReport", headers = "Accept=application/pdf",  method = RequestMethod.GET, produces = "application/pdf")
     public View getAdminPDFReport(@RequestParam String beginDate,
                                   @RequestParam String endDate,
                                   @RequestParam int countTop) {

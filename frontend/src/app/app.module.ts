@@ -33,6 +33,7 @@ import {ChartsModule} from "ng2-charts";
 import {TopicService} from "./service/topic.service";
 import {HistoryService} from "./service/history.service";
 import {Ng2GoogleChartsModule} from "ng2-google-charts";
+import {SuscribeService} from "./service/subscribe.service";
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import {Ng2GoogleChartsModule} from "ng2-google-charts";
     AdminPageGuard,
     RequestService,
     RecoverService,
+    SuscribeService,
     ManagerPageGuard,
     UserPageGuard,
     {

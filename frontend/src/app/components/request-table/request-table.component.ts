@@ -159,11 +159,11 @@ export class RequestTable {
   }
 
   openDeleteRequestModal(request: Request, event): void {
-    if(request.progressStatus.name === 'FREE'){
+    if(request.progressStatus.name === 'Free'){
       this.deleteRequestComponent.request = request;
       this.deleteRequestComponent.modal.open();
     } else {
-      this.toastr.error('Can not delete not [FREE] request', "Error!");
+      this.toastr.error('Can not delete not [Free] request', "Error!");
     }
   }
 

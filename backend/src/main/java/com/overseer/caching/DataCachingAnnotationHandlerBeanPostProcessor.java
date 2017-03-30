@@ -21,7 +21,7 @@ import java.util.*;
 public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(DataCachingAnnotationHandlerBeanPostProcessor.class);
     private Map<String, Class> repositoryMap = new HashMap<>();
-    private static final long DEFAULT_CACHE_CLEAN_TIME = 120;
+    private static final long DEFAULT_CACHE_CLEAN_TIME = 300;
     private SimpleInMemoryCache<Triplet<Object, String, List>, Object>
             simpleInMemoryCache = new SimpleInMemoryCache<>(DEFAULT_CACHE_CLEAN_TIME);
 

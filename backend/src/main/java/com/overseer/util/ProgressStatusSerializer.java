@@ -17,11 +17,27 @@ public class ProgressStatusSerializer extends JsonSerializer<ProgressStatus> {
     public void serialize(ProgressStatus progressStatus, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeFieldName("id");
-        jsonGenerator.writeNumber(progressStatus.getId());
+        if (!progressStatus.equals(ProgressStatus.NULL)) {
+            jsonGenerator.writeNumber(progressStatus.getId());
+        } else {
+            jsonGenerator.writeNumber(0);
+        }
         jsonGenerator.writeFieldName("name");
-        jsonGenerator.writeString(progressStatus.getName());
+        if (!progressStatus.equals(ProgressStatus.NULL)) {
+            String name = progressStatus.getName();
+            name = name.toLowerCase();
+            name = name.replaceAll("_", " ");
+            name = name.toUpperCase().charAt(0) + name.substring(1);
+            jsonGenerator.writeString(name);
+        } else {
+            jsonGenerator.writeString("");
+        }
         jsonGenerator.writeFieldName("value");
-        jsonGenerator.writeNumber(progressStatus.getValue());
+        if (!progressStatus.equals(ProgressStatus.NULL)) {
+            jsonGenerator.writeNumber(progressStatus.getValue());
+        } else {
+            jsonGenerator.writeNumber(0);
+        }
         jsonGenerator.writeEndObject();
     }
 }

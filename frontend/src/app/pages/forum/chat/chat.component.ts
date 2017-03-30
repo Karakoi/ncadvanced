@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
+import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from "@angular/core";
 import {Message} from "../../../model/message.model";
 import {ChatService} from "../../../service/chat.service";
 import {AuthService} from "../../../service/auth.service";
@@ -9,6 +9,7 @@ import {TopicService} from "../../../service/topic.service";
 import {UserService} from "../../../service/user.service";
 import {UserSearchDTO} from "../../../model/dto/user-search-dto.model";
 import {Observable} from "rxjs";
+import {isUndefined} from "util";
 
 declare let $ : JQueryStatic;
 
@@ -17,7 +18,7 @@ declare let $ : JQueryStatic;
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   @Input()
   messages: Message[];
   @Output()
@@ -29,6 +30,7 @@ export class ChatComponent implements OnInit {
   messageForm: FormGroup;
   message: Message;
   searchDTO : UserSearchDTO;
+  connect: any;
 
   constructor(private chatService: ChatService,
               private authService: AuthService,
@@ -55,11 +57,16 @@ export class ChatComponent implements OnInit {
       this.currentUser = user;
 
       this.chatService.getChatFriends(this.currentUser.id).subscribe((users: User[]) => {
-        console.log(users);
         this.chatFriends = users;
       });
 
     });
+  }
+
+  ngOnDestroy(): void {
+    if (!isUndefined(this.connect)) {
+      this.connect.unsubscribe();
+    }
   }
 
   createNewMessage(params) {
@@ -79,7 +86,6 @@ export class ChatComponent implements OnInit {
   loadUserMessages(user) {
     this.chatFriend = user;
     this.chatService.getDialogMessages(this.currentUser.id, user.id).subscribe((messages: Message[]) => {
-      console.log(messages);
       this.messages = messages;
       this.message = {
         sender: this.currentUser,
@@ -89,7 +95,7 @@ export class ChatComponent implements OnInit {
     });
     $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
     let timer = Observable.timer(2000, 3000);
-    timer.subscribe(t => this.reloadData(this.currentUser.id, this.chatFriend.id));
+    this.connect = timer.subscribe(t => this.reloadData(this.currentUser.id, this.chatFriend.id));
   }
 
   reloadData(userId, friendId) {
