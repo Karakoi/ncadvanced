@@ -97,7 +97,7 @@ export class ForumComponent implements OnInit {
     console.log(this.topic);
     this.topicService.create(this.topic).subscribe((resp: Response) => {
       this.toastr.success("Topic successfully deleted");
-      this.updateArray(this.topic);
+      this.updateArray(<Topic> resp.json());
       this.modal.close();
     }, e => this.handleErrorCreateTopic(e));
   }
@@ -120,7 +120,7 @@ export class ForumComponent implements OnInit {
   deleteTopic(id) {
     this.topicService.delete(id).subscribe((resp: Response) => {
       this.toastr.success("Topic " + this.topic.title + " created", "Success");
-      this.updateArray(this.topic);
+      this.updateArray(<Topic> resp.json());
       this.modal.close();
     }, e => this.handleErrorCreateTopic(e));
   }
