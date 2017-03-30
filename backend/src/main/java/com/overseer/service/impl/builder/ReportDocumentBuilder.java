@@ -63,6 +63,20 @@ public class ReportDocumentBuilder {
     }
 
     /**
+     * Gets new PdfPTable, add it to document and returns ReportDocumentBuilder for next usages.
+     *
+     * @param condition condition for adding table.
+     * @param table PdfPTable.
+     * @return ReportDocumentBuilder.
+     */
+    public ReportDocumentBuilder addTableByCondition(boolean condition, PdfPTable table) throws DocumentException {
+        if (condition) {
+            document.add(table);
+        }
+        return this;
+    }
+
+    /**
      * Gets paragraph, add it to document and returns ReportDocumentBuilder for next usages.
      *
      * @param paragraph PdfPTable paragraph.
@@ -71,6 +85,20 @@ public class ReportDocumentBuilder {
     public ReportDocumentBuilder addParagraph(Paragraph paragraph, int alignment) throws DocumentException {
         paragraph.setAlignment(alignment);
         document.add(paragraph);
+        return this;
+    }
+
+    /**
+     * Gets paragraph, add it to document and returns ReportDocumentBuilder for next usages.
+     *
+     * @param condition condition for adding paragraph.
+     * @param paragraph PdfPTable paragraph.
+     * @return ReportDocumentBuilder.
+     */
+    public ReportDocumentBuilder addParagraphByCondition(boolean condition, Paragraph paragraph) throws DocumentException {
+        if (condition) {
+            document.add(paragraph);
+        }
         return this;
     }
 
