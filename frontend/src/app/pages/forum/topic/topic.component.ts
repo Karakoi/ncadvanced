@@ -89,6 +89,12 @@ export class TopicComponent implements OnInit {
     this.updated.emit(this.messages);
   }
 
+  updateTopic(topic) {
+    this.topicService.update(topic).subscribe(() => {
+      this.toastr.success("Topic updated", "Success")
+    });
+  }
+
   private handleErrorCreateMessage(error) {
     switch (error.status) {
       case 500:

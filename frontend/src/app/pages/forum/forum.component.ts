@@ -7,6 +7,9 @@ import {Response} from "@angular/http";
 import {ModalComponent} from "ng2-bs3-modal/components/modal";
 import {User} from "../../model/user.model";
 import {AuthService} from "../../service/auth.service";
+import {RoleService} from "../../service/role.service";
+import {Role} from "../../model/role.model";
+import {DeleteTopicComponent} from "./topic-delete/delete-topic.component";
 
 declare let $: any;
 
@@ -22,13 +25,26 @@ export class ForumComponent implements OnInit {
   @Output()
   updated: EventEmitter<any> = new EventEmitter();
   topic: Topic;
-  pageCount: number;
+  pageNumber: number;
   currentUser: User;
+  roles: Role[];
+  perPage: number = 20;
+  curPage: number = 1;
+
+  @ViewChild(DeleteTopicComponent)
+  deleteTopicComponent: DeleteTopicComponent;
 
   @ViewChild('topicModal')
   modal: ModalComponent;
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe((user: User) => {
+      console.log(user)
+      this.currentUser = user;
+    });
+    this.roleService.getAll().subscribe((roles: Role[]) => {
+      this.roles = roles;
+    });
     this.topic = {
       id: null,
       title: null,
@@ -36,24 +52,22 @@ export class ForumComponent implements OnInit {
       roles: null
     };
     this.topicForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]]
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
+      description: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]],
+      roles: ['', [Validators.required]]
     });
-    this.topicService.getAll(1).subscribe((topics: Topic[]) => {
+    this.topicService.getAll(1, this.perPage).subscribe((topics: Topic[]) => {
       this.topics = topics;
       console.log(topics)
     });
-    this.topicService.getPageCount().subscribe((count) => this.pageCount = count);
-
-
+    this.topicService.getPageCount().subscribe((count) => this.pageNumber = count);
   }
 
   constructor(private topicService: TopicService,
               private formBuilder: FormBuilder,
               private toastr: ToastsManager,
-              private authService: AuthService) {
-    this.authService.currentUser.subscribe((user: User) => {
-      this.currentUser = user;
-    });
+              private authService: AuthService,
+              private roleService: RoleService) {
   }
 
   validate(field: string): boolean {
@@ -62,7 +76,49 @@ export class ForumComponent implements OnInit {
 
   createNewTopic(params) {
     this.topic.title = params.title;
+    this.topic.description = params.description;
+    let topicRoles: Role[] = [];
+    if (params.roles[0]) {
+      var role = <Role>{};
+      role.name = params.roles[0];
+      topicRoles.push(role);
+    }
+    if (params.roles[1]) {
+      var role = <Role>{};
+      role.name = params.roles[1];
+      topicRoles.push(role);
+    }
+    if (params.roles[2]) {
+      var role = <Role>{};
+      role.name = params.roles[2];
+      topicRoles.push(role);
+    }
+    this.topic.roles = topicRoles;
+    console.log(this.topic);
     this.topicService.create(this.topic).subscribe((resp: Response) => {
+      this.toastr.success("Topic successfully deleted");
+      this.updateArray(this.topic);
+      this.modal.close();
+    }, e => this.handleErrorCreateTopic(e));
+  }
+
+  changeSize(size) {
+    this.perPage = size;
+    this.topicService.getAll(this.curPage, this.perPage).subscribe(topics => {
+      this.topics = topics;
+    })
+  }
+
+  changed(data) {
+    this.curPage = data.page;
+    this.topicService.getAll(this.curPage, this.perPage).subscribe(topics => {
+      this.topics = topics;
+    })
+  }
+
+
+  deleteTopic(id) {
+    this.topicService.delete(id).subscribe((resp: Response) => {
       this.toastr.success("Topic " + this.topic.title + " created", "Success");
       this.updateArray(this.topic);
       this.modal.close();
@@ -93,9 +149,18 @@ export class ForumComponent implements OnInit {
     $('.paginate_button').removeClass('active');
     let page = data.target.text;
     $(data.target.parentElement).addClass('active');
-    this.topicService.getAll(page).subscribe((topics: Topic[]) => {
+    this.topicService.getAll(page, this.perPage).subscribe((topics: Topic[]) => {
       console.log(topics);
       this.topics = topics;
     });
+  }
+
+  openDeleteTopicModal(topic: Topic): void {
+    this.deleteTopicComponent.topic = topic;
+    this.deleteTopicComponent.modal.open();
+  }
+
+  updateTopics(topics: Topic[]) {
+    this.topics = topics;
   }
 }

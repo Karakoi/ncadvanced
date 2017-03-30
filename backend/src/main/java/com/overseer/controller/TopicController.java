@@ -22,8 +22,6 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    private static final Long DEFAULT_PAGE_SIZE = 10L;
-
     /**
      * Gets {@link Topic} entity associated with provided id param.
      *
@@ -89,9 +87,9 @@ public class TopicController {
      *
      * @return number of pages.
      */
-    @GetMapping("/pageCount")
-    public ResponseEntity<Long> getPagesCount() {
-        Long pageCount = topicService.getCount() / DEFAULT_PAGE_SIZE + 1;
+    @GetMapping("/count")
+    public ResponseEntity<Long> getCount() {
+        Long pageCount = topicService.getCount();
         return new ResponseEntity<>(pageCount, HttpStatus.OK);
     }
 
@@ -102,8 +100,9 @@ public class TopicController {
      * @return {@link Topic} list with http status 200 OK..
      */
     @GetMapping("/fetch")
-    public ResponseEntity<List<Topic>> fetchRequestPage(@RequestParam int page) {
-        val topics = topicService.fetchPage(page, Math.toIntExact(DEFAULT_PAGE_SIZE));
+    public ResponseEntity<List<Topic>> fetchRequestPage(@RequestParam int page,
+                                                        @RequestParam int size) {
+        val topics = topicService.fetchPage(page, size);
         return new ResponseEntity<>(topics, HttpStatus.OK);
     }
 

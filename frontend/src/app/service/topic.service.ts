@@ -27,15 +27,15 @@ export class TopicService {
   }
 
   update(topic: Topic): Observable<Response> {
-    return this.authHttp.put(`${url}/${topic.id}`, topic).map(resp => resp.json());
+    return this.authHttp.put(`${url}`, topic).map(resp => resp.json());
   }
 
-  getAll(page: number): Observable<Topic[]> {
-    return this.authHttp.get(`${url}/fetch?page=` + page).map(resp => resp.json());
+  getAll(page: number, size: number): Observable<Topic[]> {
+    return this.authHttp.get(`${url}/fetch?page=` + page + `&size=` + size).map(resp => resp.json());
   }
 
   getPageCount(): Observable<number> {
-    return this.authHttp.get(`${url}/pageCount`).map(resp => resp.json());
+    return this.authHttp.get(`${url}/count`).map(resp => resp.json());
   }
 
   getMessages(id: number): Observable<Message[]> {
