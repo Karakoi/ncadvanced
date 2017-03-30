@@ -1,4 +1,4 @@
-<div class="container" *ngIf="requests">
+<div class="container col-lg-12" *ngIf="requests">
   <div class="row" *ngIf="!requests.length">
     <div class="header-content">
       <div class="header-content-inner text-center">
@@ -13,31 +13,21 @@
   <div class="row">
     <div class="col-lg-12">
       <ul class="nav nav-tabs">
-        <li class="active">
-          <a href="#freeRequests" data-toggle="tab">
-            <h2 class="panel-title">Free Requests</h2>
-          </a>
-        </li>
-        <li>
-          <a href="#myRequests" data-toggle="tab" (click)="fetchMyRequests(1)">
-            <h2 class="panel-title">My Requests</h2>
-          </a>
-        </li>
+        <li class="active"><a>Free</a></li>
+        <li><a [routerLink]="['/requests/inProgress']">In Progress</a></li>
+        <li><a [routerLink]="['/requests/closed']">Closed</a></li>
       </ul>
       <div class="panel with-nav-tabs panel-default">
         <div class="panel-body">
           <div class="tab-content">
             <div class="tab-pane fade in active" id="freeRequests" *ngIf="requests.length">
-              <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings"
-              (paginationChange)="pageChange($event)" (selectedEvent)="select($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>
-            </div>
-            <div class="tab-pane fade" id="myRequests">
-              <div class="text-center" *ngIf="!myRequests.length">
-                <h2>No requests assigned yet</h2>
-              </div>
-              <div *ngIf="myRequests.length">
-                <r-table [requests]="myRequests" [requestsCount]="myPageCount" [settings]="mySettings"></r-table>
-              </div>
+              <r-table [requests]="requests"
+                       [requestsCount]="pageCount"
+                       [settings]="settings"
+                       (paginationChange)="pageChange($event)"
+                       (selectedEvent)="select($event)"
+                       (perChangeLoad)="perChangeLoad($event)">
+              </r-table>
             </div>
           </div>
         </div>
@@ -45,5 +35,3 @@
     </div>
   </div>
 </div>
-<assign-request [requests]="requests" (updated)="updateRequests($event)"></assign-request>
-<join-request [requests]="requests" [checked]="checked" (updated)="updateRequests($event)"></join-request>
