@@ -85,7 +85,8 @@ public class ManagerReportView extends AbstractPdfView {
     private PdfPTable generateNeededCloseRequestsTable(int id) {
         final int size = 20;
         final int pageNum = 1;
-        val topInProgressRequests = requestService.findInProgressRequestsByAssignee((long) id, size, pageNum);
+        val topInProgressRequests = requestService.findRequestsWithGivenProgressByAssignee(
+                (long) id, ProgressStatus.IN_PROGRESS, size, pageNum);
         final int tableColumnNum = 4;
         final int colorR = 253;
         final int colorG = 166;

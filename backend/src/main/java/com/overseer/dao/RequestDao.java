@@ -81,17 +81,12 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * Returns a list of requests which have provided {@link User} as assignee.
      *
      * @param assigneeId id of the assignee, must not be {@literal null}.
-     * @return list of requests which have provided {@link User} as assignee.
+     * @param progressStatus progress status of request, must not be {@literal null}.
+     * @param pageSize amount of fetch size, must not be {@literal null}.
+     * @param pageNumber page number, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee with given request.
      */
-    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
-
-    /**
-     * Returns a list of requests which have provided {@link User} as assignee.
-     *
-     * @param assigneeId id of the assignee, must not be {@literal null}.
-     * @return list of requests which have provided {@link User} as assignee.
-     */
-    List<Request> findClosedRequestsByAssignee(Long assigneeId, int pageSize, int pageNumber);
+    List<Request> findRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
@@ -132,18 +127,11 @@ public interface RequestDao extends CrudDao<Request, Long> {
     /**
      * Returns number of requests for assignee.
      *
-     * @param managerId assignee id must be not null.
+     * @param assigneeId assignee id must be not null.
+     * @param progressStatus progress status must be not null.
      * @return number of requests for assignee.
      */
-    Long countInProgressRequestByAssignee(Long managerId);
-
-    /**
-     * Returns number of requests for assignee.
-     *
-     * @param managerId assignee id must be not null.
-     * @return number of requests for assignee.
-     */
-    Long countClosedRequestByAssignee(Long managerId);
+    Long countRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus);
 
     /**
      * Returns number of entities of type <code>T</code>.
@@ -168,27 +156,7 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @param progress progress status id.
      * @return number of requests for reporter.
      */
-    Long countRequestsByReporterAndProgress(Long reporterId, ProgressStatus progress);
-
-    /**
-     * Returns a list of requests with provided progress status {@link ProgressStatus}.
-     *
-     * @param statusId id of the progress status, must not be {@literal null}.
-     * @return list of requests with provided progress status {@link ProgressStatus}.
-     */
-    List<Request> findRequestsByProgress(Long statusId, int pageSize, int pageNumber);
-
-    /**
-     * Returns a list of requests with provided progress status {@link ProgressStatus}.
-     *
-     * @param progressStatus request's progress status, must not be {@literal null}.
-     * @return list of requests with provided progress status {@link ProgressStatus}.
-     */
-    default List<Request> findRequestsByProgress(ProgressStatus progressStatus, int pageSize, int pageNumber) {
-        Assert.notNull(progressStatus);
-        Long id = progressStatus.getId();
-        return findRequestsByProgress(id, pageSize, pageNumber);
-    }
+    Long countRequestsWithNullParentByReporterAndProgress(Long reporterId, ProgressStatus progress);
 
     /**
      * Returns a list of requests with provided progress status {@link PriorityStatus}.

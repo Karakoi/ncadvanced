@@ -2,6 +2,10 @@ p {
   margin: 0;
 }
 
+.inline {
+  display: inline;
+}
+
 hr {
   margin: 5px;
 }

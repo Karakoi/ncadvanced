@@ -3,6 +3,7 @@ package com.overseer.controller;
 import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.Request;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -259,27 +260,27 @@ public class RequestController {
 
     @GetMapping("/countInProgressRequestsByAssignee")
     public ResponseEntity<Long> countInProgressRequestByAssignee(@RequestParam long manager) {
-        return new ResponseEntity<>(requestService.countInProgressRequestByAssignee(manager), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.countRequestsWithGivenProgressByAssignee(manager, ProgressStatus.IN_PROGRESS), HttpStatus.OK);
     }
 
     @GetMapping("/inProgressRequestsByAssignee")
     public ResponseEntity<List<Request>> getInProgressRequestsByAssignee(@RequestParam int page,
                                                                          @RequestParam int size,
                                                                          @RequestParam long manager) {
-        val requests = requestService.findInProgressRequestsByAssignee(manager, size, page);
+        val requests = requestService.findRequestsWithGivenProgressByAssignee(manager, ProgressStatus.IN_PROGRESS, size, page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     @GetMapping("/countClosedRequestsByAssignee")
     public ResponseEntity<Long> countClosedRequestByAssignee(@RequestParam long manager) {
-        return new ResponseEntity<>(requestService.countClosedRequestByAssignee(manager), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.countRequestsWithGivenProgressByAssignee(manager, ProgressStatus.CLOSED), HttpStatus.OK);
     }
 
     @GetMapping("/closedRequestsByAssignee")
     public ResponseEntity<List<Request>> getClosedRequestsByAssignee(@RequestParam int page,
                                                                      @RequestParam int size,
                                                                      @RequestParam long manager) {
-        val requests = requestService.findClosedRequestsByAssignee(manager, size, page);
+        val requests = requestService.findRequestsWithGivenProgressByAssignee(manager, ProgressStatus.CLOSED, size, page);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 

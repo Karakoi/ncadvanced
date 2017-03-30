@@ -6,6 +6,7 @@ import com.overseer.dto.RequestSearchDTO;
 import com.overseer.model.PriorityStatus;
 import com.overseer.model.Request;
 import com.overseer.model.User;
+import com.overseer.model.enums.ProgressStatus;
 import io.jsonwebtoken.lang.Assert;
 
 import java.time.LocalDate;
@@ -33,9 +34,14 @@ public interface RequestService extends CrudService<Request, Long> {
 
     Long countRequestByReporter(Long reporterId);
 
-    Long countClosedRequestByAssignee(Long managerId);
-
-    Long countInProgressRequestByAssignee(Long managerId);
+    /**
+     * Returns number of requests for assignee.
+     *
+     * @param assigneeId assignee id must be not null.
+     * @param progressStatus progress status must be not null.
+     * @return number of requests for assignee.
+     */
+    Long countRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus);
 
     /**
      * Returns a list of sub requests for the given request {@link Request}.
@@ -64,18 +70,13 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Returns a list of requests which have provided {@link User} as assignee.
      *
-     * @param assigneeId requests assignee, must not be {@literal null}.
-     * @return list of requests which have provided {@link User} as assignee.
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @param progressStatus progress status of request, must not be {@literal null}.
+     * @param pageSize amount of fetch size, must not be {@literal null}.
+     * @param pageNumber page number, must not be {@literal null}.
+     * @return list of requests which have provided {@link User} as assignee with given request.
      */
-    List<Request> findInProgressRequestsByAssignee(Long assigneeId, int size, int pageNumber);
-
-    /**
-     * Returns a list of requests which have provided {@link User} as assignee.
-     *
-     * @param assigneeId requests assignee, must not be {@literal null}.
-     * @return list of requests which have provided {@link User} as assignee.
-     */
-    List<Request> findClosedRequestsByAssignee(Long assigneeId, int size, int pageNumber);
+    List<Request> findRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus, int pageSize, int pageNumber);
 
     /**
      * Returns a list of requests which have provided {@link User} as reporter.
