@@ -9,6 +9,8 @@ import {TopicService} from "../../../service/topic.service";
 import {UserService} from "../../../service/user.service";
 import {UserSearchDTO} from "../../../model/dto/user-search-dto.model";
 import {Observable} from "rxjs";
+import {ActivatedRoute, Params} from "@angular/router";
+import {Chuck} from "../../../model/dto/chuck.model";
 
 declare let $ : JQueryStatic;
 
@@ -29,11 +31,13 @@ export class ChatComponent implements OnInit {
   messageForm: FormGroup;
   message: Message;
   searchDTO : UserSearchDTO;
+  showFriendsList: boolean = true;
 
   constructor(private chatService: ChatService,
               private authService: AuthService,
               private formBuilder: FormBuilder,
-              private userService: UserService) {
+              private userService: UserService,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -57,23 +61,53 @@ export class ChatComponent implements OnInit {
       this.chatService.getChatFriends(this.currentUser.id).subscribe((users: User[]) => {
         console.log(users);
         this.chatFriends = users;
-      });
 
+        this.activatedRoute.queryParams.subscribe((params: Params) => {
+          let userId = params['userId'];
+          if (userId) {
+            this.userService.get(userId).subscribe(user => {
+              this.updateFindedUsersArray(user);
+            });
+          }
+        });
+      });
     });
   }
 
   createNewMessage(params) {
-    this.message.text = params.text;
-    this.message.dateAndTime = new Date();
-    this.userService.get(this.chatFriend.id).subscribe((user: User) => {
-      this.chatFriend  = user;
-      this.message.recipient = this.chatFriend;
-      this.userService.sendMessage(this.message).subscribe((resp: Response) => {
-        this.updateArray(<Message> resp.json());
-        this.messageForm.reset();
-      }, e => this.handleErrorCreateMessage(e));
-    });
-    $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
+    if (params.text.startsWith("/chuck")) {
+      this.chatService.getChuckJoke().subscribe(joke => {
+        this.message.text = joke.value;
+        this.message.dateAndTime = new Date();
+        this.userService.get(this.chatFriend.id).subscribe((user: User) => {
+          this.chatFriend  = user;
+          this.message.recipient = this.chatFriend;
+          this.userService.sendMessage(this.message).subscribe((resp: Response) => {
+            this.updateArray(<Message> resp.json());
+            this.messageForm.reset();
+          }, e => this.handleErrorCreateMessage(e));
+        });
+        $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
+      });
+    } else {
+      this.message.text = params.text;
+      this.message.dateAndTime = new Date();
+      this.userService.get(this.chatFriend.id).subscribe((user: User) => {
+        this.chatFriend  = user;
+        this.message.recipient = this.chatFriend;
+        this.userService.sendMessage(this.message).subscribe((resp: Response) => {
+          this.updateArray(<Message> resp.json());
+          this.messageForm.reset();
+        }, e => this.handleErrorCreateMessage(e));
+      });
+      $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
+    }
+  }
+
+  checkChuck(text) {
+    if (text.includes('Chuck') || text.includes('chuck') || text.includes('Norris') || text.includes('norris')) {
+      return true;
+    } else return false;
   }
 
   loadUserMessages(user) {
@@ -138,5 +172,9 @@ export class ChatComponent implements OnInit {
 
   clear() {
     this.findedUsers = [];
+  }
+
+  changeShowFriendsList() {
+    this.showFriendsList = !this.showFriendsList;
   }
 }
