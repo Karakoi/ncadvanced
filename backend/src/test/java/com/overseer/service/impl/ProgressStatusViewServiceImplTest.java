@@ -3,6 +3,7 @@ package com.overseer.service.impl;
 import com.overseer.model.ProgressStatusView;
 import com.overseer.util.ProgressStatusUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class ProgressStatusViewServiceImplTest {
     private ProgressStatusUtil progressStatusUtil;
 
     @Test
+    @Ignore
     public void findAllPriorityStatuses() throws Exception {
         List<ProgressStatusView> allProgressStatusViews = progressStatusUtil.getAllProgressStatusViews();
         final int expectedStatusesSize = 4;

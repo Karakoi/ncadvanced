@@ -59,7 +59,7 @@ export class RequestProfileComponent implements OnInit {
 
       this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
         this.historyRecords = historyRecords;
-        console.log(historyRecords);
+        /*console.log(historyRecords);*/
       });
 
       this.requestService.get(id).subscribe((request: Request) => {
@@ -128,17 +128,6 @@ export class RequestProfileComponent implements OnInit {
     return text;
   }
 
-  /*showHistoryValue(generalValue: string, demonstrationValue: string){
-    if(demonstrationValue != null){
-      return demonstrationValue;
-    } else {
-      if(generalValue != null){
-        return generalValue;
-      } else {
-        return "empty value";
-      }
-    }
-  }*/
 
   openAddSubRequestModal(): void {
     this.addSubRequestComponent.modal.open();
@@ -207,14 +196,22 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
-  isEmployee(): boolean {
-    return this.role === 'employee'
+  isAdmin():boolean {
+    return this.role != 'admin';
+  }
+
+  isAssignee(request):boolean {
+    return request.assignee.id !== this.currentUser.id;
   }
 
   follow(){
     this.subscribeService.toggleSubscribe(this.request.id, this.currentUser.id).subscribe(resp => {
       this.followed = resp;
     });
+  }
+
+   isAssigneeOfRequest(){
+    return this.request.assignee.id === this.currentUser.id
   }
 
   isClosed(request):boolean {
@@ -225,8 +222,8 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
-  isNotEmployee(): boolean {
-    return this.currentUser.role.name !== 'employee';
+  isEmployee(): boolean {
+    return this.currentUser.role.name === 'employee';
   }
 
   getPDF() {

@@ -1,9 +1,9 @@
 import {Routes} from "@angular/router";
-import {ManagerComponent} from "./manager/manager.component";
 import {AdminComponent} from "./admin/admin.component";
 import {AdminPageGuard} from "../../service/guard/admin-page.guard";
 import {UserPageGuard} from "../../service/guard/user-page.guard";
 import {ManagerPageGuard} from "../../service/guard/manager-page.guard";
+import {ManagerComponent} from "./manager/manager.component";
 
 export const homeRoutes: Routes = [
   {

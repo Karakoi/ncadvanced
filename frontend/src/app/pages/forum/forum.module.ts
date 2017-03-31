@@ -13,9 +13,15 @@ import {GravatarModule} from "../../shared/gravatar/gravatar.module";
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
 import {ChatService} from "../../service/chat.service";
 import {TimeParseModule} from "../../util/time-parser/time-parse.module";
+import {DeleteMessageComponent} from "./topic/message-delete/delete-mesage.component";
+import {DeleteTopicComponent} from "./topic-delete/delete-topic.component";
+import {TopicService} from "../../service/topic.service";
+import {InlineEditorModule} from "ng2-inline-editor";
+import {PaginationModule} from "ng2-bootstrap";
 
 @NgModule({
   imports: [
+    InlineEditorModule,
     DateParseModule,
     TimeParseModule,
     GravatarModule,
@@ -24,7 +30,8 @@ import {TimeParseModule} from "../../util/time-parser/time-parse.module";
     ReactiveFormsModule,
     FormTemplateModule,
     Ng2Bs3ModalModule,
-    RouterModule.forChild(forumRoutes)
+    RouterModule.forChild(forumRoutes),
+    PaginationModule.forRoot()
   ],
   declarations: [
     ForumComponent,
@@ -32,12 +39,15 @@ import {TimeParseModule} from "../../util/time-parser/time-parse.module";
     MessageItemComponent,
     ChatComponent,
     MessageComponent,
-    TopicComponent
+    TopicComponent,
+    DeleteMessageComponent,
+    DeleteTopicComponent
   ],
   providers: [
     UserService,
     AuthService,
-    ChatService
+    ChatService,
+    TopicService
   ]
 })
 export class ForumModule {

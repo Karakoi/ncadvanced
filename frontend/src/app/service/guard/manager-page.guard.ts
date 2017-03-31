@@ -13,7 +13,7 @@ export class ManagerPageGuard implements CanActivate {
     if (this.authService.role !== 'office manager') {
       this.router.navigate(['/home']);
     }
-    console.log("Activating manager", this.authService.role === 'office manager');
+    //console.log("Activating manager", this.authService.role === 'office manager');
     return this.authService.role === 'office manager';
   }
 

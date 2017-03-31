@@ -40,4 +40,10 @@ public class MessageController {
         val messages = messageService.findDialogMessages(senderId, recipientId);
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
+
+    @DeleteMapping("messages/{id}")
+    public ResponseEntity deleteMessage(@PathVariable Long id) {
+        messageService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

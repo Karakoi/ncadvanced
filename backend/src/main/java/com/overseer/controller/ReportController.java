@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.View;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -22,14 +20,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ReportController {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final RequestService requestService;
     private final ReportService reportService;
 
     /**
      * Handle request to download an Excel document.
      */
-    @RequestMapping(value = "/request", method = RequestMethod.GET)
+    @RequestMapping(value = "/request", headers = "Accept=application/pdf", method = RequestMethod.GET)
     public View download(@RequestParam String id) {
         Long requestId = Long.valueOf(id);
         return reportService.generateRequestPDFReport(requestId);
@@ -41,12 +38,9 @@ public class ReportController {
      *
      * @return view with reporting data.
      */
-    @RequestMapping(value = "/managerPDFReport", method = RequestMethod.GET, produces = "application/pdf")
+    @RequestMapping(value = "/managerPDFReport", headers = "Accept=application/pdf", method = RequestMethod.GET, produces = "application/pdf")
     public View getManagerPDFReport(@RequestParam String beginDate, @RequestParam String endDate, @RequestParam int id) {
-
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        return reportService.generateManagerPDFReport(start, end, id);
+        return reportService.generateManagerPDFReport(beginDate, endDate, id);
     }
 
     /**
@@ -61,9 +55,7 @@ public class ReportController {
     public ResponseEntity<List<RequestDTO>> getManagerStatisticsOfClosedRequestsByPeriod(@RequestParam String beginDate,
                                                                                          @RequestParam String endDate,
                                                                                          @RequestParam int id) {
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        return new ResponseEntity<>(reportService.getManagerStatisticsOfClosedRequestsByPeriod(start, end, id), HttpStatus.OK);
+       return new ResponseEntity<>(reportService.getManagerStatisticsOfClosedRequestsByPeriod(beginDate, endDate, id), HttpStatus.OK);
     }
     //</editor-fold>
 
@@ -74,13 +66,11 @@ public class ReportController {
      *
      * @return view with reporting data.
      */
-    @RequestMapping(value = "/adminPDFReport", method = RequestMethod.GET, produces = "application/pdf")
+    @RequestMapping(value = "/adminPDFReport", headers = "Accept=application/pdf",  method = RequestMethod.GET, produces = "application/pdf")
     public View getAdminPDFReport(@RequestParam String beginDate,
                                   @RequestParam String endDate,
                                   @RequestParam int countTop) {
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        return reportService.generateAdminPDFReport(start, end, countTop);
+        return reportService.generateAdminPDFReport(beginDate, endDate, countTop);
     }
 
     /**
@@ -93,10 +83,7 @@ public class ReportController {
     @GetMapping("/getAllStatisticsOfFreeRequestsByPeriod")
     public ResponseEntity<List<RequestDTO>> getAllStatisticsOfFreeRequestsByPeriod(@RequestParam String beginDate,
                                                                                    @RequestParam String endDate) {
-
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        return new ResponseEntity<>(reportService.getAllStatisticsOfFreeRequestsByPeriod(start, end), HttpStatus.OK);
+        return new ResponseEntity<>(reportService.getAllStatisticsOfFreeRequestsByPeriod(beginDate, endDate), HttpStatus.OK);
     }
 
 
@@ -110,9 +97,7 @@ public class ReportController {
     @GetMapping("/getAllStatisticsOfClosedRequestsByPeriod")
     public ResponseEntity<List<RequestDTO>> getAllStatisticsOfClosedRequestsByPeriod(@RequestParam String beginDate,
                                                                                      @RequestParam String endDate) {
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        return new ResponseEntity<>(reportService.getAllStatisticsOfClosedRequestsByPeriod(start, end), HttpStatus.OK);
+        return new ResponseEntity<>(reportService.getAllStatisticsOfClosedRequestsByPeriod(beginDate, endDate), HttpStatus.OK);
     }
 
     /**
@@ -126,9 +111,7 @@ public class ReportController {
     public ResponseEntity<List<RequestDTO>> getBestManagersWithClosedStatusByPeriod(@RequestParam String beginDate,
                                                                                     @RequestParam String endDate,
                                                                                     @RequestParam int countTop) {
-        LocalDate start = LocalDate.parse(beginDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
-        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId(), countTop);
+        List<RequestDTO> topManagers = requestService.findBestManagersByPeriod(beginDate, endDate, ProgressStatus.CLOSED.getId(), countTop);
         return new ResponseEntity<>(topManagers, HttpStatus.OK);
     }
 

@@ -26,6 +26,18 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
         return jdbc().query(getByTopicQuery(), parameterSource, getMapper());
     }
 
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public int deleteByTopicId(Long topicId) {
+        List<Message> messagesByTopic = findByTopic(topicId);
+        for (Message message: messagesByTopic) {
+            delete(message);
+        }
+        return messagesByTopic.size();
+    }
+
     @Override
     public List<Message> findDialogMessages(Long senderId, Long recipientId) {
         val parameterSource = new MapSqlParameterSource("senderId", senderId);
@@ -96,7 +108,7 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
 
     @Override
     protected String getDeleteQuery() {
-        return null;
+        return queryService().getQuery("message.delete");
     }
 
     @Override

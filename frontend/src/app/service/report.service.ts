@@ -1,11 +1,10 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {ResponseContentType} from "@angular/http";
+import {ResponseContentType, Headers} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {ErrorService} from "./error.service";
 import {RequestDTO} from "../model/dto/requestDTO.model";
-import {ProgressStatus, Request} from "../model/request.model";
 
 const url = '/api/reports';
 
@@ -17,7 +16,8 @@ export class ReportService {
   }
 
   getPDFRequest(requestId: number): Observable<any> {
-    return this.authHttp.get(`${url}/request?id=${requestId}`, {responseType: ResponseContentType.Blob})
+    let headers = new Headers({'Accept': 'application/pdf'});
+    return this.authHttp.get(`${url}/request?id=${requestId}`, {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
@@ -26,13 +26,15 @@ export class ReportService {
 
   /* FOR ADMIN REPORTS */
   getAdminPDFReport(beginDate: Date, endDate: Date, countTopManagers: number): Observable<any> {
-    return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {responseType: ResponseContentType.Blob})
+    let headers = new Headers({'Accept': 'application/pdf'});
+    // headers.append("Content-Type", 'application/pdf');
+    // return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {responseType: ResponseContentType.Blob})
+    return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
   }
-
 
   getAllStatisticsOfFreeRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
     return this.authHttp.get(`${url}/getAllStatisticsOfFreeRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
@@ -63,7 +65,8 @@ export class ReportService {
 
   /* FOR OFFICE MANAGER REPORTS */
   getManagerPDFReport(beginDate: Date, endDate: Date, id: number): Observable<any> {
-    return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}&id=${id}`, {responseType: ResponseContentType.Blob})
+    let headers = new Headers({'Accept': 'application/pdf'});
+    return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}&id=${id}`, {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
