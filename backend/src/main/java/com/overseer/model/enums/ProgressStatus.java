@@ -17,7 +17,7 @@ public enum ProgressStatus {
     JOINED(6L, 300L),
     IN_PROGRESS(7L, 400L),
     CLOSED(8L, 500L),
-    NULL(0L, 0L);
+    NULL(null, 0L);
 
     private Long id;
     private Long value;
@@ -28,9 +28,6 @@ public enum ProgressStatus {
     }
 
     public Long getId() {
-        if (id == 0) {
-            return null;
-        }
         return id;
     }
 
@@ -38,8 +35,14 @@ public enum ProgressStatus {
         return value;
     }
 
+    /**
+     * Method return changed progress name.
+     */
     public String getName() {
-        return this.name();
+        String newName = this.name();
+        newName = newName.toLowerCase();
+        newName = newName.replaceAll("_", " ");
+        newName = newName.toUpperCase().charAt(0) + newName.substring(1);
+        return newName;
     }
-
 }
