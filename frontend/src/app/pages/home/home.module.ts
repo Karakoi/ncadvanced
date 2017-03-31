@@ -26,15 +26,17 @@ import {ManagerModule} from "./manager/manager.module";
     FormTemplateModule,
     FormsModule,
     RequestModule,
-    ManagerModule,
+    //ManagerModule,
     BasicRequestTableModule,
   ],
   declarations: [
     AdminComponent,
+    ManagerComponent,
     RequestFormComponent,
   ],
   exports: [
     AdminComponent,
+    ManagerComponent,
     RequestFormComponent,
   ]
 })
