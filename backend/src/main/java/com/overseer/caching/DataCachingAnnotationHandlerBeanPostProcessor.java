@@ -2,6 +2,7 @@ package com.overseer.caching;
 
 import com.overseer.caching.annotation.CacheChanger;
 import com.overseer.caching.annotation.CacheableData;
+import com.overseer.caching.impl.SimpleInMemoryCacheImpl;
 import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,9 @@ import java.util.*;
 public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(DataCachingAnnotationHandlerBeanPostProcessor.class);
     private Map<String, Class> repositoryMap = new HashMap<>();
-    private static final long DEFAULT_CACHE_CLEAN_TIME = 300;
+    private static final long DEFAULT_CACHE_CLEAN_TIME = 180;
     private SimpleInMemoryCache<Triplet<Object, String, List>, Object>
-            simpleInMemoryCache = new SimpleInMemoryCache<>(DEFAULT_CACHE_CLEAN_TIME);
+            simpleInMemoryCache = new SimpleInMemoryCacheImpl<>(DEFAULT_CACHE_CLEAN_TIME);
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String name) throws BeansException {

@@ -11,6 +11,8 @@ import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.component";
 import {PriorityMarkerModule} from "../../util/priority-marker/priority-marker.module";
 import {ProgressMarkerModule} from "../../util/progress-marker/progress-marker.module";
+import {GravatarModule} from "../../shared/gravatar/gravatar.module";
+import {DeleteCommentComponent} from "./comment-delete/delete-comment.component";
 
 const routes: Routes = [
   {path: '', component: RequestProfileComponent},
@@ -26,16 +28,20 @@ const routes: Routes = [
     ReactiveFormsModule,
     InlineEditorModule,
     DateParseModule,
-    Ng2Bs3ModalModule
+    Ng2Bs3ModalModule,
+    GravatarModule,
+    DateParseModule
   ],
   declarations: [
     RequestProfileComponent,
     DeleteSubRequestComponent,
+    DeleteCommentComponent,
     AddSubRequestComponent
   ],
   exports: [
     RequestProfileComponent,
     DeleteSubRequestComponent,
+    DeleteCommentComponent,
     AddSubRequestComponent
   ]
 })

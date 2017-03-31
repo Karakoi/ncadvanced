@@ -584,3 +584,8 @@ insert into topic_to_role (topic_id, role_id) values (344,11);
 insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxadmin', 'Maxadmin', 'Maxadmin', '$2a$10$5c.0Wc1.RaHNbQnRIysorOJr2URfrZ/6TPN8WySHQDhFT0weldB.2', 'maxadmin@gmail.com', '2010-10-10', '81-(368)868-2785', 10);
 insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxmanager', 'Maxmanager', 'Maxmanager', '$2a$10$OHLeC6WO0i6aPemAOQyQEuYvw1huXLpB2Zl2sS/oCE2MbMXMEJzEm', 'maxmanager@gmail.com', '2010-10-10', '81-(368)868-2785', 11);
 insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxempl', 'Maxempl', 'Maxempl', '$2a$10$UQTnkEfjD/GWPQeHgjibFeYpyLNMmz3IHe8bkmyCZ.kGw9ea2E1b6', 'maxempl@gmail.com', '2010-10-10', '81-(368)868-2785', 12);
+
+insert into comment (sender_id, request_id, text, date_and_time) values (16, 14941, 'Hey, i think its a piece of shit!', '2017-01-31 00:48:50');
+insert into comment (sender_id, request_id, text, date_and_time) values (912, 14941, 'Oh, crap..', '2017-01-31 01:22:50');
+insert into comment (sender_id, request_id, text, date_and_time) values (17, 14941, 'Why so negative, guys?', '2017-01-31 01:38:50');
+insert into comment (sender_id, request_id, text, date_and_time) values (18, 14941, 'We can change it btw..', '2017-01-31 02:55:50');

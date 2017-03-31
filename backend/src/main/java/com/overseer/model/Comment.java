@@ -8,26 +8,28 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Message entity.
+ * Comment entity.
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class Message extends AbstractEntity{
+public class Comment extends AbstractEntity {
+
     private static final int MIN_MESSAGE_LENGTH = 2;
     private static final int MAX_MESSAGE_LENGTH = 500;
 
     @NotNull(message = "Message has to have a sender")
     private User sender;
 
-    private User recipient;
-
-    private Topic topic;
+    @NotNull(message = "Message has to have a request")
+    private Request request;
 
     @Size(min = MIN_MESSAGE_LENGTH, max = MAX_MESSAGE_LENGTH)
     @NotNull(message = "Message has to have a text")
     private String text;
 
     @NotNull(message = "Message has to have a time of creation")
-    private LocalDateTime dateAndTime;
+    private LocalDateTime createDateAndTime;
+
+    private LocalDateTime updateDateAndTime;
 }
