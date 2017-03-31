@@ -245,48 +245,57 @@
           <p class="no-content-msg">
             <i *ngIf="showComments == true && comments == false">This object was not changed.</i>
           </p>
-          <ul class="list-group" *ngIf="showComments">
-            <li class="list-group-item" *ngFor="let comment of comments">
-              <div class="row">
-                <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
-                  <p>
-                    <gravatar [email]="comment.sender.email" [size]="80"></gravatar>
-                  </p>
-                  <b><a [routerLink]="['/user', comment.sender.id]">{{comment.sender.firstName}}
-                    {{comment.sender.lastName}}</a></b><br>
-                  <span><b>{{comment.sender.role.name}}</b></span><br>
-                </div>
-                <div class="col-lg-10 col-sm-9 col-xs-9">
-                  <inline-editor type="text"
-                                 [(ngModel)]="comment.text"
-                                 (onSave)="updateComment(comment)"
-                                 size="40"
-                  >
-                  </inline-editor>
-                  <p class="pull-right badge">
-                    <date-parse [date]="comment.createDateAndTime"></date-parse>
-                  </p>
-                  <p class="pull-right badge" *ngIf="comment.updateDateAndTime" style="background-color: #0dad71">
-                   <span>Updated: <date-parse [date]="comment.updateDateAndTime"></date-parse> </span>
-                  </p>
-                </div>
-              </div>
-            </li>
-          </ul>
+          <div id="comment-container">
+            <ul class="list-group" *ngIf="showComments">
+              <li class="list-group-item" *ngFor="let comment of comments">
+                <div class="row">
+                  <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
+                    <p>
+                      <gravatar [email]="comment.sender.email" [size]="80"></gravatar>
+                    </p>
+                    <b><a [routerLink]="['/user', comment.sender.id]">{{comment.sender.firstName}}
+                      {{comment.sender.lastName}}</a></b><br>
+                    <span><b>{{comment.sender.role.name}}</b></span><br>
+                  </div>
+                  <div class="col-lg-10 col-sm-9 col-xs-9">
+                      <div class="text-box">
+                        <inline-editor type="text"
+                                       [(ngModel)]="comment.text"
+                                       (onSave)="updateComment(comment)"
+                                       size="40"
+                        >
+                        </inline-editor>
+                      </div>
+                      <button [attr.value]="comment.id" class="pull-left btn btn-danger btn-xs btn-delete"
+                              (click)="openDeleteCommentModal(comment)">Delete</button>
+                      <p class="pull-right badge">
+                        <date-parse [date]="comment.createDateAndTime"></date-parse>
+                      </p>
+                      <p class="pull-right badge" *ngIf="comment.updateDateAndTime" style="background-color: #0dad71">
+                       <span>Updated: <date-parse [date]="comment.updateDateAndTime"></date-parse> </span>
+                      </p>
+                      </div>
+                  </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-      <form [formGroup]="commentForm" (ngSubmit)="createNewComment(commentForm.value)"
-            [ngClass]="{'has-error': !validate('text')}">
-        <textarea class="form-control" rows="3" formControlName="text"></textarea>
-        <div *ngIf="!validate('text')" class="help-block text-left">
-          <span *ngIf="commentForm.get('text')">Comment length should be between 2 and 500 characters.</span>
-        </div>
-        <button type="submit" class="btn btn-primary pull-right" [disabled]="commentForm.invalid" style="margin-top: 10px">Submit comment
-        </button>
-      </form>
+      <div class="comment-form" *ngIf="showComments">
+        <form [formGroup]="commentForm" (ngSubmit)="createNewComment(commentForm.value)"
+              [ngClass]="{'has-error': !validate('text')}">
+          <textarea class="form-control" rows="3" formControlName="text"></textarea>
+          <div *ngIf="!validate('text')" class="help-block text-left">
+            <span *ngIf="commentForm.get('text')">Comment length should be between 2 and 500 characters.</span>
+          </div>
+          <button type="submit" class="btn btn-primary pull-right" [disabled]="commentForm.invalid" style="margin-top: 10px">Submit comment
+          </button>
+        </form>
+      </div>
     </div>
   </div>
   <add-sub-request [subRequests]="subRequests" [parentId]="request.id"
                    (updated)="updateSubRequests($event)"></add-sub-request>
   <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
+  <delete-comment [comments]="comments" (updated)="updateComments($event)"></delete-comment>
 </div>

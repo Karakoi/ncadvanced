@@ -16,6 +16,7 @@ import * as FileSaver from "file-saver";
 import {CommentService} from "../../service/comment.service";
 import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {Response} from "@angular/http";
+import {DeleteCommentComponent} from "./comment-delete/delete-comment.component";
 
 @Component({
   selector: 'request-profile',
@@ -44,6 +45,9 @@ export class RequestProfileComponent implements OnInit {
 
   @ViewChild(DeleteSubRequestComponent)
   deleteSubRequestComponent: DeleteSubRequestComponent;
+
+  @ViewChild(DeleteCommentComponent)
+  deleteCommentComponent: DeleteCommentComponent;
 
   @ViewChild(AddSubRequestComponent)
   addSubRequestComponent: AddSubRequestComponent;
@@ -185,6 +189,15 @@ export class RequestProfileComponent implements OnInit {
   openDeleteSubRequestModal(subRequest: Request): void {
     this.deleteSubRequestComponent.subRequest = subRequest;
     this.deleteSubRequestComponent.modal.open();
+  }
+
+  openDeleteCommentModal(comment: Comment): void {
+    this.deleteCommentComponent.comment = comment;
+    this.deleteCommentComponent.modal.open();
+  }
+
+  updateComments(comments: Comment[]) {
+    this.comments = comments;
   }
 
   updateSubRequests(subRequests: Request[]) {

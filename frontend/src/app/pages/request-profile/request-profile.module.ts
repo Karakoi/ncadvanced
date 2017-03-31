@@ -12,6 +12,7 @@ import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.componen
 import {PriorityMarkerModule} from "../../util/priority-marker/priority-marker.module";
 import {ProgressMarkerModule} from "../../util/progress-marker/progress-marker.module";
 import {GravatarModule} from "../../shared/gravatar/gravatar.module";
+import {DeleteCommentComponent} from "./comment-delete/delete-comment.component";
 
 const routes: Routes = [
   {path: '', component: RequestProfileComponent},
@@ -34,11 +35,13 @@ const routes: Routes = [
   declarations: [
     RequestProfileComponent,
     DeleteSubRequestComponent,
+    DeleteCommentComponent,
     AddSubRequestComponent
   ],
   exports: [
     RequestProfileComponent,
     DeleteSubRequestComponent,
+    DeleteCommentComponent,
     AddSubRequestComponent
   ]
 })
