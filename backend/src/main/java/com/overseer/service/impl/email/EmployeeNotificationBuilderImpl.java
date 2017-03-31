@@ -26,9 +26,9 @@ public class EmployeeNotificationBuilderImpl extends EmailBuilderImpl<Request> {
                 + " "
                 + reporter.getLastName()
                 + "\n"
-                + "Request: ["
+                + "Request: "
                 + request.getTitle()
-                + "] was altered."
+                + " was altered."
                 + "\n"
                 + "Request progress status was changed to: "
                 + request.getProgressStatus().getName();

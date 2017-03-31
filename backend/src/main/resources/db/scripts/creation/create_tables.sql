@@ -114,6 +114,27 @@ CREATE TABLE "public"."topic_to_role" (
 )
 WITH (OIDS=FALSE);
 
+
+-- ----------------------------
+-- Table structure for Request subscribers
+-- ----------------------------
+CREATE TABLE request_subscriber (
+    id integer DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
+    request_id integer NOT NULL,
+    subscriber_id integer NOT NULL
+);
+
+ALTER TABLE ONLY request_subscriber
+    ADD CONSTRAINT request_subscriber_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY request_subscriber
+    ADD CONSTRAINT request_subscriber_request_id_fk FOREIGN KEY (request_id) REFERENCES request(id);
+
+ALTER TABLE ONLY request_subscriber
+    ADD CONSTRAINT request_subscriber_user_id_fk FOREIGN KEY (subscriber_id) REFERENCES "user"(id);
+
+
+
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
