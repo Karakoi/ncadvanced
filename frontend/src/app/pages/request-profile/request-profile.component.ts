@@ -30,12 +30,14 @@ export class RequestProfileComponent implements OnInit {
   type: string;
   showDescription: boolean = true;
   showHistory: boolean = true;
+  showFollowers: boolean = false;
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
   showComments: boolean = true;
   historyRecords: History[];
   subRequests: Request[];
   joinedRequests: Request[];
+  followers: User[];
   comments: Comment[];
   role: string = 'employee';
   commentForm: FormGroup;
@@ -109,6 +111,11 @@ export class RequestProfileComponent implements OnInit {
           /*console.log(joinedRequests)*/
         });
       });
+      this.subscribeService.getFollowers(id).subscribe(followers => {
+        this.followers = followers;
+        console.log(followers)
+      });
+    });
     });
   }
 
@@ -218,6 +225,10 @@ export class RequestProfileComponent implements OnInit {
 
   changeShowJoinedRequests() {
     this.showJoinedRequests = !this.showJoinedRequests;
+  }
+
+  toggleFollowersShowing() {
+    this.showFollowers = !this.showFollowers;
   }
 
   changeShowComments() {

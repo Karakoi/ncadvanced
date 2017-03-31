@@ -12,7 +12,7 @@ export class UserPageGuard implements CanActivate {
   canActivate(): boolean {
     if (this.authService.role !== 'employee') {
       if (this.authService.role === 'office manager') {
-        this.router.navigate(['/home/manager']);
+        this.router.navigate(['/home/manager/free']);
       } else if (this.authService.role === 'admin') {
         this.router.navigate(['/home/admin']);
       }

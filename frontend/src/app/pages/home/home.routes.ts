@@ -17,7 +17,7 @@ export const homeRoutes: Routes = [
     canActivate: [UserPageGuard]
   },
   {
-    path: 'manager',
+    path: 'manager/free',
     component: ManagerComponent,
     canActivate: [ManagerPageGuard]
   },

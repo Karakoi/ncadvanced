@@ -72,6 +72,7 @@ public class RequestSubscribersDaoImpl implements RequestSubscribersDao {
     protected RowMapper<List<User>> getMapper() {
         return (resultSet, i) -> {
             User firstUser = new User();
+            firstUser.setId(resultSet.getLong("subscriber_id"));
             firstUser.setFirstName(resultSet.getString("first_name"));
             firstUser.setLastName(resultSet.getString("last_name"));
             firstUser.setEmail(resultSet.getString("email"));
@@ -79,6 +80,7 @@ public class RequestSubscribersDaoImpl implements RequestSubscribersDao {
             list.add(firstUser);
             while (resultSet.next()) {
                 User user = new User();
+                user.setId(resultSet.getLong("subscriber_id"));
                 user.setFirstName(resultSet.getString("first_name"));
                 user.setLastName(resultSet.getString("last_name"));
                 user.setEmail(resultSet.getString("email"));

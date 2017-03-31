@@ -233,6 +233,31 @@
       </div>
       <div class="row">
         <div class="col-lg-12">
+          <p><b>Followers:</b>
+            <span *ngIf="showFollowers " (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span *ngIf="!showFollowers && followers != false" (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="followers == false">There are no followers at that moment.</i>
+          </p>
+          <table class="table table-bordered table-hover" >
+            <tbody>
+            <tr *ngIf="showFollowers">
+              <td *ngIf="showFollowers"><b>First Name</b></td>
+              <td *ngIf="showFollowers"><b>Last Name</b></td>
+              <td *ngIf="showFollowers"><b>Email</b></td>
+            </tr>
+            <tr *ngFor="let follower of followers">
+              <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.firstName}}</td>
+              <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.lastName}}</td>
+              <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.email}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
           <p><b>Comments:</b>
             <span (click)="changeShowComments()" *ngIf="showComments == true && comments != false"
                   class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
