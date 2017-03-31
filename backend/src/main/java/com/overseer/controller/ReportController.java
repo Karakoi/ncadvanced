@@ -94,7 +94,6 @@ public class ReportController {
 //        headers.setContentDispositionFormData(filename, filename);
 //        return new ResponseEntity<>(convertPDFToByteArray(), headers, HttpStatus.OK);
 
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
         String filename = "report.pdf";
