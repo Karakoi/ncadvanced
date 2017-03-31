@@ -12,6 +12,7 @@ import {AddSubRequestComponent} from "./sub-request-add/add-sub-request.componen
 import {SuscribeService} from "../../service/subscribe.service";
 import {ReportService} from "../../service/report.service";
 import * as FileSaver from "file-saver";
+import {CommentService} from "../../service/comment.service";
 
 @Component({
   selector: 'request-profile',
@@ -27,9 +28,11 @@ export class RequestProfileComponent implements OnInit {
   showHistory: boolean = true;
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
+  showComments: boolean = true;
   historyRecords: History[];
   subRequests: Request[];
   joinedRequests: Request[];
+  comments: Comment[];
   role: string = 'employee';
 
   @ViewChild(DeleteSubRequestComponent)
@@ -44,7 +47,8 @@ export class RequestProfileComponent implements OnInit {
               private toastr: ToastsManager,
               private authService: AuthService,
               private historyService: HistoryService,
-              private subscribeService: SuscribeService) {
+              private subscribeService: SuscribeService,
+              private commentService: CommentService) {
   }
 
   ngOnInit(): void {
@@ -52,42 +56,44 @@ export class RequestProfileComponent implements OnInit {
       this.currentUser = user;
       this.role = user.role.name;
 
+      this.route.params.subscribe(params => {
+        let id = +params['id'];
 
+        this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
+          this.historyRecords = historyRecords;
+          /*console.log(historyRecords);*/
+        });
 
-    this.route.params.subscribe(params => {
-      let id = +params['id'];
+        this.requestService.get(id).subscribe((request: Request) => {
+          this.request = request;
+          this.type = this.getRequestType(request);
+          this.subscribeService.check(this.request.id, this.currentUser.id).subscribe(result => {
+            this.followed = result;
+          });
+          this.commentService.getByRequest(this.request.id).subscribe(comments => {
+            this.comments = comments;
+            console.log(comments)
+          });
+          /*console.log(request)*/
+        });
 
-      this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
-        this.historyRecords = historyRecords;
-        /*console.log(historyRecords);*/
+        this.requestService.getSubRequests(id).subscribe((subRequests: Request[]) => {
+          this.subRequests = subRequests;
+          /*console.log(subRequests)*/
+        });
+
+        this.requestService.getJoinedRequests(id).subscribe((joinedRequests: Request[]) => {
+          this.joinedRequests = joinedRequests;
+          /*console.log(joinedRequests)*/
+        });
       });
-
-      this.requestService.get(id).subscribe((request: Request) => {
-        this.request = request;
-        this.type = this.getRequestType(request);
-        this.subscribeService.check(this.request.id, this.currentUser.id).subscribe(result => {
-          this.followed = result;
-        })
-        /*console.log(request)*/
-      });
-
-      this.requestService.getSubRequests(id).subscribe((subRequests: Request[]) => {
-        this.subRequests = subRequests;
-        /*console.log(subRequests)*/
-      });
-
-      this.requestService.getJoinedRequests(id).subscribe((joinedRequests: Request[]) => {
-        this.joinedRequests = joinedRequests;
-        /*console.log(joinedRequests)*/
-      });
-    });
     });
   }
 
 
-  showHistoryMessage(history: History): string{
+  showHistoryMessage(history: History): string {
     let text: string;
-    switch (history.columnName){
+    switch (history.columnName) {
 
       case "title":
         text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
@@ -114,7 +120,7 @@ export class RequestProfileComponent implements OnInit {
         break;
 
       case "parent_id":
-        if(history.newValue == null){
+        if (history.newValue == null) {
           text = "This request was unjoined from \"" + history.demonstrationOfOldValue + "\" request";
         } else {
           text = "This request was joined in \"" + history.demonstrationOfNewValue + "\" request";
@@ -158,6 +164,10 @@ export class RequestProfileComponent implements OnInit {
     this.showJoinedRequests = !this.showJoinedRequests;
   }
 
+  changeShowComments() {
+    this.showComments = !this.showComments;
+  }
+
   updateRequest() {
     this.request.parentId = null;
     if (this.request.assignee.id === 0) {
@@ -170,7 +180,7 @@ export class RequestProfileComponent implements OnInit {
       });
   }
 
-  getRequestType(request): string  {
+  getRequestType(request): string {
     if (request.progressStatus.name == null && request.priorityStatus.name == null) {
       return "Sub request"
     } else if (request.progressStatus.name == 'Joined') {
@@ -180,7 +190,7 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
-  isFree(request):boolean {
+  isFree(request): boolean {
     if (request.progressStatus.name == 'Free') {
       return false;
     } else {
@@ -188,7 +198,7 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
-  isInProgress(request):boolean {
+  isInProgress(request): boolean {
     if (request.progressStatus.name == 'In progress') {
       return true;
     } else {
@@ -196,25 +206,25 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
-  isAdmin():boolean {
+  isAdmin(): boolean {
     return this.role != 'admin';
   }
 
-  isAssignee(request):boolean {
+  isAssignee(request): boolean {
     return request.assignee.id !== this.currentUser.id;
   }
 
-  follow(){
+  follow() {
     this.subscribeService.toggleSubscribe(this.request.id, this.currentUser.id).subscribe(resp => {
       this.followed = resp;
     });
   }
 
-   isAssigneeOfRequest(){
+  isAssigneeOfRequest() {
     return this.request.assignee.id === this.currentUser.id
   }
 
-  isClosed(request):boolean {
+  isClosed(request): boolean {
     if (request.progressStatus.name == 'Closed') {
       return true;
     } else {
@@ -228,7 +238,7 @@ export class RequestProfileComponent implements OnInit {
 
   getPDF() {
     this.reportService.getPDFRequest(this.request.id).subscribe(
-      (res:any) => {
+      (res: any) => {
         let blob = res.blob();
         let filename = 'request_' + this.request.id + '.pdf';
         FileSaver.saveAs(blob, filename);

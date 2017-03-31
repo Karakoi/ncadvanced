@@ -231,6 +231,42 @@
           </table>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Comments:</b>
+            <span (click)="changeShowComments()" *ngIf="showComments == true && comments != false"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowComments()" *ngIf="showComments == false && comments != false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showComments == false && comments">Click arrow down to show full comments.</i>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showComments == true && comments == false">This object was not changed.</i>
+          </p>
+          <ul class="list-group" *ngIf="showComments">
+            <li class="list-group-item" *ngFor="let comment of comments">
+              <div class="row">
+                <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
+                  <p>
+                    <gravatar [email]="comment.sender.email" [size]="80"></gravatar>
+                  </p>
+                  <b><a [routerLink]="['/user', comment.sender.id]">{{comment.sender.firstName}}
+                    {{comment.sender.lastName}}</a></b><br>
+                  <span><b>{{comment.sender.role.name}}</b></span><br>
+                </div>
+                <div class="col-lg-10 col-sm-9 col-xs-9">
+                  <pre>{{comment.text}}</pre>
+                  <p class="pull-right badge">
+                    <date-parse [date]="comment.dateAndTime"></date-parse>
+                  </p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
   <add-sub-request [subRequests]="subRequests" [parentId]="request.id"
