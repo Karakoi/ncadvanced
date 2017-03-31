@@ -101,7 +101,7 @@ public class AdminReportBuilder{
      */
     public Document buildPdfDocument(Document document) throws Exception {
         val dateNow = LocalDateTime.now();
-        String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
+        String logoFilepath = "src\\main\\resources\\img\\overseer_logo.jpg";
        return new ReportDocumentBuilder(document)
                 .addParagraph(new Paragraph(dateNow.toLocalDate().toString() + ": " + dateNow.toLocalTime().toString()), Element.ALIGN_LEFT)
                 .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
