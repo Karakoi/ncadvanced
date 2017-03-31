@@ -20,8 +20,8 @@ export const appRoutes: Routes = [
   // Available for registered user
   {
     path: 'home',
-    loadChildren: './pages/deadline/deadline.module#DeadlineModule',
-    canActivate: [PrivatePageGuard, ManagerPageGuard]
+    loadChildren: './pages/home/home.module#HomeModule',
+    canActivate: [PrivatePageGuard]
   },
   {
     path: 'profile',
