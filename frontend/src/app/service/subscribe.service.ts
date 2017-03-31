@@ -2,6 +2,8 @@ import {Injectable} from "@angular/core";
 import {ErrorService} from "./error.service";
 import {AuthHttp} from "angular2-jwt";
 import {Observable} from "rxjs";
+import {URLSearchParams} from "@angular/http";
+import {User} from "../model/user.model";
 
 const url = 'api/subscribe'
 
@@ -34,5 +36,15 @@ export class SuscribeService {
         this.errorService.processError(error);
         return Observable.throw(error);
       });
+  }
+
+  getFollowers(requestId: number): Observable<User[]> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('requestId', requestId.toString());
+    return this.authHttp.get(url, { search: params }).map(resp => resp.json())
+      .catch((error: any) => {
+      this.errorService.processError(error);
+      return Observable.throw(error);
+    });
   }
 }

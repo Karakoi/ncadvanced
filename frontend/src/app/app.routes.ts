@@ -66,11 +66,6 @@ export const appRoutes: Routes = [
     canActivate: [PrivatePageGuard, ManagerPageGuard]
   },
   {
-    path: 'requests/free',
-    loadChildren: './pages/home/manager/manager.module#ManagerModule',
-    canActivate: [PrivatePageGuard, ManagerPageGuard]
-  },
-  {
     path: 'error',
     loadChildren: './pages/error/error.module#ErrorModule',
     canActivate: [PrivatePageGuard]

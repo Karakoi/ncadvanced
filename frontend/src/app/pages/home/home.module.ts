@@ -24,7 +24,6 @@ import {BasicRequestTableModule} from "../../components/request-table/request-ta
     FormTemplateModule,
     FormsModule,
     RequestModule,
-    //ManagerModule,
     BasicRequestTableModule,
   ],
   declarations: [
