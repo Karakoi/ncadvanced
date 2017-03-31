@@ -28,8 +28,7 @@ export class ReportService {
   getAdminPDFReport(beginDate: Date, endDate: Date, countTopManagers: number): Observable<any> {
     let headers = new Headers({'Accept': 'application/pdf'});
     // headers.append("Content-Type", 'application/pdf');
-    // return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {responseType: ResponseContentType.Blob})
-    return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {headers: headers, responseType: ResponseContentType.Blob})
+       return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
@@ -64,7 +63,7 @@ export class ReportService {
   }
 
   /* FOR OFFICE MANAGER REPORTS */
-  getManagerPDFReport(beginDate: Date, endDate: Date, id: number): Observable<any> {
+  getManagerPDFReport(beginDate: Date, endDate: Date, id: number): Observable<ResponseContentType.Blob> {
     let headers = new Headers({'Accept': 'application/pdf'});
     return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}&id=${id}`, {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {

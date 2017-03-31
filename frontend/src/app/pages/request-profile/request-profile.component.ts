@@ -25,11 +25,13 @@ export class RequestProfileComponent implements OnInit {
   type: string;
   showDescription: boolean = true;
   showHistory: boolean = true;
+  showFollowers: boolean = false;
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
   historyRecords: History[];
   subRequests: Request[];
   joinedRequests: Request[];
+  followers: User[];
   role: string = 'employee';
 
   @ViewChild(DeleteSubRequestComponent)
@@ -51,9 +53,6 @@ export class RequestProfileComponent implements OnInit {
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
       this.role = user.role.name;
-
-
-
     this.route.params.subscribe(params => {
       let id = +params['id'];
 
@@ -75,7 +74,10 @@ export class RequestProfileComponent implements OnInit {
         this.subRequests = subRequests;
         /*console.log(subRequests)*/
       });
-
+      this.subscribeService.getFollowers(id).subscribe(followers => {
+        this.followers = followers;
+        console.log(followers)
+      });
       this.requestService.getJoinedRequests(id).subscribe((joinedRequests: Request[]) => {
         this.joinedRequests = joinedRequests;
         /*console.log(joinedRequests)*/
@@ -156,6 +158,10 @@ export class RequestProfileComponent implements OnInit {
 
   changeShowJoinedRequests() {
     this.showJoinedRequests = !this.showJoinedRequests;
+  }
+
+  toggleFollowersShowing() {
+    this.showFollowers = !this.showFollowers;
   }
 
   updateRequest() {

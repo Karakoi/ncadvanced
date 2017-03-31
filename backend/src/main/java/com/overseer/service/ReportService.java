@@ -10,15 +10,26 @@ import java.util.List;
  */
 public interface ReportService {
 
+//    /**
+//     * Method generate PDF report for user role Admin.
+//     *
+//     * @param start period start.
+//     * @param end   period end.
+//     * @param countTop   count managers in top.
+//     * @return view with admin reports.
+//     */
+//    View generateAdminPDFReport(String start, String end, int countTop);
+
+
     /**
      * Method generate PDF report for user role Admin.
      *
      * @param start period start.
      * @param end   period end.
      * @param countTop   count managers in top.
-     * @return view with admin reports.
+     * @return pdf doc in byte[].
      */
-    View generateAdminPDFReport(String start, String end, int countTop);
+    byte[] generateAdminPDFReport(String start, String end, int countTop);
 
     /**
      * Method generate PDF report for user role Manager.

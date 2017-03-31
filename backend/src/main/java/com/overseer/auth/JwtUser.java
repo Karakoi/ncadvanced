@@ -1,13 +1,12 @@
 package com.overseer.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.overseer.model.Role;
+import com.overseer.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,25 +19,17 @@ import java.util.List;
 public class JwtUser implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private final Long id;
-    private final String firstName;
-    private final String lastName;
-    private final String secondName;
-    private final String password;
-    private final String email;
-    private final LocalDate dateOfBirth;
-    private final String phoneNumber;
-    private final Role role;
+    private final User user;
 
     @JsonIgnore
     public Long getId() {
-        return this.id;
+        return this.user.getId();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authList = new ArrayList<>();
-        switch (role.getName()) {
+        switch (this.user.getRole().getName()) {
             case "office manager":
                 authList.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 break;
@@ -56,12 +47,12 @@ public class JwtUser implements UserDetails {
     @Override
     @JsonIgnore
     public String getPassword() {
-        return this.password;
+        return this.user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.user.getEmail();
     }
 
     @Override
