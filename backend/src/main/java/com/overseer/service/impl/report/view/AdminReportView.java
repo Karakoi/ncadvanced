@@ -10,6 +10,7 @@ import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
 import com.overseer.service.impl.builder.PdfPTableBuilder;
 import com.overseer.service.impl.builder.ReportDocumentBuilder;
+import com.overseer.util.LocalDateFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class AdminReportView extends AbstractPdfView {
 
-    private LocalDate start;
-    private LocalDate end;
+    private String start;
+    private String end;
     private int countTop;
 
     private static final float DEFAULT_TABLE_WIDTH = 100.0f;
@@ -39,7 +40,7 @@ public class AdminReportView extends AbstractPdfView {
 
     private final RequestService requestService;
 
-    public void setDatePeriod(LocalDate start, LocalDate end, int countTop) {
+    public void setDatePeriod(String start, String end, int countTop) {
         this.start = start;
         this.end = end;
         this.countTop = countTop;
@@ -48,12 +49,13 @@ public class AdminReportView extends AbstractPdfView {
     /**
      * Gets period and load PdfPTable with data for adding in report.
      *
-     * @param start date from.
-     * @param end   date to.
+     * @param beginDate date from.
+     * @param endDate   date to.
      * @return return configured PdfPTable with data.
      */
-    private PdfPTable getTableWithCountRequestsByPeriod(LocalDate start, LocalDate end, ProgressStatus progressStatus) throws DocumentException {
-
+    private PdfPTable getTableWithCountRequestsByPeriod(String beginDate, String endDate, ProgressStatus progressStatus) throws DocumentException {
+        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
+        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
         val collection = requestService.findListCountRequestsByPeriod(start, end, progressStatus.getId());
         String name = progressStatus.getName();
         name = name.toLowerCase();
@@ -85,7 +87,7 @@ public class AdminReportView extends AbstractPdfView {
      * @param end   date to.
      * @return return configured Pdf list with data.
      */
-    private List getListWithBestManagers(LocalDate start, LocalDate end, int countTop) {
+    private List getListWithBestManagers(String start, String end, int countTop) {
         List list = new List();
         val collection = requestService.findBestManagersByPeriod(start, end, ProgressStatus.CLOSED.getId(), countTop);
         for (int i = 0; i < collection.size(); i++) {
@@ -107,7 +109,7 @@ public class AdminReportView extends AbstractPdfView {
                 .addLineSeparator(new LineSeparator())
                 .addLineSeparator(new LineSeparator())
                 .addParagraph(new Paragraph("Count created requests in period from "
-                        + start.toString() + " to " + end.toString()), Element.ALIGN_CENTER)
+                        + start + " to " + end), Element.ALIGN_CENTER)
                 .addTable(getTableWithCountRequestsByPeriod(start, end, ProgressStatus.FREE))
                 .addTable(getTableWithCountRequestsByPeriod(start, end, ProgressStatus.IN_PROGRESS))
                 .addLineSeparator(new LineSeparator())
