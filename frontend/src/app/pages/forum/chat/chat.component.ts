@@ -5,7 +5,6 @@ import {AuthService} from "../../../service/auth.service";
 import {User} from "../../../model/user.model";
 import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {Response} from "@angular/http";
-import {TopicService} from "../../../service/topic.service";
 import {UserService} from "../../../service/user.service";
 import {UserSearchDTO} from "../../../model/dto/user-search-dto.model";
 import {Observable} from "rxjs";
@@ -13,7 +12,7 @@ import {isUndefined} from "util";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Chuck} from "../../../model/dto/chuck.model";
 
-declare let $ : JQueryStatic;
+declare let $: JQueryStatic;
 
 @Component({
   selector: 'chat',
@@ -31,7 +30,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   findedUsers: User[];
   messageForm: FormGroup;
   message: Message;
-  searchDTO : UserSearchDTO;
+  searchDTO: UserSearchDTO;
   connect: any;
   showFriendsList: boolean = true;
 
@@ -64,14 +63,13 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.chatFriends = users;
       });
 
-        this.activatedRoute.queryParams.subscribe((params: Params) => {
-          let userId = params['userId'];
-          if (userId) {
-            this.userService.get(userId).subscribe(user => {
-              this.updateFindedUsersArray(user);
-            });
-          }
-        });
+      this.activatedRoute.queryParams.subscribe((params: Params) => {
+        let userId = params['userId'];
+        if (userId) {
+          this.userService.get(userId).subscribe(user => {
+            this.updateFindedUsersArray(user);
+          });
+        }
       });
     });
   }
@@ -88,27 +86,27 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.message.text = joke.value;
         this.message.dateAndTime = new Date();
         this.userService.get(this.chatFriend.id).subscribe((user: User) => {
-          this.chatFriend  = user;
+          this.chatFriend = user;
           this.message.recipient = this.chatFriend;
           this.userService.sendMessage(this.message).subscribe((resp: Response) => {
             this.updateArray(<Message> resp.json());
             this.messageForm.reset();
           }, e => this.handleErrorCreateMessage(e));
         });
-        $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
+        $('#msg-container').animate({scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
       });
     } else {
       this.message.text = params.text;
       this.message.dateAndTime = new Date();
       this.userService.get(this.chatFriend.id).subscribe((user: User) => {
-        this.chatFriend  = user;
+        this.chatFriend = user;
         this.message.recipient = this.chatFriend;
         this.userService.sendMessage(this.message).subscribe((resp: Response) => {
           this.updateArray(<Message> resp.json());
           this.messageForm.reset();
         }, e => this.handleErrorCreateMessage(e));
       });
-      $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
+      $('#msg-container').animate({scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
     }
   }
 
@@ -128,7 +126,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         dateAndTime: null
       };
     });
-    $('#msg-container').animate({ scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
+    $('#msg-container').animate({scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
     let timer = Observable.timer(2000, 3000);
     this.connect = timer.subscribe(t => this.reloadData(this.currentUser.id, this.chatFriend.id));
   }
@@ -159,7 +157,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private handleErrorCreateMessage(error) {
     switch (error.status) {
       case 500:
-        // this.toastr.error("Can't create message", 'Error');
+      // this.toastr.error("Can't create message", 'Error');
     }
   }
 
@@ -170,7 +168,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSearchData(searchDTO){
+  getSearchData(searchDTO) {
     this.userService.searchAll(searchDTO).subscribe(users => {
       console.log(users);
       this.findedUsers = users;
