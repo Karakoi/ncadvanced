@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild, Output, EventEmitter} from "@angular/core";
 import {RequestService} from "../../service/request.service";
 import {Request} from "../../model/request.model";
 import {ActivatedRoute} from "@angular/router";
 import {ToastsManager} from "ng2-toastr";
 import {AuthService} from "../../service/auth.service";
 import {User} from "../../model/user.model";
+import {Comment} from "../../model/comment.model";
 import {HistoryService} from "../../service/history.service";
 import {History} from "../../model/history.model";
 import {DeleteSubRequestComponent} from "./sub-request-delete/delete-sub-request.component";
@@ -13,6 +14,8 @@ import {SuscribeService} from "../../service/subscribe.service";
 import {ReportService} from "../../service/report.service";
 import * as FileSaver from "file-saver";
 import {CommentService} from "../../service/comment.service";
+import {FormGroup, Validators, FormBuilder} from "@angular/forms";
+import {Response} from "@angular/http";
 
 @Component({
   selector: 'request-profile',
@@ -34,6 +37,10 @@ export class RequestProfileComponent implements OnInit {
   joinedRequests: Request[];
   comments: Comment[];
   role: string = 'employee';
+  commentForm: FormGroup;
+  comment: Comment;
+  @Output()
+  updated: EventEmitter<any> = new EventEmitter();
 
   @ViewChild(DeleteSubRequestComponent)
   deleteSubRequestComponent: DeleteSubRequestComponent;
@@ -48,10 +55,15 @@ export class RequestProfileComponent implements OnInit {
               private authService: AuthService,
               private historyService: HistoryService,
               private subscribeService: SuscribeService,
-              private commentService: CommentService) {
+              private commentService: CommentService,
+              private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
+    this.commentForm = this.formBuilder.group({
+      text: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(500)]]
+    });
+
     this.authService.currentUser.subscribe((user: User) => {
       this.currentUser = user;
       this.role = user.role.name;
@@ -74,6 +86,12 @@ export class RequestProfileComponent implements OnInit {
             this.comments = comments;
             console.log(comments)
           });
+          this.comment = {
+            text: "",
+            sender: this.currentUser,
+            request: this.request,
+            createDateAndTime: null
+          };
           /*console.log(request)*/
         });
 
@@ -90,6 +108,31 @@ export class RequestProfileComponent implements OnInit {
     });
   }
 
+  createNewComment(params) {
+    this.comment.text = params.text;
+    this.comment.createDateAndTime = new Date();
+    this.commentService.create(this.comment).subscribe((resp: Response) => {
+      this.updateArray(<Comment> resp.json());
+      this.commentForm.reset();
+      this.toastr.success("Comment sended", "Success")
+    }, e => this.handleErrorCreateMessage(e));
+  }
+
+  private updateArray(comment: Comment): void {
+    this.comments.unshift(comment);
+    this.updated.emit(this.comment);
+  }
+
+  private handleErrorCreateMessage(error) {
+    switch (error.status) {
+      case 500:
+        this.toastr.error("Can't create message", 'Error');
+    }
+  }
+
+  validate(field: string): boolean {
+    return this.commentForm.get(field).valid || !this.commentForm.get(field).dirty;
+  }
 
   showHistoryMessage(history: History): string {
     let text: string;

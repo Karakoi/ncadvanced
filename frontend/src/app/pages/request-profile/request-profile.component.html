@@ -275,6 +275,15 @@
           </ul>
         </div>
       </div>
+      <form [formGroup]="commentForm" (ngSubmit)="createNewComment(commentForm.value)"
+            [ngClass]="{'has-error': !validate('text')}">
+        <textarea class="form-control" rows="3" formControlName="text"></textarea>
+        <div *ngIf="!validate('text')" class="help-block text-left">
+          <span *ngIf="commentForm.get('text')">Comment length should be between 2 and 500 characters.</span>
+        </div>
+        <button type="submit" class="btn btn-primary pull-right" [disabled]="commentForm.invalid" style="margin-top: 10px">Submit comment
+        </button>
+      </form>
     </div>
   </div>
   <add-sub-request [subRequests]="subRequests" [parentId]="request.id"

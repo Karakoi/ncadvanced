@@ -3,8 +3,7 @@ import {Observable} from "rxjs";
 import {Http, Response} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
-import {Topic} from "../model/topic.model";
-import {Message} from "../model/message.model";
+import {Comment} from "../model/comment.model";
 
 const url = '/api';
 
