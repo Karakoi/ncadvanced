@@ -20,7 +20,9 @@
           <a [routerLink]="['/authentication/signup']">Sign Up</a>
         </li>
         <li routerLinkActive="active" *ngIf="isSignedIn">
-          <a style="cursor: pointer" (click)="logout()">Logout</a>
+          <a style="cursor: pointer" (click)="logout()">
+            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout
+          </a>
         </li>
       </ul>
       <overseer-sidebar *ngIf="isSignedIn"></overseer-sidebar>

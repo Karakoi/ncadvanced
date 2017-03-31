@@ -97,8 +97,9 @@ WITH (OIDS=FALSE);
 -- ----------------------------
 --DROP TABLE IF EXISTS "public"."topic";
 CREATE TABLE "public"."topic" (
-"id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
-"title" varchar(45) COLLATE "default" NOT NULL
+ "id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
+ "title" varchar(45) COLLATE "default" NOT NULL,
+ "description" varchar(500) NOT NULL
 )
 WITH (OIDS=FALSE);
 
@@ -133,6 +134,19 @@ CREATE TABLE "public"."user" (
 WITH (OIDS=FALSE);
 
 -- ----------------------------
+-- Table structure for comment
+-- ----------------------------
+--DROP TABLE IF EXISTS "public"."comment";
+CREATE TABLE "public"."comment" (
+"id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
+"sender_id" int4 NOT NULL,
+"request_id" int4,
+"text" varchar(500) COLLATE "default" NOT NULL,
+"date_and_time" TIMESTAMP NOT NULL
+)
+WITH (OIDS=FALSE);
+
+-- ----------------------------
 -- Indexes structure for table request
 -- ----------------------------
 CREATE UNIQUE INDEX request_reporter_date_uindex ON "public"."request" (reporter_id, date_of_creation);
@@ -158,6 +172,11 @@ CREATE UNIQUE INDEX progress_status_name_uindex ON "public"."progress_status" (n
 CREATE UNIQUE INDEX topic_title_uindex ON "public"."topic" (title);
 
 -- ----------------------------
+-- Indexes structure for table comment
+-- ----------------------------
+CREATE UNIQUE INDEX comment_sender_date_uindex ON "public"."comment" (sender_id, date_and_time);
+
+-- ----------------------------
 -- Alter Sequences Owned By 
 -- ----------------------------
 ALTER SEQUENCE "public"."main_id_seq" OWNED BY "role"."id";
@@ -181,9 +200,20 @@ CREATE INDEX "message_fk_message_user1_idx" ON "public"."message" USING btree ("
 CREATE INDEX "message_fk_message_user3_idx" ON "public"."message" USING btree ("sender_id");
 
 -- ----------------------------
+-- Indexes structure for table comment
+-- ----------------------------
+CREATE INDEX "comment_fk_comment_topic2_idx" ON "public"."comment" USING btree ("request_id");
+CREATE INDEX "comment_fk_comment_user3_idx" ON "public"."comment" USING btree ("sender_id");
+
+-- ----------------------------
 -- Primary Key structure for table message
 -- ----------------------------
 ALTER TABLE "public"."message" ADD PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Primary Key structure for table comment
+-- ----------------------------
+ALTER TABLE "public"."comment" ADD PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Uniques structure for table priority_status
@@ -256,9 +286,15 @@ ALTER TABLE "public"."history" ADD FOREIGN KEY ("changer_id") REFERENCES "public
 -- ----------------------------
 -- Foreign Key structure for table "public"."message"
 -- ----------------------------
-ALTER TABLE "public"."message" ADD FOREIGN KEY ("recipient_id") REFERENCES "public"."user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."message" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."message" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."message" ADD FOREIGN KEY ("recipient_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "public"."message" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "public"."message" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+
+-- ----------------------------
+-- Foreign Key structure for table "public"."comment"
+-- ----------------------------
+ALTER TABLE "public"."comment" ADD FOREIGN KEY ("request_id") REFERENCES "public"."request" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "public"."comment" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."request"
@@ -273,7 +309,7 @@ ALTER TABLE "public"."request" ADD FOREIGN KEY ("reporter_id") REFERENCES "publi
 -- Foreign Key structure for table "public"."topic_to_role"
 -- ----------------------------
 ALTER TABLE "public"."topic_to_role" ADD FOREIGN KEY ("role_id") REFERENCES "public"."role" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."topic_to_role" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."topic_to_role" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."user"

@@ -1,14 +1,21 @@
 <div class="container col-lg-offset-1 col-lg-10" *ngIf="request">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <p class="panel-title">
+      <p class="panel-title height30">
+      <span class="col-lg-8 col-md-8 col-sm-8">
         <inline-editor type="text"
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
                        size="40"
-                       [disabled]="isFree(request) && isEmployee()"
-        >
+                       [disabled]="isAdmin() && isFree(request) && isAssignee(request)">
         </inline-editor>
+      </span>
+      <span class="col-lg-4 col-md-4 col-sm-4">
+        <button *ngIf="!isEmployee() && !isAssigneeOfRequest()" class="btn btn-info pull-right" (click)="follow()">
+          <span class="glyphicon" [ngClass]="followed ? 'glyphicon glyphicon-ban-circle' : 'glyphicon-flash info'"
+                [textContent]="followed ? ' Unfollow':' Follow'"></span>
+        </button>
+      </span>
       </p>
     </div>
     <div class="panel-body">
@@ -36,7 +43,9 @@
             </tr>
             <tr>
               <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date of creation:</td>
-              <td><date-parse [date]="request.dateOfCreation"></date-parse></td>
+              <td>
+                <date-parse [date]="request.dateOfCreation"></date-parse>
+              </td>
             </tr>
             <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Estimate time(in days):</td>
@@ -56,13 +65,15 @@
             <tr>
               <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Reporter:</td>
               <td>
-                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}} {{request.reporter.lastName}}</a>
+                <a [routerLink]="['/user', request.reporter.id]">{{request.reporter.firstName}}
+                  {{request.reporter.lastName}}</a>
               </td>
             </tr>
             <tr *ngIf="type == 'Request'">
               <td><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Assignee:</td>
               <td>
-                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}} {{request.assignee.lastName}}</a>
+                <a [routerLink]="['/user', request.assignee.id]">{{request.assignee.firstName}}
+                  {{request.assignee.lastName}}</a>
               </td>
             </tr>
             </tbody>
@@ -71,12 +82,12 @@
           <table class="table">
             <tbody>
             <tr>
-              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> PDF:</td>
+              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Download:</td>
               <td>
-                <a href="/api/reports/request?id={{request.id}}" class="btn btn-danger">
+                <button type="button" (click)="getPDF()" class="btn btn-danger">
                   <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
                   <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                </a>
+                </button>
               </td>
             </tr>
             </tbody>
@@ -96,13 +107,16 @@
             <tbody>
             <tr>
               <td *ngIf="showDescription">
-                <inline-editor type="textarea"
-                               [(ngModel)]="request.description"
-                               (onSave)="updateRequest($event)"
-                               [disabled]="isFree(request) && isEmployee()"
-                               cols="100"
-                               rows="3">
-                </inline-editor>
+                <div class="layer">
+                  <inline-editor type="textarea"
+                                 [(ngModel)]="request.description"
+                                 (onSave)="updateRequest($event)"
+                                 [disabled]="isAdmin() && isFree(request) && isAssignee(request)"
+                                 cols="100"
+                                 rows="4">
+                  </inline-editor>
+                </div>
+
               </td>
               <td *ngIf="!showDescription"><i>Click arrow down to show full description</i></td>
             </tr>
@@ -111,7 +125,7 @@
         </div>
       </div>
       <!-- SUB REQUESTS -->
-      <div class="row" *ngIf="type == 'Request'">
+      <div class="row" *ngIf="type == 'Request' && !isEmployee()">
         <div class="col-lg-12">
           <p><b>Sub requests:</b>
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == true && subRequests != false"
@@ -119,30 +133,31 @@
             <span (click)="changeShowSubRequests()" *ngIf="showSubRequests == false && subRequests != false"
                   class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
           </p>
-          <button *ngIf="showSubRequests && type == 'Request' && isInProgress(request)" class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub request</button>
+          <button *ngIf="showSubRequests && type == 'Request' && isInProgress(request)"
+                  class="btn btn-success btn-xs pull-right add-sub-request" (click)="openAddSubRequestModal()">New sub
+            request
+          </button>
           <p class="no-content-msg">
             <i *ngIf="subRequests == false">There are no sub requests at that moment.</i>
           </p>
           <p class="no-content-msg">
             <i *ngIf="!showSubRequests">Click arrow down to show full sub requests list.</i>
           </p>
-          <table class="table table-bordered">
+          <table class="table table-bordered table-hover">
             <tbody>
             <tr *ngIf="subRequests != false">
               <td *ngIf="showSubRequests"><b>Title</b></td>
               <td *ngIf="showSubRequests"><b>Description</b></td>
               <td *ngIf="showSubRequests"><b>Date of creation</b></td>
-              <td *ngIf="showSubRequests"><b>Details</b></td>
-              <td *ngIf="showSubRequests"><b>Delete</b></td>
+              <td *ngIf="showSubRequests && !isClosed(request)"><b>Delete</b></td>
             </tr>
-            <tr *ngFor="let subRequest of subRequests">
-              <td *ngIf="showSubRequests">{{subRequest.title}}</td>
-              <td *ngIf="showSubRequests">{{subRequest.description}}</td>
-              <td *ngIf="showSubRequests"><date-parse [date]="subRequest.dateOfCreation"></date-parse></td>
-              <td *ngIf="showSubRequests" class="details">
-                <button [routerLink]="['/request', subRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
+            <tr *ngFor="let subRequest of subRequests" >
+              <td *ngIf="showSubRequests" [routerLink]="['/request', subRequest.id]">{{subRequest.title}}</td>
+              <td *ngIf="showSubRequests" [routerLink]="['/request', subRequest.id]">{{subRequest.description}}</td>
+              <td *ngIf="showSubRequests" [routerLink]="['/request', subRequest.id]">
+                <date-parse [date]="subRequest.dateOfCreation"></date-parse>
               </td>
-              <td *ngIf="showSubRequests" class="text-center delete-col">
+              <td *ngIf="showSubRequests && !isClosed(request)" class="text-center delete-col">
                 <button [attr.value]="subRequest.id" class="glyphicon glyphicon-trash center-block btn btn-danger btn-xs"
                         (click)="openDeleteSubRequestModal(subRequest)"></button>
               </td>
@@ -166,23 +181,19 @@
           <p class="no-content-msg">
             <i *ngIf="!showJoinedRequests">Click arrow down to show full joined requests list</i>
           </p>
-          <table class="table table-bordered">
+          <table class="table table-bordered table-hover">
             <tbody>
             <tr *ngIf="joinedRequests != false">
               <td *ngIf="showJoinedRequests"><b>Title</b></td>
               <td *ngIf="showJoinedRequests"><b>Reporter</b></td>
               <td *ngIf="showJoinedRequests"><b>Priority</b></td>
               <td *ngIf="showJoinedRequests"><b>Date of creation</b></td>
-              <td *ngIf="showJoinedRequests"><b>Details</b></td>
             </tr>
             <tr *ngFor="let joinedRequest of joinedRequests">
-              <td *ngIf="showJoinedRequests">{{joinedRequest.title}}</td>
-              <td *ngIf="showJoinedRequests">{{joinedRequest.reporter.firstName}} {{joinedRequest.reporter.lastName}}</td>
-              <td *ngIf="showJoinedRequests"><priority-marker [value]="joinedRequest.priorityStatus.name"></priority-marker></td>
-              <td *ngIf="showJoinedRequests"><date-parse [date]="joinedRequest.dateOfCreation"></date-parse></td>
-              <td *ngIf="showJoinedRequests" class="details">
-                <button [routerLink]="['/request', joinedRequest.id]" class="glyphicon glyphicon-info-sign btn details-btn center-block btn-primary btn-xs"></button>
-              </td>
+              <td *ngIf="showJoinedRequests" [routerLink]="['/request', joinedRequest.id]">{{joinedRequest.title}}</td>
+              <td *ngIf="showJoinedRequests" [routerLink]="['/request', joinedRequest.id]">{{joinedRequest.reporter.firstName}} {{joinedRequest.reporter.lastName}}</td>
+              <td *ngIf="showJoinedRequests" [routerLink]="['/request', joinedRequest.id]"><priority-marker [value]="joinedRequest.priorityStatus.name"></priority-marker></td>
+              <td *ngIf="showJoinedRequests" [routerLink]="['/request', joinedRequest.id]"><date-parse [date]="joinedRequest.dateOfCreation"></date-parse></td>
             </tr>
             </tbody>
           </table>
@@ -201,7 +212,7 @@
             <i *ngIf="showHistory == false && historyRecords">Click arrow down to show full history.</i>
           </p>
           <p class="no-content-msg">
-            <i *ngIf="showHistory == true && historyRecords == false">This object was not changed.</i>
+            <i *ngIf="showHistory == true && historyRecords == false">This request was not changed.</i>
           </p>
           <table class="table table-bordered">
             <tbody>
@@ -220,8 +231,99 @@
           </table>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Followers:</b>
+            <span *ngIf="showFollowers && followers != false" (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span *ngIf="!showFollowers && followers != false" (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showFollowers == false && followers">Click arrow down to show full list of followers.</i>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="followers == false">There are no followers at that moment.</i>
+          </p>
+          <table class="table table-bordered table-hover" >
+            <tbody>
+            <tr *ngIf="followers != false">
+              <td *ngIf="showFollowers != false"><b>First Name</b></td>
+              <td *ngIf="showFollowers != false"><b>Last Name</b></td>
+              <td *ngIf="showFollowers != false"><b>Email</b></td>
+            </tr>
+            <tr *ngFor="let follower of followers">
+              <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.firstName}}</td>
+              <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.lastName}}</td>
+              <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.email}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Comments:</b>
+            <span (click)="changeShowComments()" *ngIf="showComments == true && comments != false"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowComments()" *ngIf="showComments == false && comments != false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showComments == false && comments">Click arrow down to show full comments.</i>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showComments == true && comments == false">There are no comments at that moment. Add some comment!</i>
+          </p>
+          <div id="comment-container">
+            <ul class="list-group" *ngIf="showComments">
+              <li class="list-group-item" *ngFor="let comment of comments">
+                <div class="row">
+                  <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
+                    <p>
+                      <gravatar [email]="comment.sender.email" [size]="80"></gravatar>
+                    </p>
+                    <b><a [routerLink]="['/user', comment.sender.id]">{{comment.sender.firstName}}
+                      {{comment.sender.lastName}}</a></b><br>
+                    <span><b>{{comment.sender.role.name}}</b></span><br>
+                  </div>
+                  <div class="col-lg-10 col-sm-9 col-xs-9">
+                      <div class="text-box">
+                        <inline-editor type="text"
+                                       [(ngModel)]="comment.text"
+                                       (onSave)="updateComment(comment)"
+                                       size="40"
+                        >
+                        </inline-editor>
+                      </div>
+                      <button [attr.value]="comment.id" class="pull-left btn btn-danger btn-xs btn-delete"
+                              (click)="openDeleteCommentModal(comment)">Delete</button>
+                      <p class="pull-right badge">
+                        <date-parse [date]="comment.createDateAndTime"></date-parse>
+                      </p>
+                      <p class="pull-right badge" *ngIf="comment.updateDateAndTime" style="background-color: #0dad71">
+                       <span>Updated: <date-parse [date]="comment.updateDateAndTime"></date-parse> </span>
+                      </p>
+                      </div>
+                  </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="comment-form" *ngIf="showComments">
+        <form [formGroup]="commentForm" (ngSubmit)="createNewComment(commentForm.value)"
+              [ngClass]="{'has-error': !validate('text')}">
+          <textarea class="form-control" rows="3" formControlName="text" placeholder="Comment text.."></textarea>
+          <div *ngIf="!validate('text')" class="help-block text-left">
+            <span *ngIf="commentForm.get('text')">Comment length should be between 2 and 500 characters.</span>
+          </div>
+          <button type="submit" class="btn btn-primary pull-right" [disabled]="commentForm.invalid" style="margin-top: 10px">Submit comment
+          </button>
+        </form>
+      </div>
     </div>
   </div>
-  <add-sub-request [subRequests]="subRequests" [parentId]="request.id" (updated)="updateSubRequests($event)"></add-sub-request>
+  <add-sub-request [subRequests]="subRequests" [parentId]="request.id"
+                   (updated)="updateSubRequests($event)"></add-sub-request>
   <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
+  <delete-comment [comments]="comments" (updated)="updateComments($event)"></delete-comment>
 </div>

@@ -14,12 +14,10 @@ insert into priority_status(id, name, value) values (1, 'High', 300);
 insert into priority_status(name, value) values ('Normal', 200);
 insert into priority_status(name, value) values ('Low', 100);
 
-insert into progress_status(name, value) values ('Registered', 100);
 insert into progress_status(name, value) values ('Free', 200);
 insert into progress_status(name, value) values ('Joined', 300);
 insert into progress_status(name, value) values ('In progress', 400);
 insert into progress_status(name, value) values ('Closed', 500);
-insert into progress_status(name, value) values ('Reopen', 600);
 
 insert into role (name) values ('admin');
 insert into role (name) values ('office manager');
@@ -352,31 +350,29 @@ insert into request (title, description, reporter_id, priority_status_id, progre
 ---
 
 
--- froum data
-insert into topic (title) values ('ipsum consequat');
-insert into topic (title) values ('velit ipsum');
-
-
-insert into topic (title) values ('mattis odio');
-insert into topic (title) values ('a suscipit');
-insert into topic (title) values ('rutrum neque');
-insert into topic (title) values ('sit amet');
-insert into topic (title) values ('nulla sed');
-insert into topic (title) values ('in felis');
-insert into topic (title) values ('odio odio');
-insert into topic (title) values ('ac enim');
-insert into topic (title) values ('vel ipsum');
-insert into topic (title) values ('adipiscing lorem');
-insert into topic (title) values ('quis orci');
-insert into topic (title) values ('id ligula');
-insert into topic (title) values ('ante vestibulum');
-insert into topic (title) values ('rhoncus aliquam');
-insert into topic (title) values ('ullamcorper purus');
-insert into topic (title) values ('et ultrices');
-insert into topic (title) values ('volutpat in');
-insert into topic (title) values ('at velit');
-insert into topic (title) values ('ac consequat');
-insert into topic (title) values ('ante ipsum');
+-- forum data
+insert into topic (title, description) values ('ipsum consequat', 'the best description');
+insert into topic (title, description) values ('velit ipsum', 'the best description');
+insert into topic (title, description) values ('mattis odio', 'the best description');
+insert into topic (title, description) values ('a suscipit', 'the best description');
+insert into topic (title, description) values ('rutrum neque', 'the best description');
+insert into topic (title, description) values ('sit amet', 'the best description');
+insert into topic (title, description) values ('nulla sed', 'the best description');
+insert into topic (title, description) values ('in felis', 'the best description');
+insert into topic (title, description) values ('odio odio', 'the best description');
+insert into topic (title, description) values ('ac enim', 'the best description');
+insert into topic (title, description) values ('vel ipsum', 'the best description');
+insert into topic (title, description) values ('adipiscing lorem', 'the best description');
+insert into topic (title, description) values ('quis orci', 'the best description');
+insert into topic (title, description) values ('id ligula', 'the best description');
+insert into topic (title, description) values ('ante vestibulum', 'the best description');
+insert into topic (title, description) values ('rhoncus aliquam', 'the best description');
+insert into topic (title, description) values ('ullamcorper purus', 'the best description');
+insert into topic (title, description) values ('et ultrices', 'the best description');
+insert into topic (title, description) values ('volutpat in', 'the best description');
+insert into topic (title, description) values ('at velit', 'the best description');
+insert into topic (title, description) values ('ac consequat', 'the best description');
+insert into topic (title, description) values ('ante ipsum', 'the best description');
 
 -- Messages
 
@@ -588,3 +584,8 @@ insert into topic_to_role (topic_id, role_id) values (344,11);
 insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxadmin', 'Maxadmin', 'Maxadmin', '$2a$10$5c.0Wc1.RaHNbQnRIysorOJr2URfrZ/6TPN8WySHQDhFT0weldB.2', 'maxadmin@gmail.com', '2010-10-10', '81-(368)868-2785', 10);
 insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxmanager', 'Maxmanager', 'Maxmanager', '$2a$10$OHLeC6WO0i6aPemAOQyQEuYvw1huXLpB2Zl2sS/oCE2MbMXMEJzEm', 'maxmanager@gmail.com', '2010-10-10', '81-(368)868-2785', 11);
 insert into "user" (first_name, last_name, second_name, password, email, date_of_birth, phone_number, role) values ('Maxempl', 'Maxempl', 'Maxempl', '$2a$10$UQTnkEfjD/GWPQeHgjibFeYpyLNMmz3IHe8bkmyCZ.kGw9ea2E1b6', 'maxempl@gmail.com', '2010-10-10', '81-(368)868-2785', 12);
+
+insert into comment (sender_id, request_id, text, date_and_time) values (16, 14941, 'Hey, i think its a piece of shit!', '2017-01-31 00:48:50');
+insert into comment (sender_id, request_id, text, date_and_time) values (912, 14941, 'Oh, crap..', '2017-01-31 01:22:50');
+insert into comment (sender_id, request_id, text, date_and_time) values (17, 14941, 'Why so negative, guys?', '2017-01-31 01:38:50');
+insert into comment (sender_id, request_id, text, date_and_time) values (18, 14941, 'We can change it btw..', '2017-01-31 02:55:50');

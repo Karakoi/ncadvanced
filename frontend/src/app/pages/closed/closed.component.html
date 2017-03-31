@@ -1,21 +1,20 @@
 <div class="container col-lg-12" *ngIf="requests">
-  <div class="row" *ngIf="!requests.length">
-    <div class="header-content">
-      <div class="header-content-inner text-center">
-        <h1 id="homeHeading">You haven`t closed requests!</h1>
-      </div>
-    </div>
-  </div>
 
-  <div class="row" *ngIf="requests.length">
+  <div class="row">
     <div class="col-lg-12">
       <ul class="nav nav-tabs">
-        <li><a [routerLink]="['/assigned/inProgress']">In Progress</a></li>
+        <li><a [routerLink]="['/home/manager/free']">Free</a></li>
+        <li><a [routerLink]="['/requests/inProgress']">In Progress</a></li>
         <li class="active"><a><b>Closed</b></a></li>
       </ul>
       <div class="panel panel-default">
         <div class="panel-body">
-          <r-table [requests]="requests" [requestsCount]="pageCount" [settings]="settings" (paginationChange)="pageChange($event)" (perChangeLoad)="perChangeLoad($event)"></r-table>
+          <r-table [requests]="requests"
+                   [requestsCount]="pageCount"
+                   [settings]="settings"
+                   (paginationChange)="pageChange($event)"
+                   (perChangeLoad)="perChangeLoad($event)">
+          </r-table>
         </div>
       </div>
     </div>

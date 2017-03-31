@@ -48,7 +48,7 @@ public class RequestReportPdfView extends AbstractPdfView {
 
         final int detailsTableColumnNum = 2;
 
-        String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
+        String logoFilepath = "src\\main\\resources\\img\\overseer_logo.jpg";
         new ReportDocumentBuilder(document)
                 .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
                 .addParagraph(new Paragraph("Details:", font), Paragraph.ALIGN_LEFT)
@@ -57,29 +57,18 @@ public class RequestReportPdfView extends AbstractPdfView {
                         .addDoubleCell("Title:",            request.getTitle())
                         .addDoubleCell("Reporter:",         getUserFullName(request.getReporter()))
                         .addDoubleCell("Assignee:",         getUserFullName(request.getAssignee()))
-                        .addDoubleCell("Progress:",         request.getProgressStatus().getName())
+                        .addDoubleCell("Progress:",         request.getProgressStatus().name())
                         .addDoubleCell("Priority:",         request.getPriorityStatus().getName())
                         .addDoubleCell("Date of creation:", getFormattedDate(request.getDateOfCreation()))
                         .addDoubleCell("Estimate time:",    valueOf(request.getEstimateTimeInDays()))
                         .addDoubleCell("Description:",      request.getDescription())
                         .build())
-                .addParagraph(!subRequests.isEmpty() ? new Paragraph("\nSub requests:", font) : null, 0)
-                .addTable(!subRequests.isEmpty() ? generateSubRequestsTable(subRequests) : null)
-                .addParagraph(!joinedRequests.isEmpty() ? new Paragraph("\nJoined requests:", font) : null, 0)
-                .addTable(!joinedRequests.isEmpty() ? generateJoinedRequestsTable(joinedRequests) : null)
+                .addParagraphByCondition(!subRequests.isEmpty(), new Paragraph("\nSub requests:", font))
+                .addTableByCondition(!subRequests.isEmpty(), generateSubRequestsTable(subRequests))
+                .addParagraphByCondition(!joinedRequests.isEmpty(), new Paragraph("\nJoined requests:", font))
+                .addTableByCondition(!joinedRequests.isEmpty(), generateJoinedRequestsTable(joinedRequests))
         .buildDocument();
 
-        /*if () {
-            document.add(new Paragraph("\nSub requests:", font));
-            PdfPTable subRequestsTable = ;
-            document.add(subRequestsTable);
-        }*/
-
-        /*if (!joinedRequests.isEmpty()) {
-            document.add(new Paragraph("\nJoined requests:", font));
-            PdfPTable joinedRequestsTable = generateJoinedRequestsTable(joinedRequests);
-            document.add(joinedRequestsTable);
-        }*/
     }
 
     /**

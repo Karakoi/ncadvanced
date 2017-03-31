@@ -1,11 +1,14 @@
 package com.overseer.service.impl;
 
+import com.overseer.dao.MessageDao;
 import com.overseer.dao.TopicDao;
+import com.overseer.exception.entity.EntityAlreadyExistsException;
 import com.overseer.model.Message;
 import com.overseer.model.Topic;
 import com.overseer.service.TopicService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -18,9 +21,39 @@ public class TopicServiceImpl extends CrudServiceImpl<Topic> implements TopicSer
 
     private TopicDao topicDao;
 
-    public TopicServiceImpl(TopicDao topicDao) {
+    private MessageDao messageDao;
+
+    public TopicServiceImpl(TopicDao topicDao, MessageDao messageDao) {
         super(topicDao);
         this.topicDao = topicDao;
+        this.messageDao = messageDao;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public Topic create(Topic entity) throws EntityAlreadyExistsException {
+        Assert.notNull(entity);
+        if (!entity.isNew()) {
+            throw new EntityAlreadyExistsException("Failed to perform create operation. Id was not null: " + entity);
+        }
+        if (topicDao.existsByTitle(entity.getTitle())) {
+            throw new EntityAlreadyExistsException("Failed to perform create operation. Topic with this title is already existed: " + entity);
+        }
+
+        return topicDao.save(entity);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void delete(Long id) {
+        Assert.notNull(id, "id must not be null");
+        log.debug("Deleting entity with id: {}", id);
+        topicDao.delete(id);
+        messageDao.deleteByTopicId(id);
     }
 
     /**

@@ -18,3 +18,11 @@
 button {
   margin-top: 10px;
 }
+
+.btn-danger {
+  margin-top: 0;
+}
+
+.badge {
+  background-color: #337AB7;
+}

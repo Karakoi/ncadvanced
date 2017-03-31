@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from "@angular/core";
 import {TopicService} from "../../../service/topic.service";
 import {Topic} from "../../../model/topic.model";
 import {ActivatedRoute} from "@angular/router";
@@ -8,6 +8,7 @@ import {User} from "../../../model/user.model";
 import {AuthService} from "../../../service/auth.service";
 import {Response} from "@angular/http";
 import {ToastsManager} from "ng2-toastr";
+import {DeleteMessageComponent} from "./message-delete/delete-mesage.component";
 
 
 @Component({
@@ -23,7 +24,10 @@ export class TopicComponent implements OnInit {
   @Output()
   updated: EventEmitter<any> = new EventEmitter();
   message: Message;
-  user: User;
+  currentUser: User;
+
+  @ViewChild(DeleteMessageComponent)
+  deleteMessageComponent: DeleteMessageComponent;
 
   constructor(private topicService: TopicService,
               private route: ActivatedRoute,
@@ -40,8 +44,8 @@ export class TopicComponent implements OnInit {
     };
 
     this.authService.currentUser.subscribe((user: User) => {
-      console.log(user);
       this.message.sender = user;
+      this.currentUser = user;
     });
 
     this.messageForm = this.formBuilder.group({
@@ -74,6 +78,7 @@ export class TopicComponent implements OnInit {
     this.message.topic = this.topic;
     this.topicService.createMessage(this.message).subscribe((resp: Response) => {
       this.updateArray(<Message> resp.json());
+      console.log(resp.json());
       this.messageForm.reset();
       this.toastr.success("Message sended", "Success")
     }, e => this.handleErrorCreateMessage(e));
@@ -84,10 +89,25 @@ export class TopicComponent implements OnInit {
     this.updated.emit(this.messages);
   }
 
+  updateTopic(topic) {
+    this.topicService.update(topic).subscribe(() => {
+      this.toastr.success("Topic updated", "Success")
+    });
+  }
+
   private handleErrorCreateMessage(error) {
     switch (error.status) {
       case 500:
         this.toastr.error("Can't create message", 'Error');
     }
+  }
+
+  openDeleteMessageModal(message: Message): void {
+    this.deleteMessageComponent.message = message;
+    this.deleteMessageComponent.modal.open();
+  }
+
+  updateMessages(messages: Message[]) {
+    this.messages = messages;
   }
 }

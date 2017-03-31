@@ -36,7 +36,6 @@ export class ProfileComponent implements OnInit {
   }
 
   hasUpdate() {
-
     if (this.user.password == null) {
       this.toastr.error('Firstly enter ur password to update profile', 'Wrong');
       return;
@@ -48,7 +47,6 @@ export class ProfileComponent implements OnInit {
   }
 
   update(): void {
-
     this.userService.update(this.user).subscribe(() => {
         this.toastr.success('Your profile has been updated');
         this.cach.clearAll();
@@ -59,18 +57,14 @@ export class ProfileComponent implements OnInit {
   updatePass(oldPass, newPass, confirmPass): void {
 
     if (newPass != confirmPass) {
-      this.toastr.error('Passwords do not match');
+      this.toastr.error('New and confirm passwords do not match');
       return;
     }
 
     this.authService.login(this.user.email, oldPass).subscribe(() => {
       this.user.password = newPass;
       this.update();
-    }, e => this.toastr.warning('old password is incorrect', 'Wrong'));
-  }
-
-  cancel(): void {
-    this.router.navigate(['/home']);
+    }, e => this.toastr.warning('Old password is incorrect', 'Wrong'));
   }
 
   validateField(field: string): boolean {
@@ -90,5 +84,9 @@ export class ProfileComponent implements OnInit {
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
     });
+  }
+
+  showPassword(){
+    this.showPass = !this.showPass;
   }
 }

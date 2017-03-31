@@ -28,6 +28,7 @@ class SimpleInMemoryCache<K, V> {
                 try {
                     Thread.sleep(lifeTime * SECOND);
                 } catch (InterruptedException ex) {
+                    LOG.debug("Something in cache gone wrong");
                     ex.printStackTrace();
                 }
                 cleanup();

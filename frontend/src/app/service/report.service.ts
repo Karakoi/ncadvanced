@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {Response, Headers} from "@angular/http";
+import {ResponseContentType, Headers} from "@angular/http";
 import "rxjs/Rx";
 import {AuthHttp} from "angular2-jwt";
 import {ErrorService} from "./error.service";
@@ -11,18 +11,32 @@ const url = '/api/reports';
 @Injectable()
 export class ReportService {
   constructor(private authHttp: AuthHttp,
-              private errorService:ErrorService) {
+              private errorService: ErrorService) {
 
   }
 
-  getPDFReport(): Observable<any> {
+  getPDFRequest(requestId: number): Observable<any> {
     let headers = new Headers({'Accept': 'application/pdf'});
-    return this.authHttp.get(`${url}/pdf`, {headers: headers})
-      .map((res: Response) => res.blob());
+    return this.authHttp.get(`${url}/request?id=${requestId}`, {headers: headers, responseType: ResponseContentType.Blob})
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
   }
 
-  getAllStatisticsOfCreatedRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getAllStatisticsOfCreatedRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  /* FOR ADMIN REPORTS */
+  getAdminPDFReport(beginDate: Date, endDate: Date, countTopManagers: number): Observable<any> {
+    let headers = new Headers({'Accept': 'application/pdf'});
+    // headers.append("Content-Type", 'application/pdf');
+       return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {headers: headers, responseType: ResponseContentType.Blob})
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
+
+  getAllStatisticsOfFreeRequestsByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getAllStatisticsOfFreeRequestsByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -39,8 +53,8 @@ export class ReportService {
       });
   }
 
-  getListOfBestManagersWithClosedStatusByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getBestManagersWithClosedStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
+  getListOfBestManagersWithClosedStatusByPeriod(beginDate: Date, endDate: Date, countTopManagers: number): Observable<RequestDTO[]> {
+    return this.authHttp.get(`${url}/getBestManagersWithClosedStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`)
       .map(resp => resp.json())
       .catch((error: any) => {
         this.errorService.processError(error);
@@ -48,9 +62,10 @@ export class ReportService {
       });
   }
 
-  getListOfBestManagersWithFreeStatusByPeriod(beginDate: Date, endDate: Date): Observable<RequestDTO[]> {
-    return this.authHttp.get(`${url}/getBestManagersWithFreeStatusByPeriod?beginDate=${beginDate}&endDate=${endDate}`)
-      .map(resp => resp.json())
+  /* FOR OFFICE MANAGER REPORTS */
+  getManagerPDFReport(beginDate: Date, endDate: Date, id: number): Observable<ResponseContentType.Blob> {
+    let headers = new Headers({'Accept': 'application/pdf'});
+    return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}&id=${id}`, {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);

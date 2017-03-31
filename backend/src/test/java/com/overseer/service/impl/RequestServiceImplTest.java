@@ -3,8 +3,12 @@ package com.overseer.service.impl;
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
 import com.overseer.exception.InappropriateProgressStatusException;
+import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.*;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
+import com.overseer.service.UserService;
+import lombok.Value;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -12,6 +16,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,10 +35,18 @@ import static org.hamcrest.Matchers.is;
 @Transactional
 public class RequestServiceImplTest {
 
+
+
     @Autowired
     private UserDao userDao;
     @Autowired
     private RequestDao requestDao;
+
+    @Autowired
+    private RequestService requestService;
+
+    @Autowired
+    private UserService userService;
 
     private Request request;
     private User assignee;
@@ -40,14 +56,24 @@ public class RequestServiceImplTest {
     private PriorityStatus priority;
     private List<Long> requestsGroupIds;
 
-    private static final Long IN_PROGRESS_STATUS = 7L;
-
     @Autowired
-    private RequestService requestService;
+    private AuthenticationManager authenticationManager;
+
+    @Value
+    private static final class AuthParams {
+        private final String email;
+        private final String password;
+
+        UsernamePasswordAuthenticationToken toAuthenticationToken() {
+            return new UsernamePasswordAuthenticationToken(email, password);
+        }
+    }
 
     @Before
     public void setUp() throws Exception {
-        requestsGroupIds = Arrays.asList(176L, 191L, 130L);
+
+
+        requestsGroupIds = Arrays.asList(212L, 181L, 123L);
 
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
@@ -55,7 +81,7 @@ public class RequestServiceImplTest {
         reporter.setFirstName("Tom");
         reporter.setLastName("Hardy");
         reporter.setPassword("gunner12");
-        reporter.setEmail("dashok.smile@gmail.com");
+        reporter.setEmail("tomy@gmail.com");
         reporter.setRole(reporterRole);
 
         reporter = this.userDao.save(reporter);
@@ -71,6 +97,11 @@ public class RequestServiceImplTest {
         lastChanger.setRole(changerRole);
         lastChanger = this.userDao.save(lastChanger);
 
+        AuthParams params = new AuthParams(lastChanger.getEmail(), "qwerty123");
+        UsernamePasswordAuthenticationToken loginToken = params.toAuthenticationToken();
+        Authentication authentication = authenticationManager.authenticate(loginToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         Role assigneeRole = new Role("office manager");
         assigneeRole.setId(11L);
         assignee = new User();
@@ -84,8 +115,7 @@ public class RequestServiceImplTest {
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
 
-        progress = new ProgressStatus("Free", 200);
-        progress.setId(5L);
+        progress = ProgressStatus.FREE;
 
         request = new Request();
         request.setTitle("Do something");
@@ -99,11 +129,13 @@ public class RequestServiceImplTest {
         request.setPriorityStatus(priority);
         request.setProgressStatus(progress);
 
+
         this.requestDao.save(request);
+
     }
 
-    @Test
     @Ignore
+    @Test
     public void joinRequestsIntoParent() throws Exception {
         Request parent = requestService.joinRequestsIntoParent(requestsGroupIds, request);
 
@@ -112,10 +144,10 @@ public class RequestServiceImplTest {
         Request firstChildRequest = requestService.findOne(requestsGroupIds.get(0));
         Assert.assertEquals(request.getId(), firstChildRequest.getParentId());
 
-        Request secondChildRequest = requestService.findOne(requestsGroupIds.get(0));
+        Request secondChildRequest = requestService.findOne(requestsGroupIds.get(1));
         Assert.assertEquals(request.getId(), secondChildRequest.getParentId());
 
-        Request thirdChildRequest = requestService.findOne(requestsGroupIds.get(0));
+        Request thirdChildRequest = requestService.findOne(requestsGroupIds.get(2));
         Assert.assertEquals(request.getId(), thirdChildRequest.getParentId());
     }
 
@@ -125,8 +157,23 @@ public class RequestServiceImplTest {
 
         // when
         Request assignRequest = requestService.assignRequest(request);
+
         // then
-        assertThat(assignRequest.getProgressStatus().getId(), is(IN_PROGRESS_STATUS));
+        assertThat(assignRequest.getProgressStatus(), is(ProgressStatus.IN_PROGRESS));
+    }
+
+    @Test(expected=NoSuchEntityException.class)
+    public void shouldNotReopenRequest() throws Exception {
+        // given
+
+        // when
+        requestService.assignRequest(request);
+        requestService.closeRequest(request);
+        userService.delete(request.getReporter());
+//        userDao.delete(request.getReporter());
+        requestService.reopenRequest(request.getId());
+
+        // then
     }
 
     @Test(expected=InappropriateProgressStatusException.class)

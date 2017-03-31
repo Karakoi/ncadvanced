@@ -81,7 +81,7 @@ export class ManagerComponent {
     multiSelect: false,
     filterRow: true,
     assign: false,
-    close: false,
+    close: true,
     columns: {
       title: true,
       estimate: true,
@@ -99,6 +99,7 @@ export class ManagerComponent {
 
   private fetchFreeRequests(page: number) {
     this.requestService.getFree(page, this.pageSize).subscribe((requests: Request[]) => {
+      console.log(requests);
       this.requests = requests;
     });
     this.requestService.getPageCountFree().subscribe((count) => this.pageCount = count);

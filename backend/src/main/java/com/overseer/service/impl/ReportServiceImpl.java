@@ -1,17 +1,23 @@
 package com.overseer.service.impl;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.Request;
+import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
-import com.overseer.service.impl.report.view.AdminReportView;
+import com.overseer.service.impl.report.view.AdminReportBuilder;
+import com.overseer.service.impl.report.view.ManagerReportView;
 import com.overseer.service.impl.report.view.RequestReportPdfView;
+import com.overseer.util.LocalDateFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.View;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -29,40 +35,75 @@ public class ReportServiceImpl implements ReportService {
     private static final int COUNT_MONTHS_IN_YEAR = 12;
     private final RequestService requestService;
     private final RequestDao requestDao;
-    private final AdminReportView adminReportView;
+//    private final AdminReportView adminReportView;
+    private final AdminReportBuilder adminReportBuilder;
+    private final ManagerReportView managerReportView;
+
+//    /**
+//     * {@inheritDoc}.
+//     */
+//    @Override
+//    public View generateAdminPDFReport(String beginDate, String endDate, int countTop) {
+//        adminReportView.setDatePeriod(beginDate, endDate, countTop);
+//        return adminReportView;
+//    }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public View generateAdminPDFReport(LocalDate start, LocalDate end) {
-        adminReportView.setDatePeriod(start, end);
-        return adminReportView;
+    public byte[] generateAdminPDFReport(String beginDate, String endDate, int countTop) {
+        adminReportBuilder.setDatePeriod(beginDate, endDate, countTop);
+        Document document = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, byteArrayOutputStream);
+            adminReportBuilder.buildPdfDocument(document).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public List<RequestDTO> getAllStatisticsOfCreatedRequestsByPeriod(LocalDate start, LocalDate end) {
-        //Main list with Request DTO's
+    public View generateManagerPDFReport(String beginDate, String endDate, int id) {
+        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
+        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
+        managerReportView.setDatePeriod(start, end, id);
+        return managerReportView;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<RequestDTO> getAllStatisticsOfFreeRequestsByPeriod(String beginDate, String endDate) {
+
+        //Convert dates to LocalDate format
+        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
+        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
+
+        //Create main list with request transfer objects
         List<RequestDTO> allRequests = new ArrayList<>();
 
         //Round the date until next month
         LocalDate localStart = start.plusDays((start.lengthOfMonth() - start.getDayOfMonth()) + 1);
 
         //Receive data before the 1st day of the next month (after start date)
-        allRequests.add(requestService.findCountRequestsByPeriod(start, localStart, "Free"));
+        allRequests.add(requestService.findCountRequestsByPeriod(start, localStart, ProgressStatus.FREE.getId()));
 
         //Round the date of the last month by the 1st day of this month
         LocalDate localEnd = end.minusDays(end.getDayOfMonth() - 1);
         if (!(localStart.equals(localEnd))) {
             //Receive data between the 1st day of the next month and the 1st day of the last month
-            List<RequestDTO> dataFromCentralDates = requestService.findListCountRequestsByPeriod(localStart, localEnd, "Free");
+            List<RequestDTO> dataFromCentralDates = requestService.findListCountRequestsByPeriod(localStart, localEnd, ProgressStatus.FREE.getId());
             LocalDate local = loadGeneralList(allRequests, dataFromCentralDates, localStart, localEnd);
 
             //Receive data from the 1st day of the last month
-            allRequests.add(requestService.findCountRequestsByPeriod(local, end, "Free"));
+            allRequests.add(requestService.findCountRequestsByPeriod(local, end, ProgressStatus.FREE.getId()));
         }
         return allRequests;
     }
@@ -90,11 +131,11 @@ public class ReportServiceImpl implements ReportService {
     /**
      * Gets general list of request transfer objects which created in the same period.
      *
-     * @param generalList main collection with DTO's
-     * @param hourlyList  collection with DTO's in period between the 1st day of the second month and the 1st day of the last month
-     * @param localStart  date from
-     * @param localEnd    date to
-     * @return return list of request DTO's from one period of time
+     * @param generalList main collection with DTO's.
+     * @param hourlyList  collection with DTO's in period between the 1st day of the second month and the 1st day of the last month.
+     * @param localStart  date from.
+     * @param localEnd    date to.
+     * @return return last date from period and load list of request DTO's from this period of time.
      */
     private LocalDate loadGeneralList(List<RequestDTO> generalList, List<RequestDTO> hourlyList, LocalDate localStart, LocalDate localEnd) {
 
@@ -104,6 +145,8 @@ public class ReportServiceImpl implements ReportService {
         }
         boolean key;
         LocalDate local = null;
+
+        //Load main collection with data
         for (int i = 0; i < countMonth; i++) {
             key = false;
             for (RequestDTO r : hourlyList) {
@@ -111,8 +154,6 @@ public class ReportServiceImpl implements ReportService {
                     generalList.add(r);
                     key = true;
                     break;
-                } else {
-                    key = false;
                 }
             }
             local = localStart.plusMonths(DEFAULT_MONTHS_STEP);
@@ -132,7 +173,12 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public List<RequestDTO> getAllStatisticsOfClosedRequestsByPeriod(LocalDate start, LocalDate end) {
+    public List<RequestDTO> getAllStatisticsOfClosedRequestsByPeriod(String beginDate, String endDate) {
+
+        //Convert dates to LocalDate format
+        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
+        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
+
         //Main list with request transfer objects
         List<RequestDTO> allRequests = new ArrayList<>();
 
@@ -140,17 +186,17 @@ public class ReportServiceImpl implements ReportService {
         LocalDate localStart = start.plusDays((start.lengthOfMonth() - start.getDayOfMonth()) + 1);
 
         //Receive data before the 1st day of the next month (after start date)
-        allRequests.add(requestService.findCountRequestsByPeriod(start, localStart, "Closed"));
+        allRequests.add(requestService.findCountRequestsByPeriod(start, localStart, ProgressStatus.CLOSED.getId()));
 
         //Round the date of the last month by the 1st day of this month
         LocalDate localEnd = end.minusDays(end.getDayOfMonth() - 1);
         if (!(localStart.equals(localEnd))) {
             //Receive data between the 1st day of the next month and the 1st day of the last month
-            List<RequestDTO> dataFromCentralDates = requestService.findListCountRequestsByPeriod(localStart, localEnd, "Closed");
+            List<RequestDTO> dataFromCentralDates = requestService.findListCountRequestsByPeriod(localStart, localEnd, ProgressStatus.CLOSED.getId());
             LocalDate local = loadGeneralList(allRequests, dataFromCentralDates, localStart, localEnd);
 
             //Receive data from the 1st day of the last month
-            allRequests.add(requestService.findCountRequestsByPeriod(local, end, "Closed"));
+            allRequests.add(requestService.findCountRequestsByPeriod(local, end, ProgressStatus.CLOSED.getId()));
         }
         return allRequests;
     }
@@ -159,15 +205,19 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public List<RequestDTO> getManagerStatisticsOfClosedRequestsByPeriod(LocalDate start, LocalDate end, int id) {
+    public List<RequestDTO> getManagerStatisticsOfClosedRequestsByPeriod(String beginDate, String endDate, int id) {
+
+        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
+        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
+
         List<RequestDTO> requests = new ArrayList<>();
         LocalDate localStart = start.plusDays((start.lengthOfMonth() - start.getDayOfMonth()) + 1);
-        requests.add(requestService.findCountRequestsByManagerAndPeriod(start, localStart, "Closed", id));
+        requests.add(requestService.findCountRequestsByManagerAndPeriod(start, localStart, ProgressStatus.CLOSED.getId(), id));
         LocalDate localEnd = end.minusDays(end.getDayOfMonth() - 1);
         if (!(localStart.equals(localEnd))) {
-            List<RequestDTO> dataFromCentralDates = requestService.findListCountRequestsByManagerAndPeriod(localStart, localEnd, "Closed", id);
+            List<RequestDTO> dataFromCentralDates = requestService.findListCountRequestsByManagerAndPeriod(localStart, localEnd, ProgressStatus.CLOSED.getId(), id);
             LocalDate local = loadGeneralList(requests, dataFromCentralDates, localStart, localEnd);
-            requests.add(requestService.findCountRequestsByManagerAndPeriod(local, end, "Closed", id));
+            requests.add(requestService.findCountRequestsByManagerAndPeriod(local, end, ProgressStatus.CLOSED.getId(), id));
         }
         return requests;
     }

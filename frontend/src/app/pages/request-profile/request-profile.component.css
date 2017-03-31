@@ -1,5 +1,12 @@
+.height30{
+  height: 30px;
+}
 p {
   margin: 0;
+}
+
+.inline {
+  display: inline;
 }
 
 hr {
@@ -62,4 +69,36 @@ td {
 
 .label-info {
   cursor: pointer;
+}
+
+.layer {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 820px; /* Ширина блока */
+  height: auto; /* Высота блока */
+  padding: 5px; /* Поля вокруг текста */
+  border: solid 1px #ffffff; /* Параметры рамки */
+}
+*[name = 'editable']{
+}
+
+.text-box {
+  min-height: 100px;
+}
+
+.btn-delete {
+  margin-left: 5px;
+}
+
+#comment-container {
+  max-height: 500px;
+  overflow: auto;
+}
+
+.list-group {
+  margin-right: 5px;
+}
+
+.comment-form {
+  margin-top: 10px;
 }

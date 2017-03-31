@@ -17,16 +17,6 @@ public final class JwtUserFactory {
      * @return {@link JwtUser} entity.
      */
     public static JwtUser create(User user) {
-        return new JwtUser(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getSecondName(),
-                user.getPassword(),
-                user.getEmail(),
-                user.getDateOfBirth(),
-                user.getPhoneNumber(),
-                user.getRole()
-        );
+        return new JwtUser(user);
     }
 }

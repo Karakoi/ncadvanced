@@ -1,6 +1,5 @@
 package com.overseer.model;
 
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,5 +30,4 @@ public class Message extends AbstractEntity{
 
     @NotNull(message = "Message has to have a time of creation")
     private LocalDateTime dateAndTime;
-
 }
