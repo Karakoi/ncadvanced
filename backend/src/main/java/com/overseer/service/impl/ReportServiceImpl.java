@@ -4,18 +4,16 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
-import com.overseer.model.Request;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
-import com.overseer.service.impl.report.view.AdminReportBuilder;
-import com.overseer.service.impl.report.view.ManagerReportView;
-import com.overseer.service.impl.report.view.RequestReportPdfView;
+import com.overseer.service.impl.report.AdminReportBuilder;
+import com.overseer.service.impl.report.ManagerReportBuilder;
+import com.overseer.service.impl.report.RequestReportPdfBuilder;
 import com.overseer.util.LocalDateFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.View;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
@@ -35,30 +33,21 @@ public class ReportServiceImpl implements ReportService {
     private static final int COUNT_MONTHS_IN_YEAR = 12;
     private final RequestService requestService;
     private final RequestDao requestDao;
-//    private final AdminReportView adminReportView;
     private final AdminReportBuilder adminReportBuilder;
-    private final ManagerReportView managerReportView;
-
-//    /**
-//     * {@inheritDoc}.
-//     */
-//    @Override
-//    public View generateAdminPDFReport(String beginDate, String endDate, int countTop) {
-//        adminReportView.setDatePeriod(beginDate, endDate, countTop);
-//        return adminReportView;
-//    }
+    private final ManagerReportBuilder managerReportBuilder;
+    private final RequestReportPdfBuilder requestReportPdfBuilder;
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public byte[] generateAdminPDFReport(String beginDate, String endDate, int countTop) {
-        adminReportBuilder.setDatePeriod(beginDate, endDate, countTop);
+    public byte[] generateAdminPDFReport(String beginDate, String endDate, int countTop, String encryptedEmail) {
+        adminReportBuilder.setDatePeriod(beginDate, endDate, countTop, encryptedEmail);
         Document document = new Document();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
             PdfWriter.getInstance(document, byteArrayOutputStream);
-            adminReportBuilder.buildPdfDocument(document).close();
+            adminReportBuilder.buildPdfDocument(document);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,11 +58,17 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public View generateManagerPDFReport(String beginDate, String endDate, int id) {
-        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
-        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
-        managerReportView.setDatePeriod(start, end, id);
-        return managerReportView;
+    public byte[] generateManagerPDFReport(String beginDate, String endDate, int id, String encryptedEmail) {
+        Document document = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        managerReportBuilder.setDatePeriod(beginDate, endDate, id, encryptedEmail);
+        try {
+            PdfWriter.getInstance(document, byteArrayOutputStream);
+            managerReportBuilder.buildPdfDocument(document);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 
     /**
@@ -226,10 +221,19 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}.
      */
     @Override
-    public View generateRequestPDFReport(Long requestId) {
-        Request request = requestDao.findOne(requestId);
-        List<Request> subRequests = requestDao.findSubRequests(requestId);
-        List<Request> joinedRequests = requestDao.findJoinedRequests(requestId);
-        return new RequestReportPdfView(request, subRequests, joinedRequests);
+    public byte[] generateRequestPDFReport(Long requestId) {
+        requestReportPdfBuilder.setRequest(requestDao.findOne(requestId));
+        requestReportPdfBuilder.setSubRequests(requestDao.findSubRequests(requestId));
+        requestReportPdfBuilder.setJoinedRequests(requestDao.findJoinedRequests(requestId));
+
+        Document document = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, byteArrayOutputStream);
+            requestReportPdfBuilder.buildPdfDocument(document);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 }

@@ -23,9 +23,23 @@ public class ReportDocumentBuilder {
      * @param img pdf document.
      * @return ReportDocumentBuilder.
      */
-    public ReportDocumentBuilder addImage(Image img, int alignment) throws DocumentException {
-        img.setAlignment(alignment);
+    public ReportDocumentBuilder addImage(Image img, float a, float b) throws DocumentException {
+//        img.setAlignment(alignment);
+        img.setAbsolutePosition(a, b);
         document.add(img);
+        return this;
+    }
+
+    /**
+     * Return doc with few line skipped.
+     *
+     * @return doc with few line skipped.
+     */
+    public ReportDocumentBuilder addNewLine(int countLine) throws DocumentException {
+        while(countLine != 0) {
+            document.add(new Paragraph("\n"));
+            countLine--;
+        }
         return this;
     }
 
@@ -108,6 +122,7 @@ public class ReportDocumentBuilder {
      * @return Document.
      */
     public Document buildDocument() {
+        document.close();
         return this.document;
     }
 }

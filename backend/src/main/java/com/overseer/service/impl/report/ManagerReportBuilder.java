@@ -1,61 +1,70 @@
-package com.overseer.service.impl.report.view;
+package com.overseer.service.impl.report;
 
 import static com.itextpdf.text.FontFactory.HELVETICA_BOLD;
 import static com.itextpdf.text.FontFactory.getFont;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
 import com.overseer.service.impl.builder.PdfPTableBuilder;
 import com.overseer.service.impl.builder.ReportDocumentBuilder;
+import com.overseer.util.LocalDateFormatter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 
 /**
- * Implementation of <code>ReportDocumentBuilder</code> interface, that specifies how
- * to generate reports for Administrator.
+ * Class for generating pdf reports for Office Manager.
  */
 @Service
 @RequiredArgsConstructor
 @Getter
+@PropertySource("classpath:resources.properties")
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class ManagerReportView extends AbstractPdfView {
+public class ManagerReportBuilder {
 
-    private LocalDate start;
-    private LocalDate end;
+    @Value("${reports.image.logo}")
+    private String logoImg;
+
+    @Value("${reports.gravatar.link}")
+    private String gravatarLink;
+
+    private String start;
+    private String end;
+    private String encryptedEmail;
     private int managerId;
 
     private static final float DEFAULT_TABLE_WIDTH = 100.0f;
     private static final int DEFAULT_TABLE_SPACING = 10;
     private final RequestService requestService;
 
-    public void setDatePeriod(LocalDate start, LocalDate end, int id) {
+    public void setDatePeriod(String start, String end, int id, String encryptedEmail) {
         this.start = start;
         this.end = end;
         this.managerId = id;
+        this.encryptedEmail = encryptedEmail;
     }
 
     /**
      * Gets period and load PdfPTable with data for adding in manager's report.
      *
-     * @param start date from.
-     * @param end   date to.
-     * @param id    manager id.
+     * @param beginDate date from.
+     * @param endDate   date to.
+     * @param id        manager id.
      * @return return configured PdfPTable with data.
      */
-    private PdfPTable generateClosedRequestsTable(LocalDate start, LocalDate end, int id) {
+    private PdfPTable generateClosedRequestsTable(String beginDate, String endDate, int id) {
+        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
+        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
         val collection = requestService.findListCountRequestsByManagerAndPeriod(start, end, ProgressStatus.CLOSED.getId(), id);
         final int tableColumnNum = 3;
         final int colorR = 185;
@@ -65,7 +74,6 @@ public class ManagerReportView extends AbstractPdfView {
                 .addPdfPCells(new BaseColor(colorR, colorG, colorB), getFont(HELVETICA_BOLD),
                         "Count", "From", "To")
                 .build();
-
         collection
                 .forEach(request -> {
                     table.addCell(request.getCount().toString());
@@ -79,7 +87,7 @@ public class ManagerReportView extends AbstractPdfView {
     /**
      * Gets period and load PdfPTable with data for adding in manager's report.
      *
-     * @param id    manager id.
+     * @param id manager id.
      * @return return configured PdfPTable with data.
      */
     private PdfPTable generateNeededCloseRequestsTable(int id) {
@@ -105,14 +113,24 @@ public class ManagerReportView extends AbstractPdfView {
         return table;
     }
 
-
-    @Override
-    protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String logoFilepath = "src\\main\\resources\\img\\overseer_logo.jpg";
+    /**
+     * Gets period and load it to PDF list.
+     *
+     * @param document new pdf document.
+     * @return return configured Pdf list with data.
+     */
+    public Document buildPdfDocument(Document document) throws Exception {
+        final int countNewLine = 6;
+        final float imgLogoX = 370f;
+        final float imgLogoY = 760f;
+        final float imgAvatarX = 40f;
+        final float imgAvatarY = 720f;
         val dateNow = LocalDateTime.now();
-        new ReportDocumentBuilder(document)
+        return new ReportDocumentBuilder(document)
+                .addImage(Image.getInstance(new URL(this.gravatarLink + this.encryptedEmail + "?s=100")), imgAvatarX, imgAvatarY)
+                .addImage(Image.getInstance(this.logoImg), imgLogoX, imgLogoY)
+                .addNewLine(countNewLine)
                 .addParagraph(new Paragraph(dateNow.toLocalDate().toString() + ": " + dateNow.toLocalTime().toString()), Element.ALIGN_LEFT)
-                .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
                 .addParagraph(new Paragraph("OFFICE MANAGER REPORTS"), Element.ALIGN_TOP)
                 .addParagraph(new Paragraph("For period: " + this.start + " : " + this.end, getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addLineSeparator(new LineSeparator())

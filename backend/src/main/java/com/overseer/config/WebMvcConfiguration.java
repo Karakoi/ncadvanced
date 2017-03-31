@@ -1,6 +1,5 @@
 package com.overseer.config;
 
-import com.overseer.service.impl.report.resolver.PdfViewResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -41,20 +40,20 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
         List<ViewResolver> resolvers = new ArrayList<>();
 
-        resolvers.add(pdfViewResolver());
+//        resolvers.add(pdfViewResolver());
 
         resolver.setViewResolvers(resolvers);
         return resolver;
     }
 
-    /**
-     * Configure View resolver to provide Pdf output using iText library to
-     * generate pdf output for an object content.
-     *
-     * @return pdf view resolver
-     */
-    @Bean
-    public ViewResolver pdfViewResolver() {
-        return new PdfViewResolver();
-    }
+//    /**
+//     * Configure View resolver to provide Pdf output using iText library to
+//     * generate pdf output for an object content.
+//     *
+//     * @return pdf view resolver
+//     */
+//    @Bean
+//    public ViewResolver pdfViewResolver() {
+//        return new PdfViewResolver();
+//    }
 }

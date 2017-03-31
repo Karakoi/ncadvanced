@@ -10,36 +10,27 @@ import java.util.List;
  */
 public interface ReportService {
 
-//    /**
-//     * Method generate PDF report for user role Admin.
-//     *
-//     * @param start period start.
-//     * @param end   period end.
-//     * @param countTop   count managers in top.
-//     * @return view with admin reports.
-//     */
-//    View generateAdminPDFReport(String start, String end, int countTop);
-
-
     /**
      * Method generate PDF report for user role Admin.
      *
-     * @param start period start.
-     * @param end   period end.
-     * @param countTop   count managers in top.
+     * @param start          period start.
+     * @param end            period end.
+     * @param countTop       count managers in top.
+     * @param encryptedEmail user encrypted email.
      * @return pdf doc in byte[].
      */
-    byte[] generateAdminPDFReport(String start, String end, int countTop);
+    byte[] generateAdminPDFReport(String start, String end, int countTop, String encryptedEmail);
 
     /**
      * Method generate PDF report for user role Manager.
      *
-     * @param start period start.
-     * @param end   period end.
-     * @param id    manager id.
-     * @return view with manager reports.
+     * @param start          period start.
+     * @param end            period end.
+     * @param id             manager id.
+     * @param encryptedEmail user encrypted email.
+     * @return pdf doc in byte[].
      */
-    View generateManagerPDFReport(String start, String end, int id);
+    byte[] generateManagerPDFReport(String start, String end, int id, String encryptedEmail);
 
     /**
      * The method receives all the created requests for a period of months.
@@ -71,5 +62,5 @@ public interface ReportService {
     /**
      * Method generate PDF for request.
      */
-    View generateRequestPDFReport(Long requestId);
+    byte[] generateRequestPDFReport(Long requestId);
 }

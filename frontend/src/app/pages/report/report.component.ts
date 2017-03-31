@@ -10,6 +10,7 @@ import {ReportService} from "../../service/report.service";
 import {User} from "../../model/user.model";
 import {Subject} from "rxjs";
 import * as FileSaver from "file-saver";
+import {Md5} from "ts-md5/dist/md5";
 
 @Component({
   selector: 'report',
@@ -22,6 +23,7 @@ export class ReportComponent implements OnInit {
   private role: string;
   private currentUser: User;
   private reportForm: FormGroup;
+  private encryptedEmail: any;
 
   @ViewChild(BarChartComponent)
   public barChart: BarChartComponent;
@@ -93,8 +95,10 @@ export class ReportComponent implements OnInit {
     }
   }
 
+
   private generateAdminPDF() {
-    this.reportService.getAdminPDFReport(this.startDate, this.endDate, this.countTopManagers).subscribe(
+    this.encryptedEmail = Md5.hashStr(this.currentUser.email).toString();
+    this.reportService.getAdminPDFReport(this.startDate, this.endDate, this.countTopManagers, this.encryptedEmail).subscribe(
       (res: any) => {
         let blob = res.blob();
         let filename = 'admin_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';
@@ -104,7 +108,8 @@ export class ReportComponent implements OnInit {
   }
 
   private generateManagerPDF() {
-    this.reportService.getManagerPDFReport(this.startDate, this.endDate, this.currentUser.id).subscribe(
+    this.encryptedEmail = Md5.hashStr(this.currentUser.email).toString();
+    this.reportService.getManagerPDFReport(this.startDate, this.endDate, this.currentUser.id, this.encryptedEmail).subscribe(
       (res: any) => {
         let blob = res.blob();
         let filename = 'manager_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';
