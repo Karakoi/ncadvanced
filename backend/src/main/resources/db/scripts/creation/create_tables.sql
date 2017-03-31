@@ -172,6 +172,11 @@ CREATE UNIQUE INDEX progress_status_name_uindex ON "public"."progress_status" (n
 CREATE UNIQUE INDEX topic_title_uindex ON "public"."topic" (title);
 
 -- ----------------------------
+-- Indexes structure for table comment
+-- ----------------------------
+CREATE UNIQUE INDEX comment_sender_date_uindex ON "public"."comment" (sender_id, date_and_time);
+
+-- ----------------------------
 -- Alter Sequences Owned By 
 -- ----------------------------
 ALTER SEQUENCE "public"."main_id_seq" OWNED BY "role"."id";

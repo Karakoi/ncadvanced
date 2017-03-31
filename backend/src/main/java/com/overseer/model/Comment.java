@@ -29,5 +29,7 @@ public class Comment extends AbstractEntity {
     private String text;
 
     @NotNull(message = "Message has to have a time of creation")
-    private LocalDateTime dateAndTime;
+    private LocalDateTime createDateAndTime;
+
+    private LocalDateTime updateDateAndTime;
 }

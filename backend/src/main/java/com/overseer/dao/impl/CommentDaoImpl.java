@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,13 +40,16 @@ public class CommentDaoImpl extends CrudDaoImpl<Comment> implements CommentDao {
             sender.setRole(role);
 
             Request request = new Request();
-            request.setId(resultSet.getLong("id"));
+            request.setId(resultSet.getLong("request_id"));
 
             Comment comment = new Comment();
             comment.setText(resultSet.getString("text"));
             comment.setId(resultSet.getLong("id"));
             comment.setSender(sender);
-            comment.setDateAndTime(resultSet.getTimestamp("date_and_time").toLocalDateTime());
+            comment.setCreateDateAndTime(resultSet.getTimestamp("create_date_and_time").toLocalDateTime());
+            Timestamp updateTimestamp = resultSet.getTimestamp("update_date_and_time");
+            LocalDateTime updateTime = updateTimestamp != null ? updateTimestamp.toLocalDateTime() : null;
+            comment.setUpdateDateAndTime(updateTime);
             comment.setRequest(request);
 
             return comment;

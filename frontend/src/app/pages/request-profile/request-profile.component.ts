@@ -190,6 +190,19 @@ export class RequestProfileComponent implements OnInit {
     }
   }
 
+  updateComment(comment) {
+    comment.id = null;
+    comment.updateDateAndTime = new Date();
+    console.log(comment)
+    this.commentService.create(comment).subscribe(() => {
+      this.commentService.getByRequest(this.request.id).subscribe(comments => {
+        this.comments = comments;
+        console.log(comments)
+      });
+      this.toastr.success("Comment updated", "Success")
+    });
+  }
+
   isFree(request): boolean {
     if (request.progressStatus.name == 'Free') {
       return false;

@@ -257,9 +257,17 @@
                   <span><b>{{comment.sender.role.name}}</b></span><br>
                 </div>
                 <div class="col-lg-10 col-sm-9 col-xs-9">
-                  <pre>{{comment.text}}</pre>
+                  <inline-editor type="text"
+                                 [(ngModel)]="comment.text"
+                                 (onSave)="updateComment(comment)"
+                                 size="40"
+                  >
+                  </inline-editor>
                   <p class="pull-right badge">
-                    <date-parse [date]="comment.dateAndTime"></date-parse>
+                    <date-parse [date]="comment.createDateAndTime"></date-parse>
+                  </p>
+                  <p class="pull-right badge" *ngIf="comment.updateDateAndTime" style="background-color: #0dad71">
+                   <span>Updated: <date-parse [date]="comment.updateDateAndTime"></date-parse> </span>
                   </p>
                 </div>
               </div>

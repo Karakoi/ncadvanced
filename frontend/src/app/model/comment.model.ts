@@ -6,5 +6,6 @@ export interface Message {
   sender: User,
   request: Request,
   text: string,
-  dateAndTime: Date
+  createDateAndTime: Date,
+  updateDateAndTime: Date
 }
