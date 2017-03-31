@@ -17,6 +17,7 @@ import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
 import com.overseer.service.impl.builder.SqlQueryBuilder;
+import com.overseer.util.LocalDateFormatter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,6 +38,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class RequestServiceImpl extends CrudServiceImpl<Request> implements RequestService, ApplicationEventPublisherAware {
+
     private static final short DEFAULT_PAGE_SIZE = 20;
 
     private RequestDao requestDao;
@@ -265,6 +267,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      */
     @Override
     public RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId) {
+        Assert.notNull(start, "Start date must be not null");
+        Assert.notNull(end, "End date must be not null");
         RequestDTO requestDTO = this.requestDao.findCountRequestsByPeriod(start, end, progressStatusId);
         log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
         return requestDTO;
@@ -274,9 +278,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId) {
-        List<RequestDTO> list = this.requestDao.findListCountRequestsByPeriod(start, end, progressStatusId);
-        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
+    public List<RequestDTO> findListCountRequestsByPeriod(LocalDate beginDate, LocalDate endDate, Long progressStatusId) {
+        Assert.notNull(beginDate, "Start date must be not null");
+        Assert.notNull(endDate, "End date must be not null");
+        List<RequestDTO> list = this.requestDao.findListCountRequestsByPeriod(beginDate, endDate, progressStatusId);
+        log.debug("Fetched {} request DTO's for period {} - {}", list.size(), beginDate, endDate);
         return list;
     }
 
@@ -285,6 +291,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      */
     @Override
     public RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id) {
+        Assert.notNull(start, "Start date must be not null");
+        Assert.notNull(end, "End date must be not null");
+        Assert.notNull(id, "Manager id must be not null");
         RequestDTO requestDTO = this.requestDao.findCountRequestsByManagerAndPeriod(start, end, progressStatusId, id);
         log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
         return requestDTO;
@@ -295,6 +304,9 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      */
     @Override
     public List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id) {
+        Assert.notNull(start, "Start date must be not null");
+        Assert.notNull(end, "End date must be not null");
+        Assert.notNull(id, "Manager id must be not null");
         List<RequestDTO> list = this.requestDao.findListCountRequestsByManagerAndPeriod(start, end, progressStatusId, id);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
         return list;
@@ -304,7 +316,12 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId, int countTop) {
+    public List<RequestDTO> findBestManagersByPeriod(String beginDate, String endDate, Long progressStatusId, int countTop) {
+        Assert.notNull(beginDate, "Start date must be not null");
+        Assert.notNull(endDate, "End date must be not null");
+        Assert.notNull(countTop, "Count of top managers must be not null");
+        LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
+        LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
         List<RequestDTO> list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusId, countTop);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
         return list;

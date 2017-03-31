@@ -165,7 +165,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param countTop count managers in top.
      * @return list of best managers in provided period.
      */
-    List<RequestDTO> findBestManagersByPeriod(LocalDate start, LocalDate end, Long progressStatusId, int countTop);
+    List<RequestDTO> findBestManagersByPeriod(String start, String end, Long progressStatusId, int countTop);
 
     /**
      * Returns a list of requests created in provided date.
