@@ -208,7 +208,15 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isEmployee(): boolean {
-    return this.role === 'employee'
+    return this.role != 'employee';
+  }
+  
+  isAdmin():boolean {
+    return this.role != 'admin';
+  }
+  
+  isAssignee(request):boolean {  
+    return request.assignee.id !== this.currentUser.id;
   }
 
   follow(){

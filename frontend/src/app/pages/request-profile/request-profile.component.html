@@ -6,8 +6,7 @@
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
                        size="40"
-                       [disabled]="isFree(request) && isEmployee()"
-        >
+                       [disabled]="isAdmin() && isFree(request) && isAssignee(request)">
         </inline-editor>
 
         <button *ngIf="true" class="btn btn-info" (click)="follow()">
@@ -80,7 +79,7 @@
           <table class="table">
             <tbody>
             <tr>
-              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> PDF:</td>
+              <td><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Download:</td>
               <td>
                 <button type="button" (click)="getPDF()" class="btn btn-danger">
                   <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
@@ -105,13 +104,16 @@
             <tbody>
             <tr>
               <td *ngIf="showDescription">
-                <inline-editor type="textarea"
-                               [(ngModel)]="request.description"
-                               (onSave)="updateRequest($event)"
-                               [disabled]="isFree(request) && isEmployee()"
-                               cols="100"
-                               rows="3">
-                </inline-editor>
+                <div class="layer">
+                  <inline-editor type="textarea"
+                                 [(ngModel)]="request.description"
+                                 (onSave)="updateRequest($event)"
+                                 [disabled]="isAdmin() && isFree(request) && isAssignee(request)"
+                                 cols="100"
+                                 rows="4">
+                  </inline-editor>
+                </div>
+
               </td>
               <td *ngIf="!showDescription"><i>Click arrow down to show full description</i></td>
             </tr>
