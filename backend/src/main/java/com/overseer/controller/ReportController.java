@@ -5,7 +5,9 @@ import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.View;
@@ -33,6 +35,7 @@ public class ReportController {
     }
 
     //<editor-fold defaultstate="collapsed" desc="methods for manager reports">
+
     /**
      * Method gets pdf report for office manager.
      *
@@ -55,22 +58,48 @@ public class ReportController {
     public ResponseEntity<List<RequestDTO>> getManagerStatisticsOfClosedRequestsByPeriod(@RequestParam String beginDate,
                                                                                          @RequestParam String endDate,
                                                                                          @RequestParam int id) {
-       return new ResponseEntity<>(reportService.getManagerStatisticsOfClosedRequestsByPeriod(beginDate, endDate, id), HttpStatus.OK);
+        return new ResponseEntity<>(reportService.getManagerStatisticsOfClosedRequestsByPeriod(beginDate, endDate, id), HttpStatus.OK);
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="methods for admin reports">
 
+//    /**
+//     * Method gets pdf report for admin.
+//     *
+//     * @return view with reporting data.
+//     */
+//    @RequestMapping(value = "/adminPDFReport", headers = "Accept=application/pdf", method = RequestMethod.GET, produces = "application/pdf")
+//    public View getAdminPDFReport(@RequestParam String beginDate,
+//                                  @RequestParam String endDate,
+//                                  @RequestParam int countTop) {
+//        return reportService.generateAdminPDFReport(beginDate, endDate, countTop);
+//    }
+
     /**
      * Method gets pdf report for admin.
      *
-     * @return view with reporting data.
+     * @return bytes with reporting data.
      */
-    @RequestMapping(value = "/adminPDFReport", headers = "Accept=application/pdf",  method = RequestMethod.GET, produces = "application/pdf")
-    public View getAdminPDFReport(@RequestParam String beginDate,
-                                  @RequestParam String endDate,
-                                  @RequestParam int countTop) {
-        return reportService.generateAdminPDFReport(beginDate, endDate, countTop);
+    @RequestMapping(value = "/adminPDFReport", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> test(@RequestParam String beginDate,
+                                       @RequestParam String endDate,
+                                       @RequestParam int countTop) {
+//        // Set Content-Type header (+ content disposition, etc, if you want)
+//        // (Not using "produces", because that depends on request's Accept header including
+//        // "application/pdf" and otherwise returns 406 Not Acceptable.)
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+//        String filename = "output.pdf";
+//        headers.setContentDispositionFormData(filename, filename);
+//        return new ResponseEntity<>(convertPDFToByteArray(), headers, HttpStatus.OK);
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        String filename = "report.pdf";
+        headers.setContentDispositionFormData(filename, filename);
+        return new ResponseEntity<>(reportService.generateAdminPDFReport(beginDate, endDate, countTop), headers, HttpStatus.OK);
     }
 
     /**

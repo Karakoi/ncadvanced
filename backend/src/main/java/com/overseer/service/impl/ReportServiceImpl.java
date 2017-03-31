@@ -1,12 +1,14 @@
 package com.overseer.service.impl;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.Request;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
-import com.overseer.service.impl.report.view.AdminReportView;
+import com.overseer.service.impl.report.view.AdminReportBuilder;
 import com.overseer.service.impl.report.view.ManagerReportView;
 import com.overseer.service.impl.report.view.RequestReportPdfView;
 import com.overseer.util.LocalDateFormatter;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.View;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -32,16 +35,34 @@ public class ReportServiceImpl implements ReportService {
     private static final int COUNT_MONTHS_IN_YEAR = 12;
     private final RequestService requestService;
     private final RequestDao requestDao;
-    private final AdminReportView adminReportView;
+//    private final AdminReportView adminReportView;
+    private final AdminReportBuilder adminReportBuilder;
     private final ManagerReportView managerReportView;
+
+//    /**
+//     * {@inheritDoc}.
+//     */
+//    @Override
+//    public View generateAdminPDFReport(String beginDate, String endDate, int countTop) {
+//        adminReportView.setDatePeriod(beginDate, endDate, countTop);
+//        return adminReportView;
+//    }
 
     /**
      * {@inheritDoc}.
      */
     @Override
-    public View generateAdminPDFReport(String beginDate, String endDate, int countTop) {
-        adminReportView.setDatePeriod(beginDate, endDate, countTop);
-        return adminReportView;
+    public byte[] generateAdminPDFReport(String beginDate, String endDate, int countTop) {
+        adminReportBuilder.setDatePeriod(beginDate, endDate, countTop);
+        Document document = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, byteArrayOutputStream);
+            adminReportBuilder.buildPdfDocument(document).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 
     /**
