@@ -30,7 +30,7 @@ export class RequestProfileComponent implements OnInit {
   type: string;
   showDescription: boolean = true;
   showHistory: boolean = true;
-  showFollowers: boolean = false;
+  showFollowers: boolean = true;
   showSubRequests: boolean = true;
   showJoinedRequests: boolean = true;
   showComments: boolean = true;
@@ -79,7 +79,7 @@ export class RequestProfileComponent implements OnInit {
 
         this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
           this.historyRecords = historyRecords;
-          /*console.log(historyRecords);*/
+          console.log('HR: ' + historyRecords);
         });
 
         this.requestService.get(id).subscribe((request: Request) => {
@@ -110,12 +110,12 @@ export class RequestProfileComponent implements OnInit {
           this.joinedRequests = joinedRequests;
           /*console.log(joinedRequests)*/
         });
+
+        this.subscribeService.getFollowers(id).subscribe(followers => {
+          this.followers = followers;
+          console.log('FW: ' + followers)
+        });
       });
-      this.subscribeService.getFollowers(id).subscribe(followers => {
-        this.followers = followers;
-        console.log(followers)
-      });
-    });
     });
   }
 
@@ -297,6 +297,9 @@ export class RequestProfileComponent implements OnInit {
   follow() {
     this.subscribeService.toggleSubscribe(this.request.id, this.currentUser.id).subscribe(resp => {
       this.followed = resp;
+      this.subscribeService.getFollowers(this.request.id).subscribe(followers => {
+        this.followers = followers;
+      });
     });
   }
 

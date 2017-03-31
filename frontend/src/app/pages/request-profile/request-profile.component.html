@@ -212,7 +212,7 @@
             <i *ngIf="showHistory == false && historyRecords">Click arrow down to show full history.</i>
           </p>
           <p class="no-content-msg">
-            <i *ngIf="showHistory == true && historyRecords == false">This object was not changed.</i>
+            <i *ngIf="showHistory == true && historyRecords == false">This request was not changed.</i>
           </p>
           <table class="table table-bordered">
             <tbody>
@@ -234,18 +234,21 @@
       <div class="row">
         <div class="col-lg-12">
           <p><b>Followers:</b>
-            <span *ngIf="showFollowers " (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span *ngIf="showFollowers && followers != false" (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
             <span *ngIf="!showFollowers && followers != false" (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showFollowers == false && followers">Click arrow down to show full list of followers.</i>
           </p>
           <p class="no-content-msg">
             <i *ngIf="followers == false">There are no followers at that moment.</i>
           </p>
           <table class="table table-bordered table-hover" >
             <tbody>
-            <tr *ngIf="showFollowers">
-              <td *ngIf="showFollowers"><b>First Name</b></td>
-              <td *ngIf="showFollowers"><b>Last Name</b></td>
-              <td *ngIf="showFollowers"><b>Email</b></td>
+            <tr *ngIf="followers != false">
+              <td *ngIf="showFollowers != false"><b>First Name</b></td>
+              <td *ngIf="showFollowers != false"><b>Last Name</b></td>
+              <td *ngIf="showFollowers != false"><b>Email</b></td>
             </tr>
             <tr *ngFor="let follower of followers">
               <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.firstName}}</td>
@@ -268,7 +271,7 @@
             <i *ngIf="showComments == false && comments">Click arrow down to show full comments.</i>
           </p>
           <p class="no-content-msg">
-            <i *ngIf="showComments == true && comments == false">This object was not changed.</i>
+            <i *ngIf="showComments == true && comments == false">There are no comments at that moment. Add some comment!</i>
           </p>
           <div id="comment-container">
             <ul class="list-group" *ngIf="showComments">
@@ -309,7 +312,7 @@
       <div class="comment-form" *ngIf="showComments">
         <form [formGroup]="commentForm" (ngSubmit)="createNewComment(commentForm.value)"
               [ngClass]="{'has-error': !validate('text')}">
-          <textarea class="form-control" rows="3" formControlName="text"></textarea>
+          <textarea class="form-control" rows="3" formControlName="text" placeholder="Comment text.."></textarea>
           <div *ngIf="!validate('text')" class="help-block text-left">
             <span *ngIf="commentForm.get('text')">Comment length should be between 2 and 500 characters.</span>
           </div>
