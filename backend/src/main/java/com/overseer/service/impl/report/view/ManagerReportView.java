@@ -108,7 +108,7 @@ public class ManagerReportView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
+        String logoFilepath = "src\\main\\resources\\img\\overseer_logo.jpg";
         val dateNow = LocalDateTime.now();
         new ReportDocumentBuilder(document)
                 .addParagraph(new Paragraph(dateNow.toLocalDate().toString() + ": " + dateNow.toLocalTime().toString()), Element.ALIGN_LEFT)
