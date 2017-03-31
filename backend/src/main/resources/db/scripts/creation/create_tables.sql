@@ -134,6 +134,19 @@ CREATE TABLE "public"."user" (
 WITH (OIDS=FALSE);
 
 -- ----------------------------
+-- Table structure for comment
+-- ----------------------------
+--DROP TABLE IF EXISTS "public"."comment";
+CREATE TABLE "public"."comment" (
+"id" int4 DEFAULT nextval('main_id_seq'::regclass) NOT NULL,
+"sender_id" int4 NOT NULL,
+"request_id" int4,
+"text" varchar(500) COLLATE "default" NOT NULL,
+"date_and_time" TIMESTAMP NOT NULL
+)
+WITH (OIDS=FALSE);
+
+-- ----------------------------
 -- Indexes structure for table request
 -- ----------------------------
 CREATE UNIQUE INDEX request_reporter_date_uindex ON "public"."request" (reporter_id, date_of_creation);
@@ -182,9 +195,20 @@ CREATE INDEX "message_fk_message_user1_idx" ON "public"."message" USING btree ("
 CREATE INDEX "message_fk_message_user3_idx" ON "public"."message" USING btree ("sender_id");
 
 -- ----------------------------
+-- Indexes structure for table comment
+-- ----------------------------
+CREATE INDEX "comment_fk_comment_topic2_idx" ON "public"."comment" USING btree ("request_id");
+CREATE INDEX "comment_fk_comment_user3_idx" ON "public"."comment" USING btree ("sender_id");
+
+-- ----------------------------
 -- Primary Key structure for table message
 -- ----------------------------
 ALTER TABLE "public"."message" ADD PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Primary Key structure for table comment
+-- ----------------------------
+ALTER TABLE "public"."comment" ADD PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Uniques structure for table priority_status
@@ -260,6 +284,12 @@ ALTER TABLE "public"."history" ADD FOREIGN KEY ("changer_id") REFERENCES "public
 ALTER TABLE "public"."message" ADD FOREIGN KEY ("recipient_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE "public"."message" ADD FOREIGN KEY ("topic_id") REFERENCES "public"."topic" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE "public"."message" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+
+-- ----------------------------
+-- Foreign Key structure for table "public"."comment"
+-- ----------------------------
+ALTER TABLE "public"."comment" ADD FOREIGN KEY ("request_id") REFERENCES "public"."request" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "public"."comment" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."user" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."request"
