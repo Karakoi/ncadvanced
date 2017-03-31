@@ -48,7 +48,7 @@ public class RequestReportPdfView extends AbstractPdfView {
 
         final int detailsTableColumnNum = 2;
 
-        String logoFilepath = "backend\\src\\main\\resources\\img\\overseer_logo.jpg";
+        String logoFilepath = "src\\main\\resources\\img\\overseer_logo.jpg";
         new ReportDocumentBuilder(document)
                 .addImage(Image.getInstance(logoFilepath), Image.RIGHT)
                 .addParagraph(new Paragraph("Details:", font), Paragraph.ALIGN_LEFT)

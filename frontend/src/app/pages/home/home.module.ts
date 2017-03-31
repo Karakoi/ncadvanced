@@ -12,8 +12,6 @@ import {FormTemplateModule} from "../../shared/form-template/form-template.modul
 import {RequestModule} from "../../shared/request/request.module";
 import {RequestFormComponent} from "./request-form/request-form.component";
 import {BasicRequestTableModule} from "../../components/request-table/request-table.module";
-import {ManagerModule} from "./manager/manager.module";
-
 
 @NgModule({
   imports: [
