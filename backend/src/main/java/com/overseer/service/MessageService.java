@@ -13,4 +13,6 @@ public interface MessageService extends CrudService<Message, Long> {
     List<Message> findByTopic(Long topicId);
 
     List<Message> findDialogMessages(Long senderId, Long recipientId);
+
+    List<Message> findUnreadMessages(Long recipientId);
 }

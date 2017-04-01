@@ -24,6 +24,13 @@ export class ChatService {
       .map(resp => resp.json());
   }
 
+  getUnreadMessages(recipientId: number): Observable<Message[]> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('recipientId', recipientId.toString());
+    return this.authHttp.get(`${url}/unreadMessages`, {search: params})
+      .map(resp => resp.json());
+  }
+
   getChatFriends(userId: number): Observable<User[]> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('userId', userId.toString());

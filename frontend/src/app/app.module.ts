@@ -35,6 +35,9 @@ import {HistoryService} from "./service/history.service";
 import {Ng2GoogleChartsModule} from "ng2-google-charts";
 import {SuscribeService} from "./service/subscribe.service";
 import {CommentService} from "./service/comment.service";
+import {ChatService} from "./service/chat.service";
+import {DateParseModule} from "./util/date-parser/date-parse.module";
+import {TimeParseModule} from "./util/time-parser/time-parse.module";
 
 @NgModule({
   declarations: [
@@ -56,6 +59,8 @@ import {CommentService} from "./service/comment.service";
     Ng2GoogleChartsModule,
     HttpModule,
     GravatarModule,
+    DateParseModule,
+    TimeParseModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes),
   ],
@@ -78,6 +83,7 @@ import {CommentService} from "./service/comment.service";
     CommentService,
     ManagerPageGuard,
     UserPageGuard,
+    ChatService,
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

@@ -30,4 +30,6 @@ public class Message extends AbstractEntity{
 
     @NotNull(message = "Message has to have a time of creation")
     private LocalDateTime dateAndTime;
+
+    private boolean read;
 }

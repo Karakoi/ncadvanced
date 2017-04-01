@@ -46,6 +46,12 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
     }
 
     @Override
+    public List<Message> findUnreadMessages(Long recipientId) {
+        val parameterSource = new MapSqlParameterSource("recipientId", recipientId);
+        return jdbc().query(getUnreadMessagesQuery(), parameterSource, getDialogMapper());
+    }
+
+    @Override
     protected RowMapper<Message> getMapper() {
         return (resultSet, i) -> {
             Role role = new Role(resultSet.getString("name"));
@@ -90,6 +96,7 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
             message.setRecipient(recipient);
             message.setSender(sender);
             message.setTopic(null);
+            message.setRead(resultSet.getBoolean("read"));
             message.setDateAndTime(resultSet.getTimestamp("date_and_time").toLocalDateTime());
 
             return message;
@@ -132,5 +139,9 @@ public class MessageDaoImpl extends CrudDaoImpl<Message> implements MessageDao {
 
     private String getByFriendQuery() {
         return queryService().getQuery("message.getByFriendQuery");
+    }
+
+    private String getUnreadMessagesQuery() {
+        return queryService().getQuery("message.getUnreadMessagesQuery");
     }
 }

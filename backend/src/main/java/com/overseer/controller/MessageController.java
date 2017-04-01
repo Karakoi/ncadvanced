@@ -41,6 +41,12 @@ public class MessageController {
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 
+    @GetMapping("/unreadMessages")
+    public ResponseEntity<List<Message>> findUnreadMessages(@RequestParam Long recipientId) {
+        val messages = messageService.findUnreadMessages(recipientId);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+
     @DeleteMapping("messages/{id}")
     public ResponseEntity deleteMessage(@PathVariable Long id) {
         messageService.delete(id);

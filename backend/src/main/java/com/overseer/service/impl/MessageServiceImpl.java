@@ -36,4 +36,11 @@ public class MessageServiceImpl extends CrudServiceImpl<Message> implements Mess
         log.debug("Fetched messages for dialog for sender with id {} and recipient with id {}", senderId, recipientId);
         return list;
     }
+
+    @Override
+    public List<Message> findUnreadMessages(Long recipientId) {
+        val list = messageDao.findUnreadMessages(recipientId);
+        log.debug("Fetched unread messages for recipient with id {}", recipientId);
+        return list;
+    }
 }
