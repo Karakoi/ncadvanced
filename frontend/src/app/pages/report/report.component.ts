@@ -73,7 +73,6 @@ export class ReportComponent implements OnInit {
       this.countTopManagers = formData.countManagersSelector;
       this.startDate = formData.dateOfStart;
       this.endDate = formData.dateOfEnd;
-      console.log(this.countTopManagers);
       if (!this.isGenerated) {
         this.isGenerated = true;
       } else {

@@ -21,7 +21,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-
+/**
+ * Class for generating pdf reports for request.
+ */
 @Service
 @RequiredArgsConstructor
 @Setter
@@ -38,6 +40,12 @@ public class RequestReportPdfBuilder {
     private static final float DEFAULT_TABLE_WIDTH = 100.0f;
     private static final int DEFAULT_TABLE_SPACING = 10;
 
+    /**
+     * Method build pdf document.
+     *
+     * @param document new pdf document.
+     * @return return configured Pdf list with data.
+     */
     public Document buildPdfDocument(Document document) throws Exception {
         Font font = getFont(HELVETICA_BOLD);
         final float imgLogoX = 370f;

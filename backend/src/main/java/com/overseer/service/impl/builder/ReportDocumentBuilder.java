@@ -36,7 +36,7 @@ public class ReportDocumentBuilder {
      * @return doc with few line skipped.
      */
     public ReportDocumentBuilder addNewLine(int countLine) throws DocumentException {
-        while(countLine != 0) {
+        while (countLine != 0) {
             document.add(new Paragraph("\n"));
             countLine--;
         }

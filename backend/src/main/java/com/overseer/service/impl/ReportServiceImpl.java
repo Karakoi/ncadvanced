@@ -84,6 +84,11 @@ public class ReportServiceImpl implements ReportService {
         //Create main list with request transfer objects
         List<RequestDTO> allRequests = new ArrayList<>();
 
+        if (getDifferenceBetweenDates(start, end) == 0) {
+            allRequests.add(requestService.findCountRequestsByPeriod(start, start.plusMonths(DEFAULT_MONTHS_STEP), ProgressStatus.FREE.getId()));
+            return  allRequests;
+        }
+
         //Round the date until next month
         LocalDate localStart = start.plusDays((start.lengthOfMonth() - start.getDayOfMonth()) + 1);
 
@@ -176,6 +181,11 @@ public class ReportServiceImpl implements ReportService {
 
         //Main list with request transfer objects
         List<RequestDTO> allRequests = new ArrayList<>();
+
+        if (getDifferenceBetweenDates(start, end) == 0) {
+            allRequests.add(requestService.findCountRequestsByPeriod(start, start.plusMonths(DEFAULT_MONTHS_STEP), ProgressStatus.FREE.getId()));
+            return  allRequests;
+        }
 
         //Round the date until next month
         LocalDate localStart = start.plusDays((start.lengthOfMonth() - start.getDayOfMonth()) + 1);
