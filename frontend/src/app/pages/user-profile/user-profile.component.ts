@@ -92,7 +92,7 @@ export class UserProfileComponent implements OnInit {
     this.pieChartRequestForOpenClosed = {
       chartType: 'BarChart',
       dataTable: [
-        ['Status', 'Open','Closed'],
+        ['Status', 'Open','Close'],
         ['Status', this.statisticForUser[0],this.statisticForUser[1]]
       ],
       options: {
@@ -130,7 +130,7 @@ export class UserProfileComponent implements OnInit {
   pieChartRequestForOpenClosed = {
     chartType: 'BarChart',
     dataTable: [
-      ['Request', 'Open', 'Closed'],
+      ['Request', 'Open', 'Close'],
       ['Click to see open',100,100]
     ],
     options: {
