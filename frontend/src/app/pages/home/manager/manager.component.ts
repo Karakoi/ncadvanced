@@ -99,7 +99,6 @@ export class ManagerComponent {
 
   private fetchFreeRequests(page: number) {
     this.requestService.getFree(page, this.pageSize).subscribe((requests: Request[]) => {
-      console.log(requests);
       this.requests = requests;
     });
     this.requestService.getPageCountFree().subscribe((count) => this.pageCount = count);
