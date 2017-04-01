@@ -429,7 +429,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
             throw new NoSuchEntityException("Reporter of request with id: " + requestId + " is absent in DB");
         }
 
-        ChangeProgressEvent event = new ChangeProgressEvent(this, request, ProgressStatus.IN_PROGRESS);
+        ChangeProgressEvent event = new ChangeProgressEvent(this, request, ProgressStatus.FREE);
         publisher.publishEvent(event);
 
         if (!event.isHandled()) {

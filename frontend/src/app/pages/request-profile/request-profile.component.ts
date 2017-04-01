@@ -267,11 +267,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isFree(request): boolean {
-    if (request.progressStatus.name == 'Free') {
-      return false;
-    } else {
-      return true;
-    }
+      return request.progressStatus.name == 'Free';
   }
 
   isInProgress(request): boolean {
@@ -304,11 +300,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isClosed(request): boolean {
-    if (request.progressStatus.name == 'Closed') {
-      return true;
-    } else {
-      return false;
-    }
+      return request.progressStatus.name == 'Closed';
   }
 
   isEmployee(): boolean {
