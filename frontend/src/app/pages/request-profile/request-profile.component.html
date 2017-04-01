@@ -7,7 +7,9 @@
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
                        size="40"
-                       [disabled]="isAdmin() && isFree(request) && isAssignee(request)">
+                       [disabled]="isAdmin() && isFree(request) && isAssignee(request)"
+                       min="5"
+                       max="45">
         </inline-editor>
       </span>
       <span class="col-lg-4 col-md-4 col-sm-4">
@@ -16,6 +18,13 @@
                 [textContent]="followed ? ' Unfollow':' Follow'"></span>
         </button>
       </span>
+
+      <span class="col-lg-4 col-md-4 col-sm-4">
+        <button *ngIf="isManager() && isAssigneeOfRequest() && isInProgress(request)" class="btn btn-danger pull-right" (click)="close()">
+          <span class="glyphicon glyphicon-ok-circle" [textContent]="' Close'"></span>
+        </button>
+      </span>
+
       </p>
     </div>
     <div class="panel-body">
@@ -113,7 +122,9 @@
                                  (onSave)="updateRequest($event)"
                                  [disabled]="isAdmin() && isFree(request) && isAssignee(request)"
                                  cols="100"
-                                 rows="4">
+                                 rows="4"
+                                 min="10"
+                                 max="500">
                   </inline-editor>
                 </div>
 
@@ -326,4 +337,5 @@
                    (updated)="updateSubRequests($event)"></add-sub-request>
   <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
   <delete-comment [comments]="comments" (updated)="updateComments($event)"></delete-comment>
+  <close (updated)="update($event)"></close>
 </div>

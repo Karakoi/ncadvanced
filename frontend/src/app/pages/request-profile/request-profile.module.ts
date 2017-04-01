@@ -13,6 +13,7 @@ import {PriorityMarkerModule} from "../../util/priority-marker/priority-marker.m
 import {ProgressMarkerModule} from "../../util/progress-marker/progress-marker.module";
 import {GravatarModule} from "../../shared/gravatar/gravatar.module";
 import {DeleteCommentComponent} from "./comment-delete/delete-comment.component";
+import {CloseComponent} from "./close/close.component";
 
 const routes: Routes = [
   {path: '', component: RequestProfileComponent},
@@ -36,7 +37,8 @@ const routes: Routes = [
     RequestProfileComponent,
     DeleteSubRequestComponent,
     DeleteCommentComponent,
-    AddSubRequestComponent
+    AddSubRequestComponent,
+    CloseComponent
   ],
   exports: [
     RequestProfileComponent,
