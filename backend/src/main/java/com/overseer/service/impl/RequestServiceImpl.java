@@ -5,10 +5,7 @@ import com.overseer.dao.UserDao;
 import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.dto.RequestSearchDTO;
-import com.overseer.event.AssignRequestEvent;
-import com.overseer.event.CloseRequestEvent;
-import com.overseer.event.JoinRequestEvent;
-import com.overseer.event.ReopenRequestEvent;
+import com.overseer.event.*;
 import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.PriorityStatus;
@@ -25,6 +22,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -37,6 +35,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@Transactional
 public class RequestServiceImpl extends CrudServiceImpl<Request> implements RequestService, ApplicationEventPublisherAware {
 
     private static final short DEFAULT_PAGE_SIZE = 20;
@@ -88,7 +87,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
                     + " can not be deleted");
         }
     }
-
 
     //-----------------------FIND---------------------------
 
@@ -210,6 +208,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public List<DeadlineDTO> getManagerDeadlines(Long managerID) {
         return requestDao.getDeadlinesByAssignee(managerID);
     }
+
+    //-----------------------SEARCH---------------------------
 
     @Override
     public List<Request> searchRequests(RequestSearchDTO searchDTO) {
@@ -352,7 +352,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Request saveSubRequest(Request subRequest) {
         Assert.notNull(subRequest, "sub request must not be null");
         log.debug("Create sub request {} for parent request with id {}", subRequest, subRequest.getParentId());
-        subRequest.getProgressStatus().getId();
         return requestDao.save(subRequest);
     }
 
@@ -368,14 +367,6 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         // Retrieve specified requests for joining from database
         List<Request> joinedRequests = requestDao.findRequestsByIds(ids);
 
-        //check if joinedRequests are appropriate
-        joinedRequests.forEach(request -> {
-            if (!ProgressStatus.FREE.getId().equals(request.getProgressStatus().getId())) {
-                throw new InappropriateProgressStatusException("Can not join request with id: " + request.getId()
-                        + " because it has progress status that is not [Free]");
-            }
-        });
-
         JoinRequestEvent event = new JoinRequestEvent(this, parentRequest, joinedRequests);
         publisher.publishEvent(event);
 
@@ -389,15 +380,15 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Request assignRequest(Request request) {
         Assert.notNull(request, "request must not be null");
         log.debug("Assign request with id: {} to office manager with id: {}", request.getId(), request.getAssignee().getId());
-        if (!ProgressStatus.FREE.getId().equals(request.getProgressStatus().getId())) {
+
+        ChangeProgressEvent event = new ChangeProgressEvent(this, request, ProgressStatus.IN_PROGRESS);
+        publisher.publishEvent(event);
+        if (!event.isHandled()) {
             throw new InappropriateProgressStatusException("Request with id: "
                     + request.getId() + " and ProgressStatus: "
                     + request.getProgressStatus().getName()
                     + " can not be assign");
         }
-
-        AssignRequestEvent event = new AssignRequestEvent(this, request);
-        publisher.publishEvent(event);
         return request;
     }
 
@@ -409,16 +400,15 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public Request closeRequest(Request request) {
         Assert.notNull(request, "request must not be null");
         log.debug("Close request with id: {} ", request.getId());
-        Long progressStatusId = request.getProgressStatus().getId();
-        if (!ProgressStatus.IN_PROGRESS.getId().equals(progressStatusId) && !ProgressStatus.JOINED.getId().equals(progressStatusId)) {
+
+        ChangeProgressEvent event = new ChangeProgressEvent(this, request, ProgressStatus.CLOSED);
+        publisher.publishEvent(event);
+        if (!event.isHandled()) {
             throw new InappropriateProgressStatusException("Request with id: "
                     + request.getId() + " and ProgressStatus: "
                     + request.getProgressStatus().getName()
                     + " can not be closed");
         }
-
-        CloseRequestEvent event = new CloseRequestEvent(this, request);
-        publisher.publishEvent(event);
         return request;
     }
 
@@ -438,15 +428,16 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         if (reporter == null) {
             throw new NoSuchEntityException("Reporter of request with id: " + requestId + " is absent in DB");
         }
-        if (!ProgressStatus.CLOSED.getId().equals(request.getProgressStatus().getId())) {
+
+        ChangeProgressEvent event = new ChangeProgressEvent(this, request, ProgressStatus.IN_PROGRESS);
+        publisher.publishEvent(event);
+
+        if (!event.isHandled()) {
             throw new InappropriateProgressStatusException("Request with id: "
                     + request.getId() + " and ProgressStatus: "
                     + request.getProgressStatus().getName()
                     + " can not be reopen");
         }
-
-        ReopenRequestEvent event = new ReopenRequestEvent(this, request);
-        publisher.publishEvent(event);
         return request;
     }
 
@@ -454,8 +445,21 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public void closeAllRequestsOfGivenAssignee(Long assigneeId) {
+        Assert.notNull(assigneeId, "id of assignee must not be null");
+        log.debug("Close all requests of Assignee with id: {} ", assigneeId);
+        List<Long> idsOfProgresStatuses = new ArrayList<>();
+        idsOfProgresStatuses.add(ProgressStatus.IN_PROGRESS.getId());
+        List<Request> requests = requestDao.findRequestsByProgressStatusesAndAssigneeId(idsOfProgresStatuses, assigneeId);
+        requests.forEach(this::closeRequest);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public void closeAllRequestsOfGivenReporter(Long reporterId) {
-        Assert.notNull(reporterId, "id of request must not be null");
+        Assert.notNull(reporterId, "id of reporter must not be null");
         log.debug("Close all requests of Reporter with id: {} ", reporterId);
         List<Long> idsOfProgresStatuses = new ArrayList<>();
         idsOfProgresStatuses.add(ProgressStatus.IN_PROGRESS.getId());
@@ -469,7 +473,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      */
     @Override
     public void deleteAllFreeRequestsOfGivenReporter(Long reporterId) {
-        Assert.notNull(reporterId, "id of request must not be null");
+        Assert.notNull(reporterId, "id of reporter must not be null");
         log.debug("Close all requests of Reporter with id: {} ", reporterId);
         List<Long> idsOfProgresStatuses = new ArrayList<>();
         idsOfProgresStatuses.add(ProgressStatus.FREE.getId());
