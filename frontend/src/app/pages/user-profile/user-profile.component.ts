@@ -4,6 +4,7 @@ import {User} from "../../model/user.model";
 import {UserService} from "../../service/user.service";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'user-profile',
@@ -23,7 +24,8 @@ export class UserProfileComponent implements OnInit {
 
   constructor(private userService: UserService,
               private route: ActivatedRoute,
-              private requestService: RequestService) {
+              private requestService: RequestService,
+              private toast: ToastsManager) {
   }
 
   ngOnInit(): void {
@@ -39,7 +41,7 @@ export class UserProfileComponent implements OnInit {
           } else {
             this.hasAnyRequest = true;
           }
-        });
+        }, e => this.toast.warning("can't research statistic",'warning'));
         this.requestService.getOpenClosedRequestForUser(this.user.id, 6).subscribe(s => {
           if (s[0]!= 0 || s[1]!= 0) {
             this.hasSixMonthsRec = true;
@@ -47,7 +49,7 @@ export class UserProfileComponent implements OnInit {
             this.statisticForUser = s;
             this.setStatisticOpenClosedReq();
           }
-        });
+        }, e => this.toast.warning("can't research statistic",'warning'));
       });
     });
   }
@@ -170,6 +172,6 @@ export class UserProfileComponent implements OnInit {
         this.statisticForUser = s;
         this.setStatisticOpenClosedReq();
       }
-    });
+    }, e => this.toast.warning("can't research statistic",'warning'));
   }
 }

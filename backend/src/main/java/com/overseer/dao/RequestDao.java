@@ -297,13 +297,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
     void deleteParentRequestIfItHasNoChildren(Long parentId);
 
     /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by progress status.
-     */
-    List<Long> countRequestByProgressStatus();
-
-    /**
      * Returns list to build pie chart for user profile.
      *
      * @return list of statistic request for user profile.
@@ -340,23 +333,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of statistic for admin dashboard.
      */
     List<Long> statisticForAdminDashBoard(Long howLong);
-
-    /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by priority status.
-     */
-    List<Long> countRequestByPriorityStatus();
-
-//    /**
-//     * @return list of statistic for six months by progress status.
-//     */
-//    List<Long> countRequestByProgressStatusForSixMonths();
-
-//    /**
-//     * @return list of statistic for six months by progress status for user.
-//     */
-//    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
 
     /**
      * @return list of manager deadlines information entity.

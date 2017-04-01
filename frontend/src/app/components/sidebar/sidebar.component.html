@@ -6,6 +6,7 @@
     <li class="logo" *ngIf="user">
       <a [routerLink]="['/profile']">
         <gravatar [email]="user.email" [size]="80"></gravatar>
+        {{user.firstName}}
       </a>
     </li>
     <br/>
