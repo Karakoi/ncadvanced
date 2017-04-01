@@ -381,6 +381,13 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         Assert.notNull(request, "request must not be null");
         log.debug("Assign request with id: {} to office manager with id: {}", request.getId(), request.getAssignee().getId());
 
+        //check if progress status has not changed
+        Request requestFromDb = requestDao.findOne(request.getId());
+        if (!request.getProgressStatus().equals(requestFromDb.getProgressStatus())) {
+            throw new InappropriateProgressStatusException("Request: ["
+                    + request.getTitle() + "] have already been assigned.");
+        }
+
         ChangeProgressEvent event = new ChangeProgressEvent(this, request, ProgressStatus.IN_PROGRESS);
         publisher.publishEvent(event);
         if (!event.isHandled()) {

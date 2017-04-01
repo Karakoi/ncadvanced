@@ -246,7 +246,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   getRequestType(request): string {
-    if (request.progressStatus.name == null && request.priorityStatus.name == null) {
+    if (request.progressStatus.name == 'Null' && request.priorityStatus.name == null) {
       return "Sub request"
     } else if (request.progressStatus.name == 'Joined') {
       return "Joined request";
