@@ -1,17 +1,12 @@
 package com.overseer;
 
-import com.overseer.dao.RequestDao;
-import com.overseer.dao.UserDao;
 import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.*;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.RequestService;
 import com.overseer.service.UserService;
-import lombok.Value;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,16 +42,10 @@ public class RequestLifecycleTest {
     private User assignee;
     private User reporter;
     private User lastChanger;
-    private ProgressStatus progress;
     private PriorityStatus priority;
-    private List<Long> requestsGroupIds;
 
     @Before
     public void setUp() throws Exception {
-
-
-        requestsGroupIds = Arrays.asList(212L, 181L, 123L);
-
         Role reporterRole = new Role("employee");
         reporterRole.setId(12L);
         reporter = new User();
@@ -65,9 +54,17 @@ public class RequestLifecycleTest {
         reporter.setPassword("gunner12");
         reporter.setEmail("tomy@gmail.com");
         reporter.setRole(reporterRole);
-
         reporter = userService.create(reporter);
 
+        Role assigneeRole = new Role("office manager");
+        assigneeRole.setId(11L);
+        assignee = new User();
+        assignee.setFirstName("Tom");
+        assignee.setLastName("Cruz");
+        assignee.setPassword("cruzXXX");
+        assignee.setEmail("blabla@3g.ua");
+        assignee.setRole(assigneeRole);
+        assignee = userService.create(assignee);
 
         Role changerRole = new Role("admin");
         changerRole.setId(10L);
@@ -84,58 +81,74 @@ public class RequestLifecycleTest {
         Authentication authentication = authenticationManager.authenticate(loginToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Role assigneeRole = new Role("office manager");
-        assigneeRole.setId(11L);
-        assignee = new User();
-        assignee.setFirstName("Tom");
-        assignee.setLastName("Cruz");
-        assignee.setPassword("cruzXXX");
-        assignee.setEmail("blabla@3g.ua");
-        assignee.setRole(assigneeRole);
-        assignee = userService.create(assignee);
-
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
-
-        progress = ProgressStatus.FREE;
 
         request = new Request();
         request.setTitle("Do something");
         request.setDescription("Do some great work");
-        request.setParentId(null);
-        request.setEstimateTimeInDays(3);
         request.setDateOfCreation(LocalDateTime.of(2015, 6, 21, 12, 30));
         request.setReporter(reporter);
-        request.setAssignee(assignee);
-        request.setLastChanger(lastChanger);
+        request.setAssignee(new User());
         request.setPriorityStatus(priority);
-        request.setProgressStatus(progress);
-
-
-        requestService.create(request);
-
+        request.setProgressStatus(ProgressStatus.FREE);
+        request = requestService.create(request);
     }
 
-    @Ignore
     @Test
-    public void joinRequestsIntoParent() throws Exception {
-        Request parent = requestService.joinRequestsIntoParent(requestsGroupIds, request);
+    public void shouldJoinRequestsIntoParent() throws Exception {
+        // given
+        List<Long> requestsGroupIds = new ArrayList<>();
 
-        Assert.assertEquals(parent.getId(), request.getId());
+        Request requestFirstChild = new Request();
+        requestFirstChild.setTitle("Do something very important");
+        requestFirstChild.setDescription("It is hard job");
+        requestFirstChild.setDateOfCreation(LocalDateTime.of(2015, 6, 21, 12, 30));
+        requestFirstChild.setReporter(reporter);
+        requestFirstChild.setAssignee(new User());
+        requestFirstChild.setPriorityStatus(priority);
+        requestFirstChild.setProgressStatus(ProgressStatus.FREE);
+        requestFirstChild = requestService.create(requestFirstChild);
 
-        Request firstChildRequest = requestService.findOne(requestsGroupIds.get(0));
-        Assert.assertEquals(request.getId(), firstChildRequest.getParentId());
+        Request requestSecondChild = new Request();
+        requestSecondChild.setTitle("Do something really important");
+        requestSecondChild.setDescription("Do hard work");
+        requestSecondChild.setDateOfCreation(LocalDateTime.of(2015, 6, 21, 12, 30));
+        requestSecondChild.setReporter(reporter);
+        requestSecondChild.setAssignee(new User());
+        requestSecondChild.setPriorityStatus(priority);
+        requestSecondChild.setProgressStatus(ProgressStatus.FREE);
+        requestSecondChild = requestService.create(requestSecondChild);
 
-        Request secondChildRequest = requestService.findOne(requestsGroupIds.get(1));
-        Assert.assertEquals(request.getId(), secondChildRequest.getParentId());
+        requestsGroupIds.add(requestFirstChild.getId());
+        requestsGroupIds.add(requestSecondChild.getId());
 
-        Request thirdChildRequest = requestService.findOne(requestsGroupIds.get(2));
-        Assert.assertEquals(request.getId(), thirdChildRequest.getParentId());
+        request.setAssignee(assignee);
+        request.setEstimateTimeInDays(3);
+        requestService.update(request);
+
+        //when
+        requestService.joinRequestsIntoParent(requestsGroupIds, request);
+        requestFirstChild = requestService.findOne(requestFirstChild.getId());
+        requestSecondChild = requestService.findOne(requestSecondChild.getId());
+
+        //then
+        assertThat(requestFirstChild.getParentId(), is(request.getId()));
+        assertThat(requestSecondChild.getParentId(), is(request.getId()));
+
+        assertThat(requestFirstChild.getProgressStatus(), is(ProgressStatus.JOINED));
+        assertThat(requestSecondChild.getProgressStatus(), is(ProgressStatus.JOINED));
+
+        assertThat(request.getProgressStatus(), is(ProgressStatus.IN_PROGRESS));
+
     }
 
     @Test
     public void shouldAssignFreeRequest() throws Exception {
         // given
+        request.setAssignee(assignee);
+        request.setEstimateTimeInDays(3);
+        requestService.update(request);
 
         // when
         Request assignRequest = requestService.assignRequest(request);
@@ -145,12 +158,14 @@ public class RequestLifecycleTest {
     }
 
     @Test(expected=NoSuchEntityException.class)
-    public void shouldNotReopenRequest() throws Exception {
+    public void shouldNotReopenRequestOfDeactivatedEmployee() throws Exception {
         // given
+        request.setAssignee(assignee);
+        request.setEstimateTimeInDays(3);
+        request.setProgressStatus(ProgressStatus.CLOSED);
+        requestService.update(request);
 
         // when
-        requestService.assignRequest(request);
-        requestService.closeRequest(request);
         userService.delete(request.getReporter());
         requestService.reopenRequest(request.getId());
 

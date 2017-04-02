@@ -155,8 +155,7 @@ public class ChangeProgressStatusEventListener {
         request.setProgressStatus(progressStatus);
         Request savedRequest = requestDao.save(request);
         sendMessageToReporter(request);
-        List<User> subscribers = requestSubscribeService.getSubscribersOfRequest(savedRequest.getId());
-        sendMessageToSubscribers(savedRequest, subscribers);
+        sendMessageToSubscribers(savedRequest);
     }
 
     /**
@@ -198,9 +197,9 @@ public class ChangeProgressStatusEventListener {
      * Sends notification to Reporter of request.
      *
      * @param request request with changed {@link ProgressStatus}
-     * @param subscribers {@link User} who subscribed to notification
      */
-    private void sendMessageToSubscribers(Request request, List<User> subscribers) {
+    private void sendMessageToSubscribers(Request request) {
+        val subscribers = requestSubscribeService.getSubscribersOfRequest(request.getId());
         for (User sub : subscribers) {
             val message = universalMessageBuilder.getMessageBody(request, sub);
             emailService.sendMessage(message);
