@@ -1,4 +1,4 @@
-package com.overseer.service.impl;
+package com.overseer;
 
 import com.overseer.dao.RequestDao;
 import com.overseer.dao.UserDao;
@@ -33,20 +33,15 @@ import static org.hamcrest.Matchers.is;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class RequestServiceImplTest {
-
-
-
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private RequestDao requestDao;
-
+public class RequestLifecycleTest {
     @Autowired
     private RequestService requestService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     private Request request;
     private User assignee;
@@ -55,19 +50,6 @@ public class RequestServiceImplTest {
     private ProgressStatus progress;
     private PriorityStatus priority;
     private List<Long> requestsGroupIds;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Value
-    private static final class AuthParams {
-        private final String email;
-        private final String password;
-
-        UsernamePasswordAuthenticationToken toAuthenticationToken() {
-            return new UsernamePasswordAuthenticationToken(email, password);
-        }
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -84,7 +66,7 @@ public class RequestServiceImplTest {
         reporter.setEmail("tomy@gmail.com");
         reporter.setRole(reporterRole);
 
-        reporter = this.userDao.save(reporter);
+        reporter = userService.create(reporter);
 
 
         Role changerRole = new Role("admin");
@@ -93,12 +75,12 @@ public class RequestServiceImplTest {
         lastChanger.setFirstName("Bruce");
         lastChanger.setLastName("li");
         lastChanger.setPassword("qwerty123");
-        lastChanger.setEmail("bruceli@email.com");
+        lastChanger.setEmail("brucelicka@email.com");
         lastChanger.setRole(changerRole);
-        lastChanger = this.userDao.save(lastChanger);
+        lastChanger = userService.create(lastChanger);
 
-        AuthParams params = new AuthParams(lastChanger.getEmail(), "qwerty123");
-        UsernamePasswordAuthenticationToken loginToken = params.toAuthenticationToken();
+        UsernamePasswordAuthenticationToken loginToken =
+                new UsernamePasswordAuthenticationToken(lastChanger.getEmail(), "qwerty123");
         Authentication authentication = authenticationManager.authenticate(loginToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -110,7 +92,7 @@ public class RequestServiceImplTest {
         assignee.setPassword("cruzXXX");
         assignee.setEmail("blabla@3g.ua");
         assignee.setRole(assigneeRole);
-        assignee = this.userDao.save(assignee);
+        assignee = userService.create(assignee);
 
         priority = new PriorityStatus("Normal", 200);
         priority.setId(2L);
@@ -130,7 +112,7 @@ public class RequestServiceImplTest {
         request.setProgressStatus(progress);
 
 
-        this.requestDao.save(request);
+        requestService.create(request);
 
     }
 
@@ -170,7 +152,6 @@ public class RequestServiceImplTest {
         requestService.assignRequest(request);
         requestService.closeRequest(request);
         userService.delete(request.getReporter());
-//        userDao.delete(request.getReporter());
         requestService.reopenRequest(request.getId());
 
         // then

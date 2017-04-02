@@ -1,20 +1,18 @@
 package com.overseer.event;
 
 import com.overseer.dao.RequestDao;
+import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.model.PriorityStatus;
 
 import com.overseer.model.Request;
 import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
-import com.overseer.service.EmailBuilder;
 import com.overseer.service.EmailService;
 import com.overseer.service.RequestSubscribeService;
+import com.overseer.service.impl.email.NotificationMessageBuilder;
 import com.overseer.service.impl.email.UniversalMessageBuilder;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
@@ -27,91 +25,83 @@ import java.util.List;
  * Listener for ChangeProgressStatusEvent.
  */
 @Component
-public class ChangeProgressStatusEventListener implements ApplicationEventPublisherAware {
-
-    private ApplicationEventPublisher publisher;
-
+public class ChangeProgressStatusEventListener {
+    @Autowired
     private RequestDao requestDao;
 
-    private EmailBuilder<Request> emailStrategyForAssignee;
-    private EmailBuilder<Request> emailStrategyForReporter;
+    @Autowired
     private EmailService emailService;
+    @Autowired
+    private NotificationMessageBuilder notificationMessageBuilder;
 
     @Autowired
     private RequestSubscribeService requestSubscribeService;
     @Autowired
     private UniversalMessageBuilder universalMessageBuilder;
 
-    public ChangeProgressStatusEventListener(RequestDao requestDao,
-                                             @Qualifier("officeManagerNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForAssignee,
-                                             @Qualifier("employeeNotificationBuilderImpl") EmailBuilder<Request> emailStrategyForReporter,
-                                             EmailService emailService) {
-        this.requestDao = requestDao;
-        this.emailStrategyForAssignee = emailStrategyForAssignee;
-        this.emailStrategyForReporter = emailStrategyForReporter;
-        this.emailService = emailService;
-    }
-
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        this.publisher = applicationEventPublisher;
-    }
-
     /**
      * Assigns request to specified office manager and changes it {@link Request#progressStatus}.
      *
-     * @param assignRequestEvent event of changing progress status
+     * @param changeProgressEvent event of changing progress status
      */
-    @EventListener
-    public void assignRequest(AssignRequestEvent assignRequestEvent) {
-        Request request = assignRequestEvent.getRequest();
-        changeStatusAndSave(request, AssignRequestEvent.PROGRESS_STATUS);
+    @EventListener(condition = "#changeProgressEvent.request.progressStatus.getName() == 'Free' "
+            + "&& #changeProgressEvent.progressStatus.getName() == 'In progress'")
+    public void assignRequest(ChangeProgressEvent changeProgressEvent) {
+        Request request = changeProgressEvent.getRequest();
+        changeStatusAndSave(request, changeProgressEvent.getProgressStatus());
+        changeProgressEvent.setIsHandled(true);
     }
-
 
     /**
      * Closes request and changes it {@link Request#progressStatus}.
      *
-     * @param closeRequestEvent event of changing progress status
+     * @param changeProgressEvent event of changing progress status
      */
-    @EventListener
-    public void closeRequest(CloseRequestEvent closeRequestEvent) {
-        Request request = closeRequestEvent.getRequest();
+    @EventListener(condition = "(#changeProgressEvent.request.progressStatus.getName() == 'In progress' "
+            + "|| #changeProgressEvent.request.progressStatus.getName() == 'Joined') "
+            + "&& #changeProgressEvent.progressStatus.getName() == 'Closed'")
+    public void closeRequest(ChangeProgressEvent changeProgressEvent) {
+        Request request = changeProgressEvent.getRequest();
         //Check if request is parent
         List<Request> joinedRequests = requestDao.findJoinedRequests(request);
+        //if request is not parent
         if (joinedRequests.isEmpty()) {
             Long parentRequestId = request.getParentId();
             request.setParentId(null);
-            changeStatusAndSave(request, CloseRequestEvent.PROGRESS_STATUS);
+            changeStatusAndSave(request, changeProgressEvent.getProgressStatus());
+            //if request is joined
             if (parentRequestId != null) {
                 requestDao.deleteParentRequestIfItHasNoChildren(parentRequestId);
             }
         } else {
             for (Request joinedRequest : joinedRequests) {
                 joinedRequest.setParentId(null);
-                changeStatusAndSave(joinedRequest, CloseRequestEvent.PROGRESS_STATUS);
+                changeStatusAndSave(joinedRequest, changeProgressEvent.getProgressStatus());
             }
             List<Request> subRequests = requestDao.findSubRequests(request);
             subRequests.forEach(requestDao::delete);
             requestDao.deleteParentRequestIfItHasNoChildren(request.getId());
         }
+        changeProgressEvent.setIsHandled(true);
     }
 
     /**
      * Reopens request and changes it {@link Request#progressStatus}.
      *
-     * @param reopenRequestEvent event of changing progress status
+     * @param changeProgressEvent event of changing progress status
      */
-    @EventListener
-    public void reopenRequest(ReopenRequestEvent reopenRequestEvent) {
-        Request request = reopenRequestEvent.getRequest();
+    @EventListener(condition = "#changeProgressEvent.request.progressStatus.getName() == 'Closed' "
+            + "&& #changeProgressEvent.progressStatus.getName() == 'Free'")
+    public void reopenRequest(ChangeProgressEvent changeProgressEvent) {
+        Request request = changeProgressEvent.getRequest();
         request.setEstimateTimeInDays(null);
 
-        changeStatusAndSave(request, ReopenRequestEvent.PROGRESS_STATUS);
+        changeStatusAndSave(request, changeProgressEvent.getProgressStatus());
 
         sendMessageToAssignee(request);
         request.getAssignee().setId(null);
         requestDao.save(request);
+        changeProgressEvent.setIsHandled(true);
     }
 
     /**
@@ -125,6 +115,14 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
     public void joinRequestsIntoParent(JoinRequestEvent joinRequestEvent) {
         Request parentRequest = joinRequestEvent.getParentRequest();
         List<Request> joinedRequests = joinRequestEvent.getJoinedRequests();
+
+        //check if joinedRequests are appropriate
+        joinedRequests.forEach(request -> {
+            if (!ProgressStatus.FREE.getId().equals(request.getProgressStatus().getId())) {
+                throw new InappropriateProgressStatusException("Can not join request with id: " + request.getId()
+                        + " because it has progress status that is not [Free]");
+            }
+        });
 
         // Find and set max priority status from specified requests to parent request
         PriorityStatus maxPriorityStatus = getMaxPriorityStatus(joinedRequests);
@@ -155,16 +153,10 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
      */
     private void changeStatusAndSave(Request request, ProgressStatus progressStatus) {
         request.setProgressStatus(progressStatus);
-        val req = requestDao.save(request);
-        val subscribers = requestSubscribeService.getSubscribersOfRequest(req.getId());
-        for (User sub : subscribers) {
-            val message = universalMessageBuilder.getMessageBody(request, sub);
-            emailService.sendMessage(message);
-        }
+        Request savedRequest = requestDao.save(request);
         sendMessageToReporter(request);
-
-        RequestChangeEvent event = new RequestChangeEvent(this, request);
-        publisher.publishEvent(event);
+        List<User> subscribers = requestSubscribeService.getSubscribersOfRequest(savedRequest.getId());
+        sendMessageToSubscribers(savedRequest, subscribers);
     }
 
     /**
@@ -188,7 +180,7 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
      * @param request request with changed {@link ProgressStatus}
      */
     private void sendMessageToAssignee(Request request) {
-        SimpleMailMessage message = this.emailStrategyForAssignee.buildMessage(request);
+        SimpleMailMessage message = notificationMessageBuilder.getMessageBody(request, request.getAssignee());
         emailService.sendMessage(message);
     }
 
@@ -198,7 +190,20 @@ public class ChangeProgressStatusEventListener implements ApplicationEventPublis
      * @param request request with changed {@link ProgressStatus}
      */
     private void sendMessageToReporter(Request request) {
-        SimpleMailMessage message = this.emailStrategyForReporter.buildMessage(request);
+        SimpleMailMessage message =  notificationMessageBuilder.getMessageBody(request, request.getReporter());
         emailService.sendMessage(message);
+    }
+
+    /**
+     * Sends notification to Reporter of request.
+     *
+     * @param request request with changed {@link ProgressStatus}
+     * @param subscribers {@link User} who subscribed to notification
+     */
+    private void sendMessageToSubscribers(Request request, List<User> subscribers) {
+        for (User sub : subscribers) {
+            val message = universalMessageBuilder.getMessageBody(request, sub);
+            emailService.sendMessage(message);
+        }
     }
 }

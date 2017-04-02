@@ -81,6 +81,23 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public List<Request> findRequestsByProgressStatusesAndAssigneeId(List<Long> statusIds, Long assigneeId) {
+        Assert.notNull(assigneeId, "id must not be null");
+        Assert.notNull(statusIds, "list status ids must not be null");
+        String findRequestsByProgressStatusAndAssigneeIdQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findRequestsByProgressStatusAndAssigneeId"));
+        try {
+            val parameterSource = new MapSqlParameterSource("assigneeId", assigneeId);
+            parameterSource.addValue("progress_status_ids", statusIds);
+            return jdbc().query(findRequestsByProgressStatusAndAssigneeIdQuery,
+                    parameterSource,
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<Request> findRequestsByProgressStatusesAndReporterId(List<Long> statusIds, Long reporterId) {
         Assert.notNull(reporterId, "id must not be null");
         Assert.notNull(statusIds, "list status ids must not be null");
@@ -96,7 +113,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             return null;
         }
     }
-
 
     @Override
     public List<Request> findSubRequests(Long id) {
