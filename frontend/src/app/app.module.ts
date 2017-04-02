@@ -19,7 +19,7 @@ import {
   AuthService,
   UserService,
   UserPageGuard,
-  ManagerPageGuard
+  ManagerPageGuard,
 } from "./service/barrel";
 import {FooterComponent, NavbarComponent, NoContentComponent, SideBarComponent} from "./components/barrel";
 import {GravatarModule} from "./shared/gravatar/gravatar.module";
