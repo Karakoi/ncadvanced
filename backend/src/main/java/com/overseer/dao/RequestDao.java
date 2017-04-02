@@ -280,6 +280,15 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> searchRequests(String searchQuery);
 
     /**
+     * Gets a list of requests which have provided {@link User} as assignee and specified {@link ProgressStatus}.
+     *
+     * @param statusIds  list of progress status ids, must not be {@literal null}
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @return list of requests
+     */
+    List<Request> findRequestsByProgressStatusesAndAssigneeId(List<Long> statusIds, Long assigneeId);
+
+    /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
      * @param statusIds  list of progress status ids, must not be {@literal null}
@@ -295,13 +304,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      */
     @CacheChanger
     void deleteParentRequestIfItHasNoChildren(Long parentId);
-
-    /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by progress status.
-     */
-    List<Long> countRequestByProgressStatus();
 
     /**
      * Returns list to build pie chart for user profile.
@@ -340,23 +342,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of statistic for admin dashboard.
      */
     List<Long> statisticForAdminDashBoard(Long howLong);
-
-    /**
-     * Returns list to build pie chart.
-     *
-     * @return list of statistic request by priority status.
-     */
-    List<Long> countRequestByPriorityStatus();
-
-//    /**
-//     * @return list of statistic for six months by progress status.
-//     */
-//    List<Long> countRequestByProgressStatusForSixMonths();
-
-//    /**
-//     * @return list of statistic for six months by progress status for user.
-//     */
-//    List<Long> countRequestByProgressStatusForSixMonthsForUser(Long userId);
 
     /**
      * @return list of manager deadlines information entity.

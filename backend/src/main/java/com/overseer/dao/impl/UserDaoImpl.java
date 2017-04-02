@@ -88,7 +88,7 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
 
     @Override
     protected String getDeleteQuery() {
-        return this.queryService().getQuery("user.delete");
+        return this.queryService().getQuery("user.deactivate");
     }
 
     @Override
@@ -211,7 +211,7 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
 
     @Override
     public Long getCountAllDeactivated() {
-        return this.jdbc().queryForObject(this.queryService().getQuery("user.deletedCount"), new MapSqlParameterSource(), Long.class);
+        return this.jdbc().queryForObject(this.queryService().getQuery("user.deactivatedCount"), new MapSqlParameterSource(), Long.class);
     }
 
     @Override

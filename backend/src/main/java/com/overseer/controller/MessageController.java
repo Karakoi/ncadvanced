@@ -21,11 +21,17 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    /**
+     * @param message open message from frontend that going to be encrypted.
+     * @return decrypted message.
+     */
     @PostMapping("/sendMessage")
     public ResponseEntity<Message> sendMessageToEmail(@RequestBody Message message) {
         Assert.notNull(message.getText(), "Message has to have text");
-        Message savedMessage = messageService.create(message);
-        return new ResponseEntity<>(savedMessage, HttpStatus.OK);
+        val encryptMessage = messageService.encryptMessage(message);
+        val savedMessage = messageService.create(encryptMessage);
+        val decryptMessage = messageService.decryptMessage(savedMessage);
+        return new ResponseEntity<>(decryptMessage, HttpStatus.OK);
     }
 
     @GetMapping("/messagesByTopic")

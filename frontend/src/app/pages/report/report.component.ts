@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../service/user.service";
 import {AuthService, AuthEvent} from "../../service/auth.service";
 import {CustomValidators} from "ng2-validation";
@@ -30,8 +30,8 @@ export class ReportComponent implements OnInit {
 
   @ViewChild(LineChartComponent)
   public lineChart: LineChartComponent;
-  private startDate: any;
-  private endDate: any;
+  private startDate: Date;
+  private endDate: Date;
   private isGenerated: boolean = false;
   private countManagers: number[] = [1, 3, 5, 10];
   private countTopManagers: number;
@@ -64,7 +64,7 @@ export class ReportComponent implements OnInit {
     this.reportForm = this.formBuilder.group({
       dateOfStart: ['', CustomValidators.dateISO],
       dateOfEnd: ['', CustomValidators.dateISO],
-      countManagersSelector: [''],
+      countManagersSelector: ['']
     });
   }
 
@@ -73,6 +73,11 @@ export class ReportComponent implements OnInit {
       this.countTopManagers = formData.countManagersSelector;
       this.startDate = formData.dateOfStart;
       this.endDate = formData.dateOfEnd;
+
+      this.isDatesDifferenceLessStep(this.startDate, this.endDate);
+
+      console.log(this.startDate);
+      console.log(this.endDate);
       if (!this.isGenerated) {
         this.isGenerated = true;
       } else {
@@ -85,6 +90,20 @@ export class ReportComponent implements OnInit {
     }
   }
 
+  private isDatesDifferenceLessStep(start: Date, end: Date): boolean {
+    let startDate = new Date(start);
+    let endDate = new Date(end);
+    let countYears = endDate.getFullYear() - startDate.getFullYear();
+    let countMonths = (endDate.getMonth() + 1) - (startDate.getMonth() + 1);
+    if (countMonths == 0 && countYears == 0) {
+      this.toastr.warning("Warning. The minimum date difference is one month.");
+      this.toastr.warning("The end date will be rounded to the minimum step boundary");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private generateReportByRole(start: any, end: any) {
     if (this.isAdmin()) {
       this.barChart.buildAdminChart(start, end, this.countTopManagers);
@@ -93,7 +112,6 @@ export class ReportComponent implements OnInit {
       this.barChart.buildManagerChart(start, end);
     }
   }
-
 
   private generateAdminPDF() {
     this.encryptedEmail = Md5.hashStr(this.currentUser.email).toString();

@@ -19,6 +19,8 @@ export class JoinRequestComponent implements OnInit {
   requests:Request[];
   @Input()
   checked:number[];
+  @Input()
+  checkedRequests:Request[];
   @Output()
   updated:EventEmitter<any> = new EventEmitter();
 
@@ -35,8 +37,8 @@ export class JoinRequestComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.maxLength(255)]],
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(45)]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       estimateTimeInDays: ['', [Validators.required, CustomValidators.min(0), CustomValidators.max(30)]]
     });
 
@@ -55,12 +57,10 @@ export class JoinRequestComponent implements OnInit {
   }
 
   joinRequests(params) {
-    console.log("Checked : " + this.checked);
     this.authService.currentUser.subscribe((user:User) => {
       this.request.assignee = user;
       this.request.parentId = null;
       this.request.reporter = user;
-      // this.request.progressStatus.id = 6;
       this.request.lastChanger = user;
       this.request.title = params.title;
       this.request.description = params.description;

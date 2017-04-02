@@ -39,10 +39,9 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     private static final int LOW = 3;
     private static final int DEFAULT_DAY_IN_MONTH = 1;
     private static final Long DEFAULT_MONTHS_STEP = 1L;
-    private static final Long VALUE_TO_GET_STATISTIC_FOR_ALL_TIME = 10L;
-    private static final int START_PROJECT_YEARS = 2017;
-    private static final int START_PROJECT_MONTHS = 2;
-    private static final int START_PROJECT_DAY = 7;
+//    private static final int START_PROJECT_YEARS = 2017;
+//    private static final int START_PROJECT_MONTHS = 2;
+//    private static final int START_PROJECT_DAY = 7;
 
     private ProgressStatusUtil progressStatusUtil;
     private SecurityContextService securityContextService;
@@ -82,6 +81,23 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public List<Request> findRequestsByProgressStatusesAndAssigneeId(List<Long> statusIds, Long assigneeId) {
+        Assert.notNull(assigneeId, "id must not be null");
+        Assert.notNull(statusIds, "list status ids must not be null");
+        String findRequestsByProgressStatusAndAssigneeIdQuery = this.queryService().getQuery("request.select")
+                .concat(queryService().getQuery("request.findRequestsByProgressStatusAndAssigneeId"));
+        try {
+            val parameterSource = new MapSqlParameterSource("assigneeId", assigneeId);
+            parameterSource.addValue("progress_status_ids", statusIds);
+            return jdbc().query(findRequestsByProgressStatusAndAssigneeIdQuery,
+                    parameterSource,
+                    this.getMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<Request> findRequestsByProgressStatusesAndReporterId(List<Long> statusIds, Long reporterId) {
         Assert.notNull(reporterId, "id must not be null");
         Assert.notNull(statusIds, "list status ids must not be null");
@@ -97,7 +113,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
             return null;
         }
     }
-
 
     @Override
     public List<Request> findSubRequests(Long id) {
@@ -271,16 +286,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
-    public List<Long> countRequestByProgressStatus() {
-        String quantityQuery = queryService().getQuery("request.countByProgressStatus");
-        List<Long> progressList = new LinkedList<>();
-        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", ProgressStatus.FREE.getId()), Long.class));
-        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", ProgressStatus.JOINED.getId()), Long.class));
-        progressList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("progress", ProgressStatus.IN_PROGRESS.getId()), Long.class));
-        return progressList;
-    }
-
-    @Override
     public List<Long> countRequestByProgressStatusForUser(Long userId) {
         List<Long> progressListForUser = new LinkedList<>();
         progressListForUser.add(countRequestByProgressStatusForReporter(userId, ProgressStatus.FREE));
@@ -331,9 +336,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     @Override
     public List<Long> countOpenClosedRequestForUser(Long userId, Long howLong) {
         LocalDate localDate = LocalDate.now().minusMonths(howLong);
-        if (VALUE_TO_GET_STATISTIC_FOR_ALL_TIME.equals(howLong)) {
-            localDate = LocalDate.of(START_PROJECT_YEARS, START_PROJECT_MONTHS, START_PROJECT_DAY);
-        }
         String quantityQuery = queryService().getQuery("request.countStatisticForForUser");
         List<Long> userStatistic = new LinkedList<>();
         val parameterSource = new MapSqlParameterSource("userId", userId);
@@ -352,9 +354,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     @Override
     public List<Long> statisticForAdminDashBoard(Long howLong) {
         LocalDate localDate = LocalDate.now().minusMonths(howLong);
-        if (VALUE_TO_GET_STATISTIC_FOR_ALL_TIME.equals(howLong)) {
-            localDate = LocalDate.of(START_PROJECT_YEARS, START_PROJECT_MONTHS, START_PROJECT_DAY);
-        }
         List<Long> adminStatisticList = new LinkedList<>();
         adminStatisticList.add(countStatisticForAdminDashBoardByProgressStatus(localDate, ProgressStatus.FREE));
         adminStatisticList.add(countStatisticForAdminDashBoardByProgressStatus(localDate, ProgressStatus.JOINED));
@@ -397,16 +396,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         parameterSource.addValue("howLong", localDate);
         parameterSource.addValue("priority", priority);
         return  jdbc().queryForObject(query, parameterSource, Long.class);
-    }
-
-    @Override
-    public List<Long> countRequestByPriorityStatus() {
-        String quantityQuery = queryService().getQuery("request.countByPriorityStatus");
-        List<Long> priorityList = new LinkedList<>();
-        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", HIGH), Long.class));
-        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", NORMAL), Long.class));
-        priorityList.add(jdbc().queryForObject(quantityQuery, new MapSqlParameterSource("priority", LOW), Long.class));
-        return priorityList;
     }
 
     @Override
@@ -669,10 +658,10 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
             ProgressStatus progressStatus;
             Long progressStatusId = resultSet.getLong("progress_id");
-            if (progressStatusId == null) {
-                progressStatus = progressStatusUtil.getProgressById(0L);
-            } else {
+            if (progressStatusId != null) {
                 progressStatus = progressStatusUtil.getProgressById(progressStatusId);
+            } else {
+                progressStatus = progressStatusUtil.getProgressById(0L);
             }
 
 
