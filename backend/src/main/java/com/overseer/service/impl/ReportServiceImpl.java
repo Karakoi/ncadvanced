@@ -183,7 +183,7 @@ public class ReportServiceImpl implements ReportService {
         List<RequestDTO> allRequests = new ArrayList<>();
 
         if (getDifferenceBetweenDates(start, end) == 0) {
-            allRequests.add(requestService.findCountRequestsByPeriod(start, start.plusMonths(DEFAULT_MONTHS_STEP), ProgressStatus.FREE.getId()));
+            allRequests.add(requestService.findCountRequestsByPeriod(start, start.plusMonths(DEFAULT_MONTHS_STEP), ProgressStatus.CLOSED.getId()));
             return  allRequests;
         }
 
