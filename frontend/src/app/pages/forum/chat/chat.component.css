@@ -64,3 +64,9 @@
 .glyphicon-triangle-bottom:before, .glyphicon-triangle-top:before {
   vertical-align: middle;
 }
+
+.unread-msg-count {
+  font-size: 14px;
+  background-color: #449D44;
+  min-width: 27px;
+}

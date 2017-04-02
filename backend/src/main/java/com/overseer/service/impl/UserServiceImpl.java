@@ -232,4 +232,12 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     public List<User> findUserChatPartners(Long userId) {
         return userDao.findUserChatPartners(userId);
     }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findUsersWithUnreadMessages(Long userId) {
+        return userDao.findUsersWithUnreadMessages(userId);
+    }
 }

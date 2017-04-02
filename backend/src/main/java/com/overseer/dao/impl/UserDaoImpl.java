@@ -150,6 +150,17 @@ public class UserDaoImpl extends CrudDaoImpl<User> implements UserDao {
                 this.getMapper());
     }
 
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findUsersWithUnreadMessages(Long userId) {
+        Assert.notNull(userId, "User can't be null");
+        return this.jdbc().query(this.queryService().getQuery("user.findUsersWithUnreadMessagesQuery"),
+                new MapSqlParameterSource("userId", userId),
+                this.getMapper());
+    }
+
     @Override
     protected String getCountQuery() {
         return this.queryService().getQuery("user.count");

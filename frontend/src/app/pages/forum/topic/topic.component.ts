@@ -40,7 +40,8 @@ export class TopicComponent implements OnInit {
     this.message = {
       sender: null,
       text: null,
-      dateAndTime: null
+      dateAndTime: null,
+      read: false
     };
 
     this.authService.currentUser.subscribe((user: User) => {

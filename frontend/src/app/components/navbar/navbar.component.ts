@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import {Router} from "@angular/router";
 import {AuthService} from "../../service/auth.service";
 import {UserService} from "../../service/user.service";
@@ -6,6 +6,11 @@ import {ErrorService} from "../../service/error.service";
 import {Message} from "../../model/message.model";
 import {ChatService} from "../../service/chat.service";
 import {User} from "../../model/user.model";
+import {Response} from "@angular/http";
+import {timer} from "rxjs/observable/timer";
+import {Observable} from "rxjs";
+
+declare let $: JQueryStatic;
 
 @Component({
   selector: 'overseer-navbar',
@@ -16,6 +21,9 @@ export class NavbarComponent implements OnInit {
   isSignedIn: boolean;
   unreadMessages: Message[];
   currentUser: User;
+  @Output()
+  updated: EventEmitter<any> = new EventEmitter();
+  connect: any;
 
   constructor(private router: Router,
               private authService: AuthService,
@@ -33,11 +41,30 @@ export class NavbarComponent implements OnInit {
 
     this.authService.currentUser.subscribe(user => {
       this.currentUser = user;
-      this.chatService.getUnreadMessages(this.currentUser.id).subscribe((unreadMessages: Message[]) => {
-        this.unreadMessages = unreadMessages;
-        console.log(unreadMessages)
-      });
+      this.loadUnreadMessages(this.currentUser.id);
     });
+
+    let timer = Observable.timer(2000, 5000);
+    this.connect = timer.subscribe(t => this.loadUnreadMessages(this.currentUser.id));
+  }
+
+  loadUnreadMessages(recipientId) {
+    this.chatService.getUnreadMessages(recipientId).subscribe((unreadMessages: Message[]) => {
+      this.unreadMessages = unreadMessages;
+    });
+  }
+
+  setMessageRead(message, event) {
+    event.stopPropagation();
+    message.id = null;
+    message.read = true;
+    this.userService.sendMessage(message).subscribe((resp: Response) => {
+      this.loadUnreadMessages(this.currentUser.id);
+    });
+  }
+
+  private updateArray(message) {
+    this.unreadMessages = this.unreadMessages.filter(r => r.id !== message.id);
   }
 
   logout() {

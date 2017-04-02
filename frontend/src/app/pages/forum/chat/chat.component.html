@@ -64,8 +64,17 @@
             class="glyphicon glyphicon-plus-sign pull-right"></span></span>
             </a>
           </div>
+          <div class="list-group" *ngIf="usersWithUnreadMessages">
+            <span class="list-group-item active">Unread messages:</span>
+            <a *ngFor="let user of usersWithUnreadMessages" class="list-group-item">
+              <span class="search-result" (click)="loadUserMessages(user)">{{user.firstName}} {{user.lastName}}<span class="badge pull-right unread-msg-count">{{user.phoneNumber}}</span></span>
+            </a>
+            <span class="list-group-item" *ngIf="usersWithUnreadMessages.length == 0">
+              You haven't unread messages.
+            </span>
+          </div>
           <div class="list-group">
-            <span class="list-group-item active">Friends list:
+            <span class="list-group-item active">Conversation partners:
             <span *ngIf="showFriendsList" (click)="changeShowFriendsList()"
                   class="glyphicon glyphicon-triangle-top pull-right" aria-hidden="true"></span>
             <span *ngIf="!showFriendsList" (click)="changeShowFriendsList()"

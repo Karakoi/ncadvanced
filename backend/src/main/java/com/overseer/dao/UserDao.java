@@ -80,4 +80,12 @@ public interface UserDao extends CrudDao<User, Long> {
      * @return list of chat partners
      */
     List<User> findUserChatPartners(Long userId);
+
+    /**
+     * Returns list of users which have unread messages.
+     *
+     * @param userId specified user
+     * @return list of users which have unread messages
+     */
+    List<User> findUsersWithUnreadMessages(Long userId);
 }

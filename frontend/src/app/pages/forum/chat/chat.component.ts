@@ -27,6 +27,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   currentUser: User;
   chatFriend: User;
   chatFriends: User[];
+  usersWithUnreadMessages: User[];
   findedUsers: User[];
   messageForm: FormGroup;
   message: Message;
@@ -61,15 +62,18 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       this.chatService.getChatFriends(this.currentUser.id).subscribe((users: User[]) => {
         this.chatFriends = users;
+        this.activatedRoute.queryParams.subscribe((params: Params) => {
+          let userId = params['userId'];
+          if (userId) {
+            this.userService.get(userId).subscribe(user => {
+              this.updateFindedUsersArray(user);
+            });
+          }
+        });
       });
-
-      this.activatedRoute.queryParams.subscribe((params: Params) => {
-        let userId = params['userId'];
-        if (userId) {
-          this.userService.get(userId).subscribe(user => {
-            this.updateFindedUsersArray(user);
-          });
-        }
+      this.chatService.getUsersWithUnreadMessages(this.currentUser.id).subscribe((users: User[]) => {
+        this.usersWithUnreadMessages = users;
+        console.log(users)
       });
     });
   }
@@ -123,18 +127,38 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.message = {
         sender: this.currentUser,
         text: null,
-        dateAndTime: null
+        dateAndTime: null,
+        read: false
       };
     });
     $('#msg-container').animate({scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
     let timer = Observable.timer(2000, 3000);
-    this.connect = timer.subscribe(t => this.reloadData(this.currentUser.id, this.chatFriend.id));
+    this.connect = timer.subscribe(t => {
+      this.reloadData(this.currentUser.id, this.chatFriend.id)
+      this.chatService.getUsersWithUnreadMessages(this.currentUser.id).subscribe((users: User[]) => {
+        this.usersWithUnreadMessages = users;
+      });
+    });
   }
 
   reloadData(userId, friendId) {
     this.chatService.getDialogMessages(userId, friendId).subscribe((messages: Message[]) => {
       this.messages = messages;
+      this.readMessages(messages);
     });
+  }
+
+  readMessages(messages) {
+    messages.forEach(msg => {
+      if (!msg.read) {
+        msg.id = null;
+        msg.read = true;
+        console.log('readed');
+        this.userService.sendMessage(msg).subscribe((resp: Response) => {
+          // this.updateArray(<Message> resp.json());
+        }, e => this.handleErrorCreateMessage(e));
+      }
+    })
   }
 
   private updateArray(message: Message): void {

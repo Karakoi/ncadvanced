@@ -42,4 +42,11 @@ export class ChatService {
     return this.http.get(`https://api.chucknorris.io/jokes/random`)
       .map(resp => resp.json());
   }
+
+  getUsersWithUnreadMessages(userId: number): Observable<User[]> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('userId', userId.toString());
+    return this.authHttp.get(`${url}/users/findUsersWithUnreadMessages`, {search: params})
+      .map(resp => resp.json());
+  }
 }
