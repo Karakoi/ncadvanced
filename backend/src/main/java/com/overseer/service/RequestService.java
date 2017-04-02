@@ -220,6 +220,13 @@ public interface RequestService extends CrudService<Request, Long> {
     Request reopenRequest(Long requestId);
 
     /**
+     * Closes all requests which have provided {@link User} as Assignee and have specified ProgressStatus.
+     *
+     * @param assigneeId id of the Assignee, must not be {@literal null}.
+     */
+    void closeAllRequestsOfGivenAssignee(Long assigneeId);
+
+    /**
      * Closes all requests which have provided {@link User} as reporter and have specified ProgressStatus.
      *
      * @param reporterId id of the reporter, must not be {@literal null}.

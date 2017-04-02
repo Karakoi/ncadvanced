@@ -17,6 +17,7 @@ import {CommentService} from "../../service/comment.service";
 import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {Response} from "@angular/http";
 import {DeleteCommentComponent} from "./comment-delete/delete-comment.component";
+import {CloseComponent} from "./close/close.component";
 
 @Component({
   selector: 'request-profile',
@@ -54,6 +55,9 @@ export class RequestProfileComponent implements OnInit {
   @ViewChild(AddSubRequestComponent)
   addSubRequestComponent: AddSubRequestComponent;
 
+  @ViewChild(CloseComponent)
+  closeComponent: CloseComponent;
+
   constructor(private requestService: RequestService,
               private route: ActivatedRoute,
               private reportService: ReportService,
@@ -79,7 +83,6 @@ export class RequestProfileComponent implements OnInit {
 
         this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
           this.historyRecords = historyRecords;
-          console.log('HR: ' + historyRecords);
         });
 
         this.requestService.get(id).subscribe((request: Request) => {
@@ -90,7 +93,6 @@ export class RequestProfileComponent implements OnInit {
           });
           this.commentService.getByRequest(this.request.id).subscribe(comments => {
             this.comments = comments;
-            console.log(comments)
           });
           this.comment = {
             text: "",
@@ -98,22 +100,18 @@ export class RequestProfileComponent implements OnInit {
             request: this.request,
             createDateAndTime: null
           };
-          /*console.log(request)*/
         });
 
         this.requestService.getSubRequests(id).subscribe((subRequests: Request[]) => {
           this.subRequests = subRequests;
-          /*console.log(subRequests)*/
         });
 
         this.requestService.getJoinedRequests(id).subscribe((joinedRequests: Request[]) => {
           this.joinedRequests = joinedRequests;
-          /*console.log(joinedRequests)*/
         });
 
         this.subscribeService.getFollowers(id).subscribe(followers => {
           this.followers = followers;
-          console.log('FW: ' + followers)
         });
       });
     });
@@ -248,7 +246,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   getRequestType(request): string {
-    if (request.progressStatus.name == null && request.priorityStatus.name == null) {
+    if (request.progressStatus.name == 'Null' && request.priorityStatus.name == null) {
       return "Sub request"
     } else if (request.progressStatus.name == 'Joined') {
       return "Joined request";
@@ -260,22 +258,16 @@ export class RequestProfileComponent implements OnInit {
   updateComment(comment) {
     comment.id = null;
     comment.updateDateAndTime = new Date();
-    console.log(comment)
     this.commentService.create(comment).subscribe(() => {
       this.commentService.getByRequest(this.request.id).subscribe(comments => {
         this.comments = comments;
-        console.log(comments)
       });
       this.toastr.success("Comment updated", "Success")
     });
   }
 
   isFree(request): boolean {
-    if (request.progressStatus.name == 'Free') {
-      return false;
-    } else {
-      return true;
-    }
+      return request.progressStatus.name == 'Free';
   }
 
   isInProgress(request): boolean {
@@ -308,15 +300,15 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isClosed(request): boolean {
-    if (request.progressStatus.name == 'Closed') {
-      return true;
-    } else {
-      return false;
-    }
+      return request.progressStatus.name == 'Closed';
   }
 
   isEmployee(): boolean {
     return this.currentUser.role.name === 'employee';
+  }
+
+  isManager(): boolean {
+    return this.currentUser.role.name === 'office manager';
   }
 
   getPDF() {
@@ -327,5 +319,14 @@ export class RequestProfileComponent implements OnInit {
         FileSaver.saveAs(blob, filename);
       }
     );
+  }
+
+  close(request:Request) {
+    this.closeComponent.request = this.request;
+    this.closeComponent.modal.open();
+  }
+
+  update(request:Request) {
+    this.request = request;
   }
 }

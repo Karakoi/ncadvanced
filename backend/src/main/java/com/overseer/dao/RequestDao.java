@@ -280,6 +280,15 @@ public interface RequestDao extends CrudDao<Request, Long> {
     List<Request> searchRequests(String searchQuery);
 
     /**
+     * Gets a list of requests which have provided {@link User} as assignee and specified {@link ProgressStatus}.
+     *
+     * @param statusIds  list of progress status ids, must not be {@literal null}
+     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @return list of requests
+     */
+    List<Request> findRequestsByProgressStatusesAndAssigneeId(List<Long> statusIds, Long assigneeId);
+
+    /**
      * Gets a list of requests which have provided {@link User} as reporter and specified {@link ProgressStatus}.
      *
      * @param statusIds  list of progress status ids, must not be {@literal null}
