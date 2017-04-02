@@ -2,7 +2,6 @@ package com.overseer.service.impl;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.overseer.dao.HistoryDAO;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.enums.ProgressStatus;

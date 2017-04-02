@@ -10,6 +10,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.overseer.model.History;
 import com.overseer.model.Request;
 import com.overseer.model.User;
+import com.overseer.service.HistoryService;
 import com.overseer.service.impl.builder.PdfPTableBuilder;
 import com.overseer.service.impl.builder.ReportDocumentBuilder;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class RequestReportPdfBuilder {
     private List<Request> subRequests;
     private List<Request> joinedRequests;
     private List<History> historyList;
+    private final HistoryService historyService;
 
     private static final float DEFAULT_TABLE_WIDTH = 100.0f;
     private static final int DEFAULT_TABLE_SPACING = 10;
@@ -127,8 +129,14 @@ public class RequestReportPdfBuilder {
         return joinedRequestsTable;
     }
 
+    /**
+     * Generates {@link PdfPTable} table for history report section.
+     * @param historyList all histories records for request
+     * @return history table
+     */
     private PdfPTable generateHistoryTable(List<History> historyList) {
         final int joinedTableColumnNum = 3;
+        final int maxNumberOfCharsInHistoryValue = 20;
         PdfPTable historyTable = new PdfPTableBuilder(joinedTableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)
                 .addPdfPCells(BaseColor.LIGHT_GRAY, getFont(HELVETICA_BOLD),
                         "Message", "Changer", "Date")
@@ -136,8 +144,9 @@ public class RequestReportPdfBuilder {
 
         historyList
                 .forEach(history -> {
-                    historyTable.addCell(history.getColumnName()); // TODO: 01.04.2017 CHANGE
-                    historyTable.addCell(history.getChanger().getFirstName());
+                    historyTable.addCell(historyService.createMessageFromChanges(history, true, maxNumberOfCharsInHistoryValue));
+                    User changer = history.getChanger();
+                    historyTable.addCell(changer.getFirstName() + ' ' + changer.getLastName());
                     historyTable.addCell(getFormattedDate(history.getDateOfChange()));
                 });
 
@@ -165,8 +174,8 @@ public class RequestReportPdfBuilder {
      * Format {@link LocalDateTime} instance by pattern.
      * By default it contain 'T' symbol.
      *
-     * @param dateTime selected date and time
-     * @return formatted date and time string
+     * @param dateTime selected date and time.
+     * @return formatted date and time string.
      */
     private String getFormattedDate(LocalDateTime dateTime) {
         return DateTimeFormatter
