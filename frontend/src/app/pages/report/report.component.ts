@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../service/user.service";
 import {AuthService, AuthEvent} from "../../service/auth.service";
 import {CustomValidators} from "ng2-validation";
@@ -64,7 +64,7 @@ export class ReportComponent implements OnInit {
     this.reportForm = this.formBuilder.group({
       dateOfStart: ['', CustomValidators.dateISO],
       dateOfEnd: ['', CustomValidators.dateISO],
-      countManagersSelector: [''],
+      countManagersSelector: ['']
     });
   }
 

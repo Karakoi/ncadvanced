@@ -658,10 +658,10 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
             ProgressStatus progressStatus;
             Long progressStatusId = resultSet.getLong("progress_id");
-            if (progressStatusId == null) {
-                progressStatus = progressStatusUtil.getProgressById(0L);
-            } else {
+            if (progressStatusId != null) {
                 progressStatus = progressStatusUtil.getProgressById(progressStatusId);
+            } else {
+                progressStatus = progressStatusUtil.getProgressById(0L);
             }
 
 

@@ -182,6 +182,7 @@ public class ReportServiceImpl implements ReportService {
         //Main list with request transfer objects
         List<RequestDTO> allRequests = new ArrayList<>();
 
+        //Set minimum step if difference between dates is less one month
         if (getDifferenceBetweenDates(start, end) == 0) {
             allRequests.add(requestService.findCountRequestsByPeriod(start, start.plusMonths(DEFAULT_MONTHS_STEP), ProgressStatus.CLOSED.getId()));
             return  allRequests;
