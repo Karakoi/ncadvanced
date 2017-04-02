@@ -10,6 +10,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,7 @@ import java.util.*;
  */
 @Slf4j
 @Component
-public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostProcessor {
+public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostProcessor, Ordered {
     private Map<String, Class> repositoryMap = new HashMap<>();
     private static final long DEFAULT_CACHE_CLEAN_SECONDS_TIME = 120;
     private SimpleInMemoryCache<Triplet<Object, String, List>, Object>
@@ -88,5 +89,10 @@ public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostPr
         } else {
             return method.invoke(bean, args);
         }
+    }
+
+    @Override
+    public int getOrder() {
+        return LOWEST_PRECEDENCE;
     }
 }
