@@ -165,4 +165,16 @@ public class UserController {
         List<User> users = userService.findUserChatPartners(userId);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    /**
+     * Returns list of users which have unread messages.
+     *
+     * @param userId specified user
+     * @return list of users which have unread messages
+     */
+    @GetMapping("/findUsersWithUnreadMessages")
+    public ResponseEntity<List<User>> findUsersWithUnreadMessages(@RequestParam Long userId) {
+        List<User> users = userService.findUsersWithUnreadMessages(userId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }

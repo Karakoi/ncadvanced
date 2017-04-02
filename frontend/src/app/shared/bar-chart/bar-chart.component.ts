@@ -107,7 +107,14 @@ export class BarChartComponent implements OnInit {
       this.buildManagerChart(start, end);
     }
   }
-  
+
+  public barChartColors:Array<any> = [
+    { // green
+      backgroundColor: 'rgba(81, 147, 82, 0.7)',
+      borderColor: 'rgba(47,82,40,1)'
+    }
+  ];
+
 }
 
 

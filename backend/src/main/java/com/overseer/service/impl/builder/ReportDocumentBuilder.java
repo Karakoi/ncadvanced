@@ -5,9 +5,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 /**
- * The <code>ReportDocumentBuilder</code> abstract class represents Builder pattern for creating report in PDF format.
+ * The <code>ReportDocumentBuilder</code> class represents Builder pattern for creating report in PDF format.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class ReportDocumentBuilder {
 
     private final Document document;
@@ -20,12 +19,13 @@ public class ReportDocumentBuilder {
     /**
      * Gets new image, add it to document and returns ReportDocumentBuilder for next usages.
      *
-     * @param img pdf document.
+     * @param img       pdf document.
+     * @param xPosition position for X axis.
+     * @param yPosition position for y axis.
      * @return ReportDocumentBuilder.
      */
-    public ReportDocumentBuilder addImage(Image img, float a, float b) throws DocumentException {
-//        img.setAlignment(alignment);
-        img.setAbsolutePosition(a, b);
+    public ReportDocumentBuilder addImage(Image img, float xPosition, float yPosition) throws DocumentException {
+        img.setAbsolutePosition(xPosition, yPosition);
         document.add(img);
         return this;
     }
@@ -33,6 +33,7 @@ public class ReportDocumentBuilder {
     /**
      * Return doc with few line skipped.
      *
+     * @param countLine count lines.
      * @return doc with few line skipped.
      */
     public ReportDocumentBuilder addNewLine(int countLine) throws DocumentException {
@@ -80,7 +81,7 @@ public class ReportDocumentBuilder {
      * Gets new PdfPTable, add it to document and returns ReportDocumentBuilder for next usages.
      *
      * @param condition condition for adding table.
-     * @param table PdfPTable.
+     * @param table     PdfPTable.
      * @return ReportDocumentBuilder.
      */
     public ReportDocumentBuilder addTableByCondition(boolean condition, PdfPTable table) throws DocumentException {

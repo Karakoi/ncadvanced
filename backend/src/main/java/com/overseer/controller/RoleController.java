@@ -70,7 +70,6 @@ public class RoleController {
      *
      * @return all {@link Role} entities.
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.findAllRoles();

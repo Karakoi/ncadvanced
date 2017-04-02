@@ -24,6 +24,13 @@ export class ChatService {
       .map(resp => resp.json());
   }
 
+  getUnreadMessages(recipientId: number): Observable<Message[]> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('recipientId', recipientId.toString());
+    return this.authHttp.get(`${url}/unreadMessages`, {search: params})
+      .map(resp => resp.json());
+  }
+
   getChatFriends(userId: number): Observable<User[]> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('userId', userId.toString());
@@ -33,6 +40,13 @@ export class ChatService {
 
   getChuckJoke(): Observable<Chuck> {
     return this.http.get(`https://api.chucknorris.io/jokes/random`)
+      .map(resp => resp.json());
+  }
+
+  getUsersWithUnreadMessages(userId: number): Observable<User[]> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('userId', userId.toString());
+    return this.authHttp.get(`${url}/users/findUsersWithUnreadMessages`, {search: params})
       .map(resp => resp.json());
   }
 }

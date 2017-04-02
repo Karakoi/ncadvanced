@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.List;
 @Service
 @Slf4j
 @PropertySource("classpath:security.properties")
+@Transactional
 public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
 
     @Value("${password.length}")
@@ -76,6 +78,9 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         if (id.equals(currentUser.getId())) {
             throw new RemovingYourselfException("Id of current user is equals to id of user that is deleting ");
         }
+        //if user is office manager
+        requestService.closeAllRequestsOfGivenAssignee(id);
+        //if user is employee
         requestService.closeAllRequestsOfGivenReporter(id);
         requestService.deleteAllFreeRequestsOfGivenReporter(id);
         super.delete(id);
@@ -231,5 +236,13 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     @Override
     public List<User> findUserChatPartners(Long userId) {
         return userDao.findUserChatPartners(userId);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<User> findUsersWithUnreadMessages(Long userId) {
+        return userDao.findUsersWithUnreadMessages(userId);
     }
 }

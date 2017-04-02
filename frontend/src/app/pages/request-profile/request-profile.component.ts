@@ -150,7 +150,7 @@ export class RequestProfileComponent implements OnInit {
       case "title":
         text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
         break;
-      case "estimate_time_in_date":
+      case "estimate_time_in_days":
         text = "Estimate time (in day) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
         break;
 
@@ -246,7 +246,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   getRequestType(request): string {
-    if (request.progressStatus.name == null && request.priorityStatus.name == null) {
+    if (request.progressStatus.name == 'Null' && request.priorityStatus.name == null) {
       return "Sub request"
     } else if (request.progressStatus.name == 'Joined') {
       return "Joined request";
@@ -267,11 +267,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isFree(request): boolean {
-    if (request.progressStatus.name == 'Free') {
-      return false;
-    } else {
-      return true;
-    }
+      return request.progressStatus.name == 'Free';
   }
 
   isInProgress(request): boolean {
@@ -304,11 +300,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   isClosed(request): boolean {
-    if (request.progressStatus.name == 'Closed') {
-      return true;
-    } else {
-      return false;
-    }
+      return request.progressStatus.name == 'Closed';
   }
 
   isEmployee(): boolean {

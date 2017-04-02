@@ -4,34 +4,35 @@
   <ul class="sidebar-nav">
     <br/>
     <li class="logo" *ngIf="user">
-      <a [routerLink]="['/profile']">
+      <a side-bar [routerLink]="['/profile']">
         <gravatar [email]="user.email" [size]="80"></gravatar>
+         {{user.firstName}}
       </a>
     </li>
     <br/>
     <!--This div will be visible regardless of role-->
     <li>
-      <a [routerLink]="['/profile']">Profile</a>
+      <a side-bar [routerLink]="['/profile']">Profile</a>
     </li>
     <li>
-      <a [routerLink]="['/forum']">Forum</a>
+      <a side-bar [routerLink]="['/forum']">Forum</a>
     </li>
     <li>
-      <a [routerLink]="['/forum/chat']">Chat</a>
+      <a side-bar [routerLink]="['/forum/chat']">Chat</a>
     </li>
     <!--Show this div, if user's role is Admin -->
     <li>
-      <a [routerLink]="['/users']" *ngIf="isAdmin()">All users</a>
+      <a side-bar [routerLink]="['/users']" *ngIf="isAdmin()">All users</a>
     </li>
     <li>
-      <a [routerLink]="['/requests']" *ngIf="isAdmin()">All requests</a>
+      <a side-bar [routerLink]="['/requests']" *ngIf="isAdmin()">All requests</a>
     </li>
     <li>
-      <a [routerLink]="['/reports']" *ngIf="isManager() || isAdmin()">Reports</a>
+      <a side-bar [routerLink]="['/reports']" *ngIf="isManager() || isAdmin()">Reports</a>
     </li>
     <!--Show this div, if user's role is Manager -->
     <li>
-      <a [routerLink]="['/requests/inProgress']" *ngIf="isManager()">Requests</a>
+      <a side-bar [routerLink]="['/requests/inProgress']" *ngIf="isManager()">Requests</a>
     </li>
   </ul>
 </div>
