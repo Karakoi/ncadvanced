@@ -52,10 +52,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
 
 
-  /*  public RequestDaoImpl(ProgressStatusUtil progressStatusUtil, SecurityContextService securityContextService) {
-        this.progressStatusUtil = progressStatusUtil;
-        //this.securityContextService = securityContextService;
-    }*/
 
 
     //-----------------------CRUD---------------------------

@@ -44,79 +44,49 @@ public class DataCachingAnnotationHandlerBeanPostProcessor implements BeanPostPr
             return bean;
         }
         if (bean.getClass().getInterfaces() == null) {
+            LOG.debug("Method has no interface, creating via cglib");
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(beanClass);
-            enhancer.setCallback(getCacheInterceptor(bean));
+            enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> cacheHandler(bean, method, objects));
             return enhancer.create();
         } else {
             LOG.debug("Checking bean {} with annotation Repository on containing cache annotation", bean);
-            return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), getInvocationHandler(bean));
+            return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(),
+                    (proxy, method, args) -> cacheHandler(bean, method, args));
         }
     }
 
-
     /**
-     * awdwadwa.
-     *
-     * @param bean awdwadwda.
-     * @return dawdadawdwadawd.
+     * Method interceptor for dynamic proxy or MethodInterceptor for cglib. Method encapsulate logic of access to cache
+     * and method invoking for two different class {@link MethodInterceptor} and {@link InvocationHandler}
+     * @param bean   Object which method will be intercepted.
+     * @param method target method.
+     * @param args   arguments of target method.
+     * @return result of method invoking.
+     * @throws Throwable  the exception to throw from the method invocation on the proxy instance. The exception's type must be assignable either to any of the exception types declared in the throws clause of the interface method or to the unchecked exception types java.lang.RuntimeException or java.lang.Error. If a checked exception is thrown by this method that is not assignable to any of the exception types declared in the throws clause of the interface method, then an UndeclaredThrowableException containing the exception that was thrown by this method ill be thrown by the method invocation on the proxy instance.
      */
-    private MethodInterceptor getCacheInterceptor(Object bean) {
-        return (object, method, args, proxy) -> {
-            if (method.isAnnotationPresent(CacheChanger.class)) {
-                LOG.debug("Method {} has annotation CacheChanger, start cleaning cache");
-                simpleInMemoryCache.cleanup();
+    public Object cacheHandler(Object bean, Method method, Object[] args) throws Throwable {
+        if (method.isAnnotationPresent(CacheChanger.class)) {
+            LOG.debug("Method {} has annotation CacheChanger, start cleaning cache");
+            simpleInMemoryCache.cleanup();
+        }
+        if (method.isAnnotationPresent(CacheableData.class)) {
+            Triplet<Object, String, List> key = Triplet.with(bean, method.getName(), null);
+            if (args != null) {                                  //for methods which has arguments
+                LOG.debug("Method has arguments. Added to key");
+                key = key.setAt2(Arrays.asList(args));
             }
-            if (method.isAnnotationPresent(CacheableData.class)) {
-                Triplet<Object, String, List> key = Triplet.with(bean, method.getName(), null);
-                if (args != null) {                                  //for methods which has arguments
-                    LOG.debug("Method has arguments. Added to key");
-                    key = key.setAt2(Arrays.asList(args));
-                }
-                LOG.debug("Method {} has annotation, starting checking cache", method);
-                if (simpleInMemoryCache.contains(key)) {
-                    LOG.debug("Getting date from cache with key: {}", key);
-                    return simpleInMemoryCache.getData(key);
-                } else {
-                    LOG.debug("Adding date to cache with key: {}", key);
-                    simpleInMemoryCache.put(key, proxy.invoke(bean, args));
-                    return simpleInMemoryCache.getData(key);
-                }
+            LOG.debug("Method {} has annotation, starting checking cache", method);
+            if (simpleInMemoryCache.contains(key)) {
+                LOG.debug("Getting date from cache with key: {}", key);
+                return simpleInMemoryCache.getData(key);
             } else {
-                return proxy.invoke(bean, args);
+                LOG.debug("Adding date to cache with key: {}", key);
+                simpleInMemoryCache.put(key, method.invoke(bean, args));
+                return simpleInMemoryCache.getData(key);
             }
-        };
-    }
-
-    /**
-     * wadwadwad.
-     *
-     * @param bean awdawdawd.
-     * @return wadwadawdawd.
-     */
-    private InvocationHandler getInvocationHandler(Object bean) {
-        return (proxy, method, args) -> {
-            if (method.isAnnotationPresent(CacheChanger.class)) {
-                LOG.debug("Method {} has annotation CacheChanger, start cleaning cache");
-                simpleInMemoryCache.cleanup();
-            }
-            if (method.isAnnotationPresent(CacheableData.class)) {
-                Triplet<Object, String, List> key = Triplet.with(bean, method.getName(), null);
-                if (args != null) {                                  //for methods which has arguments
-                    LOG.debug("Method has arguments. Added to key");
-                    key = key.setAt2(Arrays.asList(args));
-                }
-                LOG.debug("Method {} has annotation, starting checking cache", method);
-                if (simpleInMemoryCache.contains(key)) {
-                    LOG.debug("Getting date from cache with key: {}", key);
-                    return simpleInMemoryCache.getData(key);
-                } else {
-                    simpleInMemoryCache.put(key, method.invoke(bean, args));
-                    return simpleInMemoryCache.getData(key);
-                }
-            } else {
-                return method.invoke(bean, args);
-            }
-        };
+        } else {
+            return method.invoke(bean, args);
+        }
     }
 }
