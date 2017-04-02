@@ -18,34 +18,21 @@ import java.util.concurrent.*;
  */
 public class SimpleInMemoryCacheImpl<K, V> implements SimpleInMemoryCache<K, V> {
     private static final Logger LOG = LoggerFactory.getLogger(SimpleInMemoryCacheImpl.class);
-    private static final int SECOND = 1000;
 
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
-
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     private Map<K, Future<V>> cache = new ConcurrentHashMap<>();
 
 
     public SimpleInMemoryCacheImpl(long lifeTime) {
-        Thread t = new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(lifeTime * SECOND);
-                } catch (InterruptedException ex) {
-                    LOG.debug("Something in cache gone wrong");
-                    ex.printStackTrace();
-                }
-                cleanup();
-            }
-        });
-        t.setDaemon(true);
-        executorService.execute(t);
+        scheduler.scheduleAtFixedRate(() -> cleanup(), lifeTime, lifeTime, TimeUnit.SECONDS);
         LOG.debug("Cache has been created");
     }
 
     /**
      * Save value as a future if it not exists.
-     * @param key just a key for value.
+     *
+     * @param key      just a key for value.
      * @param callable value wrapped it callable so it can be stored as future.
      * @return future of value if it exists or just added.
      */
@@ -64,7 +51,6 @@ public class SimpleInMemoryCacheImpl<K, V> implements SimpleInMemoryCache<K, V> 
 
     @Override
     public V getData(K key) {
-        LOG.debug("Getting date from cache with key {}", key);
         V value = null;
         val future = cache.getOrDefault(key, null);
         try {
@@ -83,7 +69,7 @@ public class SimpleInMemoryCacheImpl<K, V> implements SimpleInMemoryCache<K, V> 
     }
 
     @Override
-    public  int getSize() {
+    public int getSize() {
         return cache.size();
     }
 
@@ -99,7 +85,6 @@ public class SimpleInMemoryCacheImpl<K, V> implements SimpleInMemoryCache<K, V> 
 
     @Override
     public void put(K key, V value) {
-        LOG.debug("Adding date to cache with key: {}", key);
         createIfAbsent(key, () -> value);
     }
 

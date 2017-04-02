@@ -12,6 +12,7 @@ import com.overseer.model.User;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.util.ProgressStatusUtil;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,7 +34,6 @@ import java.util.List;
 @Repository
 public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
-
     private static final int HIGH = 1;
     private static final int NORMAL = 2;
     private static final int LOW = 3;
@@ -44,13 +44,18 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     private static final int START_PROJECT_MONTHS = 2;
     private static final int START_PROJECT_DAY = 7;
 
+    @Autowired
     private ProgressStatusUtil progressStatusUtil;
+
+    @Autowired
     private SecurityContextService securityContextService;
 
-    public RequestDaoImpl(ProgressStatusUtil progressStatusUtil, SecurityContextService securityContextService) {
+
+
+  /*  public RequestDaoImpl(ProgressStatusUtil progressStatusUtil, SecurityContextService securityContextService) {
         this.progressStatusUtil = progressStatusUtil;
-        this.securityContextService = securityContextService;
-    }
+        //this.securityContextService = securityContextService;
+    }*/
 
 
     //-----------------------CRUD---------------------------

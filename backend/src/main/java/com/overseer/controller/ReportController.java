@@ -4,7 +4,7 @@ import com.overseer.dto.RequestDTO;
 import com.overseer.model.enums.ProgressStatus;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/reports")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ReportController {
 
     private final RequestService requestService;

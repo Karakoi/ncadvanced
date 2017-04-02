@@ -2,6 +2,7 @@ package com.overseer.dao.impl;
 
 import static com.overseer.util.ValidationUtil.validate;
 
+import com.overseer.caching.annotation.CacheableData;
 import com.overseer.dao.CrudDao;
 import com.overseer.model.AbstractEntity;
 import com.overseer.service.QueryService;
@@ -86,6 +87,7 @@ public abstract class CrudDaoImpl<T extends AbstractEntity> implements CrudDao<T
     }
 
     @Override
+    @CacheableData
     public List<T> fetchPage(int pageSize, int pageNumber) {
         Assert.state(pageNumber > 0, "Must be greater then 0");
         val parameterSource = new MapSqlParameterSource("limit", pageSize);
