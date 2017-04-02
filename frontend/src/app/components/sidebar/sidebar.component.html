@@ -34,6 +34,9 @@
     <li>
       <a side-bar [routerLink]="['/requests/inProgress']" *ngIf="isManager()">Requests</a>
     </li>
+    <li>
+      <a [routerLink]="['/calendar']" *ngIf="isManager()">Calendar</a>
+    </li>
   </ul>
 </div>
 <!-- /#sidebar-wrapper -->
