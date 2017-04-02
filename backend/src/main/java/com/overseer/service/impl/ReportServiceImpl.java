@@ -2,9 +2,11 @@ package com.overseer.service.impl;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.overseer.dao.HistoryDAO;
 import com.overseer.dao.RequestDao;
 import com.overseer.dto.RequestDTO;
 import com.overseer.model.enums.ProgressStatus;
+import com.overseer.service.HistoryService;
 import com.overseer.service.ReportService;
 import com.overseer.service.RequestService;
 import com.overseer.service.impl.report.AdminReportBuilder;
@@ -33,6 +35,7 @@ public class ReportServiceImpl implements ReportService {
     private static final int COUNT_MONTHS_IN_YEAR = 12;
     private final RequestService requestService;
     private final RequestDao requestDao;
+    private final HistoryService historyService;
     private final AdminReportBuilder adminReportBuilder;
     private final ManagerReportBuilder managerReportBuilder;
     private final RequestReportPdfBuilder requestReportPdfBuilder;
@@ -235,6 +238,7 @@ public class ReportServiceImpl implements ReportService {
         requestReportPdfBuilder.setRequest(requestDao.findOne(requestId));
         requestReportPdfBuilder.setSubRequests(requestDao.findSubRequests(requestId));
         requestReportPdfBuilder.setJoinedRequests(requestDao.findJoinedRequests(requestId));
+        requestReportPdfBuilder.setHistoryList(historyService.findHistory(requestId));
 
         Document document = new Document();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
