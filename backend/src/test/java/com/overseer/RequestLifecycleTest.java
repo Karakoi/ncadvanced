@@ -122,13 +122,12 @@ public class RequestLifecycleTest {
 
         requestsGroupIds.add(requestFirstChild.getId());
         requestsGroupIds.add(requestSecondChild.getId());
-
         request.setAssignee(assignee);
         request.setEstimateTimeInDays(3);
         requestService.update(request);
 
         //when
-        requestService.joinRequestsIntoParent(requestsGroupIds, request);
+        requestService.joinRequestsIntoParent(requestFirstChild.getId().toString() + "," + requestSecondChild.getId().toString(), request);
         requestFirstChild = requestService.findOne(requestFirstChild.getId());
         requestSecondChild = requestService.findOne(requestSecondChild.getId());
 

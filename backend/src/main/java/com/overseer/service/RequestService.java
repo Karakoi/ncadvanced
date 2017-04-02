@@ -183,7 +183,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param ids specified requests primary keys for joining
      * @return created parent request
      */
-    Request joinRequestsIntoParent(List<Long> ids, Request parentRequest);
+    Request joinRequestsIntoParent(String ids, Request parentRequest);
 
     /**
      * Creates sub request for parent request.

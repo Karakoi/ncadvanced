@@ -19,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -28,7 +26,9 @@ import org.springframework.util.Assert;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link RequestService} interface.
@@ -61,9 +61,8 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     /**
      * {@inheritDoc}.
      */
-    @PreAuthorize("hasRole('ADMIN') || #r.assignee.email == authentication.name || #r.progressStatus.id == 5")
     @Override
-    public Request update(@P("r")Request request) throws NoSuchEntityException {
+    public Request update(Request request) throws NoSuchEntityException {
         Assert.notNull(request, "request must not be null");
         log.debug("Updating request with id: {} ", request.getId());
         return super.update(request);
@@ -359,13 +358,16 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
-    public Request joinRequestsIntoParent(List<Long> ids, Request parentRequest) {
+    public Request joinRequestsIntoParent(String ids, Request parentRequest) {
         Assert.notNull(ids, "ids must not be null");
         Assert.notNull(parentRequest, "parent request must not be null");
         log.debug("Joining requests with ids {} into parent request {}", ids, parentRequest);
 
+        // Retrieve joined requests id list from string representation
+        List<Long> idList = Arrays.asList(ids.split(",")).stream().map(Long::parseLong).collect(Collectors.toList());
+
         // Retrieve specified requests for joining from database
-        List<Request> joinedRequests = requestDao.findRequestsByIds(ids);
+        List<Request> joinedRequests = requestDao.findRequestsByIds(idList);
 
         JoinRequestEvent event = new JoinRequestEvent(this, parentRequest, joinedRequests);
         publisher.publishEvent(event);
