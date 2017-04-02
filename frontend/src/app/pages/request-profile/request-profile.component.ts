@@ -150,7 +150,7 @@ export class RequestProfileComponent implements OnInit {
       case "title":
         text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
         break;
-      case "estimate_time_in_date":
+      case "estimate_time_in_days":
         text = "Estimate time (in day) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
         break;
 

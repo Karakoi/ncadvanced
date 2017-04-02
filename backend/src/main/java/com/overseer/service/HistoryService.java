@@ -16,4 +16,13 @@ public interface HistoryService {
      * @return list of {@link History} entities.
      */
     List<History> findHistory(Long entityId);
+
+    /**
+     * Method create message, using history data.
+     * @param history history wich we use for getting message.
+     * @param useTrimLongText boolean variable. {@code true} if we need to trim long String values.
+     * @param maxNumberOfCharsInText max number of chars in long String values, if we need to use trimming of text.
+     * @return message with changing data
+     */
+    String createMessageFromChanges(History history, boolean useTrimLongText, int maxNumberOfCharsInText);
 }
