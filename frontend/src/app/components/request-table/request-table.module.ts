@@ -1,6 +1,5 @@
 import {CommonModule} from "@angular/common";
-import {ReactiveFormsModule, FormsModule} from "@angular/forms";
-import {NgModule} from "@angular/core/src/metadata/ng_module";
+import {NgModule} from "@angular/core";
 import {FormTemplateModule} from "../../shared/form-template/form-template.module";
 import {RequestModule} from "../../shared/request/request.module";
 import {DateParseModule} from "../../util/date-parser/date-parse.module";
@@ -16,6 +15,7 @@ import {CloseRequestComponent} from "./request-close/close-request.component";
 import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
 import {PriorityMarkerModule} from "../../util/priority-marker/priority-marker.module";
 import {ProgressMarkerModule} from "../../util/progress-marker/progress-marker.module";
+import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
@@ -46,8 +46,7 @@ import {ProgressMarkerModule} from "../../util/progress-marker/progress-marker.m
     CloseRequestComponent,
     DeleteRequestComponent,
     JoinRequestComponent,
-    ReopenRequestComponent
+    ReopenRequestComponent,
   ]
 })
-export class  BasicRequestTableModule {
-}
+export class BasicRequestTableModule{}
