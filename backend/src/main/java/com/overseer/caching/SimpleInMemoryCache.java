@@ -22,7 +22,7 @@ public interface SimpleInMemoryCache<K, V> {
 
     boolean contains(K key);
 
-    void remove(V key);
+    void remove(K key);
 
     /**
      * Adding value to map.

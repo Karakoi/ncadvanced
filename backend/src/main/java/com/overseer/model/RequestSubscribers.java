@@ -1,6 +1,6 @@
 package com.overseer.model;
 
-import lombok.Data;
+import lombok.*;
 
 
 import java.util.List;
@@ -8,7 +8,10 @@ import java.util.List;
 /**
  * The <code>Request</code> class represents subscribers of request {@link Request}.
  */
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class RequestSubscribers extends AbstractEntity {
     private Request request;
