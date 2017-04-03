@@ -129,7 +129,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     @Override
     public List<User> findByRole(Role role, int pageNumber) {
         Assert.notNull(role, "role must not be null");
-        val list = userDao.findByRole(role, this.DEFAULT_PAGE_SIZE, pageNumber);
+        val list = userDao.findByRole(role, DEFAULT_PAGE_SIZE, pageNumber);
         log.debug("Fetched {} users with role: {} for page number: {}", list.size(), role, pageNumber);
         return list;
     }

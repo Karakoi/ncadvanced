@@ -128,7 +128,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   private updateArray(comment: Comment): void {
-    this.comments.unshift(comment);
+    this.comments.push(comment);
     this.updated.emit(this.comment);
   }
 
@@ -151,7 +151,7 @@ export class RequestProfileComponent implements OnInit {
         text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
         break;
       case "estimate_time_in_days":
-        text = "Estimate time (in day) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
+        text = "Estimate time (in days) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
         break;
 
       case "description":

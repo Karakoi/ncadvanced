@@ -160,7 +160,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       if (!msg.read && msg.sender.id == this.chatFriend.id) {
         msg.id = null;
         msg.read = true;
-        console.log('readed');
+        //console.log('readed');
         this.userService.sendMessage(msg).subscribe((resp: Response) => {
           // this.updateArray(<Message> resp.json());
         }, e => this.handleErrorCreateMessage(e));
@@ -201,7 +201,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   getSearchData(searchDTO) {
     this.userService.searchAll(searchDTO).subscribe(users => {
-      console.log(users);
+      //console.log(users);
       this.findedUsers = users;
     })
   }

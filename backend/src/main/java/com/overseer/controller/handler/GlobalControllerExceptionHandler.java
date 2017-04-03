@@ -27,13 +27,13 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
      * @param request   input web request
      * @return error response object
      */
-   /* @ExceptionHandler(value = RuntimeException.class)
+    @ExceptionHandler(value = RuntimeException.class)
     protected ResponseEntity<Object> handleException(RuntimeException exception, WebRequest request) {
         val message = exception.getMessage();
         val status = HttpStatus.CONFLICT.value();
         val response = new ErrorResponse(message, status);
         return handleExceptionInternal(exception, response, new HttpHeaders(), HttpStatus.CONFLICT, request);
-    }*/
+    }
 
     /**
      * Handles application sql exceptions and send response data to client side.

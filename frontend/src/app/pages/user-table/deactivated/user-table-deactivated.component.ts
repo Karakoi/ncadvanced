@@ -53,7 +53,7 @@ export class UserTableDeactivatedComponent implements OnInit {
   ngOnInit() {
     this.userService.getAllDeactivated(1, this.perPage).subscribe((users: User[]) => {
       this.users = users;
-      console.log(users)
+      //console.log(users)
     });
     this.userService.getDeactivatedUsersPageCount().subscribe((count) => this.pageNumber = count);
   }
@@ -137,12 +137,12 @@ export class UserTableDeactivatedComponent implements OnInit {
         break;
     }
     this.getSearchData(this.searchDTO);
-    console.log(this.searchDTO)
+    //console.log(this.searchDTO)
   }
 
   getSearchData(searchDTO){
     this.userService.searchAll(searchDTO).subscribe(users => {
-      console.log(users);
+      //console.log(users);
       this.users = users;
     })
   }
