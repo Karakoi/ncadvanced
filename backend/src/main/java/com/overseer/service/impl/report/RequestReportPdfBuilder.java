@@ -58,7 +58,7 @@ public class RequestReportPdfBuilder {
         final int countNewLine = 3;
 
         return new ReportDocumentBuilder(document)
-                .addImage(Image.getInstance(this.logoImg), imgLogoX, imgLogoY)
+                .addImage(Image.getInstance(getClass().getClassLoader().getResource(logoImg)), imgLogoX, imgLogoY)
                 .addNewLine(countNewLine)
                 .addParagraph(new Paragraph("Details:", font), Paragraph.ALIGN_LEFT)
                 .addTable(new PdfPTableBuilder(detailsTableColumnNum, DEFAULT_TABLE_WIDTH, DEFAULT_TABLE_SPACING)

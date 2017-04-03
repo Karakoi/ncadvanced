@@ -132,7 +132,7 @@ public class ManagerReportBuilder {
 
         return new ReportDocumentBuilder(document)
                 .addImage(Image.getInstance(new URL(this.gravatarLink + this.encryptedEmail + "?s=100")), imgAvatarX, imgAvatarY)
-                .addImage(Image.getInstance(this.logoImg), imgLogoX, imgLogoY)
+                .addImage(Image.getInstance(getClass().getClassLoader().getResource(logoImg)), imgLogoX, imgLogoY)
                 .addNewLine(countNewLine)
                 .addParagraph(new Paragraph(dateNow.toLocalDate().toString() + ": " + dateNow.toLocalTime().toString()), Element.ALIGN_LEFT)
                 .addParagraph(new Paragraph("OFFICE MANAGER REPORTS"), Element.ALIGN_TOP)

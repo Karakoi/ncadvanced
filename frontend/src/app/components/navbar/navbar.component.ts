@@ -9,6 +9,7 @@ import {User} from "../../model/user.model";
 import {Response} from "@angular/http";
 import {timer} from "rxjs/observable/timer";
 import {Observable} from "rxjs";
+import {isUndefined} from "util";
 
 declare let $: JQueryStatic;
 
@@ -37,15 +38,16 @@ export class NavbarComponent implements OnInit {
 
     this.authService.events.subscribe(() => {
       this.isSignedIn = this.authService.isSignedIn();
-    });
+      if (this.isSignedIn) {
+        this.authService.currentUser.subscribe(user => {
+          this.currentUser = user;
+          this.loadUnreadMessages(this.currentUser.id);
+        });
 
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user;
-      this.loadUnreadMessages(this.currentUser.id);
+        let timer = Observable.timer(2000, 5000);
+        this.connect = timer.subscribe(t => this.loadUnreadMessages(this.currentUser.id));
+      }
     });
-
-    let timer = Observable.timer(2000, 5000);
-    this.connect = timer.subscribe(t => this.loadUnreadMessages(this.currentUser.id));
   }
 
   loadUnreadMessages(recipientId) {
@@ -68,6 +70,9 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
+    if (!isUndefined(this.connect)) {
+      this.connect.unsubscribe();
+    }
     this.authService.logout();
     this.router.navigate(['/authentication/login']);
   }
