@@ -281,7 +281,7 @@ public class ReportServiceImpl implements ReportService {
         requestReportPdfBuilder.setRequest(requestDao.findOne(requestId));
         requestReportPdfBuilder.setSubRequests(requestDao.findSubRequests(requestId));
         requestReportPdfBuilder.setJoinedRequests(requestDao.findJoinedRequests(requestId));
-        requestReportPdfBuilder.setHistoryList(historyService.findHistory(requestId));
+        requestReportPdfBuilder.setHistoryList(historyService.findHistoryList(requestId));
 
         Document document = new Document();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

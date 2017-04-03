@@ -18,6 +18,7 @@ import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {Response} from "@angular/http";
 import {DeleteCommentComponent} from "./comment-delete/delete-comment.component";
 import {CloseComponent} from "./close/close.component";
+import {HistoryMessageDTO} from "../../model/dto/historyMessageDTO.model";
 
 @Component({
   selector: 'request-profile',
@@ -36,6 +37,7 @@ export class RequestProfileComponent implements OnInit {
   showJoinedRequests: boolean = true;
   showComments: boolean = true;
   historyRecords: History[];
+  historyDTOsRecords: HistoryMessageDTO[];
   subRequests: Request[];
   joinedRequests: Request[];
   followers: User[];
@@ -81,8 +83,11 @@ export class RequestProfileComponent implements OnInit {
       this.route.params.subscribe(params => {
         let id = +params['id'];
 
-        this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
+        /*this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
           this.historyRecords = historyRecords;
+        });*/
+        this.historyService.getHistoryDTOs(id).subscribe((historyDtoRecords: HistoryMessageDTO[]) => {
+          this.historyDTOsRecords = historyDtoRecords;
         });
 
         this.requestService.get(id).subscribe((request: Request) => {
@@ -143,7 +148,7 @@ export class RequestProfileComponent implements OnInit {
     return this.commentForm.get(field).valid || !this.commentForm.get(field).dirty;
   }
 
-  showHistoryMessage(history: History): string {
+  /*showHistoryMessage(history: History): string {
     let text: string;
     switch (history.columnName) {
 
@@ -184,7 +189,7 @@ export class RequestProfileComponent implements OnInit {
     }
 
     return text;
-  }
+  }*/
 
 
   openAddSubRequestModal(): void {

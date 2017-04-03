@@ -227,15 +227,19 @@
           </p>
           <table class="table table-bordered">
             <tbody>
-            <tr *ngFor="let history of historyRecords">
+            <!--<tr *ngFor="let history of historyRecords">-->
+            <tr *ngFor="let history of historyDTOsRecords">
               <td *ngIf="showHistory">
                 <span>
-                  {{showHistoryMessage(history)}}
-                  by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>
+                  <!--{{showHistoryMessage(history)}}-->
+                  {{history.message}}
+                  <!--by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>-->
+                  by <span class="bold-text"><a [routerLink]="['/user', history.changerId]">{{history.changerFirstName}} {{history.changerLastName}}</a></span>
                 </span>
               </td>
               <td *ngIf="showHistory" width="40px">
-                <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
+                <!--<span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>-->
+                <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChanges"></date-parse></span></span>
               </td>
             </tr>
             </tbody>

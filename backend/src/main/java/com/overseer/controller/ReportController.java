@@ -86,15 +86,6 @@ public class ReportController {
                                                     @RequestParam String endDate,
                                                     @RequestParam int countTop,
                                                     @RequestParam String encryptedEmail) {
-//        // Set Content-Type header (+ content disposition, etc, if you want)
-//        // (Not using "produces", because that depends on request's Accept header including
-//        // "application/pdf" and otherwise returns 406 Not Acceptable.)
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-//        String filename = "output.pdf";
-//        headers.setContentDispositionFormData(filename, filename);
-//        return new ResponseEntity<>(convertPDFToByteArray(), headers, HttpStatus.OK);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
         String filename = "report.pdf";

@@ -1,6 +1,7 @@
 package com.overseer.service.impl;
 
 import com.overseer.dao.HistoryDAO;
+import com.overseer.dto.HistoryMessageDTO;
 import com.overseer.model.History;
 import com.overseer.service.HistoryService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,11 +26,19 @@ public class HistoryServiceImpl implements HistoryService{
      * {@inheritDoc}.
      */
     @Override
-    public List<History> findHistory(Long entityId) {
+    public List<History> findHistoryList(Long entityId) {
         Assert.notNull(entityId, "id of entity must not be null");
         List<History> histories = historyDAO.findAllForEntity(entityId);
         log.debug("Fetched {} history records for entity with id: {}", histories.size(), entityId);
         return histories;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<HistoryMessageDTO> findHistoryMessageDTO(Long entityId, boolean useTrimLongText, int maxNumberOfCharsInText) {
+        return convertHistoryInHistoryMessageDTO(findHistoryList(entityId), useTrimLongText, maxNumberOfCharsInText);
     }
 
     /**
@@ -82,9 +92,9 @@ public class HistoryServiceImpl implements HistoryService{
                 break;
 
             case "parent_id":
-                if (history.getNewValue() == null) {
+                if (history.getNewValue() == null) { // if: parent id deleted
                     text = "This request was unjoined from \"" + history.getDemonstrationOfOldValue() + "\" request";
-                } else {
+                } else { // if: parent id created
                     text = "This request was joined in \"" + history.getDemonstrationOfNewValue() + "\" request";
                 }
                 break;
@@ -94,6 +104,48 @@ public class HistoryServiceImpl implements HistoryService{
         }
 
         return text;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public HistoryMessageDTO convertHistoryInHistoryMessageDTO(History history, boolean useTrimLongText, int maxNumberOfCharsInText) {
+        HistoryMessageDTO historyMessageDTO = new HistoryMessageDTO();
+
+        String message = createMessageFromChanges(history, useTrimLongText, maxNumberOfCharsInText);
+
+        historyMessageDTO.setMessage(message);
+        historyMessageDTO.setId(history.getId());
+        historyMessageDTO.setChangerId(history.getChanger().getId());
+        historyMessageDTO.setChangerFirstName(history.getChanger().getFirstName());
+        historyMessageDTO.setChangerLastName(history.getChanger().getLastName());
+        historyMessageDTO.setDateOfChange(history.getDateOfChange());
+
+        return historyMessageDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<HistoryMessageDTO> convertHistoryInHistoryMessageDTO(List<History> histories, boolean useTrimLongText, int maxNumberOfCharsInText) {
+        List<HistoryMessageDTO> historyMessageDTOList = new ArrayList<>();
+        for (History history: histories) {
+            historyMessageDTOList.add(convertHistoryInHistoryMessageDTO(history, useTrimLongText, maxNumberOfCharsInText));
+        }
+        return historyMessageDTOList;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public HistoryMessageDTO getLongHistoryMessageDTO(Long historyId, boolean useTrimLongText, int maxNumberOfCharsInText) {
+        Assert.notNull(historyId, "id of history must not be null");
+        History history = historyDAO.findEntity(historyId);
+        log.debug("Got history record for entity");
+        return convertHistoryInHistoryMessageDTO(history, useTrimLongText, maxNumberOfCharsInText);
     }
 
     /**

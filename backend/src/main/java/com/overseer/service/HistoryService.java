@@ -1,5 +1,6 @@
 package com.overseer.service;
 
+import com.overseer.dto.HistoryMessageDTO;
 import com.overseer.model.History;
 
 import java.util.List;
@@ -15,14 +16,49 @@ public interface HistoryService {
      * @param entityId id of entity for which we need to get all history of changes, must not be {@literal null}.
      * @return list of {@link History} entities.
      */
-    List<History> findHistory(Long entityId);
+    List<History> findHistoryList(Long entityId);
+
+    /**
+     * Method returns a list of {@link HistoryMessageDTO} entities which have an information about changes of transferred entity.
+     *
+     * @param entityId id of entity for which we need to get all history of changes, must not be {@literal null}.
+     * @param useTrimLongText boolean variable. {@code true} if we need to trim long String values.
+     * @param maxNumberOfCharsInText max number of chars in long String values, if we need to use trimming of text.
+     * @return list of {@link History} entities.
+     */
+    List<HistoryMessageDTO> findHistoryMessageDTO(Long entityId, boolean useTrimLongText, int maxNumberOfCharsInText);
 
     /**
      * Method create message, using history data.
-     * @param history history wich we use for getting message.
+     * @param history history which we use for getting message.
      * @param useTrimLongText boolean variable. {@code true} if we need to trim long String values.
      * @param maxNumberOfCharsInText max number of chars in long String values, if we need to use trimming of text.
      * @return message with changing data
      */
     String createMessageFromChanges(History history, boolean useTrimLongText, int maxNumberOfCharsInText);
+
+    /**
+     * Method convert {@link HistoryMessageDTO} object to {@link History} object.
+     * @param history {@link History} object that will be converted to {@link HistoryMessageDTO} object.
+     * @param useTrimLongText boolean variable. {@code true} if we need to trim long string history values.
+     * @param maxNumberOfCharsInText max number of chars in long string values, if we need to trim its.
+     * @return {@link HistoryMessageDTO} object, created from {@link History} object.
+     */
+    HistoryMessageDTO convertHistoryInHistoryMessageDTO(History history, boolean useTrimLongText, int maxNumberOfCharsInText);
+
+    /**
+     * Method convert {@link List} of {@link HistoryMessageDTO} object to {@link List} of {@link History} object.
+     * @param histories {@link List} of {@link History} objects that will be converted to {@link List} of {@link HistoryMessageDTO} objects.
+     * @param useTrimLongText boolean variable. {@code true} if we need to trim long string history values.
+     * @param maxNumberOfCharsInText max number of chars in long string values, if we need to trim its.
+     * @return {@link List} of {@link HistoryMessageDTO} objects, created from {@link List} of {@link History} objects.
+     */
+    List<HistoryMessageDTO> convertHistoryInHistoryMessageDTO(List<History> histories, boolean useTrimLongText, int maxNumberOfCharsInText);
+
+    /**
+     * Method get {@link HistoryMessageDTO} object with message with don`t trimmed values.
+     * @param historyId id of {@link HistoryMessageDTO} object for which we get message with don`t trimmed values.
+     * @return {@link HistoryMessageDTO} object with message with don`t trimmed values.
+     */
+    HistoryMessageDTO getLongHistoryMessageDTO(Long historyId, boolean useTrimLongText, int maxNumberOfCharsInText);
 }

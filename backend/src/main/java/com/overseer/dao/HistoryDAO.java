@@ -10,10 +10,17 @@ import java.util.List;
 public interface HistoryDAO {
 
     /**
-     * Returns all {@link History} details by entity id.
+     * Returns all {@link History} objects by entity id.
      *
      * @param entityId entity id for which history is retrieving.
-     * @return list of all {@link History} details.
+     * @return list of all {@link History} objects.
      */
     List<History> findAllForEntity(Long entityId);
+
+    /**
+     * Return {@link History} object by entity id.
+     * @param entityId entity id for which history is retrieving.
+     * @return {@link History} object.
+     */
+    History findEntity(Long entityId);
 }
