@@ -151,12 +151,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   reloadData(userId, friendId) {
     this.chatService.getDialogMessages(userId, friendId).subscribe((messages: Message[]) => {
       this.messages = messages;
+      this.readMessages(messages);
     });
   }
 
   readMessages(messages) {
     messages.forEach(msg => {
-      if (!msg.read) {
+      if (!msg.read && msg.sender.id == this.chatFriend.id) {
         msg.id = null;
         msg.read = true;
         console.log('readed');

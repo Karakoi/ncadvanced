@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-lg-4">
           <gravatar [email]="user.email" [size]="160"></gravatar><br>
-          <a href="/forum/chat?userId={{user.id}}"><button class="btn btn-primary center-block">Send message</button></a>
+          <button class="btn btn-primary center-block" [routerLink]="['/forum/chat']" [queryParams]="{userId: user.id}">Send message</button>
         </div>
         <div class="col-lg-8">
           <table class="table">

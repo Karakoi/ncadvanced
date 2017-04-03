@@ -20,7 +20,7 @@ declare let $: JQueryStatic;
 })
 export class NavbarComponent implements OnInit {
   isSignedIn: boolean;
-  unreadMessages: Message[];
+  unreadMessages: Message[] = [];
   currentUser: User;
   @Output()
   updated: EventEmitter<any> = new EventEmitter();
@@ -41,13 +41,19 @@ export class NavbarComponent implements OnInit {
       if (this.isSignedIn) {
         this.authService.currentUser.subscribe(user => {
           this.currentUser = user;
-          this.loadUnreadMessages(this.currentUser.id);
+          let timer = Observable.timer(2000, 5000);
+          this.connect = timer.subscribe(t => this.loadUnreadMessages(this.currentUser.id));
         });
-
-        let timer = Observable.timer(2000, 5000);
-        this.connect = timer.subscribe(t => this.loadUnreadMessages(this.currentUser.id));
       }
     });
+
+    if (this.isSignedIn) {
+      this.authService.currentUser.subscribe(user => {
+        this.currentUser = user;
+        let timer = Observable.timer(2000, 5000);
+        this.connect = timer.subscribe(t => this.loadUnreadMessages(this.currentUser.id));
+      });
+    }
   }
 
   loadUnreadMessages(recipientId) {

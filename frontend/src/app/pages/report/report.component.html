@@ -15,7 +15,7 @@
 <div class="col-6" style="text-align: center">
   <br/>
     <h3>Please fill in all required fields</h3>
-    <label *ngIf="isManager()">Note: Statistics on managers will be shown rounded up to a near month</label>
+    <label *ngIf="isAdmin()">Note: Statistics on managers will be shown rounded up to a near month</label>
 </div>
 
 <form [formGroup]="reportForm" style="width: 15%; margin: 0 auto;">
