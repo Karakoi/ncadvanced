@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-    public static final Long DEFAULT_MONTHS_STEP = 1L;
+    private static final Long DEFAULT_MONTHS_STEP = 1L;
     private static final int COUNT_MONTHS_IN_YEAR = 12;
     private final RequestService requestService;
     private final RequestDao requestDao;
