@@ -199,6 +199,7 @@ export class RequestTable implements OnInit{
 
   updateRequests(request:Request[]) {
     this.requests = request;
+    this.uncheck();
   }
 
   openFormModal():void {

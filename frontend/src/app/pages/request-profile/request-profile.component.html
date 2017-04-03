@@ -116,7 +116,6 @@
             <tbody>
             <tr>
               <td *ngIf="showDescription">
-                <div class="layer">
                   <inline-editor type="textarea"
                                  [(ngModel)]="request.description"
                                  (onSave)="updateRequest($event)"
@@ -126,8 +125,6 @@
                                  min="10"
                                  max="500">
                   </inline-editor>
-                </div>
-
               </td>
               <td *ngIf="!showDescription"><i>Click arrow down to show full description</i></td>
             </tr>
