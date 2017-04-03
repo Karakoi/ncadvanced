@@ -59,7 +59,7 @@ export class UserTableComponent implements OnInit {
     });
     this.userService.getPageCount().subscribe((count) => {
       this.pageNumber = count;
-      console.log(count);
+      //console.log(count);
     });
   }
 
@@ -154,12 +154,12 @@ export class UserTableComponent implements OnInit {
         break;
     }
     this.getSearchData(this.searchDTO);
-    console.log(this.searchDTO)
+    //console.log(this.searchDTO)
   }
 
   getSearchData(searchDTO){
     this.userService.searchAll(searchDTO).subscribe(users => {
-     console.log(users);
+     //console.log(users);
      this.users = users;
      })
   }

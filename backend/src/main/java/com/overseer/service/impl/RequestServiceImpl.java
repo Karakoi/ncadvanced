@@ -392,7 +392,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         log.debug("Joining requests with ids {} into parent request {}", ids, parentRequest);
 
         // Retrieve joined requests id list from string representation
-        List<Long> idList = Arrays.asList(ids.split(",")).stream().map(Long::parseLong).collect(Collectors.toList());
+        List<Long> idList = Arrays.stream(ids.split(",")).map(Long::parseLong).collect(Collectors.toList());
 
         // Retrieve specified requests for joining from database
         List<Request> joinedRequests = requestDao.findRequestsByIds(idList);

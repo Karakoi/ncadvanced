@@ -1,7 +1,6 @@
 package com.overseer.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.overseer.model.enums.ProgressStatus;
@@ -14,7 +13,7 @@ import java.io.IOException;
 public class ProgressStatusSerializer extends JsonSerializer<ProgressStatus> {
 
     @Override
-    public void serialize(ProgressStatus progressStatus, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+    public void serialize(ProgressStatus progressStatus, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -80,7 +81,7 @@ public class TopicServiceImpl extends CrudServiceImpl<Topic> implements TopicSer
     @Override
     public List<Topic> fetchPage(int pageNumber, int size) {
         List<Topic> topics = super.fetchPage(pageNumber, size);
-        Collections.sort(topics, (firstTopic, secondTopic) -> firstTopic.getTitle().compareTo(secondTopic.getTitle()));
+        Collections.sort(topics, Comparator.comparing(Topic::getTitle));
         return topics;
     }
 

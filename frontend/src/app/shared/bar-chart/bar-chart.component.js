@@ -22,10 +22,10 @@ var BarChartComponent = (function () {
     }
     // events
     BarChartComponent.prototype.chartClicked = function (e) {
-        console.log(e);
+        //console.log(e);
     };
     BarChartComponent.prototype.chartHovered = function (e) {
-        console.log(e);
+        //console.log(e);
     };
     BarChartComponent.prototype.randomize = function () {
         // Only Change 3 values

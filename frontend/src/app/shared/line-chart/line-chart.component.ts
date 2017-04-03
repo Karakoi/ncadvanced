@@ -94,7 +94,7 @@ export class LineChartComponent {
     this.clear();
     this.reportService.getAllStatisticsOfClosedRequestsByPeriod(start, end)
       .subscribe((array: RequestDTO[]) => {
-        console.log(array);
+        //console.log(array);
         array.forEach(requestDTO => {
           closedRequests.push(requestDTO.count);
           let firstDate = requestDTO.startDateLimit[0] + "-" + requestDTO.startDateLimit[1] + "-" + requestDTO.startDateLimit[2]
@@ -104,7 +104,7 @@ export class LineChartComponent {
 
         this.reportService.getAllStatisticsOfFreeRequestsByPeriod(start, end)
           .subscribe((array: RequestDTO[]) => {
-            console.log(array);
+            //console.log(array);
             array.forEach(requestDTO => {
               freeRequests.push(requestDTO.count);
             });
@@ -117,10 +117,10 @@ export class LineChartComponent {
 
   // events
   public chartClicked(e: any): void {
-    console.log(e);
+    //console.log(e);
   }
 
   public chartHovered(e: any): void {
-    console.log(e);
+    //console.log(e);
   }
 }

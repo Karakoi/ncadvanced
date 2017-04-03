@@ -199,6 +199,7 @@ export class RequestTable implements OnInit{
 
   updateRequests(request:Request[]) {
     this.requests = request;
+    this.uncheck();
   }
 
   openFormModal():void {
@@ -233,12 +234,12 @@ export class RequestTable implements OnInit{
         break;
     }
     this.getSearchData(this.searchDTO);
-    console.log(this.searchDTO)
+    /*console.log(this.searchDTO)*/
   }
 
   getSearchData(searchDTO) {
     this.requestService.searchAll(searchDTO).subscribe(requests => {
-      console.log(requests);
+      //console.log(requests);
       this.requests = requests;
     })
   }

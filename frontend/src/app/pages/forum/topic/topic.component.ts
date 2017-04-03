@@ -63,7 +63,7 @@ export class TopicComponent implements OnInit {
     this.route.params.subscribe(params => {
       let id = +params['id'];
       this.topicService.getMessages(id).subscribe((messages: Message[]) => {
-        console.log(messages);
+        //console.log(messages);
         this.messages = messages;
       });
     });
@@ -79,7 +79,7 @@ export class TopicComponent implements OnInit {
     this.message.topic = this.topic;
     this.topicService.createMessage(this.message).subscribe((resp: Response) => {
       this.updateArray(<Message> resp.json());
-      console.log(resp.json());
+      //console.log(resp.json());
       this.messageForm.reset();
       this.toastr.success("Message sended", "Success")
     }, e => this.handleErrorCreateMessage(e));

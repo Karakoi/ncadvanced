@@ -44,7 +44,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new Http401AuthenticationEntryPoint("'Bearer token_type=\"JWT\"'");
 
         http
-                // using JWT token instead
                 .csrf().disable()
 
                 // don't create session
