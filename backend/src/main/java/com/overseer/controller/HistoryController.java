@@ -40,23 +40,8 @@ public class HistoryController {
      */
     @GetMapping("/dto/{entityId}")
     public ResponseEntity<List<HistoryMessageDTO>> getHistorieDTOs(@PathVariable Long entityId) {
-        boolean useTrimLongText = true;
         final int maxNumberOfCharsInText = 20;
-        List<HistoryMessageDTO> histories = historyService.findHistoryMessageDTO(entityId, useTrimLongText, maxNumberOfCharsInText);
-        return new ResponseEntity<>(histories, HttpStatus.OK);
-    }
-
-    /**
-     * Method return a {@link HistoryMessageDTO} object with long data value by its id.
-     *
-     * @param entityId id of {@link HistoryMessageDTO} object, for witch we get long data value.
-     * @return {@link HistoryMessageDTO} object with long data value.
-     */
-    @GetMapping("/dto/longValue/{entityId}")
-    public ResponseEntity<HistoryMessageDTO> getLongHistorieDTOs(@PathVariable Long entityId) {
-        boolean useTrimLongText = false;
-        final int maxNumberOfCharsInText = -1;
-        HistoryMessageDTO histories = historyService.getLongHistoryMessageDTO(entityId, useTrimLongText, maxNumberOfCharsInText);
+        List<HistoryMessageDTO> histories = historyService.getHistoryMessageDTOs(entityId, maxNumberOfCharsInText);
         return new ResponseEntity<>(histories, HttpStatus.OK);
     }
 }

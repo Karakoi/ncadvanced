@@ -19,6 +19,8 @@ public class HistoryMessageDTO extends AbstractEntity {
     @NotNull(message = "History record has to have a message")
     private String message;
 
+    private String longMessage;
+
     @NotNull(message = "History has to have a changer id")
     private Long changerId;
 

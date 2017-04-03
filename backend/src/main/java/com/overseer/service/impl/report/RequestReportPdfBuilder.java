@@ -145,7 +145,7 @@ public class RequestReportPdfBuilder {
 
         historyList
                 .forEach(history -> {
-                    HistoryMessageDTO historyMessageDTO = historyService.convertHistoryInHistoryMessageDTO(history, true, maxNumberOfCharsInHistoryValue);
+                    HistoryMessageDTO historyMessageDTO = historyService.convertHistoryInHistoryMessageDTO(history, maxNumberOfCharsInHistoryValue);
                     historyTable.addCell(historyMessageDTO.getMessage());
                     historyTable.addCell(historyMessageDTO.getChangerFirstName() + ' ' + historyMessageDTO.getChangerLastName());
                     historyTable.addCell(getFormattedDate(historyMessageDTO.getDateOfChange()));
