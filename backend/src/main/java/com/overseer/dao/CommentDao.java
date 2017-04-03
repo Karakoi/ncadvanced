@@ -17,4 +17,6 @@ public interface CommentDao extends CrudDao<Comment, Long> {
      * @return fetched request messages
      */
     List<Comment> findByRequest(Long requestId);
+
+    void deleteAllByRequest(Long requestId);
 }

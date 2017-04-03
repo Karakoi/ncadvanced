@@ -13,19 +13,19 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown mega-dropdown" *ngIf="unreadMessages && currentUser">
+        <li class="dropdown mega-dropdown" *ngIf="unreadMessages && isSignedIn">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-bell"> <span class="badge" style="background-color: #337AB7">{{unreadMessages.length}}</span></i> <b
             class="caret"></b>
           </a>
           <ul class="dropdown-menu list-group">
             <li class="list-group-item" *ngFor="let message of unreadMessages">
-                <div class="row">
+                <div class="row" [routerLink]="['/forum/chat']" [queryParams]="{userId: message.sender.id}">
                   <div class="col-lg-3">
                     <gravatar [email]="message.sender.email" [size]="30" [center]="false"></gravatar>
                   </div>
                   <div class="col-lg-9 no-padding">
-                    <p><b><a href="/forum/chat?userId={{message.sender.id}}">{{message.text}}</a></b><span class="glyphicon glyphicon-remove pull-right" (click)="setMessageRead(message, $event)"></span></p>
+                    <p><b>{{message.text}}</b><span class="glyphicon glyphicon-remove pull-right" (click)="setMessageRead(message, $event)"></span></p>
                     from <span class="msg-sender">{{message.sender.firstName}}</span>
                     <span class="msg-time-info"> - <time-parse [date]="message.dateAndTime"></time-parse></span>
                   </div>
