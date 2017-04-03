@@ -24,7 +24,6 @@ import java.util.List;
 @RequestMapping("/api/requests")
 @RequiredArgsConstructor
 public class RequestController {
-    //private static final Long DEFAULT_PAGE_SIZE = 20L;
     private final RequestService requestService;
 
     /**
@@ -70,6 +69,7 @@ public class RequestController {
      * @param id request identifier.
      * @return http status 204 NO_CONTENT.
      */
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     @DeleteMapping("/{id}")
     public ResponseEntity deleteRequest(@PathVariable Long id) {
         requestService.delete(id);

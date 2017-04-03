@@ -1,4 +1,4 @@
-import {Component, ViewChild, Input, Output, EventEmitter} from "@angular/core";
+import {Component, ViewChild, Input, Output, EventEmitter, OnInit} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
@@ -9,6 +9,8 @@ import {JoinRequestComponent} from "./request-join/join-request.component";
 import {CloseRequestComponent} from "./request-close/close-request.component";
 import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
 import {RequestSearchDTO} from "../../model/dto/request-seaarch-dto.model";
+import {User} from "../../model/user.model";
+import {AuthService} from "../../service/auth.service";
 
 declare let $:any;
 
@@ -17,10 +19,11 @@ declare let $:any;
   templateUrl: 'request-table.component.html',
   styleUrls: ['request-table.component.css']
 })
-export class RequestTable {
+export class RequestTable implements OnInit{
   selected:Set<number>;
   checked:number[] = [];
   checkedRequests:Request[] = [];
+  currentUser: User;
 
   @Input() private requests:Request[];
   @Input() private requestsCount:number;
@@ -36,6 +39,12 @@ export class RequestTable {
 
   reopen() {
     this.reopenEvent.emit();
+  }
+
+  ngOnInit() {
+   this.authService.currentUser.subscribe(user => {
+     this.currentUser = user;
+   })
   }
 
   @Input() settings = {
@@ -81,6 +90,7 @@ export class RequestTable {
   reopenRequestComponent:ReopenRequestComponent;
 
   constructor(private requestService:RequestService,
+              private authService: AuthService,
               private toastr:ToastsManager) {
     this.searchDTO = {
       title: "",
@@ -163,11 +173,11 @@ export class RequestTable {
   }
 
   openDeleteRequestModal(request:Request, event):void {
-    if (request.progressStatus.name === 'Free') {
+    if ((request.reporter.id == this.currentUser.id && request.progressStatus.name == "Free") || this.currentUser.role.name != "employee") {
       this.deleteRequestComponent.request = request;
       this.deleteRequestComponent.modal.open();
     } else {
-      this.toastr.error('Can not delete not [Free] request', "Error!");
+      this.toastr.error('Can not delete not Free request', "Error!");
     }
   }
 

@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-
 /**
  * <p>
  * Implementation of {@link RequestDao} interface.
@@ -48,9 +47,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
 
     @Autowired
     private SecurityContextService securityContextService;
-
-
-
 
 
     //-----------------------CRUD---------------------------
@@ -123,6 +119,12 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         return jdbc().query(subRequestsQuery,
                 new MapSqlParameterSource("id", id),
                 this.getMapper());
+    }
+
+    @Override
+    public void deleteAllSubRequestByParent(Long parentId) {
+        jdbc().update(queryService().getQuery("request.deleteAllSubRequestByParent"),
+                new MapSqlParameterSource("parentId", parentId));
     }
 
     @Override
@@ -299,7 +301,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     /**
      * Counts Request with given ProgressStatus for Reporter.
      *
-     * @param reporterId reporter id
+     * @param reporterId     reporter id
      * @param progressStatus specified progressStatus
      */
     private Long countRequestByProgressStatusForReporter(Long reporterId, ProgressStatus progressStatus) {
@@ -374,7 +376,7 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     /**
      * Counts Request with given ProgressStatus and Date.
      *
-     * @param localDate date
+     * @param localDate      date
      * @param progressStatus specified progressStatus
      */
     private Long countStatisticForAdminDashBoardByProgressStatus(LocalDate localDate, ProgressStatus progressStatus) {
@@ -382,21 +384,21 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
         val parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("howLong", localDate);
         parameterSource.addValue("progress", progressStatus.getId());
-        return  jdbc().queryForObject(queryProgress, parameterSource, Long.class);
+        return jdbc().queryForObject(queryProgress, parameterSource, Long.class);
     }
 
     /**
      * Counts Request with given PriorityStatus and Date.
      *
      * @param localDate date
-     * @param priority specified progressStatus
+     * @param priority  specified progressStatus
      */
     private Long countStatisticForAdminDashBoardByPriorityStatus(LocalDate localDate, int priority) {
         String query = queryService().getQuery("request.countStatisticForAdminDashBoardByPriorityStatus");
         val parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("howLong", localDate);
         parameterSource.addValue("priority", priority);
-        return  jdbc().queryForObject(query, parameterSource, Long.class);
+        return jdbc().queryForObject(query, parameterSource, Long.class);
     }
 
     @Override

@@ -368,4 +368,6 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return list of manager deadlines information entity.
      */
     List<DeadlineDTO> getDeadlinesByAssignee(Long assigneeID);
+
+    void deleteAllSubRequestByParent(Long parentId);
 }

@@ -2,8 +2,10 @@ package com.overseer.dao.impl;
 
 import com.overseer.dao.CommentDao;
 import com.overseer.model.*;
+import com.overseer.service.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -20,11 +22,19 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class CommentDaoImpl extends CrudDaoImpl<Comment> implements CommentDao {
+    @Autowired
+    private QueryService queryService;
 
     @Override
     public List<Comment> findByRequest(Long requestId) {
         val parameterSource = new MapSqlParameterSource("requestId", requestId);
         return jdbc().query(getByRequestQuery(), parameterSource, getMapper());
+    }
+
+    @Override
+    public void deleteAllByRequest(Long requestId) {
+        val deleteByRequestQuery = queryService.getQuery("comment.deleteByRequest");
+        jdbc().update(deleteByRequestQuery, new MapSqlParameterSource("requestId", requestId));
     }
 
     @Override

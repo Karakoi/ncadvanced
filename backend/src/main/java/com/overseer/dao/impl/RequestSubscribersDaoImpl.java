@@ -51,7 +51,8 @@ public class RequestSubscribersDaoImpl implements RequestSubscribersDao {
 
     @Override
     public void delete(Long subscriberId, Long requestId) {
-        String deleteQuery = queryService.getQuery("request.unsubscribe");
+        String deleteQuery = queryService.getQuery("request.unsubscribe.all")
+                .concat(queryService.getQuery("request.unsubscribe"));
         val parameter = new MapSqlParameterSource("subscriberId", subscriberId);
         parameter.addValue("requestId", requestId);
         this.jdbc.update(deleteQuery, parameter);
@@ -68,6 +69,11 @@ public class RequestSubscribersDaoImpl implements RequestSubscribersDao {
 
     }
 
+    @Override
+    public void unsubscribeAll(Long requestId) {
+        String deleteAllQuery = queryService.getQuery("request.unsubscribe.all");
+        this.jdbc.update(deleteAllQuery, new MapSqlParameterSource("requestId", requestId));
+    }
 
     protected RowMapper<List<User>> getMapper() {
         return (resultSet, i) -> {
