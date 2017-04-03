@@ -9,14 +9,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller provides api for creating, getting and deleting request.
@@ -83,8 +82,9 @@ public class RequestController {
      * @param request json object which represents {@link Request} entity.
      * @return json representation of updated {@link Request} entity.
      */
+    @PreAuthorize("hasRole('ADMIN') || #r.assignee.email == authentication.name || #r.progressStatus.id == 5")
     @PutMapping
-    public ResponseEntity updateRequest(@RequestBody Request request) {
+    public ResponseEntity updateRequest(@P("r") @RequestBody Request request) {
         val updatedRequest = requestService.update(request);
         return new ResponseEntity<>(updatedRequest, HttpStatus.OK);
     }
@@ -244,8 +244,7 @@ public class RequestController {
      */
     @PostMapping("/join/{ids}")
     public ResponseEntity<Request> joinRequests(@RequestBody Request request, @PathVariable String ids) {
-        List<Long> list = Arrays.asList(ids.split(",")).stream().map(Long::parseLong).collect(Collectors.toList());
-        val createdRequest = requestService.joinRequestsIntoParent(list, request);
+        val createdRequest = requestService.joinRequestsIntoParent(ids, request);
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
 

@@ -1,4 +1,4 @@
-<div class="container col-lg-offset-2 col-lg-8" *ngIf="user">
+<div class="container col-lg-offset-2 col-lg-9" *ngIf="user">
   <div class="panel panel-default">
     <div class="panel-heading">
       <p class="panel-title">
@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-lg-4">
           <gravatar [email]="user.email" [size]="160"></gravatar><br>
-          <a href="./forum/message"><button class="btn btn-primary center-block">Send message</button></a>
+          <a href="/forum/chat?userId={{user.id}}"><button class="btn btn-primary center-block">Send message</button></a>
         </div>
         <div class="col-lg-8">
           <table class="table">
@@ -43,13 +43,39 @@
           </table>
         </div>
       </div>
-      <div *ngIf="hasSixMonthsRec">
-        <input type="number" value="{{setPeriod}}" [(ngModel)]="setPeriod" placeholder="months">
-        <button class="btn btn-primary" (click)="setStatisticByPeriod(setPeriod)">Set period in months</button>
+      <h5 align="center" *ngIf="hasAnyRequest && !hasSixMonthsRec">User hasn't had any request yet.</h5>
+
+      <div class="header-content" *ngIf="hasSixMonthsRec">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="input-group col-lg-3 pull-right">
+              <input type="number" class="form-control" [(ngModel)]="setPeriod" placeholder="months">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" (click)="setStatisticByPeriod(setPeriod)"
+                        type="button">Calculate</button>
+              </span>
+            </div>
+            <br>
+            <div class="row">
+              <google-chart *ngIf="hasSixMonthsRec" [data]="pieChartRequestForOpenClosed"></google-chart>
+            </div>
+          </div>
+        </div>
       </div>
-      <h5 align="center" *ngIf="hasAnyRequest">User hasn't had any request yet.</h5>
-      <google-chart *ngIf="hasSixMonthsRec" [data]="pieChartRequestForOpenClosed"></google-chart>
-      <google-chart *ngIf="hasRequest" [data]="pieChartRequest" ></google-chart>
+
+      <div class="header-content" >
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <br>
+            <div class="row">
+              <google-chart *ngIf="hasRequest" [data]="pieChartRequest" ></google-chart>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+
+

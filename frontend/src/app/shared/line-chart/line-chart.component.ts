@@ -44,6 +44,30 @@ export class LineChartComponent {
   //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
   //   }
   // ];
+
+  public lineChartColors:Array<any> = [
+    { // green
+      backgroundColor: 'rgba(60, 214, 65,0.3)',
+      borderColor: 'rgba(47,82,40,1)',
+      pointBackgroundColor: 'rgba(91, 245, 96,1)',
+      pointBorderColor: '#0b1f07',
+      pointHoverBackgroundColor: '#2b9e15',
+      pointHoverBorderColor: 'rgba(7,28,3,0.8)',
+      pointBorderWidth: 2,
+      pointRadius: 4
+    },
+    { // red
+      backgroundColor: 'rgba(255, 93, 56,0.6)',
+      borderColor: 'rgba(153, 15, 0,1)',
+      pointBackgroundColor: 'rgba(255, 74, 54, 1)',
+      pointBorderColor: '#630a00',
+      pointHoverBackgroundColor: '#ff5a36',
+      pointHoverBorderColor: 'rgba(209, 54, 19,0.8)',
+      pointBorderWidth: 2,
+      pointRadius: 4
+    }
+  ];
+
   public lineChartLegend: boolean = true;
   public lineChartType: string = 'line';
   public lineChartData: any[] = [{data: [], label: ''}, {data: [], label: ''}];

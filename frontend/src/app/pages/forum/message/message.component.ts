@@ -41,7 +41,8 @@ export class MessageComponent implements OnInit {
         recipient: null,
         text: null,
         topic: null,
-        dateAndTime: null
+        dateAndTime: null,
+        read: null
       };
       if (this.authService.role === 'office manager' || this.authService.role === 'admin') {
         this.userService.getPotentialRecipientForManager(user.id).subscribe((potential) => {

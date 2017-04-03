@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, Input, Output, EventEmitter} from "@angular/core";
+import {Component, ViewChild, Input, Output, EventEmitter} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
 import {Request} from "../../model/request.model";
 import {RequestService} from "../../service/request.service";
@@ -10,7 +10,7 @@ import {CloseRequestComponent} from "./request-close/close-request.component";
 import {ReopenRequestComponent} from "./request-reopen/reopen-request.component";
 import {RequestSearchDTO} from "../../model/dto/request-seaarch-dto.model";
 
-declare let $: any;
+declare let $:any;
 
 @Component({
   selector: 'r-table',
@@ -18,22 +18,23 @@ declare let $: any;
   styleUrls: ['request-table.component.css']
 })
 export class RequestTable {
-  selected: Set<number>;
-  checked: number[] = [];
+  selected:Set<number>;
+  checked:number[] = [];
+  checkedRequests:Request[] = [];
 
-  @Input() private requests: Request[];
-  @Input() private requestsCount: number;
+  @Input() private requests:Request[];
+  @Input() private requestsCount:number;
   @Output() paginationChange = new EventEmitter();
-  @Output() selectedEvent: EventEmitter<any> = new EventEmitter();
+  @Output() selectedEvent:EventEmitter<any> = new EventEmitter();
   @Output() reopenEvent = new EventEmitter();
   @Output() perChangeLoad = new EventEmitter();
-  private perPage: number = 20;
-  term: any;
-  orderType: boolean;
-  orderField: string;
-  searchTypes: any;
+  private perPage:number = 20;
+  term:any;
+  orderType:boolean;
+  orderField:string;
+  searchTypes:any;
 
-  reopen(){
+  reopen() {
     this.reopenEvent.emit();
   }
 
@@ -59,28 +60,28 @@ export class RequestTable {
     }
   }
 
-  searchDTO : RequestSearchDTO;
+  searchDTO:RequestSearchDTO;
 
   @ViewChild(RequestFormComponent)
-  requestForm: RequestFormComponent;
+  requestForm:RequestFormComponent;
 
   @ViewChild(AssignRequestComponent)
-  assignForm: AssignRequestComponent;
+  assignForm:AssignRequestComponent;
 
   @ViewChild(JoinRequestComponent)
-  joinRequestComponent: JoinRequestComponent;
+  joinRequestComponent:JoinRequestComponent;
 
   @ViewChild(CloseRequestComponent)
   closeRequestComponent:CloseRequestComponent;
 
   @ViewChild(DeleteRequestComponent)
-  deleteRequestComponent: DeleteRequestComponent;
+  deleteRequestComponent:DeleteRequestComponent;
 
   @ViewChild(ReopenRequestComponent)
-  reopenRequestComponent: ReopenRequestComponent;
+  reopenRequestComponent:ReopenRequestComponent;
 
-  constructor(private requestService: RequestService,
-              private toastr: ToastsManager) {
+  constructor(private requestService:RequestService,
+              private toastr:ToastsManager) {
     this.searchDTO = {
       title: "",
       dateOfCreation: "",
@@ -106,7 +107,7 @@ export class RequestTable {
     this.selected = new Set();
   }
 
-  currentPage : number = 1;
+  currentPage:number = 1;
 
   changed(data) {
     this.currentPage = data.page;
@@ -120,16 +121,19 @@ export class RequestTable {
 
   perPageChange(data) {
     this.perPage = data;
-    let pageData = {"page" : this.currentPage, "size": data};
+    let pageData = {"page": this.currentPage, "size": data};
     this.perChangeLoad.emit(pageData);
   }
 
   check(data) {
     data = +data;
-    if (!this.selected.has(data))
+    if (!this.selected.has(data)) {
       this.selected.add(data);
+      this.checkedRequests.push(this.requests.filter(request => request.id == data)[0]);
+    }
     else {
       this.selected.delete(data);
+      this.checkedRequests = this.checkedRequests.filter(request => request.id != data);
     }
     this.selectedEvent.emit(this.selected);
     this.checked = Array.from(this.selected);
@@ -158,8 +162,8 @@ export class RequestTable {
     this.checked = [];
   }
 
-  openDeleteRequestModal(request: Request, event): void {
-    if(request.progressStatus.name === 'Free'){
+  openDeleteRequestModal(request:Request, event):void {
+    if (request.progressStatus.name === 'Free') {
       this.deleteRequestComponent.request = request;
       this.deleteRequestComponent.modal.open();
     } else {
@@ -167,13 +171,13 @@ export class RequestTable {
     }
   }
 
-  openAssignRequestModal(request: Request) {
+  openAssignRequestModal(request:Request) {
     request.estimateTimeInDays = 3;
     this.assignForm.request = request;
     this.assignForm.modal.open();
   }
 
-  get sorted(): Request[] {
+  get sorted():Request[] {
     return this.requests
       .map(request => request)
       .sort((a, b) => {
@@ -183,11 +187,11 @@ export class RequestTable {
       });
   }
 
-  updateRequests(request: Request[]) {
+  updateRequests(request:Request[]) {
     this.requests = request;
   }
 
-  openFormModal(): void {
+  openFormModal():void {
     this.requestForm.modal.open();
   }
 
@@ -222,7 +226,7 @@ export class RequestTable {
     console.log(this.searchDTO)
   }
 
-  getSearchData(searchDTO){
+  getSearchData(searchDTO) {
     this.requestService.searchAll(searchDTO).subscribe(requests => {
       console.log(requests);
       this.requests = requests;

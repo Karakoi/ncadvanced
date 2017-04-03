@@ -20,4 +20,6 @@ public interface MessageDao extends CrudDao<Message, Long> {
     int deleteByTopicId(Long topicId);
 
     List<Message> findDialogMessages(Long senderId, Long recipientId);
+
+    List<Message> findUnreadMessages(Long recipientId);
 }

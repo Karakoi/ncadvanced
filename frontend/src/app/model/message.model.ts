@@ -7,5 +7,6 @@ export interface Message {
   recipient?: User,
   topic?: Topic,
   text: string,
-  dateAndTime: Date
+  dateAndTime: Date,
+  read: boolean
 }

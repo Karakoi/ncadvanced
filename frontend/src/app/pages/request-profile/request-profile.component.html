@@ -7,7 +7,9 @@
                        [(ngModel)]="request.title"
                        (onSave)="updateRequest($event)"
                        size="40"
-                       [disabled]="isAdmin() && isFree(request) && isAssignee(request)">
+                       [disabled]="isAdmin() && isFree(request) && isAssignee(request)"
+                       min="5"
+                       max="45">
         </inline-editor>
       </span>
       <span class="col-lg-4 col-md-4 col-sm-4">
@@ -16,6 +18,13 @@
                 [textContent]="followed ? ' Unfollow':' Follow'"></span>
         </button>
       </span>
+
+      <span class="col-lg-4 col-md-4 col-sm-4">
+        <button *ngIf="isManager() && isAssigneeOfRequest() && isInProgress(request)" class="btn btn-danger pull-right" (click)="close()">
+          <span class="glyphicon glyphicon-ok-circle" [textContent]="' Close'"></span>
+        </button>
+      </span>
+
       </p>
     </div>
     <div class="panel-body">
@@ -113,7 +122,9 @@
                                  (onSave)="updateRequest($event)"
                                  [disabled]="isAdmin() && isFree(request) && isAssignee(request)"
                                  cols="100"
-                                 rows="4">
+                                 rows="4"
+                                 min="10"
+                                 max="500">
                   </inline-editor>
                 </div>
 
@@ -212,7 +223,7 @@
             <i *ngIf="showHistory == false && historyRecords">Click arrow down to show full history.</i>
           </p>
           <p class="no-content-msg">
-            <i *ngIf="showHistory == true && historyRecords == false">This object was not changed.</i>
+            <i *ngIf="showHistory == true && historyRecords == false">This request was not changed.</i>
           </p>
           <table class="table table-bordered">
             <tbody>
@@ -234,18 +245,21 @@
       <div class="row">
         <div class="col-lg-12">
           <p><b>Followers:</b>
-            <span *ngIf="showFollowers " (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span *ngIf="showFollowers && followers != false" (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
             <span *ngIf="!showFollowers && followers != false" (click)="toggleFollowersShowing()" class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showFollowers == false && followers">Click arrow down to show full list of followers.</i>
           </p>
           <p class="no-content-msg">
             <i *ngIf="followers == false">There are no followers at that moment.</i>
           </p>
           <table class="table table-bordered table-hover" >
             <tbody>
-            <tr *ngIf="showFollowers">
-              <td *ngIf="showFollowers"><b>First Name</b></td>
-              <td *ngIf="showFollowers"><b>Last Name</b></td>
-              <td *ngIf="showFollowers"><b>Email</b></td>
+            <tr *ngIf="followers != false">
+              <td *ngIf="showFollowers != false"><b>First Name</b></td>
+              <td *ngIf="showFollowers != false"><b>Last Name</b></td>
+              <td *ngIf="showFollowers != false"><b>Email</b></td>
             </tr>
             <tr *ngFor="let follower of followers">
               <td *ngIf="showFollowers" [routerLink]="['/user', follower.id]">{{follower.firstName}}</td>
@@ -256,9 +270,72 @@
           </table>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <p><b>Comments:</b>
+            <span (click)="changeShowComments()" *ngIf="showComments == true && comments != false"
+                  class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></span>
+            <span (click)="changeShowComments()" *ngIf="showComments == false && comments != false"
+                  class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showComments == false && comments">Click arrow down to show full comments.</i>
+          </p>
+          <p class="no-content-msg">
+            <i *ngIf="showComments == true && comments == false">There are no comments at that moment. Add some comment!</i>
+          </p>
+          <div id="comment-container">
+            <ul class="list-group" *ngIf="showComments">
+              <li class="list-group-item" *ngFor="let comment of comments">
+                <div class="row">
+                  <div class="col-lg-2 col-sm-2 col-xs-2 text-center">
+                    <p>
+                      <gravatar [email]="comment.sender.email" [size]="80"></gravatar>
+                    </p>
+                    <b><a [routerLink]="['/user', comment.sender.id]">{{comment.sender.firstName}}
+                      {{comment.sender.lastName}}</a></b><br>
+                    <span><b>{{comment.sender.role.name}}</b></span><br>
+                  </div>
+                  <div class="col-lg-10 col-sm-9 col-xs-9">
+                      <div class="text-box">
+                        <inline-editor type="text"
+                                       [(ngModel)]="comment.text"
+                                       (onSave)="updateComment(comment)"
+                                       size="40"
+                        >
+                        </inline-editor>
+                      </div>
+                      <button [attr.value]="comment.id" class="pull-left btn btn-danger btn-xs btn-delete"
+                              (click)="openDeleteCommentModal(comment)">Delete</button>
+                      <p class="pull-right badge">
+                        <date-parse [date]="comment.createDateAndTime"></date-parse>
+                      </p>
+                      <p class="pull-right badge" *ngIf="comment.updateDateAndTime" style="background-color: #0dad71">
+                       <span>Updated: <date-parse [date]="comment.updateDateAndTime"></date-parse> </span>
+                      </p>
+                      </div>
+                  </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="comment-form" *ngIf="showComments">
+        <form [formGroup]="commentForm" (ngSubmit)="createNewComment(commentForm.value)"
+              [ngClass]="{'has-error': !validate('text')}">
+          <textarea class="form-control" rows="3" formControlName="text" placeholder="Comment text.."></textarea>
+          <div *ngIf="!validate('text')" class="help-block text-left">
+            <span *ngIf="commentForm.get('text')">Comment length should be between 2 and 500 characters.</span>
+          </div>
+          <button type="submit" class="btn btn-primary pull-right" [disabled]="commentForm.invalid" style="margin-top: 10px">Submit comment
+          </button>
+        </form>
+      </div>
     </div>
   </div>
   <add-sub-request [subRequests]="subRequests" [parentId]="request.id"
                    (updated)="updateSubRequests($event)"></add-sub-request>
   <delete-sub-request [subRequests]="subRequests" (updated)="updateSubRequests($event)"></delete-sub-request>
+  <delete-comment [comments]="comments" (updated)="updateComments($event)"></delete-comment>
+  <close (updated)="update($event)"></close>
 </div>

@@ -3,7 +3,6 @@ package com.overseer.util;
 import com.overseer.model.ProgressStatusView;
 import com.overseer.model.enums.ProgressStatus;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@Scope("singleton")
 public class ProgressStatusUtil {
 
     private static final int FREE_ID = 5;

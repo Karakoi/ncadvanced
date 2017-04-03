@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {ToastsManager} from "ng2-toastr";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../service/user.service";
 import {AuthService, AuthEvent} from "../../service/auth.service";
 import {CustomValidators} from "ng2-validation";
@@ -10,6 +10,7 @@ import {ReportService} from "../../service/report.service";
 import {User} from "../../model/user.model";
 import {Subject} from "rxjs";
 import * as FileSaver from "file-saver";
+import {Md5} from "ts-md5/dist/md5";
 
 @Component({
   selector: 'report',
@@ -22,14 +23,15 @@ export class ReportComponent implements OnInit {
   private role: string;
   private currentUser: User;
   private reportForm: FormGroup;
+  private encryptedEmail: any;
 
   @ViewChild(BarChartComponent)
   public barChart: BarChartComponent;
 
   @ViewChild(LineChartComponent)
   public lineChart: LineChartComponent;
-  private startDate: any;
-  private endDate: any;
+  private startDate: Date;
+  private endDate: Date;
   private isGenerated: boolean = false;
   private countManagers: number[] = [1, 3, 5, 10];
   private countTopManagers: number;
@@ -62,7 +64,7 @@ export class ReportComponent implements OnInit {
     this.reportForm = this.formBuilder.group({
       dateOfStart: ['', CustomValidators.dateISO],
       dateOfEnd: ['', CustomValidators.dateISO],
-      countManagersSelector: [''],
+      countManagersSelector: ['']
     });
   }
 
@@ -71,7 +73,9 @@ export class ReportComponent implements OnInit {
       this.countTopManagers = formData.countManagersSelector;
       this.startDate = formData.dateOfStart;
       this.endDate = formData.dateOfEnd;
-      console.log(this.countTopManagers);
+
+      // this.isDatesDifferenceLessStep(this.startDate, this.endDate);
+
       if (!this.isGenerated) {
         this.isGenerated = true;
       } else {
@@ -84,6 +88,20 @@ export class ReportComponent implements OnInit {
     }
   }
 
+  // private isDatesDifferenceLessStep(start: Date, end: Date): boolean {
+  //   let startDate = new Date(start);
+  //   let endDate = new Date(end);
+  //   let countYears = endDate.getFullYear() - startDate.getFullYear();
+  //   let countMonths = (endDate.getMonth() + 1) - (startDate.getMonth() + 1);
+  //   if (countMonths == 0 && countYears == 0) {
+  //     this.toastr.warning("Warning. The minimum date difference is one month.");
+  //     this.toastr.warning("The end date will be rounded to the minimum step boundary");
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
   private generateReportByRole(start: any, end: any) {
     if (this.isAdmin()) {
       this.barChart.buildAdminChart(start, end, this.countTopManagers);
@@ -94,7 +112,8 @@ export class ReportComponent implements OnInit {
   }
 
   private generateAdminPDF() {
-    this.reportService.getAdminPDFReport(this.startDate, this.endDate, this.countTopManagers).subscribe(
+    this.encryptedEmail = Md5.hashStr(this.currentUser.email).toString();
+    this.reportService.getAdminPDFReport(this.startDate, this.endDate, this.countTopManagers, this.encryptedEmail).subscribe(
       (res: any) => {
         let blob = res.blob();
         let filename = 'admin_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';
@@ -104,7 +123,8 @@ export class ReportComponent implements OnInit {
   }
 
   private generateManagerPDF() {
-    this.reportService.getManagerPDFReport(this.startDate, this.endDate, this.currentUser.id).subscribe(
+    this.encryptedEmail = Md5.hashStr(this.currentUser.email).toString();
+    this.reportService.getManagerPDFReport(this.startDate, this.endDate, this.currentUser.id, this.encryptedEmail).subscribe(
       (res: any) => {
         let blob = res.blob();
         let filename = 'manager_report_from_' + this.startDate + '_to_' + this.endDate + '.pdf';

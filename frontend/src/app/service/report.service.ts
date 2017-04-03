@@ -17,7 +17,10 @@ export class ReportService {
 
   getPDFRequest(requestId: number): Observable<any> {
     let headers = new Headers({'Accept': 'application/pdf'});
-    return this.authHttp.get(`${url}/request?id=${requestId}`, {headers: headers, responseType: ResponseContentType.Blob})
+    return this.authHttp.get(`${url}/request?id=${requestId}`, {
+      headers: headers,
+      responseType: ResponseContentType.Blob
+    })
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
@@ -25,10 +28,11 @@ export class ReportService {
   }
 
   /* FOR ADMIN REPORTS */
-  getAdminPDFReport(beginDate: Date, endDate: Date, countTopManagers: number): Observable<any> {
+  getAdminPDFReport(beginDate: Date, endDate: Date, countTopManagers: number, encryptedEmail: any): Observable<any> {
     let headers = new Headers({'Accept': 'application/pdf'});
     // headers.append("Content-Type", 'application/pdf');
-       return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}`, {headers: headers, responseType: ResponseContentType.Blob})
+    return this.authHttp.get(`${url}/adminPDFReport?beginDate=${beginDate}&endDate=${endDate}&countTop=${countTopManagers}&encryptedEmail=${encryptedEmail}`,
+      {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);
@@ -63,9 +67,10 @@ export class ReportService {
   }
 
   /* FOR OFFICE MANAGER REPORTS */
-  getManagerPDFReport(beginDate: Date, endDate: Date, id: number): Observable<ResponseContentType.Blob> {
+  getManagerPDFReport(beginDate: Date, endDate: Date, id: number, encryptedEmail: any): Observable<ResponseContentType.Blob> {
     let headers = new Headers({'Accept': 'application/pdf'});
-    return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}&id=${id}`, {headers: headers, responseType: ResponseContentType.Blob})
+    return this.authHttp.get(`${url}/managerPDFReport?beginDate=${beginDate}&endDate=${endDate}&id=${id}&encryptedEmail=${encryptedEmail}`,
+      {headers: headers, responseType: ResponseContentType.Blob})
       .catch((error: any) => {
         this.errorService.processError(error);
         return Observable.throw(error);

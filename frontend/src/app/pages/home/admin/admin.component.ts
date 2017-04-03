@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Request} from "../../../model/request.model";
 import {RequestService} from "../../../service/request.service";
 import 'rxjs/Rx';
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
 
@@ -18,26 +19,27 @@ export class AdminComponent implements OnInit {
   when: string = 'for 6 months';
   selectPeriod: number;
 
-  constructor(private requestService: RequestService) {}
+  constructor(private requestService: RequestService,
+              private toast: ToastsManager) {}
 
   ngOnInit(): void {
     this.setStatisticByDefault();
 
     this.requestService.getTotalUsers().subscribe(s => {
       this.totalUsers = s;
-    });
+    }, e => this.toast.warning("can't research total users",'warning'));
 
     this.requestService.getTotalRequests().subscribe(s => {
       this.totalRequests = s;
-    });
+    }, e => this.toast.warning("can't research total request",'warning'));
 
     this.requestService.getRequestToday().subscribe(s => {
       this.requestToday = s;
-    });
+    }, e => this.toast.warning("can't research request today",'warning'));
 
     this.requestService.getRunningToday().subscribe(s => {
       this.runningToday = s;
-    })
+    }, e => this.toast.warning("can't research assigned today",'warning'));
   }
 
   setStatisticByProgress() {
@@ -190,7 +192,7 @@ export class AdminComponent implements OnInit {
       this.setStatisticByProgress();
       this.setStatisticByPriority();
       this.setStatisticForBarChart();
-    });
+    }, e => this.toast.warning("can't research statistic for the first pie chart please try again",'warning',32));
   }
 
     setStatisticByDropdown(howLong: number): void {
@@ -200,6 +202,6 @@ export class AdminComponent implements OnInit {
         this.setStatisticByProgress();
         this.setStatisticByPriority();
         this.setStatisticForBarChart();
-      });
+      }, e => this.toast.warning("can't research statistic for the second pie chart please try again",'warning',32));
     }
 }

@@ -1,6 +1,6 @@
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
-import {NgModule} from "@angular/core/src/metadata/ng_module";
+import {NgModule} from "@angular/core";
 import {Routes, RouterModule} from "@angular/router";
 import {AddUserComponent} from "./all/user-add/add-user.component";
 import {UserTableComponent} from "./all/user-table.component";
@@ -49,5 +49,4 @@ const routes: Routes = [
   ],
   providers: []
 })
-export class UserTableModule {
-}
+export class UserTableModule {}

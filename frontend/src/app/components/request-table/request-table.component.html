@@ -135,9 +135,11 @@
         </tr>
         <tr style="cursor: pointer;"
             *ngFor="let request of sorted | filter: searchTypes | sort: {field: orderField, order: orderType }">
-          <td *ngIf="settings.multiSelect"><input [attr.value]="request.id" class="check-box"
+          <td *ngIf="settings.multiSelect"><input [attr.value]="request.id"
+                                                  class="check-box"
                                                   [checked]="isChecked(request.id)"
-                                                  type="checkbox" #that (click)="check(that.value)"></td>
+                                                  type="checkbox"
+                                                  #that (click)="check(that.value)"></td>
           <td *ngIf="settings.columns.title" [routerLink]="settings.info ? ['/request', request.id]: null">
             {{request.title}}
           </td>
@@ -198,7 +200,7 @@
   <request-form *ngIf="settings.add " [requests]="requests" (updated)="updateRequests($event)"></request-form>
   <delete-request *ngIf="settings.delete" [requests]="requests" (updated)="updateRequests($event)"></delete-request>
   <assign-request *ngIf="settings.assign" [requests]="requests" (updated)="updateRequests($event)"></assign-request>
-  <join-request *ngIf="settings.join" [requests]="requests" [checked]="checked"
+  <join-request *ngIf="settings.join" [requests]="requests" [checked]="checked" [checkedRequests]="checkedRequests"
                 (updated)="updateRequests($event)"></join-request>
   <close-request *ngIf="settings.close" [requests]="requests" (updated)="updateRequests($event)"></close-request>
   <reopen-request *ngIf="settings.reopen" [requests]="requests" (updated)="updateRequests($event)"></reopen-request>
