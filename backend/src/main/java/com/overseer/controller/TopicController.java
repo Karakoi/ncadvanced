@@ -100,8 +100,7 @@ public class TopicController {
      * @return {@link Topic} list with http status 200 OK..
      */
     @GetMapping("/fetch")
-    public ResponseEntity<List<Topic>> fetchRequestPage(@RequestParam int page,
-                                                        @RequestParam int size) {
+    public ResponseEntity<List<Topic>> fetchRequestPage(@RequestParam int page, @RequestParam int size) {
         val topics = topicService.fetchPage(page, size);
         return new ResponseEntity<>(topics, HttpStatus.OK);
     }

@@ -4,6 +4,7 @@ import static com.overseer.util.ValidationUtil.validate;
 
 import com.overseer.dao.RoleDao;
 import com.overseer.dao.TopicDao;
+import com.overseer.dto.TopicRolesNumberDTO;
 import com.overseer.model.Message;
 import com.overseer.model.Role;
 import com.overseer.model.Topic;
@@ -100,13 +101,55 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
         }
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<Topic> fetchPage(int pageSize, int pageNumber) {
-        Assert.state(pageNumber > 0, "Must be greater then 0");
-        val parameterSource = new MapSqlParameterSource("limit", pageSize);
-        parameterSource.addValue("offset", pageSize * (pageNumber - 1));
+        Assert.state(pageNumber > 0, "page number must be greater then 0");
+        Assert.state(pageSize > 0, "page size must be greater then 0");
         String findAllQuery = this.getFindAllQuery();
-        return this.jdbc().query(findAllQuery, parameterSource, new TopicObjectsExtractor());
+        return this.jdbc().query(findAllQuery, getParameterSourceForFetchPage(pageSize, pageNumber), new TopicObjectsExtractor());
+    }
+
+    /**
+     * Calculation of correct {@code offset} and {@code limit} parameters for {@link MapSqlParameterSource} object
+     * for topic.
+     * @param pageSize necessary number of elements ({@link Topic} objects) for one page.
+     * @param pageNumber number of viewing page.
+     * @return {@link MapSqlParameterSource} object with correct {@code offset} and {@code limit} parameters.
+     */
+    private MapSqlParameterSource getParameterSourceForFetchPage(int pageSize, int pageNumber) {
+        List<TopicRolesNumberDTO> topicRolesNumber = jdbc().query(getFindRoleNumbersForEachTopicQuery(),
+                new MapSqlParameterSource(), getTopicRolesNumberMapper());
+
+        // calculation of index of first row in db for current page
+        int numberOfRowsInDbForPreviousPages = 0;
+        int numberOfTopicsOnPreviousPages = (pageNumber - 1) * pageSize;
+        for (int i = 0; i < numberOfTopicsOnPreviousPages; i++) {
+            numberOfRowsInDbForPreviousPages += topicRolesNumber.get(i).getRolesNumber();
+        }
+        int indexOfFirstRowInDbForCurrentPage = numberOfRowsInDbForPreviousPages;
+
+        // calculation of number of rows in db for current page
+        int numberOfRowsInDbForCurrentPage = 0;
+        int lastIndexOfTopicOnCurrentPage = (numberOfTopicsOnPreviousPages + pageSize) < topicRolesNumber.size() ? (numberOfTopicsOnPreviousPages + pageSize) : topicRolesNumber.size();
+        for (int i = numberOfTopicsOnPreviousPages; i < lastIndexOfTopicOnCurrentPage; i++) {
+            numberOfRowsInDbForCurrentPage += topicRolesNumber.get(i).getRolesNumber();
+        }
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource("offset", indexOfFirstRowInDbForCurrentPage);
+        parameterSource.addValue("limit", numberOfRowsInDbForCurrentPage);
+        return parameterSource;
+    }
+
+    protected RowMapper<TopicRolesNumberDTO> getTopicRolesNumberMapper() {
+        return (resultSet, i) -> {
+            TopicRolesNumberDTO topicRolesNumberDTO = new TopicRolesNumberDTO();
+            topicRolesNumberDTO.setTopicId(resultSet.getLong("topic_id"));
+            topicRolesNumberDTO.setRolesNumber(resultSet.getInt("roles_number"));
+            return topicRolesNumberDTO;
+        };
     }
 
     /**
@@ -170,6 +213,10 @@ public class TopicDaoImpl extends CrudDaoImpl<Topic> implements TopicDao {
 
     private String getExistsByTitleQuery() {
         return this.queryService().getQuery("topic.exists_by_title");
+    }
+
+    private String getFindRoleNumbersForEachTopicQuery() {
+        return this.queryService().getQuery("topic.findRoleNumbersForEachTopic");
     }
 
     @Override
