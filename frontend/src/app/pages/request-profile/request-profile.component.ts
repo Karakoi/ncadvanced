@@ -72,6 +72,8 @@ export class RequestProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.showFull)
+
     this.commentForm = this.formBuilder.group({
       text: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(500)]]
     });
@@ -87,6 +89,7 @@ export class RequestProfileComponent implements OnInit {
           this.historyRecords = historyRecords;
         });*/
         this.historyService.getHistoryDTOs(id).subscribe((historyDtoRecords: HistoryMessageDTO[]) => {
+          console.log(historyDtoRecords)
           this.historyDTOsRecords = historyDtoRecords;
         });
 
@@ -147,50 +150,6 @@ export class RequestProfileComponent implements OnInit {
   validate(field: string): boolean {
     return this.commentForm.get(field).valid || !this.commentForm.get(field).dirty;
   }
-
-  /*showHistoryMessage(history: History): string {
-    let text: string;
-    switch (history.columnName) {
-
-      case "title":
-        text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
-        break;
-      case "estimate_time_in_days":
-        text = "Estimate time (in day) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
-        break;
-
-      case "description":
-        text = "Description was changed from \"" +
-          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
-        break;
-      case "priority_status_id":
-        text = "Priority was changed from \"" +
-          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
-        break;
-      case "progress_status_id":
-        text = "Progress status was changed from \"" +
-          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
-        break;
-
-      case "assignee_id":
-        text = "This request was assigned";
-        break;
-
-      case "parent_id":
-        if (history.newValue == null) {
-          text = "This request was unjoined from \"" + history.demonstrationOfOldValue + "\" request";
-        } else {
-          text = "This request was joined in \"" + history.demonstrationOfNewValue + "\" request";
-        }
-        break;
-
-      default:
-        text = "Some changes";
-    }
-
-    return text;
-  }*/
-
 
   openAddSubRequestModal(): void {
     this.addSubRequestComponent.modal.open();
@@ -333,5 +292,26 @@ export class RequestProfileComponent implements OnInit {
 
   update(request:Request) {
     this.request = request;
+  }
+
+  changeHistoryDTO(id) {
+    this.historyService.getFullHistoryDTO(id).subscribe((historyDtoRecord: HistoryMessageDTO) => {
+      console.log(historyDtoRecord)
+      this.historyDTOsRecords.filter(h => {
+        if (h.id == id) {
+          h = historyDtoRecord;
+        }
+      })
+    });
+  }
+
+  showFull = {
+    id: 0,
+    show: false
+  };
+
+  changeShowFull(id) {
+    this.showFull.id = id;
+    this.showFull.show = true;
   }
 }

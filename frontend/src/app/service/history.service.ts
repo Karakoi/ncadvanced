@@ -31,4 +31,13 @@ export class HistoryService{
         return Observable.throw(error);
       });
   }
+
+  getFullHistoryDTO(entityId: number): Observable<HistoryMessageDTO> {
+    return this.authHttp.get(`${url}/dto/longValue/${entityId}`)
+      .map(resp => resp.json())
+      .catch((error: any) => {
+        this.errorService.processError(error);
+        return Observable.throw(error);
+      });
+  }
 }
