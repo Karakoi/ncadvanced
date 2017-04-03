@@ -435,6 +435,26 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     }
 
     @Override
+    public RequestDTO findCountRequestsBySmallPeriod(LocalDate start, LocalDate end, Long progressStatusId) {
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            parameterSource.addValue("progress_status_id", progressStatusId);
+            return jdbc().queryForObject(this.queryService().getQuery("request.countByStatusAndSmallPeriod"),
+                    parameterSource, (resultSet, i) -> {
+                        RequestDTO request = new RequestDTO();
+                        request.setEndDateLimit(end);
+                        request.setCount(resultSet.getLong("summa"));
+                        request.setStartDateLimit(start);
+                        return request;
+                    });
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<RequestDTO> findListCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId) {
         String findCountByPeriodsQuery = this.queryService().getQuery("request.countByStatusesAndPeriods");
         List<RequestDTO> list = new ArrayList<>();
@@ -483,6 +503,27 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                         request.setStartDateLimit(start);
                         request.setEndDateLimit(end);
                         request.setCount(resultSet.getLong("count"));
+                        return request;
+                    });
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public RequestDTO findCountRequestsByManagerAndSmallPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id) {
+        try {
+            val parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("progress_status_id", progressStatusId);
+            parameterSource.addValue("assignee_id", id);
+            parameterSource.addValue("begin", java.sql.Date.valueOf(start));
+            parameterSource.addValue("end", java.sql.Date.valueOf(end));
+            return jdbc().queryForObject(this.queryService().getQuery("request.countByManagerAndSmallPeriod"),
+                    parameterSource, (resultSet, i) -> {
+                        RequestDTO request = new RequestDTO();
+                        request.setCount(resultSet.getLong("summa"));
+                        request.setStartDateLimit(start);
+                        request.setEndDateLimit(end);
                         return request;
                     });
         } catch (DataAccessException e) {

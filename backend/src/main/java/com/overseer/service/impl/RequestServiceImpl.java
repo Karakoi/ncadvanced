@@ -5,7 +5,8 @@ import com.overseer.dao.UserDao;
 import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
 import com.overseer.dto.RequestSearchDTO;
-import com.overseer.event.*;
+import com.overseer.event.ChangeProgressEvent;
+import com.overseer.event.JoinRequestEvent;
 import com.overseer.exception.InappropriateProgressStatusException;
 import com.overseer.exception.entity.NoSuchEntityException;
 import com.overseer.model.PriorityStatus;
@@ -277,6 +278,18 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public RequestDTO findCountRequestsBySmallPeriod(LocalDate start, LocalDate end, Long progressStatusId) {
+        Assert.notNull(start, "Start date must be not null");
+        Assert.notNull(end, "End date must be not null");
+        RequestDTO requestDTO = this.requestDao.findCountRequestsBySmallPeriod(start, end, progressStatusId);
+        log.debug("Fetched {} count of requests for period {} - {}", requestDTO, start, end);
+        return requestDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public List<RequestDTO> findListCountRequestsByPeriod(LocalDate beginDate, LocalDate endDate, Long progressStatusId) {
         Assert.notNull(beginDate, "Start date must be not null");
         Assert.notNull(endDate, "End date must be not null");
@@ -302,11 +315,24 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
      * {@inheritDoc}.
      */
     @Override
+    public RequestDTO findCountRequestsByManagerAndSmallPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id) {
+        Assert.notNull(id, "Manager id must be not null");
+        Assert.notNull(start, "Start date must be not null");
+        Assert.notNull(end, "End date must be not null");
+        RequestDTO request = this.requestDao.findCountRequestsByManagerAndSmallPeriod(start, end, progressStatusId, id);
+        log.debug("Fetched {} count of requests for period {} - {}", request, start, end);
+        return request;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public List<RequestDTO> findListCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id) {
         Assert.notNull(start, "Start date must be not null");
         Assert.notNull(end, "End date must be not null");
         Assert.notNull(id, "Manager id must be not null");
-        List<RequestDTO> list = this.requestDao.findListCountRequestsByManagerAndPeriod(start, end, progressStatusId, id);
+        val list = this.requestDao.findListCountRequestsByManagerAndPeriod(start, end, progressStatusId, id);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
         return list;
     }
@@ -319,7 +345,7 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
         Assert.notNull(countTop, "Count of top managers must be not null");
         LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
         LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
-        List<RequestDTO> list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusId, countTop);
+        val list = this.requestDao.findListOfBestManagersByPeriod(start, end, progressStatusId, countTop);
         log.debug("Fetched {} request DTO's for period {} - {}", list.size(), start, end);
         return list;
     }

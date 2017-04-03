@@ -74,10 +74,8 @@ export class ReportComponent implements OnInit {
       this.startDate = formData.dateOfStart;
       this.endDate = formData.dateOfEnd;
 
-      this.isDatesDifferenceLessStep(this.startDate, this.endDate);
+      // this.isDatesDifferenceLessStep(this.startDate, this.endDate);
 
-      console.log(this.startDate);
-      console.log(this.endDate);
       if (!this.isGenerated) {
         this.isGenerated = true;
       } else {
@@ -90,19 +88,19 @@ export class ReportComponent implements OnInit {
     }
   }
 
-  private isDatesDifferenceLessStep(start: Date, end: Date): boolean {
-    let startDate = new Date(start);
-    let endDate = new Date(end);
-    let countYears = endDate.getFullYear() - startDate.getFullYear();
-    let countMonths = (endDate.getMonth() + 1) - (startDate.getMonth() + 1);
-    if (countMonths == 0 && countYears == 0) {
-      this.toastr.warning("Warning. The minimum date difference is one month.");
-      this.toastr.warning("The end date will be rounded to the minimum step boundary");
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // private isDatesDifferenceLessStep(start: Date, end: Date): boolean {
+  //   let startDate = new Date(start);
+  //   let endDate = new Date(end);
+  //   let countYears = endDate.getFullYear() - startDate.getFullYear();
+  //   let countMonths = (endDate.getMonth() + 1) - (startDate.getMonth() + 1);
+  //   if (countMonths == 0 && countYears == 0) {
+  //     this.toastr.warning("Warning. The minimum date difference is one month.");
+  //     this.toastr.warning("The end date will be rounded to the minimum step boundary");
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   private generateReportByRole(start: any, end: any) {
     if (this.isAdmin()) {

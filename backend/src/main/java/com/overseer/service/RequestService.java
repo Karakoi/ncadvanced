@@ -37,7 +37,7 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Returns number of requests for assignee.
      *
-     * @param assigneeId assignee id must be not null.
+     * @param assigneeId     assignee id must be not null.
      * @param progressStatus progress status must be not null.
      * @return number of requests for assignee.
      */
@@ -70,10 +70,10 @@ public interface RequestService extends CrudService<Request, Long> {
     /**
      * Returns a list of requests which have provided {@link User} as assignee.
      *
-     * @param assigneeId id of the assignee, must not be {@literal null}.
+     * @param assigneeId     id of the assignee, must not be {@literal null}.
      * @param progressStatus progress status of request, must not be {@literal null}.
-     * @param pageSize amount of fetch size, must not be {@literal null}.
-     * @param pageNumber page number, must not be {@literal null}.
+     * @param pageSize       amount of fetch size, must not be {@literal null}.
+     * @param pageNumber     page number, must not be {@literal null}.
      * @return list of requests which have provided {@link User} as assignee with given request.
      */
     List<Request> findRequestsWithGivenProgressByAssignee(Long assigneeId, ProgressStatus progressStatus, int pageSize, int pageNumber);
@@ -125,6 +125,16 @@ public interface RequestService extends CrudService<Request, Long> {
     RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
 
     /**
+     * Returns a request DTO created in small period.
+     *
+     * @param start            period start.
+     * @param end              period end.
+     * @param progressStatusId progress status id.
+     * @return request DTO created in small period.
+     */
+    RequestDTO findCountRequestsBySmallPeriod(LocalDate start, LocalDate end, Long progressStatusId);
+
+    /**
      * Returns a request DTO created in provided period by manager id.
      *
      * @param start            period start.
@@ -134,6 +144,17 @@ public interface RequestService extends CrudService<Request, Long> {
      * @return request DTO created in provided period.
      */
     RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
+
+    /**
+     * Returns a request DTO created in small period by manager id.
+     *
+     * @param start            period start.
+     * @param end              period end.
+     * @param progressStatusId progress status id.
+     * @param id               manager id.
+     * @return request DTO created in small period.
+     */
+    RequestDTO findCountRequestsByManagerAndSmallPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
 
     /**
      * Returns a list of requests DTO created in provided period.
@@ -162,7 +183,7 @@ public interface RequestService extends CrudService<Request, Long> {
      * @param start            period start.
      * @param end              period end.
      * @param progressStatusId progress status id.
-     * @param countTop count managers in top.
+     * @param countTop         count managers in top.
      * @return list of best managers in provided period.
      */
     List<RequestDTO> findBestManagersByPeriod(String start, String end, Long progressStatusId, int countTop);

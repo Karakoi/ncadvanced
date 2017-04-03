@@ -1,7 +1,6 @@
 package com.overseer.service.impl.report;
 
-import static com.itextpdf.text.FontFactory.HELVETICA_BOLD;
-import static com.itextpdf.text.FontFactory.getFont;
+import static com.itextpdf.text.FontFactory.*;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -62,6 +61,7 @@ public class AdminReportBuilder {
         LocalDate start = LocalDate.parse(beginDate, LocalDateFormatter.FORMATTER);
         LocalDate end = LocalDate.parse(endDate, LocalDateFormatter.FORMATTER);
         val collection = requestService.findListCountRequestsByPeriod(start, end, progressStatus.getId());
+
         final int tableColumnNum = 3;
         final int colorR = 185;
         final int colorG = 247;
@@ -70,7 +70,6 @@ public class AdminReportBuilder {
                 .addPdfPCells(new BaseColor(colorR, colorG, colorB), getFont(HELVETICA_BOLD),
                         "Count of " + progressStatus.getName() + " requests", "Start Date", "End Date")
                 .build();
-
         collection
                 .forEach(request -> {
                     table.addCell(request.getCount().toString());
@@ -112,6 +111,8 @@ public class AdminReportBuilder {
         final float imgLogoY = 760f;
         final float imgAvatarX = 60f;
         final float imgAvatarY = 680f;
+        final int fontSize = 8;
+        Font font = getFont(HELVETICA, fontSize);
         val dateNow = LocalDateTime.now();
 
         return new ReportDocumentBuilder(document)
@@ -123,12 +124,14 @@ public class AdminReportBuilder {
                 .addParagraph(new Paragraph("For period: " + this.start + " : " + this.end, getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addLineSeparator(new LineSeparator())
                 .addLineSeparator(new LineSeparator())
-                .addParagraph(new Paragraph("Count created requests in period from "
+                .addParagraph(new Paragraph("Statistics of created requests in period from "
                         + start + " to " + end), Element.ALIGN_CENTER)
+                .addParagraph(new Paragraph("Node: Data are presented with rounding up to a near month", font), Element.ALIGN_LEFT)
                 .addTable(getTableWithCountRequestsByPeriod(start, end, ProgressStatus.FREE))
                 .addTable(getTableWithCountRequestsByPeriod(start, end, ProgressStatus.IN_PROGRESS))
                 .addLineSeparator(new LineSeparator())
                 .addParagraph(new Paragraph("Best managers: "), Element.ALIGN_CENTER)
+                .addParagraph(new Paragraph("Node: Data are presented with rounding up to a month", font), Element.ALIGN_LEFT)
                 .addList(getListWithBestManagers(start, end, countTop))
                 .buildDocument();
     }
