@@ -149,6 +149,6 @@ public class MessageServiceImpl extends CrudServiceImpl<Message> implements Mess
     public List<Message> findUnreadMessages(Long recipientId) {
         val list = messageDao.findUnreadMessages(recipientId);
         log.debug("Fetched unread messages for recipient with id {}", recipientId);
-        return list;
+        return decryptListOfMessages(list);
     }
 }

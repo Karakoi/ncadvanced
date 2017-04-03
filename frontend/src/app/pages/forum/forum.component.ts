@@ -96,7 +96,7 @@ export class ForumComponent implements OnInit {
     this.topic.roles = topicRoles;
     console.log(this.topic);
     this.topicService.create(this.topic).subscribe((resp: Response) => {
-      this.toastr.success("Topic successfully deleted");
+      this.toastr.success("Topic successfully created");
       this.updateArray(<Topic> resp.json());
       this.modal.close();
     }, e => this.handleErrorCreateTopic(e));
@@ -133,7 +133,7 @@ export class ForumComponent implements OnInit {
   private handleErrorCreateTopic(error) {
     switch (error.status) {
       case 500:
-        this.toastr.error("Can't create topic", 'Error');
+        this.toastr.error("Can't create topic. Topic with this title is already existed.", 'Error');
     }
   }
 
