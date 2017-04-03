@@ -58,7 +58,7 @@ export class SignupComponent implements OnInit {
 
   private handleError(error) {
     switch (error.status) {
-      case 409:
+      case 500:
         this.toastr.error('This email is already taken.', 'Error.');
     }
   }
