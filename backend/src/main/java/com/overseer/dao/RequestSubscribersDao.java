@@ -15,6 +15,8 @@ public interface RequestSubscribersDao {
 
     void delete(Long subscriberId, Long requestId);
 
+    void unsubscribeAll(Long requestId);
+
     List<User> getSubscribersOfRequest(Long requestId);
 
     default List<User> getSubscribersOfRequest(Request request) {

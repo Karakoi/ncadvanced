@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -72,4 +73,16 @@ public class TopicServiceImpl extends CrudServiceImpl<Topic> implements TopicSer
     public Message saveTopicMessage(Message message) {
         return topicDao.saveTopicMessage(message);
     }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<Topic> fetchPage(int pageNumber, int size) {
+        List<Topic> topics = super.fetchPage(pageNumber, size);
+        Collections.sort(topics, (firstTopic, secondTopic) -> firstTopic.getTitle().compareTo(secondTopic.getTitle()));
+        return topics;
+    }
+
+    
 }

@@ -32,7 +32,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   messageForm: FormGroup;
   message: Message;
   searchDTO: UserSearchDTO;
-  connect: any;
+  reloadDataTimer: any;
+  usersUnreadMessagesTimer: any;
   showFriendsList: boolean = true;
 
   constructor(private chatService: ChatService,
@@ -71,16 +72,21 @@ export class ChatComponent implements OnInit, OnDestroy {
           }
         });
       });
-      this.chatService.getUsersWithUnreadMessages(this.currentUser.id).subscribe((users: User[]) => {
-        this.usersWithUnreadMessages = users;
-        console.log(users)
+      let timer = Observable.timer(2000, 3000);
+      this.usersUnreadMessagesTimer = timer.subscribe(t => {
+        this.chatService.getUsersWithUnreadMessages(this.currentUser.id).subscribe((users: User[]) => {
+          this.usersWithUnreadMessages = users;
+        });
       });
     });
   }
 
   ngOnDestroy(): void {
-    if (!isUndefined(this.connect)) {
-      this.connect.unsubscribe();
+    if (!isUndefined(this.reloadDataTimer)) {
+      this.reloadDataTimer.unsubscribe();
+    }
+    if (!isUndefined(this.usersUnreadMessagesTimer)) {
+      this.usersUnreadMessagesTimer.unsubscribe();
     }
   }
 
@@ -124,6 +130,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatFriend = user;
     this.chatService.getDialogMessages(this.currentUser.id, user.id).subscribe((messages: Message[]) => {
       this.messages = messages;
+      this.readMessages(messages);
       this.message = {
         sender: this.currentUser,
         text: null,
@@ -133,8 +140,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     $('#msg-container').animate({scrollTop: $('#msg-container')[0].scrollHeight}, 2000);
     let timer = Observable.timer(2000, 3000);
-    this.connect = timer.subscribe(t => {
-      this.reloadData(this.currentUser.id, this.chatFriend.id)
+    this.reloadDataTimer = timer.subscribe(t => {
+      this.reloadData(this.currentUser.id, this.chatFriend.id);
       this.chatService.getUsersWithUnreadMessages(this.currentUser.id).subscribe((users: User[]) => {
         this.usersWithUnreadMessages = users;
       });
@@ -150,7 +157,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   readMessages(messages) {
     messages.forEach(msg => {
-      if (!msg.read) {
+      if (!msg.read && msg.sender.id == this.chatFriend.id) {
         msg.id = null;
         msg.read = true;
         console.log('readed');

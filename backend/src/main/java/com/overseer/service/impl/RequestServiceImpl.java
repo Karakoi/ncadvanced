@@ -1,6 +1,8 @@
 package com.overseer.service.impl;
 
+import com.overseer.dao.CommentDao;
 import com.overseer.dao.RequestDao;
+import com.overseer.dao.RequestSubscribersDao;
 import com.overseer.dao.UserDao;
 import com.overseer.dto.DeadlineDTO;
 import com.overseer.dto.RequestDTO;
@@ -41,15 +43,20 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
 
     private static final short DEFAULT_PAGE_SIZE = 20;
 
+    private RequestSubscribersDao requestSubscribersDao;
+    private CommentDao commentDao;
     private RequestDao requestDao;
     private UserDao userDao;
 
     private ApplicationEventPublisher publisher;
 
-    public RequestServiceImpl(RequestDao requestDao, UserDao userDao) {
+    public RequestServiceImpl(RequestDao requestDao, UserDao userDao, RequestSubscribersDao requestSubscribersDao,
+                              CommentDao commentDao) {
         super(requestDao);
         this.userDao = userDao;
         this.requestDao = requestDao;
+        this.requestSubscribersDao = requestSubscribersDao;
+        this.commentDao = commentDao;
     }
 
     @Override
@@ -76,16 +83,11 @@ public class RequestServiceImpl extends CrudServiceImpl<Request> implements Requ
     public void delete(Long idRequest) {
         Assert.notNull(idRequest, "id of request must not be null");
         log.debug("Delete request with id: {} ", idRequest);
-        Request request = requestDao.findOne(idRequest);
-        Long progressStatusId = request.getProgressStatus().getId();
-        if (progressStatusId == null || ProgressStatus.FREE.getId().equals(progressStatusId)) {
-            super.delete(idRequest);
-        } else {
-            throw new InappropriateProgressStatusException("Request with id: "
-                    + request.getId() + " and ProgressStatus: "
-                    + request.getProgressStatus().getName()
-                    + " can not be deleted");
-        }
+        Long requestId = requestDao.findOne(idRequest).getId();
+        requestSubscribersDao.unsubscribeAll(requestId);
+        commentDao.deleteAllByRequest(requestId);
+        requestDao.deleteAllSubRequestByParent(requestId);
+        super.delete(requestId);
     }
 
     //-----------------------FIND---------------------------
