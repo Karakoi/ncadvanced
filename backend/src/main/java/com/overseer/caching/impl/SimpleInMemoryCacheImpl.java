@@ -1,9 +1,8 @@
 package com.overseer.caching.impl;
 
 import com.overseer.caching.SimpleInMemoryCache;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.*;
@@ -16,55 +15,35 @@ import java.util.concurrent.*;
  * @param <K> Key for storing in map which identify method invoking.
  * @param <V> Data or array of date fetched from db.
  */
+@Slf4j
 public class SimpleInMemoryCacheImpl<K, V> implements SimpleInMemoryCache<K, V> {
-    private static final Logger LOG = LoggerFactory.getLogger(SimpleInMemoryCacheImpl.class);
-    private static final int SECOND = 1000;
-
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
-
 
     private Map<K, Future<V>> cache = new ConcurrentHashMap<>();
 
-
     public SimpleInMemoryCacheImpl(long lifeTime) {
-        Thread t = new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(lifeTime * SECOND);
-                } catch (InterruptedException ex) {
-                    LOG.debug("Something in cache gone wrong");
-                    ex.printStackTrace();
-                }
-                cleanup();
-            }
-        });
-        t.setDaemon(true);
-        executorService.execute(t);
-        LOG.debug("Cache has been created");
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this::cleanup, lifeTime, lifeTime, TimeUnit.SECONDS);
+        log.debug("Cache has been created");
     }
 
     /**
      * Save value as a future if it not exists.
-     * @param key just a key for value.
+     *
+     * @param key      just a key for value.
      * @param callable value wrapped it callable so it can be stored as future.
-     * @return future of value if it exists or just added.
      */
-    private Future<V> createIfAbsent(K key, final Callable<V> callable) {
+    private void createIfAbsent(K key, final Callable<V> callable) {
         Future<V> future = cache.get(key);
         if (future == null) {
             final FutureTask<V> futureTask = new FutureTask<>(callable);
             future = cache.putIfAbsent(key, futureTask);
             if (future == null) {
-                future = futureTask;
                 futureTask.run();
             }
         }
-        return future;
     }
 
     @Override
     public V getData(K key) {
-        LOG.debug("Getting date from cache with key {}", key);
         V value = null;
         val future = cache.getOrDefault(key, null);
         try {
@@ -78,12 +57,12 @@ public class SimpleInMemoryCacheImpl<K, V> implements SimpleInMemoryCache<K, V> 
 
     @Override
     public void cleanup() {
-        LOG.debug("Cleaning cache");
+        log.debug("Cleaning cache");
         cache.clear();
     }
 
     @Override
-    public  int getSize() {
+    public int getSize() {
         return cache.size();
     }
 
@@ -93,13 +72,12 @@ public class SimpleInMemoryCacheImpl<K, V> implements SimpleInMemoryCache<K, V> 
     }
 
     @Override
-    public void remove(V key) {
+    public void remove(K key) {
         cache.remove(key);
     }
 
     @Override
     public void put(K key, V value) {
-        LOG.debug("Adding date to cache with key: {}", key);
         createIfAbsent(key, () -> value);
     }
 
