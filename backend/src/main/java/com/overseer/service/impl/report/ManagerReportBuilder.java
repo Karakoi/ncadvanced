@@ -1,5 +1,6 @@
 package com.overseer.service.impl.report;
 
+import static com.itextpdf.text.FontFactory.HELVETICA;
 import static com.itextpdf.text.FontFactory.HELVETICA_BOLD;
 import static com.itextpdf.text.FontFactory.getFont;
 
@@ -125,7 +126,10 @@ public class ManagerReportBuilder {
         final float imgLogoY = 760f;
         final float imgAvatarX = 40f;
         final float imgAvatarY = 720f;
+        final int fontSize = 8;
+        Font font = getFont(HELVETICA, fontSize);
         val dateNow = LocalDateTime.now();
+
         return new ReportDocumentBuilder(document)
                 .addImage(Image.getInstance(new URL(this.gravatarLink + this.encryptedEmail + "?s=100")), imgAvatarX, imgAvatarY)
                 .addImage(Image.getInstance(this.logoImg), imgLogoX, imgLogoY)
@@ -136,6 +140,7 @@ public class ManagerReportBuilder {
                 .addLineSeparator(new LineSeparator())
                 .addLineSeparator(new LineSeparator())
                 .addParagraph(new Paragraph("Statistic for closed request by period:", getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
+                .addParagraph(new Paragraph("Node: Data are presented with rounding up to a near month", font), Element.ALIGN_LEFT)
                 .addTable(generateClosedRequestsTable(this.start, this.end, this.managerId))
                 .addParagraph(new Paragraph("You need close this request in the near future:", getFont(HELVETICA_BOLD)), Paragraph.ALIGN_LEFT)
                 .addTable(generateNeededCloseRequestsTable(this.managerId))

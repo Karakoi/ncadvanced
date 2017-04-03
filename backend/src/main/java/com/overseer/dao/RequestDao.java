@@ -209,6 +209,16 @@ public interface RequestDao extends CrudDao<Request, Long> {
     RequestDTO findCountRequestsByPeriod(LocalDate start, LocalDate end, Long progressStatusId);
 
     /**
+     * Returns a request DTO created in small period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusId progress status id.
+     * @return request DTO created in small period.
+     */
+    RequestDTO findCountRequestsBySmallPeriod(LocalDate start, LocalDate end, Long progressStatusId);
+
+    /**
      * Returns a list of request DTO created in provided period.
      *
      * @param start              period start.
@@ -229,6 +239,17 @@ public interface RequestDao extends CrudDao<Request, Long> {
      * @return request DTO created in provided period.
      */
     RequestDTO findCountRequestsByManagerAndPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
+
+    /**
+     * Returns a request DTO created in small period.
+     *
+     * @param start              period start.
+     * @param end                period end.
+     * @param progressStatusId progress status id.
+     * @param id                 manager id.
+     * @return request DTO created in small period.
+     */
+    RequestDTO findCountRequestsByManagerAndSmallPeriod(LocalDate start, LocalDate end, Long progressStatusId, int id);
 
     /**
      * Returns a list of best managers in provided period.
