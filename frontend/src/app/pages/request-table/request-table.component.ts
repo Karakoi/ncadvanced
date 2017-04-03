@@ -21,7 +21,7 @@ export class RequestTableComponent implements OnInit {
     this.requestService.getAll(1, this.pageSize).subscribe((requests: Request[]) => {
       this.requestService.getPageCount().subscribe((count) => {
         this.pageCount = count;
-        console.log(this.pageCount);
+        //console.log(this.pageCount);
       });
       this.requests = requests;
       this.loaded = true

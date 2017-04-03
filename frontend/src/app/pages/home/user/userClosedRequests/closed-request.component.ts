@@ -71,7 +71,7 @@ export class ClosedRequest implements OnInit {
 
   reopen() {
     let sel = Array.from(this.selected);
-    console.log("trying reopen")
+    //console.log("trying reopen")
     this.employeeService.reopenRequests(sel).subscribe(
       (success) => {
         this.requests = this.requests.map(r => r).filter(r => !this.selected.has(r.id))

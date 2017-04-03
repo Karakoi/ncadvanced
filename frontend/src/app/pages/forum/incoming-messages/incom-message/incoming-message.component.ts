@@ -13,7 +13,7 @@ export class MessageItemComponent {
   }
 
   answer(sender) {
-    console.log(sender);
+    //console.log(sender);
     this.router.navigate(['/forum/message']);
   }
 }

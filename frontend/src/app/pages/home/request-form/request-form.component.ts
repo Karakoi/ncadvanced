@@ -19,7 +19,7 @@ export class RequestFormComponent implements OnInit {
   }
 
   createNewRequest(params): void {
-    console.log(params);
+    //console.log(params);
   }
 
   validateField(field: string): boolean {

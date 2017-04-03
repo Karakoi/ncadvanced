@@ -27,7 +27,7 @@ export class ReopenRequestComponent {
 
   reopenRequest() {
     this.request.lastChanger = this.request.assignee;
-    console.log(this.request);
+    /*console.log(this.request);*/
     this.requestService.reopen(this.request).subscribe((item:Request) => {
       this.toastr.success("Request was reopened successfully", "Success!");
       this.updated.emit(this.requests.filter((request) => request.id !== item.id));

@@ -39,7 +39,7 @@ export class ForumComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe((user: User) => {
-      console.log(user)
+      //console.log(user)
       this.currentUser = user;
     });
     this.roleService.getAll().subscribe((roles: Role[]) => {
@@ -58,7 +58,7 @@ export class ForumComponent implements OnInit {
     });
     this.topicService.getAll(1, this.perPage).subscribe((topics: Topic[]) => {
       this.topics = topics;
-      console.log(topics)
+      //console.log(topics)
     });
     this.topicService.getPageCount().subscribe((count) => this.pageNumber = count);
   }
@@ -94,7 +94,7 @@ export class ForumComponent implements OnInit {
       topicRoles.push(role);
     }
     this.topic.roles = topicRoles;
-    console.log(this.topic);
+    //console.log(this.topic);
     this.topicService.create(this.topic).subscribe((resp: Response) => {
       this.toastr.success("Topic successfully created");
       this.updateArray(<Topic> resp.json());
@@ -150,7 +150,7 @@ export class ForumComponent implements OnInit {
     let page = data.target.text;
     $(data.target.parentElement).addClass('active');
     this.topicService.getAll(page, this.perPage).subscribe((topics: Topic[]) => {
-      console.log(topics);
+      //console.log(topics);
       this.topics = topics;
     });
   }
