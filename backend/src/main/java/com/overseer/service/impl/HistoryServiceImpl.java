@@ -1,6 +1,7 @@
 package com.overseer.service.impl;
 
 import com.overseer.dao.HistoryDAO;
+import com.overseer.dto.HistoryMessageDTO;
 import com.overseer.model.History;
 import com.overseer.service.HistoryService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ public class HistoryServiceImpl implements HistoryService{
      * {@inheritDoc}.
      */
     @Override
-    public List<History> findHistory(Long entityId) {
+    public List<History> findHistoryList(Long entityId) {
         Assert.notNull(entityId, "id of entity must not be null");
         List<History> histories = historyDAO.findAllForEntity(entityId);
         log.debug("Fetched {} history records for entity with id: {}", histories.size(), entityId);
@@ -35,10 +37,19 @@ public class HistoryServiceImpl implements HistoryService{
      * {@inheritDoc}.
      */
     @Override
-    public String createMessageFromChanges(History history, boolean useTrimLongText, int maxNumberOfCharsInText) {
-        String text;
-        switch (history.getColumnName()) {
+    public List<HistoryMessageDTO> getHistoryMessageDTOs(Long entityId, int maxNumberOfCharsInText) {
+        return convertHistoryInHistoryMessageDTO(findHistoryList(entityId), maxNumberOfCharsInText);
+    }
 
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public HistoryMessageDTO createHistoryDtoWithMessages(History history, int maxNumberOfCharsInText) {
+        HistoryMessageDTO historyDTO = new HistoryMessageDTO();
+        String text;
+
+        switch (history.getColumnName()) {
             case "title":
                 text = "Title was changed from \"" + history.getOldValue() + "\" to \"" + history.getNewValue() + "\"";
                 break;
@@ -48,19 +59,25 @@ public class HistoryServiceImpl implements HistoryService{
                     text = "Estimate time (in day) was set in \"" + history.getNewValue() + "\" days";
                 } else if (history.getNewValue() == null) { // if: estimate time deleted
                     text = "Estimate time (in day) was deleted";
-                } else { // if: change estimate time
-                    text = "Estimate time (in day) was changed from \"" + history.getOldValue() + "\" to \"" + history.getNewValue() + "\"";
+                } else { // if: estimate time changed
+                    text = "Estimate time (in day) was changed from \"" + history.getOldValue() + "\" to \""
+                            + history.getNewValue() + "\"";
                 }
                 break;
 
             case "description":
-                String oldDescription = history.getDemonstrationOfOldValue();
-                String newDescription = history.getDemonstrationOfNewValue();
-                if (useTrimLongText) { // if text must be trimmed
-                    trimText(oldDescription, maxNumberOfCharsInText);
-                    trimText(newDescription, maxNumberOfCharsInText);
+                String oldDescription = history.getOldValue();
+                String newDescription = history.getNewValue();
+                String textWithoutTrimming = "Description was changed from \"" + oldDescription
+                        + "\" to \"" + newDescription + "\"";
+                if (oldDescription.length() > maxNumberOfCharsInText || newDescription.length() > 0) { // if: we need to trim text
+                    historyDTO.setLongMessage(textWithoutTrimming); // long text
+                    // trimmed text (below) (will set into historyDTO in the end of the method)
+                    text = "Description was changed from \"" + trimText(oldDescription, maxNumberOfCharsInText)
+                            + "\" to \"" + trimText(newDescription, maxNumberOfCharsInText) + "\"";
+                } else { // if: we do not need to trim text, textWithoutTrimming is our only required text
+                    text = textWithoutTrimming;
                 }
-                text = "Description was changed from \"" + oldDescription + "\" to \"" + newDescription + "\"";
                 break;
 
             case "priority_status_id":
@@ -82,9 +99,9 @@ public class HistoryServiceImpl implements HistoryService{
                 break;
 
             case "parent_id":
-                if (history.getNewValue() == null) {
+                if (history.getNewValue() == null) { // if: parent id deleted
                     text = "This request was unjoined from \"" + history.getDemonstrationOfOldValue() + "\" request";
-                } else {
+                } else { // if: parent id created
                     text = "This request was joined in \"" + history.getDemonstrationOfNewValue() + "\" request";
                 }
                 break;
@@ -93,7 +110,34 @@ public class HistoryServiceImpl implements HistoryService{
                 text = "Some changes";
         }
 
-        return text;
+        historyDTO.setMessage(text);
+        return historyDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public HistoryMessageDTO convertHistoryInHistoryMessageDTO(History history, int maxNumberOfCharsInText) {
+        HistoryMessageDTO historyMessageDTO = createHistoryDtoWithMessages(history, maxNumberOfCharsInText);
+        historyMessageDTO.setId(history.getId());
+        historyMessageDTO.setChangerId(history.getChanger().getId());
+        historyMessageDTO.setChangerFirstName(history.getChanger().getFirstName());
+        historyMessageDTO.setChangerLastName(history.getChanger().getLastName());
+        historyMessageDTO.setDateOfChange(history.getDateOfChange());
+        return historyMessageDTO;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public List<HistoryMessageDTO> convertHistoryInHistoryMessageDTO(List<History> histories, int maxNumberOfCharsInText) {
+        List<HistoryMessageDTO> historyMessageDTOList = new ArrayList<>();
+        for (History history: histories) {
+            historyMessageDTOList.add(convertHistoryInHistoryMessageDTO(history, maxNumberOfCharsInText));
+        }
+        return historyMessageDTOList;
     }
 
     /**
@@ -103,9 +147,6 @@ public class HistoryServiceImpl implements HistoryService{
      * @return trimmed text.
      */
     private String trimText(String text, int maxCountOfChars) {
-        if (text.length() > maxCountOfChars) {
-            text = text.substring(0,  maxCountOfChars) + "...";
-        }
-        return text;
+        return text.length() <= maxCountOfChars ? text : text.substring(0,  maxCountOfChars) + "...";
     }
 }

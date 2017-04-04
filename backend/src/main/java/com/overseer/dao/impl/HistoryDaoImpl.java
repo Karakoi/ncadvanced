@@ -39,9 +39,24 @@ public class HistoryDaoImpl implements HistoryDAO{
         Assert.notNull(entityId, "id of entity must not be null");
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("entity_id", entityId);
-        return this.jdbc().query(this.queryService().getQuery("history.findAllForEntity"), parameterSource, this.getMapper());
+        return jdbc().query(this.queryService().getQuery("history.findAllForEntity"), parameterSource, this.getMapper());
     }
 
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public History findEntity(Long historyId) {
+        Assert.notNull(historyId, "id of entity must not be null");
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("history_id", historyId);
+        return jdbc().queryForObject(this.queryService().getQuery("history.findOne"), parameterSource, this.getMapper());
+    }
+
+    /**
+     * Mapper for {@link History} object.
+     * @return {@link RowMapper} object for {@link History} object.
+     */
     private RowMapper<History> getMapper() {
         return (resultSet, i) -> {
             User changer = new User();

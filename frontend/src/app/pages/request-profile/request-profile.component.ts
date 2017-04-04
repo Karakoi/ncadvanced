@@ -18,6 +18,7 @@ import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {Response} from "@angular/http";
 import {DeleteCommentComponent} from "./comment-delete/delete-comment.component";
 import {CloseComponent} from "./close/close.component";
+import {HistoryMessageDTO} from "../../model/dto/historyMessageDTO.model";
 
 @Component({
   selector: 'request-profile',
@@ -36,6 +37,7 @@ export class RequestProfileComponent implements OnInit {
   showJoinedRequests: boolean = true;
   showComments: boolean = true;
   historyRecords: History[];
+  historyDTOsRecords: HistoryMessageDTO[];
   subRequests: Request[];
   joinedRequests: Request[];
   followers: User[];
@@ -81,8 +83,9 @@ export class RequestProfileComponent implements OnInit {
       this.route.params.subscribe(params => {
         let id = +params['id'];
 
-        this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
-          this.historyRecords = historyRecords;
+        this.historyService.getHistoryDTOs(id).subscribe((historyDtoRecords: HistoryMessageDTO[]) => {
+          console.log(historyDtoRecords)
+          this.historyDTOsRecords = historyDtoRecords;
         });
 
         this.requestService.get(id).subscribe((request: Request) => {
@@ -123,7 +126,7 @@ export class RequestProfileComponent implements OnInit {
     this.commentService.create(this.comment).subscribe((resp: Response) => {
       this.updateArray(<Comment> resp.json());
       this.commentForm.reset();
-      this.toastr.success("Comment sended", "Success")
+      this.toastr.success("Comment sent", "Success")
     }, e => this.handleErrorCreateMessage(e));
   }
 
@@ -142,50 +145,6 @@ export class RequestProfileComponent implements OnInit {
   validate(field: string): boolean {
     return this.commentForm.get(field).valid || !this.commentForm.get(field).dirty;
   }
-
-  showHistoryMessage(history: History): string {
-    let text: string;
-    switch (history.columnName) {
-
-      case "title":
-        text = "Title was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
-        break;
-      case "estimate_time_in_days":
-        text = "Estimate time (in days) was changed from \"" + history.oldValue + "\" to \"" + history.newValue + "\"";
-        break;
-
-      case "description":
-        text = "Description was changed from \"" +
-          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
-        break;
-      case "priority_status_id":
-        text = "Priority was changed from \"" +
-          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
-        break;
-      case "progress_status_id":
-        text = "Progress status was changed from \"" +
-          history.demonstrationOfOldValue + "\" to \"" + history.demonstrationOfNewValue + "\"";
-        break;
-
-      case "assignee_id":
-        text = "This request was assigned";
-        break;
-
-      case "parent_id":
-        if (history.newValue == null) {
-          text = "This request was unjoined from \"" + history.demonstrationOfOldValue + "\" request";
-        } else {
-          text = "This request was joined in \"" + history.demonstrationOfNewValue + "\" request";
-        }
-        break;
-
-      default:
-        text = "Some changes";
-    }
-
-    return text;
-  }
-
 
   openAddSubRequestModal(): void {
     this.addSubRequestComponent.modal.open();
@@ -328,5 +287,13 @@ export class RequestProfileComponent implements OnInit {
 
   update(request:Request) {
     this.request = request;
+  }
+
+  showFull = {
+    id: 0,
+  };
+
+  changeShowFull(id) {
+    this.showFull.id = id;
   }
 }
