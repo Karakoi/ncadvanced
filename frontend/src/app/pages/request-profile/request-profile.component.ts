@@ -136,7 +136,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   private updateArray(comment: Comment): void {
-    this.comments.unshift(comment);
+    this.comments.push(comment);
     this.updated.emit(this.comment);
   }
 

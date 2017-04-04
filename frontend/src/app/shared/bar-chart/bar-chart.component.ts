@@ -48,11 +48,11 @@ export class BarChartComponent implements OnInit {
 
   // events
   public chartClicked(e: any): void {
-    console.log(e);
+    //console.log(e);
   }
 
   public chartHovered(e: any): void {
-    console.log(e);
+    //console.log(e);
   }
 
   clear() {
@@ -65,7 +65,7 @@ export class BarChartComponent implements OnInit {
     this.clear();
     this.reportService.getListOfBestManagersWithClosedStatusByPeriod(start, end, countTopManagers)
       .subscribe((array: RequestDTO[]) => {
-        console.log(array);
+        //console.log(array);
         array.forEach(manager => {
           count.push(manager.count);
           let name = manager.managerFirstName + " " + manager.managerLastName;
@@ -80,7 +80,7 @@ export class BarChartComponent implements OnInit {
     this.clear();
     this.reportService.getManagerStatisticsOfClosedRequestsByPeriod(start, end, this.currentUser.id)
       .subscribe((array: RequestDTO[]) => {
-        console.log(array);
+        //console.log(array);
         array.forEach(requestDTO => {
           closedRequests.push(requestDTO.count);
           let firstDate = requestDTO.startDateLimit[0] + "-" + requestDTO.startDateLimit[1] + "-" + requestDTO.startDateLimit[2]

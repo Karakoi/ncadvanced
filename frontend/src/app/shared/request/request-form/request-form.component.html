@@ -15,20 +15,12 @@
       </div>
       <!--REQUEST PRIORITY STATUS-->
       <div class="form-group col-lg-12">
-        <label for="priorityStatus">Priority status:</label>
+        <label for="priorityStatus">Priority:</label>
         <select id="priorityStatus" class="form-control" formControlName="priorityStatus">
           <option [ngValue]="priorityStatus" *ngFor="let priorityStatus of priorityStatuses">{{priorityStatus.name}}</option>
         </select>
       </div>
       <!--&lt;!&ndash;REQUEST ESTIMATE TIME&ndash;&gt;
-      <div class="form-group" [ngClass]="{'has-error': !validate('estimateTimeInDays')}">
-        <label for="estimateTimeInDays">Estimate time (in days):</label>
-        <input id="estimateTimeInDays" type="number" class="form-control" formControlName="estimateTimeInDays"/>
-        <div *ngIf="!validate('estimateTimeInDays')" class="help-block text-left">
-          <span *ngIf="requestForm.get('estimateTimeInDays').hasError('min')">Time in days must be greater then 0.</span>
-          <span *ngIf="requestForm.get('estimateTimeInDays').hasError('max')">Time in days must be less then 30.</span>
-        </div>
-      </div>-->
        <!--REQUEST DESCRIPTION-->
       <div class="form-group col-lg-12" [ngClass]="{'has-error': !validate('description')}">
         <label for="description">Description:</label>

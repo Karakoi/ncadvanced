@@ -38,9 +38,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
     private static final int LOW = 3;
     private static final int DEFAULT_DAY_IN_MONTH = 1;
     private static final Long DEFAULT_MONTHS_STEP = 1L;
-//    private static final int START_PROJECT_YEARS = 2017;
-//    private static final int START_PROJECT_MONTHS = 2;
-//    private static final int START_PROJECT_DAY = 7;
 
     @Autowired
     private ProgressStatusUtil progressStatusUtil;
@@ -555,7 +552,6 @@ public class RequestDaoImpl extends CrudDaoImpl<Request> implements RequestDao {
                             LocalDate localEndDate = LocalDate.of(year, month, DEFAULT_DAY_IN_MONTH);
                             localEndDate = localEndDate.plusMonths(DEFAULT_MONTHS_STEP);
                             request.setEndDateLimit(localEndDate);
-                            System.out.println("request" + request);
                             data.add(request);
                         }
                         return data;
