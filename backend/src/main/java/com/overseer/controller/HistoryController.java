@@ -33,7 +33,8 @@ public class HistoryController {
     }
 
     /**
-     * Method returns a list of {@link HistoryMessageDTO} entities which have an information about changes of transferred entity.
+     * Method returns a list of {@link HistoryMessageDTO} entities which have an information about changes
+     * of transferred entity.
      *
      * @param entityId id of entity for which we need to get all history of changes, must not be {@literal null}.
      * @return list of {@link HistoryMessageDTO} entities.

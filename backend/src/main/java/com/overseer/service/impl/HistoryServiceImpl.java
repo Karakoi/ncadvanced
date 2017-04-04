@@ -48,8 +48,8 @@ public class HistoryServiceImpl implements HistoryService{
     public HistoryMessageDTO createHistoryDtoWithMessages(History history, int maxNumberOfCharsInText) {
         HistoryMessageDTO historyDTO = new HistoryMessageDTO();
         String text;
-        switch (history.getColumnName()) {
 
+        switch (history.getColumnName()) {
             case "title":
                 text = "Title was changed from \"" + history.getOldValue() + "\" to \"" + history.getNewValue() + "\"";
                 break;
@@ -59,7 +59,7 @@ public class HistoryServiceImpl implements HistoryService{
                     text = "Estimate time (in day) was set in \"" + history.getNewValue() + "\" days";
                 } else if (history.getNewValue() == null) { // if: estimate time deleted
                     text = "Estimate time (in day) was deleted";
-                } else { // if: change estimate time
+                } else { // if: estimate time changed
                     text = "Estimate time (in day) was changed from \"" + history.getOldValue() + "\" to \""
                             + history.getNewValue() + "\"";
                 }
@@ -72,7 +72,7 @@ public class HistoryServiceImpl implements HistoryService{
                         + "\" to \"" + newDescription + "\"";
                 if (oldDescription.length() > maxNumberOfCharsInText || newDescription.length() > 0) { // if: we need to trim text
                     historyDTO.setLongMessage(textWithoutTrimming); // long text
-                    // trimmed text (will set into historyDTO in the end of the method)
+                    // trimmed text (below) (will set into historyDTO in the end of the method)
                     text = "Description was changed from \"" + trimText(oldDescription, maxNumberOfCharsInText)
                             + "\" to \"" + trimText(newDescription, maxNumberOfCharsInText) + "\"";
                 } else { // if: we do not need to trim text, textWithoutTrimming is our only required text

@@ -72,8 +72,6 @@ export class RequestProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.showFull);
-
     this.commentForm = this.formBuilder.group({
       text: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(500)]]
     });
@@ -85,9 +83,6 @@ export class RequestProfileComponent implements OnInit {
       this.route.params.subscribe(params => {
         let id = +params['id'];
 
-        /*this.historyService.getHistory(id).subscribe((historyRecords: History[]) => {
-          this.historyRecords = historyRecords;
-        });*/
         this.historyService.getHistoryDTOs(id).subscribe((historyDtoRecords: HistoryMessageDTO[]) => {
           console.log(historyDtoRecords)
           this.historyDTOsRecords = historyDtoRecords;
@@ -131,7 +126,7 @@ export class RequestProfileComponent implements OnInit {
     this.commentService.create(this.comment).subscribe((resp: Response) => {
       this.updateArray(<Comment> resp.json());
       this.commentForm.reset();
-      this.toastr.success("Comment sended", "Success")
+      this.toastr.success("Comment sent", "Success")
     }, e => this.handleErrorCreateMessage(e));
   }
 
@@ -294,24 +289,11 @@ export class RequestProfileComponent implements OnInit {
     this.request = request;
   }
 
-  /*changeHistoryDTO(id) {
-    this.historyService.getFullHistoryDTO(id).subscribe((historyDtoRecord: HistoryMessageDTO) => {
-      console.log(historyDtoRecord)
-      this.historyDTOsRecords.filter(h => {
-        if (h.id == id) {
-          h = historyDtoRecord;
-        }
-      })
-    });
-  }*/
-
   showFull = {
     id: 0,
-    show: false
   };
 
   changeShowFull(id) {
     this.showFull.id = id;
-    this.showFull.show = true;
   }
 }

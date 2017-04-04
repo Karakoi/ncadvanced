@@ -215,6 +215,7 @@
           </table>
         </div>
       </div>
+
       <!-- HISTORY -->
       <div class="row">
         <div class="col-lg-12">
@@ -233,28 +234,24 @@
           <div class="fixedHeight">
           <table class="table table-bordered ">
             <tbody>
-            <!--<tr *ngFor="let history of historyRecords">-->
             <tr *ngFor="let history of historyDTOsRecords">
               <td *ngIf="showHistory" (click)="changeHistoryDTO(history.id)">
                 <span>
-                  <!--{{showHistoryMessage(history)}}-->
                   <span (click)="changeShowFull(history.id)" *ngIf="showFull.id != history.id || (showFull.id == history.id && history.longMessage == null)">{{history.message}}</span>
                   <span *ngIf="showFull.id == history.id && history.longMessage !== null">{{history.longMessage}}</span>
-                  <!--by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>-->
                   by <span class="bold-text"><a [routerLink]="['/user', history.changerId]">{{history.changerFirstName}} {{history.changerLastName}}</a></span>
                 </span>
               </td>
               <td *ngIf="showHistory" width="40px">
-                <!--<span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>-->
                 <span class="bold-text"><span class="badge pull-right"><date-parse [date]="history.dateOfChange"></date-parse></span></span>
               </td>
             </tr>
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
+
     <div class="row">
       <div class="col-lg-12">
         <p><b>Followers:</b>

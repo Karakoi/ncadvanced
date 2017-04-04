@@ -53,6 +53,10 @@ public class HistoryDaoImpl implements HistoryDAO{
         return jdbc().queryForObject(this.queryService().getQuery("history.findOne"), parameterSource, this.getMapper());
     }
 
+    /**
+     * Mapper for {@link History} object.
+     * @return {@link RowMapper} object for {@link History} object.
+     */
     private RowMapper<History> getMapper() {
         return (resultSet, i) -> {
             User changer = new User();

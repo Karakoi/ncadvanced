@@ -132,6 +132,7 @@ public class RequestReportPdfBuilder {
 
     /**
      * Generates {@link PdfPTable} table for history report section.
+     *
      * @param historyList all histories records for request
      * @return history table
      */
