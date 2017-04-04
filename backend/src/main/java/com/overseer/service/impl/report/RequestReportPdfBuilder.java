@@ -7,6 +7,7 @@ import static java.lang.String.valueOf;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.overseer.dto.HistoryMessageDTO;
 import com.overseer.model.History;
 import com.overseer.model.Request;
 import com.overseer.model.User;
@@ -131,6 +132,7 @@ public class RequestReportPdfBuilder {
 
     /**
      * Generates {@link PdfPTable} table for history report section.
+     *
      * @param historyList all histories records for request
      * @return history table
      */
@@ -144,10 +146,10 @@ public class RequestReportPdfBuilder {
 
         historyList
                 .forEach(history -> {
-                    historyTable.addCell(historyService.createMessageFromChanges(history, true, maxNumberOfCharsInHistoryValue));
-                    User changer = history.getChanger();
-                    historyTable.addCell(changer.getFirstName() + ' ' + changer.getLastName());
-                    historyTable.addCell(getFormattedDate(history.getDateOfChange()));
+                    HistoryMessageDTO historyMessageDTO = historyService.convertHistoryInHistoryMessageDTO(history, maxNumberOfCharsInHistoryValue);
+                    historyTable.addCell(historyMessageDTO.getMessage());
+                    historyTable.addCell(historyMessageDTO.getChangerFirstName() + ' ' + historyMessageDTO.getChangerLastName());
+                    historyTable.addCell(getFormattedDate(historyMessageDTO.getDateOfChange()));
                 });
 
         return historyTable;
