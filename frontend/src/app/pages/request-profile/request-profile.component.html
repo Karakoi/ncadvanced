@@ -232,8 +232,8 @@
               <td *ngIf="showHistory" (click)="changeHistoryDTO(history.id)">
                 <span>
                   <!--{{showHistoryMessage(history)}}-->
-                  <span (click)="changeShowFull(history.id)" *ngIf="showFull.id != history.id">{{history.message}}</span>
-                  <span *ngIf="showFull.id == history.id">{{history.changerFirstName}} {{history.id}} {{showFull.id}}</span>
+                  <span (click)="changeShowFull(history.id)" *ngIf="showFull.id != history.id || (showFull.id == history.id && history.longMessage == null)">{{history.message}}</span>
+                  <span *ngIf="showFull.id == history.id && history.longMessage !== null">{{history.longMessage}}</span>
                   <!--by <span class="bold-text"><a [routerLink]="['/user', history.changer.id]">{{history.changer.firstName}} {{history.changer.lastName}}</a></span>-->
                   by <span class="bold-text"><a [routerLink]="['/user', history.changerId]">{{history.changerFirstName}} {{history.changerLastName}}</a></span>
                 </span>

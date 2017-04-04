@@ -1,8 +1,9 @@
 export interface HistoryMessageDTO {
   id?: number,
-  message: string,
+  message: String,
+  longMessage?: String,
   changerId: number,
-  changerFirstName: string,
-  changerLastName: string,
+  changerFirstName: String,
+  changerLastName: String,
   dateOfChanges: Date
 }

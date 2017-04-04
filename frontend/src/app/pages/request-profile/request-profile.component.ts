@@ -72,7 +72,7 @@ export class RequestProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.showFull)
+    console.log(this.showFull);
 
     this.commentForm = this.formBuilder.group({
       text: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(500)]]
@@ -294,7 +294,7 @@ export class RequestProfileComponent implements OnInit {
     this.request = request;
   }
 
-  changeHistoryDTO(id) {
+  /*changeHistoryDTO(id) {
     this.historyService.getFullHistoryDTO(id).subscribe((historyDtoRecord: HistoryMessageDTO) => {
       console.log(historyDtoRecord)
       this.historyDTOsRecords.filter(h => {
@@ -303,7 +303,7 @@ export class RequestProfileComponent implements OnInit {
         }
       })
     });
-  }
+  }*/
 
   showFull = {
     id: 0,
