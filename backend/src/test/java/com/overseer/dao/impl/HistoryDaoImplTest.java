@@ -144,17 +144,6 @@ public class HistoryDaoImplTest {
         // given
         updateRequest();
 
-        Role assigneeRole = new Role("office manager");
-        assigneeRole.setId(11L);
-        assignee = new User();
-        assignee.setFirstName("office manager 2");
-        assignee.setLastName("office manager 2");
-        assignee.setPassword("office manager 2");
-        assignee.setEmail("officemanager2@email.com");
-        assignee.setRole(assigneeRole);
-        assignee = userDao.save(assignee);
-        request.setAssignee(assignee);
-
         // when
         requestDao.save(request);
         List<History> allHistoryForRequest = historyDAO.findAllForEntity(request.getId());
@@ -163,7 +152,6 @@ public class HistoryDaoImplTest {
         assertThat(allHistoryForRequest.size(), is(3));
     }
 
-    @Ignore
     @Test
     public void findAllForEntityTestForCheckOldAndNewValuesInThirdHistoryRecord() throws Exception {
         // given
@@ -196,7 +184,6 @@ public class HistoryDaoImplTest {
         assertThat(allHistoryForRequest.get(1).getRecordId(), is(request.getId()));
     }
 
-    @Ignore
     @Test
     public void findAllForEntityTestForCheckOldAndNewValuesInFirstHistoryRecord() throws Exception {
         // given
